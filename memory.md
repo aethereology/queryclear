@@ -45,6 +45,15 @@ JSON-LD Organization/WebSite/Service/FAQPage). Lead form → /api/lead now email
 Resend when RESEND_API_KEY set (always logs; see .env.example). Build green, 0
 console errors, verified in browser. Design: Fraunces + IBM Plex, paper/pine/lime.
 
-BLOCKED: `git push` denied (403) — the fine-grained GitHub PAT lacks Contents:write
-on aethereology/queryclear. Founder must add that scope, then push the 4 commits.
-NOT yet done: push, deploy to Vercel, connect RESEND_API_KEY + domain, connect queryclear.com.
+LAUNCHED 2026-05-29: LIVE at https://www.queryclear.com (apex queryclear.com 307→www).
+Deployed on Vercel (team `sparkcreativesinc`, project `queryclear`, scope flag required
+on CLI: --scope sparkcreativesinc). Deployment Protection disabled (public). Production
+env set: RESEND_API_KEY, LEAD_TO=info@queryclear.com, LEAD_FROM="queryclear <info@queryclear.com>".
+queryclear.com verified in Resend (sending enabled); DNS/nameservers on Cloudflare.
+End-to-end lead form VERIFIED: submit → /api/lead → Resend → delivered to info@queryclear.com
+(reply-to = lead's email). GitHub push works via gh credential override.
+Tools installed: resend-cli (global), vercel CLI. info@queryclear.com receives via Cloudflare Email Routing.
+
+OPEN POLISH: canonical mismatch — code declares apex (site.url=https://queryclear.com) but
+live canonical is www. Decide: make apex primary in Vercel (www→apex) OR set site.url=www.
+NOT yet done: resolve canonical, optional OG image, real audit prompt-runner tooling.
