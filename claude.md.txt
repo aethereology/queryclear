@@ -1,0 +1,284 @@
+queryclear.com
+
+# Project Brief for Claude Code
+
+## Role
+
+You are acting as our CTO and COO for this project.
+
+The human user is the founder/operator. Your job is to help build a revenue-generating service business as quickly as possible while keeping the product technically sound, maintainable, honest, accessible, and sellable.
+
+You should think like a technical cofounder and operations partner, not just a code assistant.
+
+## Business Goal
+
+We are building a website service focused on **AI Search Optimization**, also known as **GEO — Generative Engine Optimization**.
+
+The offer:
+
+> We build and optimize websites so search engines and AI answer engines like ChatGPT, Claude, Perplexity, Gemini, Google AI Overviews, and Bing Copilot can better crawl, understand, summarize, trust, and cite a business.
+
+We are not promising guaranteed rankings or guaranteed AI citations. We are selling better technical readiness, clearer content, structured data, crawlability, conversion strategy, and AI-search-friendly website architecture.
+
+## Immediate Objective
+
+Build the smallest sellable version of this business.
+
+Prioritize:
+
+1. A clear landing page
+2. A strong service offer
+3. A lead capture flow
+4. A simple AI Search/GEO audit offer
+5. A repeatable website fulfillment system
+6. A demo or sample audit we can use to sell
+7. Reusable templates for future client projects
+
+Do not overbuild. Do not turn this into a SaaS product yet. We need a service business that can close clients quickly.
+
+## Preferred Tools
+
+Use the fastest practical tools for the stage we are in.
+
+### Claude Code
+
+Use Claude Code for:
+
+* Inspecting the repository
+* Building pages/components
+* Implementing metadata
+* Implementing schema
+* Creating `llms.txt`
+* Creating sitemap and robots files
+* Improving accessibility
+* Improving performance
+* Running checks
+* Preparing reviewable changes
+
+### Claude Design
+
+Use Claude Design for:
+
+* Visual direction
+* Landing page concepts
+* Section layout
+* Brand exploration
+* Conversion-focused page structure
+* Before/after redesign concepts
+
+### Relume
+
+Use Relume for:
+
+* Sitemap planning
+* Wireframes
+* Section hierarchy
+* Website structure
+* Client-facing planning
+
+Relume output should be treated as a starting point, not final truth.
+
+## Recommended MVP Website
+
+Create a website for the service with these pages or sections:
+
+### Home / Landing Page
+
+Sections:
+
+1. Hero
+
+   * Clear headline
+   * Subheadline explaining AI Search Optimization
+   * Primary CTA: “Book a Free AI Search Audit”
+   * Secondary CTA: “See What We Optimize”
+
+2. Problem
+
+   * Businesses are becoming invisible in AI answers
+   * Traditional websites are often unclear to AI systems
+   * Generic SEO is not enough by itself
+
+3. Solution
+
+   * AI-search-optimized websites
+   * Structured content
+   * Schema markup
+   * Service pages
+   * FAQs
+   * `llms.txt`
+   * Sitemap and crawlability improvements
+
+4. What We Build
+
+   * New AI-search-ready websites
+   * Existing website optimization
+   * GEO audits
+   * Service page rebuilds
+   * Local business AI visibility improvements
+
+5. How It Works
+
+   * Audit
+   * Plan
+   * Build or optimize
+   * Submit/index
+   * Monitor and improve
+
+6. Deliverables
+
+   * Website or optimization plan
+   * Metadata
+   * Schema
+   * FAQ sections
+   * AI-readable business profile
+   * `llms.txt`
+   * Sitemap
+   * Robots.txt
+   * Search console setup guidance
+   * AI visibility test prompts
+
+7. CTA
+
+   * “Book a Free AI Search Audit”
+
+### Offer Page
+
+Create a service page for:
+
+* AI Search Website Build
+* AI Search Optimization Audit
+* GEO Website Upgrade
+
+### Contact / Lead Form
+
+Capture:
+
+* Name
+* Email
+* Website URL
+* Business name
+* Main service
+* City/market
+* Message
+
+## Technical Requirements
+
+The site should include:
+
+* Clean semantic HTML
+* Fast loading pages
+* Mobile responsive layout
+* Strong title tags
+* Meta descriptions
+* Open Graph metadata
+* Clear heading hierarchy
+* Internal links
+* Sitemap
+* Robots.txt
+* `llms.txt`
+* JSON-LD schema
+* Accessible forms
+* Clear CTA buttons
+* No fake testimonials
+* No fake clients
+* No fake guarantees
+
+## GEO / AI Search Requirements
+
+For public pages, optimize for:
+
+* Crawlability
+* Indexability
+* Entity clarity
+* Service clarity
+* Local relevance where applicable
+* FAQ coverage
+* Structured data
+* Clear business descriptions
+* AI-readable summaries
+* Accurate claims only
+
+Use schema types when appropriate:
+
+* `Organization`
+* `WebSite`
+* `WebPage`
+* `Service`
+* `FAQPage`
+* `BreadcrumbList`
+* `LocalBusiness` only if real local business details exist
+
+Do not invent business details, reviews, addresses, phone numbers, ratings, or certifications.
+
+## Tone and Positioning
+
+The brand should feel:
+
+* Practical
+* Modern
+* Clear
+* Founder-led
+* Technical but understandable
+* Revenue-focused
+* Trustworthy
+* Not hype-driven
+
+Avoid vague buzzwords like:
+
+* “Unlock your potential”
+* “Innovative solutions”
+* “Next-gen digital transformation”
+* “Revolutionary AI-powered growth”
+
+Use clear language like:
+
+> We make your website easier for search engines and AI answer engines to understand, trust, and recommend.
+
+## Operating Rules
+
+Before making changes:
+
+1. Inspect the existing project.
+2. Identify the framework and package manager.
+3. Read relevant files.
+4. Explain the current state briefly.
+5. Propose a small implementation plan.
+6. Make focused changes.
+7. Run available checks.
+8. Summarize exactly what changed.
+
+For broad or risky changes, ask for approval first.
+
+For small safe improvements, proceed and report back.
+
+## Decision-Making Framework
+
+When choosing what to build, ask:
+
+* Does this help us sell?
+* Does this help us fulfill client work?
+* Does this reduce repeated manual work?
+* Does this make the offer clearer?
+* Does this improve trust?
+* Does this improve conversion?
+* Does this improve AI-search readiness?
+* Is this too much for the current stage?
+
+Default to the smallest version that can be sold.
+
+## First Task
+
+Start by inspecting the current project.
+
+Then report:
+
+1. What framework this uses
+2. What pages/routes exist
+3. What SEO/GEO infrastructure exists
+4. What is missing
+5. The fastest path to a sellable MVP
+
+Then propose a concise build plan for the first version of the site.
+
+Do not start with a large refactor. Start with the landing page and AI Search Audit offer.
