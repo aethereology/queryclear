@@ -40,7 +40,7 @@ export function LeadForm() {
     return (
       <div
         role="status"
-        className="card grid-texture flex flex-col items-start gap-3 p-8"
+        className="card grid-texture flex flex-col items-start gap-3 p-8 text-ink"
       >
         <p className="mono-label text-lime-deep">[ received ]</p>
         <h3 className="text-2xl">Thanks — your audit request is in.</h3>
@@ -53,7 +53,7 @@ export function LeadForm() {
   }
 
   return (
-    <form onSubmit={onSubmit} noValidate className="card p-6 sm:p-8">
+    <form onSubmit={onSubmit} noValidate className="card p-6 text-ink sm:p-8">
       <div className="grid gap-5 sm:grid-cols-2">
         {fields.map((f) => (
           <div
@@ -71,7 +71,7 @@ export function LeadForm() {
               required={f.required}
               autoComplete={"autoComplete" in f ? f.autoComplete : undefined}
               placeholder={"placeholder" in f ? f.placeholder : undefined}
-              className="w-full rounded-lg border border-line bg-paper px-3.5 py-2.5 text-sm outline-none transition-colors focus:border-pine"
+              className="w-full rounded-lg border border-line bg-paper px-3.5 py-2.5 text-sm text-ink placeholder:text-muted outline-none transition-colors focus:border-pine"
             />
           </div>
         ))}
@@ -83,7 +83,7 @@ export function LeadForm() {
             id="message"
             name="message"
             rows={3}
-            className="w-full rounded-lg border border-line bg-paper px-3.5 py-2.5 text-sm outline-none transition-colors focus:border-pine"
+            className="w-full rounded-lg border border-line bg-paper px-3.5 py-2.5 text-sm text-ink placeholder:text-muted outline-none transition-colors focus:border-pine"
           />
         </div>
       </div>

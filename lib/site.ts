@@ -12,7 +12,7 @@ export const site = {
   // The free audit is the primary action everywhere.
   primaryCta: { label: "Book a free AI search audit", href: "#audit-cta" },
   secondaryCta: { label: "See what we optimize", href: "#solution" },
-  email: "aethelo@sparkcreativesinc.org",
+  email: "info@queryclear.com",
   answerEngines: [
     "ChatGPT",
     "Claude",
