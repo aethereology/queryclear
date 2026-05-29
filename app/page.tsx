@@ -100,15 +100,16 @@ export default function Home() {
                 className="fade-up mt-6 text-balance text-5xl leading-[1.02] sm:text-6xl"
                 style={{ animationDelay: "0.08s" }}
               >
-                Get found when people ask AI.
+                Your customers ask AI. We make sure it knows you.
               </h1>
               <p
                 className="fade-up mt-6 max-w-xl text-lg leading-relaxed text-muted"
                 style={{ animationDelay: "0.16s" }}
               >
-                We make your website easier for search engines and AI answer
-                engines — ChatGPT, Claude, Perplexity, Gemini, Google AI
-                Overviews — to crawl, understand, trust, and recommend.
+                When someone asks ChatGPT, Claude, or Google&apos;s AI for a
+                business like yours, the answer is assembled from what machines
+                can read about you. We make your site clear, structured, and
+                trustworthy — so you&apos;re the one they recommend.
               </p>
               <div
                 className="fade-up mt-9 flex flex-wrap items-center gap-3"
