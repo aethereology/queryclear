@@ -36,11 +36,15 @@ Update the "Current state" line whenever it changes.
 
 ## Current state (update this line)
 
-2026-05-29 — Phase 1 MVP BUILT on branch `phase1-mvp`. Next.js 16 + React 19 +
-Tailwind v4. Landing page (hero w/ human/machine-view motif, problem, solution,
-what-we-build, how-it-works, deliverables, FAQ, lead-form CTA), sample audit page
-(/audit, Brightleaf demo), GEO infra (llms.txt, sitemap.xml, robots.txt, JSON-LD
-Organization/WebSite/Service/FAQPage), accessible lead form → /api/lead (logs
-only; delivery not yet wired). `npm run build` green, 0 console errors, verified
-in browser. Design: Fraunces + IBM Plex Sans/Mono, paper/pine/lime palette.
-NOT yet done: lead delivery (Resend/Formspree), deploy to Vercel, merge to main.
+2026-05-29 — Phase 1 MVP BUILT + merged to `main` LOCALLY (4 commits ahead of
+origin/main). Next.js 16 + React 19 + Tailwind v4. Landing page (hero H1 "Your
+customers ask AI. We make sure it knows you." + human/machine-view motif, problem,
+solution, what-we-build, how-it-works, deliverables, FAQ, lead-form CTA), sample
+audit page (/audit, Brightleaf demo), GEO infra (llms.txt, sitemap.xml, robots.txt,
+JSON-LD Organization/WebSite/Service/FAQPage). Lead form → /api/lead now emails via
+Resend when RESEND_API_KEY set (always logs; see .env.example). Build green, 0
+console errors, verified in browser. Design: Fraunces + IBM Plex, paper/pine/lime.
+
+BLOCKED: `git push` denied (403) — the fine-grained GitHub PAT lacks Contents:write
+on aethereology/queryclear. Founder must add that scope, then push the 4 commits.
+NOT yet done: push, deploy to Vercel, connect RESEND_API_KEY + domain, connect queryclear.com.
