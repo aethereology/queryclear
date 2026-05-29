@@ -197,7 +197,7 @@ export default function Home() {
               </ul>
             </div>
             <div>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <div className="card p-5">
                   <p className="mono-label mb-2">Human view</p>
                   <p className="font-display text-2xl leading-tight">

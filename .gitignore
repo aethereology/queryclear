@@ -34,10 +34,9 @@ Thumbs.db
 # TypeScript
 *.tsbuildinfo
 
-# Playwright / local verification artifacts
+# Playwright / local verification artifacts (root-level screenshots)
 .playwright-mcp/
-home-full.png
-audit-full.png
+/*.png
 
 # Reference docs we don't track in git (kept locally)
 queryclear.com_AI Search Optimized Website Service Business Plan.pdf
