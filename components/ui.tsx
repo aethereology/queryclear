@@ -1,6 +1,22 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 
+// queryclear brand mark: a ring with a neon-lime dot at its edge.
+// Ring uses currentColor so it adapts to context (ink on paper, paper on pine).
+export function Mark({ className = "" }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 20 20"
+      fill="none"
+      className={className}
+      aria-hidden="true"
+    >
+      <circle cx="10" cy="10" r="6" stroke="currentColor" strokeWidth="1.5" />
+      <circle cx="16" cy="10" r="2" fill="#b6f03c" />
+    </svg>
+  );
+}
+
 export function Container({
   children,
   className = "",

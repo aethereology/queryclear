@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Container, Cta } from "@/components/ui";
+import { Container, Cta, Mark } from "@/components/ui";
 import { site } from "@/lib/site";
 
 const links = [
@@ -19,11 +19,11 @@ export function Header() {
       <Container className="flex h-16 items-center justify-between">
         <Link
           href="/"
-          className="flex items-baseline gap-1.5"
+          className="flex items-center gap-2"
           onClick={() => setOpen(false)}
         >
           <span className="font-display text-2xl tracking-tight">queryclear</span>
-          <span className="h-1.5 w-1.5 translate-y-[-2px] rounded-full bg-lime" />
+          <Mark className="h-5 w-5 text-ink" />
         </Link>
 
         {/* Desktop nav */}
