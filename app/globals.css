@@ -1,0 +1,137 @@
+@import "tailwindcss";
+
+/* ──────────────────────────────────────────────────────────
+   queryclear design system — "Human view / Machine view"
+   Warm editorial paper, deep pine ink, one sharp signal-lime.
+   Fraunces (display) · IBM Plex Sans (body) · IBM Plex Mono (machine)
+   ────────────────────────────────────────────────────────── */
+
+@theme {
+  --color-paper: #f7f4ee;
+  --color-paper-2: #efeae0;
+  --color-ink: #17180f;
+  --color-muted: #5b5a4d;
+  --color-pine: #12352a;
+  --color-pine-2: #0c2a21;
+  --color-lime: #b6f03c;
+  --color-lime-deep: #8fcf1f;
+  --color-line: #1718091a;
+
+  --font-display: var(--font-fraunces), Georgia, serif;
+  --font-sans: var(--font-plex-sans), system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+
+  --radius-card: 14px;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-feature-settings: "ss01", "cv01";
+    -webkit-font-smoothing: antialiased;
+  }
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 540;
+    letter-spacing: -0.02em;
+    line-height: 1.02;
+  }
+  ::selection {
+    background: var(--color-lime);
+    color: var(--color-pine-2);
+  }
+  /* visible focus for a11y */
+  :where(a, button, input, textarea, select, [tabindex]):focus-visible {
+    outline: 2px solid var(--color-pine);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+}
+
+@layer components {
+  /* monospace section tag, e.g. [ 01 ] PROBLEM */
+  .mono-label {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+
+  /* the "machine view" panel — what an AI reads */
+  .machine-panel {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    line-height: 1.6;
+    background: var(--color-pine-2);
+    color: #cfe8c4;
+    border-radius: var(--radius-card);
+    border: 1px solid #ffffff14;
+    padding: 1.1rem 1.2rem;
+    overflow-x: auto;
+  }
+  .machine-panel .k {
+    color: var(--color-lime);
+  }
+  .machine-panel .s {
+    color: #e9d9a6;
+  }
+
+  /* hairline-ruled card */
+  .card {
+    background: var(--color-paper);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-card);
+    transition:
+      transform 0.25s ease,
+      box-shadow 0.25s ease,
+      border-color 0.25s ease;
+  }
+  .card:hover {
+    transform: translateY(-3px);
+    border-color: #17180933;
+    box-shadow: 0 14px 30px -18px #17180955;
+  }
+
+  /* dotted-grid atmosphere */
+  .grid-texture {
+    background-image: radial-gradient(var(--color-line) 1px, transparent 1px);
+    background-size: 22px 22px;
+  }
+}
+
+/* staggered page-load reveal (CSS-only, perf-safe) */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.fade-up {
+  opacity: 0;
+  animation: fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .fade-up {
+    animation: none;
+    opacity: 1;
+  }
+  .card {
+    transition: none;
+  }
+}

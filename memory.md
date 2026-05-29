@@ -36,5 +36,11 @@ Update the "Current state" line whenever it changes.
 
 ## Current state (update this line)
 
-2026-05-29 — Foundation + docs done. Next: decide stack/palette, then build the
-landing page + sample audit (Phase 1 MVP). Nothing built yet.
+2026-05-29 — Phase 1 MVP BUILT on branch `phase1-mvp`. Next.js 16 + React 19 +
+Tailwind v4. Landing page (hero w/ human/machine-view motif, problem, solution,
+what-we-build, how-it-works, deliverables, FAQ, lead-form CTA), sample audit page
+(/audit, Brightleaf demo), GEO infra (llms.txt, sitemap.xml, robots.txt, JSON-LD
+Organization/WebSite/Service/FAQPage), accessible lead form → /api/lead (logs
+only; delivery not yet wired). `npm run build` green, 0 console errors, verified
+in browser. Design: Fraunces + IBM Plex Sans/Mono, paper/pine/lime palette.
+NOT yet done: lead delivery (Resend/Formspree), deploy to Vercel, merge to main.

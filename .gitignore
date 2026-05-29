@@ -34,5 +34,10 @@ Thumbs.db
 # TypeScript
 *.tsbuildinfo
 
+# Playwright / local verification artifacts
+.playwright-mcp/
+home-full.png
+audit-full.png
+
 # Reference docs we don't track in git (kept locally)
 queryclear.com_AI Search Optimized Website Service Business Plan.pdf

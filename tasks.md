@@ -9,18 +9,18 @@ Living board. Move items between sections. Keep "Now" short (1–3 items).
 - Project docs scaffolded (2026-05-29)
 
 ## 🔄 Now
-- ✅ Stack locked: Next.js + Tailwind + shadcn/ui on Vercel (2026-05-29)
-- Decide queryclear color palette / visual identity
-- Draft hero copy (headline + subheadline + CTAs)
-- Scaffold the Next.js app + base GEO infra (llms.txt, sitemap, robots, schema)
+- ✅ Stack locked: Next.js + Tailwind on Vercel (2026-05-29)
+- ✅ Visual identity: Fraunces + IBM Plex, paper/pine/lime, "human/machine view" motif
+- ✅ Scaffold + base GEO infra (llms.txt, sitemap, robots, JSON-LD) — done
+- ✅ Landing page + accessible lead form + sample audit page — done, build green
+- Wire lead delivery (Resend → aethelo@sparkcreativesinc.org, or Formspree)
+- Deploy to Vercel at queryclear.com
+- Merge phase1-mvp → main
 
 ## ⏭️ Next
-- Build landing page (sections per UI_direction.md)
-- Build accessible lead-capture form (fields per product_spec.md)
-- Implement our-own-site GEO: JSON-LD, llms.txt, sitemap, robots, OG, semantic HTML
-- Build the sample GEO audit against seed_data.md demo business
-- Wire AI-visibility prompt run (prompts.md) for the sample audit
-- Deploy to Vercel at queryclear.com
+- Review/refine hero copy with founder
+- Wire AI-visibility prompt run (prompts.md) for real client audits
+- Build the real audit report generator (reusable)
 
 ## 🗓️ Later
 - Reusable audit template + report generator
