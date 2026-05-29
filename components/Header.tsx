@@ -22,8 +22,8 @@ export function Header() {
           className="flex items-center gap-2"
           onClick={() => setOpen(false)}
         >
-          <span className="font-display text-2xl tracking-tight">queryclear</span>
           <Mark className="h-5 w-5 text-ink" />
+          <span className="font-display text-2xl tracking-tight">queryclear</span>
         </Link>
 
         {/* Desktop nav */}

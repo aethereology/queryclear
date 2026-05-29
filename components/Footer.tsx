@@ -9,8 +9,8 @@ export function Footer() {
         <div className="flex flex-col gap-10 md:flex-row md:items-start md:justify-between">
           <div className="max-w-sm">
             <div className="flex items-center gap-2">
-              <span className="font-display text-2xl">queryclear</span>
               <Mark className="h-5 w-5 text-paper" />
+              <span className="font-display text-2xl">queryclear</span>
             </div>
             <p className="mt-3 text-sm leading-relaxed text-paper/70">
               {site.description}
