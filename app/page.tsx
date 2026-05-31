@@ -124,7 +124,7 @@ export default function Home() {
 
             {/* the signature: what the machine reads */}
             <div className="fade-up" style={{ animationDelay: "0.32s" }}>
-              <p className="mono-label mb-2">// what the AI reads about you</p>
+              <p className="mono-label mb-2">{"// what the AI reads about you"}</p>
               <div className="machine-panel">
                 <div>
                   <span className="text-paper/40"># llms.txt</span>

@@ -17,7 +17,7 @@
   --color-lime-deep: #8fcf1f;
   --color-line: #1718091a;
 
-  --font-display: var(--font-fraunces), Georgia, serif;
+  --font-display: var(--font-bricolage), "Segoe UI", system-ui, sans-serif;
   --font-sans: var(--font-plex-sans), system-ui, sans-serif;
   --font-mono: var(--font-plex-mono), ui-monospace, monospace;
 
