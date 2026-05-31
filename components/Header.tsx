@@ -42,6 +42,7 @@ export function Header() {
         <div className="flex items-center gap-2">
           <Cta
             href={`/${site.primaryCta.href}`}
+            showArrow={false}
             className="px-4 py-2 text-xs sm:px-5 sm:py-2.5 sm:text-sm"
           >
             Free audit

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 
 export type AccordionItem = { q: string; a: string };
 
@@ -40,21 +40,18 @@ export function Accordion({
                 </motion.span>
               </button>
             </h3>
-            <AnimatePresence initial={false}>
-              {isOpen && (
-                <motion.div
-                  initial={reduce ? false : { height: 0, opacity: 0 }}
-                  animate={{ height: "auto", opacity: 1 }}
-                  exit={reduce ? { opacity: 0 } : { height: 0, opacity: 0 }}
-                  transition={{ duration: reduce ? 0 : 0.3, ease: [0.22, 1, 0.36, 1] }}
-                  className="overflow-hidden"
-                >
-                  <p className="px-6 pb-6 text-sm leading-relaxed text-muted">
-                    {item.a}
-                  </p>
-                </motion.div>
-              )}
-            </AnimatePresence>
+            {/* Answer stays in the DOM always (crawlable); height animates. */}
+            <motion.div
+              initial={false}
+              animate={{ height: isOpen ? "auto" : 0, opacity: isOpen ? 1 : 0 }}
+              transition={{ duration: reduce ? 0 : 0.3, ease: [0.22, 1, 0.36, 1] }}
+              className="overflow-hidden"
+              aria-hidden={!isOpen}
+            >
+              <p className="px-6 pb-6 text-sm leading-relaxed text-muted">
+                {item.a}
+              </p>
+            </motion.div>
           </div>
         );
       })}

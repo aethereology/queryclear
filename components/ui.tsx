@@ -51,6 +51,8 @@ type CtaProps = {
   children: ReactNode;
   variant?: "primary" | "ghost";
   className?: string;
+  /** Show the trailing arrow (primary only). Off for compact nav buttons. */
+  showArrow?: boolean;
 };
 
 export function Cta({
@@ -58,6 +60,7 @@ export function Cta({
   children,
   variant = "primary",
   className = "",
+  showArrow = true,
 }: CtaProps) {
   const base =
     "group inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-medium transition-colors duration-200 active:scale-[0.97]";
@@ -68,7 +71,7 @@ export function Cta({
   return (
     <Link href={href} className={`${base} ${styles} ${className}`}>
       {children}
-      {variant === "primary" && (
+      {variant === "primary" && showArrow && (
         <span
           aria-hidden="true"
           className="transition-transform duration-200 ease-out group-hover:translate-x-1"
