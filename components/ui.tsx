@@ -8,11 +8,11 @@ export function Mark({ className = "" }: { className?: string }) {
     <svg
       viewBox="0 0 20 20"
       fill="none"
-      className={className}
+      className={`mark-orbit overflow-visible ${className}`}
       aria-hidden="true"
     >
       <circle cx="10" cy="10" r="6" stroke="currentColor" strokeWidth="1.5" />
-      <circle cx="16" cy="10" r="2" fill="#b6f03c" />
+      <circle className="orbit-dot" cx="16" cy="10" r="2" fill="#b6f03c" />
     </svg>
   );
 }
@@ -60,7 +60,7 @@ export function Cta({
   className = "",
 }: CtaProps) {
   const base =
-    "inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-medium transition-colors duration-200";
+    "group inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-medium transition-colors duration-200 active:scale-[0.97]";
   const styles =
     variant === "primary"
       ? "bg-lime text-pine-2 hover:bg-lime-deep"
@@ -68,6 +68,14 @@ export function Cta({
   return (
     <Link href={href} className={`${base} ${styles} ${className}`}>
       {children}
+      {variant === "primary" && (
+        <span
+          aria-hidden="true"
+          className="transition-transform duration-200 ease-out group-hover:translate-x-1"
+        >
+          →
+        </span>
+      )}
     </Link>
   );
 }
