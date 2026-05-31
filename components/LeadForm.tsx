@@ -71,7 +71,7 @@ export function LeadForm() {
               required={f.required}
               autoComplete={"autoComplete" in f ? f.autoComplete : undefined}
               placeholder={"placeholder" in f ? f.placeholder : undefined}
-              className="w-full rounded-lg border border-line bg-paper px-3.5 py-2.5 text-sm text-ink placeholder:text-muted outline-none transition-colors focus:border-pine"
+              className="input-halo w-full rounded-lg border border-line bg-paper px-3.5 py-2.5 text-sm text-ink placeholder:text-muted outline-none transition-colors"
             />
           </div>
         ))}
@@ -83,7 +83,7 @@ export function LeadForm() {
             id="message"
             name="message"
             rows={3}
-            className="w-full rounded-lg border border-line bg-paper px-3.5 py-2.5 text-sm text-ink placeholder:text-muted outline-none transition-colors focus:border-pine"
+            className="input-halo w-full rounded-lg border border-line bg-paper px-3.5 py-2.5 text-sm text-ink placeholder:text-muted outline-none transition-colors"
           />
         </div>
       </div>
@@ -97,9 +97,19 @@ export function LeadForm() {
       <button
         type="submit"
         disabled={status === "submitting"}
-        className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-lime px-6 py-3.5 text-sm font-medium text-pine-2 transition-colors hover:bg-lime-deep disabled:opacity-60 sm:w-auto"
+        className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-lime px-6 py-3.5 text-sm font-medium text-pine-2 transition-colors hover:bg-lime-deep disabled:opacity-70 sm:w-auto"
       >
-        {status === "submitting" ? "Sending…" : "Book my free AI search audit"}
+        {status === "submitting" ? (
+          <>
+            <span
+              aria-hidden="true"
+              className="h-4 w-4 animate-spin rounded-full border-2 border-pine-2/40 border-t-pine-2"
+            />
+            Sending…
+          </>
+        ) : (
+          "Book my free AI search audit"
+        )}
       </button>
       <p className="mt-3 text-xs text-muted">
         Free, no obligation. We reply with a real audit, not a sales bot.

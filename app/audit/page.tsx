@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Container, MonoLabel, Cta } from "@/components/ui";
+import { Reveal, Stagger, StaggerItem } from "@/components/motion";
+import { CountUp } from "@/components/CountUp";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -43,7 +45,9 @@ function ScoreRing({ score }: { score: number }) {
       aria-label={`Readiness score ${score} out of 100`}
     >
       <div className="grid h-[88px] w-[88px] place-items-center rounded-full bg-paper">
-        <span className="font-display text-3xl leading-none">{score}</span>
+        <span className="font-display text-3xl leading-none">
+          <CountUp to={score} />
+        </span>
         <span className="mono-label !text-[0.6rem]">/ 100</span>
       </div>
     </div>
@@ -77,7 +81,7 @@ export default function AuditPage() {
               <ScoreRing score={34} />
               <div className="text-sm">
                 <p className="font-medium">Current readiness</p>
-                <p className="text-muted">Estimated after fixes: <span className="font-medium text-ink">82</span></p>
+                <p className="text-muted">Estimated after fixes: <span className="font-medium text-ink"><CountUp to={82} /></span></p>
               </div>
             </div>
           </Container>
@@ -114,9 +118,9 @@ export default function AuditPage() {
           <Container>
             <MonoLabel index="02">Findings &amp; fixes</MonoLabel>
             <h2 className="mt-3 text-3xl sm:text-4xl">Prioritized, biggest impact first.</h2>
-            <div className="mt-8 grid gap-4">
+            <Stagger className="mt-8 grid gap-4">
               {findings.map((f) => (
-                <div key={f.t} className="card grid gap-4 p-6 sm:grid-cols-[auto_1fr] sm:items-start">
+                <StaggerItem key={f.t} className="card grid gap-4 p-6 sm:grid-cols-[auto_1fr] sm:items-start">
                   <span className={`inline-flex h-fit w-fit rounded-full border px-3 py-1 text-xs font-medium ${sevColor[f.sev]}`}>
                     {f.sev}
                   </span>
@@ -132,9 +136,9 @@ export default function AuditPage() {
                       <span className="font-medium text-ink">Fix: </span>{f.fix}
                     </p>
                   </div>
-                </div>
+                </StaggerItem>
               ))}
-            </div>
+            </Stagger>
           </Container>
         </section>
 
@@ -144,7 +148,7 @@ export default function AuditPage() {
             <MonoLabel index="03">Before → after</MonoLabel>
             <h2 className="mt-3 text-3xl sm:text-4xl">What the machine reads.</h2>
             <div className="mt-8 grid gap-4 md:grid-cols-2">
-              <div>
+              <Reveal>
                 <p className="mono-label mb-2">Before — nothing to cite</p>
                 <div className="machine-panel !text-paper/50">
                   <div># llms.txt → 404</div>
@@ -152,8 +156,8 @@ export default function AuditPage() {
                   <div># services → unclear</div>
                   <div className="mt-2 text-red-300">✗ AI can&apos;t confidently describe you</div>
                 </div>
-              </div>
-              <div>
+              </Reveal>
+              <Reveal delay={0.1}>
                 <p className="mono-label mb-2">After — clear &amp; structured</p>
                 <div className="machine-panel">
                   <div><span className="k">Business</span>: <span className="s">Brightleaf Plumbing Co.</span></div>
@@ -162,7 +166,7 @@ export default function AuditPage() {
                   <div><span className="k">@type</span>: <span className="s">LocalBusiness</span></div>
                   <div className="mt-2 text-lime">✓ clear · structured · citable</div>
                 </div>
-              </div>
+              </Reveal>
             </div>
           </Container>
         </section>
