@@ -30,6 +30,8 @@ const HONEYPOT_FIELD: HoneypotField = "company";
 const EMAIL_TIMEOUT_MS = 8_000;
 const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
 const RATE_LIMIT_MAX = 5;
+const WEBSITE_URL_ERROR =
+  "Please add a valid website URL. Valid websites must start with https://.";
 
 const leadFields = ["name", "email", "website", "business", "service", "city", "message"] as const;
 const fieldLimits: Record<LeadField | HoneypotField, number> = {
@@ -149,11 +151,11 @@ function validateLead(body: unknown): ValidationResult {
   try {
     websiteUrl = new URL(website);
   } catch {
-    return { ok: false, status: 422, error: "Please add a valid website URL." };
+    return { ok: false, status: 422, error: WEBSITE_URL_ERROR };
   }
 
-  if (websiteUrl.protocol !== "http:" && websiteUrl.protocol !== "https:") {
-    return { ok: false, status: 422, error: "Please add a valid website URL." };
+  if (websiteUrl.protocol !== "https:") {
+    return { ok: false, status: 422, error: WEBSITE_URL_ERROR };
   }
 
   return {

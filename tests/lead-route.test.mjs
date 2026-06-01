@@ -143,9 +143,13 @@ test("invalid email and website values are rejected", async () => {
 
   const badEmail = await route.POST(makeRequest(baseLead({ email: "not-an-email" })));
   const badWebsite = await route.POST(makeRequest(baseLead({ website: "javascript:alert(1)" })));
+  const insecureWebsite = await route.POST(makeRequest(baseLead({ website: "http://example.com" })));
 
   assert.equal(badEmail.status, 422);
   assert.equal(badWebsite.status, 422);
+  assert.equal(insecureWebsite.status, 422);
+  assert.match((await badWebsite.json()).error, /start with https:\/\//i);
+  assert.match((await insecureWebsite.json()).error, /start with https:\/\//i);
 });
 
 test("overlong fields are rejected", async () => {

@@ -7,7 +7,15 @@ type Status = "idle" | "submitting" | "success" | "error";
 const fields = [
   { name: "name", label: "Your name", type: "text", required: true, autoComplete: "name" },
   { name: "email", label: "Email", type: "email", required: true, autoComplete: "email" },
-  { name: "website", label: "Website URL", type: "url", required: true, placeholder: "https://", autoComplete: "url" },
+  {
+    name: "website",
+    label: "Website URL",
+    type: "url",
+    required: true,
+    placeholder: "https://",
+    defaultValue: "https://",
+    autoComplete: "url",
+  },
   { name: "business", label: "Business name", type: "text", required: true, autoComplete: "organization" },
   { name: "service", label: "Main service", type: "text", required: false, placeholder: "e.g. emergency plumbing" },
   { name: "city", label: "City / market", type: "text", required: false, autoComplete: "address-level2" },
@@ -82,6 +90,7 @@ export function LeadForm() {
               required={f.required}
               autoComplete={"autoComplete" in f ? f.autoComplete : undefined}
               placeholder={"placeholder" in f ? f.placeholder : undefined}
+              defaultValue={"defaultValue" in f ? f.defaultValue : undefined}
               className="input-halo w-full rounded-lg border border-line bg-paper px-3.5 py-2.5 text-sm text-ink placeholder:text-muted outline-none transition-colors"
             />
           </div>
