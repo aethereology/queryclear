@@ -94,6 +94,20 @@ function loadRoute({ sendImpl } = {}) {
       };
     }
 
+    if (id === "dns") {
+      return {
+        promises: {
+          resolve4: async (hostname) => {
+            const validDomains = ["example.com", "queryclear.com"];
+            if (validDomains.includes(hostname)) {
+              return ["1.2.3.4"];
+            }
+            throw new Error("ENOTFOUND");
+          },
+        },
+      };
+    }
+
     throw new Error(`Unexpected import: ${id}`);
   };
 
@@ -150,6 +164,16 @@ test("invalid email and website values are rejected", async () => {
   assert.equal(insecureWebsite.status, 422);
   assert.match((await badWebsite.json()).error, /start with https:\/\//i);
   assert.match((await insecureWebsite.json()).error, /start with https:\/\//i);
+});
+
+test("non-existent domains are rejected", async () => {
+  clearLeadEnv();
+  const { route } = loadRoute();
+
+  const fakeWebsite = await route.POST(makeRequest(baseLead({ website: "https://w.wer.wer.com" })));
+
+  assert.equal(fakeWebsite.status, 422);
+  assert.match((await fakeWebsite.json()).error, /valid.*existing domain/i);
 });
 
 test("overlong fields are rejected", async () => {

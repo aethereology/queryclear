@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
+import { promises as dns } from "dns";
 import { site } from "@/lib/site";
 
 // Lead capture endpoint.
@@ -233,6 +234,20 @@ async function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
   }
 }
 
+async function validateWebsiteDomain(
+  websiteUrl: URL,
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  try {
+    await dns.resolve4(websiteUrl.hostname);
+    return { ok: true };
+  } catch {
+    return {
+      ok: false,
+      error: "Please enter a website with a valid, existing domain.",
+    };
+  }
+}
+
 function teamHtml(lead: Lead) {
   const rows = leadFields
     .filter((field) => lead[field])
@@ -378,6 +393,11 @@ export async function POST(req: Request) {
   const validation = validateLead(body);
   if (!validation.ok) {
     return NextResponse.json({ error: validation.error }, { status: validation.status });
+  }
+
+  const domainValidation = await validateWebsiteDomain(validation.websiteUrl);
+  if (!domainValidation.ok) {
+    return NextResponse.json({ error: domainValidation.error }, { status: 422 });
   }
 
   // Always record an accepted lead with privacy-safe metadata, regardless of delivery state.
