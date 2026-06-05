@@ -45,13 +45,19 @@ We sell *readiness*, not outcomes. **Never** promise rankings or AI citations.
     `app/llms-txt-for-businesses`
   - `app/not-found.tsx` — custom 404 (T13, 2026-06-04; full chrome, returns HTTP 404)
   - `app/opengraph-image.tsx` — sitewide social card (T13, 2026-06-04; next/og 1200×630)
+  - `app/stack-kit/page.tsx` + `app/stack-kit/success/page.tsx` — $97 DIY-kit
+    offer-test (T14, 2026-06-05; Stripe refundable pre-order, NOT yet deployed)
+  - `app/api/checkout/route.ts` — Stripe Checkout Session for the pre-order
+  - `app/api/stripe/webhook/route.ts` — verify sig → Resend order notify to info@
   - `app/api/lead/route.ts` — lead capture → Resend email (info@queryclear.com)
   - `app/llms.txt/route.ts`, `app/robots.ts`, `app/sitemap.ts` — GEO infra
 - **Lead flow VERIFIED working** end-to-end (form → /api/lead → Resend → inbox).
 - **Canonical now = www in code** (`site.url = https://www.queryclear.com`, T0 done).
-- **BUILD/LINT/TEST VERIFIED ON WINDOWS (2026-06-04):** `npm run build` → 21 routes
-  compile + TS passes; `npm run lint` clean; `npm test` 9/9. The prior "couldn't run
-  next build in sandbox" blocker is CLEARED. Code is green and deploy-ready.
+- **BUILD/LINT/TEST VERIFIED ON WINDOWS (2026-06-05):** `npm run build` → 25 routes
+  compile + TS passes; `npm run lint` clean; `npm test` 18/18 (lead 9 + checkout 4 +
+  webhook 5). `stripe` SDK added. Code is green. NOTE: `npm test` now lists files
+  explicitly (`node --test tests/lead-route... tests/checkout-route... tests/stripe-webhook...`)
+  because `node --test tests/` errors on this Node (22.14).
 - **What does NOT exist yet:** vertical pages (Phase 6), productization (Phase 5).
   T13 partially done (custom 404 ✅, OG image ✅); STILL pending = Search Console +
   Bing verification, deploy of the 12 new pages, formal Lighthouse/axe ≥90 — all

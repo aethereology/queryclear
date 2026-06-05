@@ -30,6 +30,7 @@ guaranteed AI citations — we deliver technical readiness, clarity, and structu
 - AI-Search-Ready Websites: ${site.url}/ai-search-ready-website
 - Schema for AI Search: ${site.url}/schema-for-ai-search
 - llms.txt for Businesses: ${site.url}/llms-txt-for-businesses
+- The Local AI Visibility Stack (DIY kit, $97 pre-order): ${site.url}/stack-kit
 - About: ${site.url}/about
 - Contact / request a free audit: ${site.url}/contact
 - Privacy Policy: ${site.url}/privacy

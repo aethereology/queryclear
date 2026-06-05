@@ -36,6 +36,19 @@ Update the "Current state" line whenever it changes.
 
 ## Current state (update this line)
 
+2026-06-05 (latest) — T14 /stack-kit BUILT + VERIFIED IN CODE (not yet deployed).
+Pages `/stack-kit` + `/stack-kit/success`; `/api/checkout` (Stripe Checkout Session)
++ `/api/stripe/webhook` (sig verify → Resend order email to info@); `PreorderButton`;
+`stripe` SDK added; `lib/site.ts` gained `stackKit` config. build 25 routes clean,
+lint clean, tests 18/18. Checkout endpoint verified end-to-end → real
+checkout.stripe.com session using founder's keys in .env.local. NOT pushed/deployed
+yet (awaiting founder go on a live payment surface). To go live: commit/push +
+`vercel --prod`, add STRIPE_SECRET_KEY/PUBLISHABLE_KEY/WEBHOOK_SECRET to Vercel prod
+env, and register the prod webhook endpoint (/api/stripe/webhook) in the Stripe
+Dashboard so its signing secret matches STRIPE_WEBHOOK_SECRET. Watch: JSX trims a
+text node's leading space right after a {expr}; fixed by putting whole phrases in one
+template literal (bit us on "30 days of purchase").
+
 2026-06-05 (later) — BUILDING T14 /stack-kit offer test (Phase 5 demand test).
 GSC + Bing verified + sitemap submitted (founder) → T13 core complete. Founder chose
 the **Stripe refundable $97 pre-order** capture for "The Local AI Visibility Stack"

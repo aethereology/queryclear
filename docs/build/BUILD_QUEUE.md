@@ -159,6 +159,13 @@ days or auto-refund. `POST /api/checkout` (create session) + `POST /api/stripe/w
 **Env:** STRIPE_SECRET_KEY / STRIPE_PUBLISHABLE_KEY / STRIPE_WEBHOOK_SECRET (in
 `.env.local`; must also be added to Vercel prod + webhook registered in Stripe Dashboard).
 **Accept:** can drive traffic to it and measure real pre-orders before any product is built.
+**Built + verified 2026-06-05:** `/stack-kit` + `/stack-kit/success` pages, `/api/checkout`
+(Stripe Checkout Session) + `/api/stripe/webhook` (sig verify → Resend order notify),
+`PreorderButton`. In sitemap+llms.txt. build clean (25 routes) · lint clean · tests 18/18
+(4 checkout + 5 webhook added). Checkout endpoint verified end-to-end → real
+checkout.stripe.com session with founder's keys. **Pending to go live:** commit/push +
+`vercel --prod`, add STRIPE_* to Vercel prod env, register webhook endpoint
+(`/api/stripe/webhook`) in Stripe Dashboard so its signing secret matches.
 
 ## T15–T18+ — Later (see roadmap.md) 🔒
 Scorecard tool · paid audit report template · DIY kit contents (only if T14 validates) ·
