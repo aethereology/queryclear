@@ -120,7 +120,7 @@ recommendation · CTA.
 **Accept:** explicitly states llms.txt is optional and that good crawlable content
 matters more; includes a sample format. (Don't make this a signature offering.)
 
-## T13 — Technical hardening (recurring) ▣ in progress
+## T13 — Technical hardening (recurring) ✅ core complete 2026-06-05 (recurring checklist stays open for new pages)
 **Phase 4, runs in parallel.** Standing checklist, not one-shot:
 per-page metadata + canonical tags · BreadcrumbList/WebPage schema everywhere ·
 OG image · custom 404 (`app/not-found.tsx`) · fix broken links · Google Search
@@ -138,17 +138,27 @@ Progress 2026-06-04:
 - ✅ **OG image** — `app/opengraph-image.tsx` (`next/og`, 1200×630, on-brand pine/
   paper/lime, brand mark + tagline). Auto-wired into OpenGraph + Twitter sitewide;
   prerendered static at build. Visually verified.
-- ☐ **Still pending (need founder accounts/creds):** Google Search Console + Bing
-  Webmaster verification; deploy of all 12 pages to Vercel; submit updated sitemap;
-  formal axe/Lighthouse ≥90 pass.
+- ✅ **Deployed** 2026-06-05: committed 1d732f2 → pushed main → `vercel --prod` →
+  live + aliased to www.queryclear.com. All routes verified 200; unknown route → 404.
+- ✅ **Google Search Console + Bing Webmaster verified, sitemap submitted** (founder,
+  2026-06-05).
+- ☐ **Still open (recurring):** formal axe/Lighthouse ≥90 pass; keep sitemap +
+  llms.txt in sync as new pages ship.
 
-## T14 — /stack-kit offer test ☐ (gate closed → deferred to Phase 5)
+## T14 — /stack-kit offer test ▣ in progress (design approved 2026-06-05)
 **Phase 5.** Demand test for "The Local AI Visibility Stack" ($97). Landing page +
-waitlist/checkout capture — **built before the product exists** to measure intent.
+**Stripe refundable pre-order** — built before the product exists to measure intent.
 Position as a funnel into the paid audit/build, not the whole business. Decision
 (GATE-MODEL): audit-first stays primary; do NOT build the actual kit until this test
-shows real demand. Don't start until Phases 1–3 ship.
-**Accept:** can drive traffic to it and measure clicks/sign-ups before any product is built.
+shows real demand.
+**Design:** `docs/superpowers/specs/2026-06-05-stack-kit-offer-test-design.md`.
+**Capture (founder-chosen):** Stripe Checkout pre-order $97, **refundable**; ship ≤30
+days or auto-refund. `POST /api/checkout` (create session) + `POST /api/stripe/webhook`
+(notify info@ via Resend on `checkout.session.completed`) + `/stack-kit/success`.
+**Schema:** WebPage + Product(Offer) + FAQPage + BreadcrumbList. Add to sitemap+llms.txt.
+**Env:** STRIPE_SECRET_KEY / STRIPE_PUBLISHABLE_KEY / STRIPE_WEBHOOK_SECRET (in
+`.env.local`; must also be added to Vercel prod + webhook registered in Stripe Dashboard).
+**Accept:** can drive traffic to it and measure real pre-orders before any product is built.
 
 ## T15–T18+ — Later (see roadmap.md) 🔒
 Scorecard tool · paid audit report template · DIY kit contents (only if T14 validates) ·

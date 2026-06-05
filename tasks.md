@@ -33,11 +33,19 @@ Short living board. Strategy lives in `roadmap.md`; the executable cards live in
 - T13: custom 404 (`app/not-found.tsx`) + OG image (`app/opengraph-image.tsx`)
   built & visually verified; 404 returns real HTTP 404.
 
-## 🔄 Now
-- **Deploy** all pages to Vercel (founder: needs `vercel` CLI install or git push;
-  team `sparkcreativesinc`). Code is green and ready.
-- T13 remaining (need founder accounts): Google Search Console + Bing Webmaster
-  verification; submit updated sitemap; formal Lighthouse/axe ≥90 pass.
+## ✅ Shipped to production (2026-06-05)
+- All 12 routes + custom 404 + OG image LIVE at www.queryclear.com (commit 1d732f2,
+  `vercel --prod`). Routes verified 200; unknown route → 404.
+- GSC + Bing Webmaster verified; sitemap submitted (founder).
+
+## 🔄 Now — building T14 /stack-kit offer test (Phase 5 demand test)
+- Founder chose: **Stripe refundable $97 pre-order** for "The Local AI Visibility
+  Stack." Design approved + spec written
+  (`docs/superpowers/specs/2026-06-05-stack-kit-offer-test-design.md`).
+- Build: `/stack-kit` page + `/api/checkout` + `/api/stripe/webhook` + success page;
+  add `stripe`; wire sitemap+llms.txt; tests; build/lint/test green.
+- After build: add STRIPE_* to Vercel prod, register webhook in Stripe Dashboard, deploy.
+- Open recurring: formal Lighthouse/axe ≥90 pass.
 
 ## ⏭️ Next
 - Phase 6: one deep vertical (med spa) then template — only after deploy + verify

@@ -36,6 +36,24 @@ Update the "Current state" line whenever it changes.
 
 ## Current state (update this line)
 
+2026-06-05 (later) — BUILDING T14 /stack-kit offer test (Phase 5 demand test).
+GSC + Bing verified + sitemap submitted (founder) → T13 core complete. Founder chose
+the **Stripe refundable $97 pre-order** capture for "The Local AI Visibility Stack"
+(design approved; spec at `docs/superpowers/specs/2026-06-05-stack-kit-offer-test-design.md`).
+Stripe keys (SECRET/PUBLISHABLE/WEBHOOK_SECRET) are in `.env.local`; still need to be
+added to Vercel prod + webhook registered in Stripe Dashboard before launch. Pre-order
+terms: ships ≤30 days or auto-refund; refundable anytime before delivery; no guarantees.
+
+2026-06-05 — DEPLOYED. All 12 newer routes + custom 404 + OG image are now LIVE in
+production (committed 1d732f2, pushed to GitHub main, `vercel --prod` → aliased to
+https://www.queryclear.com, readyState READY). Verified live: /, /about,
+/ai-visibility-audit, /ai-visibility-stack, /geo-audit, /schema-for-ai-search,
+/opengraph-image, /sitemap.xml, /llms.txt all 200; unknown route → real 404.
+Production now MATCHES code. Vercel CLI is installed + authenticated locally (user
+kylelamban54-6487; project linked via .vercel/project.json to team sparkcreativesinc).
+Still pending (founder accounts): Google Search Console + Bing Webmaster verification,
+submit updated sitemap, formal Lighthouse/axe ≥90.
+
 2026-06-04 — PHASES 1–3 NOW VERIFIED ON WINDOWS + T13 STARTED. `npm run build`
 (21 routes, TS pass) + `npm run lint` (clean) + `npm test` (9/9) all green — the
 prior sandbox "can't run next build" blocker is CLEARED. Added two T13 artifacts,

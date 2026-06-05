@@ -89,10 +89,12 @@ custom 404, Search Console + Bing Webmaster, sitemap/llms.txt kept in sync, Core
 Web Vitals + a11y audit. Tracked as T13 (a recurring checklist card).
 **Exit:** every page passes `test_plan.md`; both webmaster tools configured.
 
-### Phase 5 — Productization  *(BLOCKED by GATE-MODEL)*
+### Phase 5 — Productization  *(BLOCKED by GATE-MODEL — except the T14 demand test)*
 Only after the audit motion is proven. Likely order:
-- T14 `/stack-kit` **offer test page** — sell "The Local AI Visibility Stack" with a
-      waitlist/checkout to measure demand. Build this *before* the product.
+- T14 `/stack-kit` **offer test page** ▣ in progress (2026-06-05) — "The Local AI
+      Visibility Stack" via a **Stripe refundable $97 pre-order** to measure demand.
+      Built *before* the product. Design:
+      `docs/superpowers/specs/2026-06-05-stack-kit-offer-test-design.md`.
 - T15 Free AI-visibility scorecard (the 100-pt rubric) as a lightweight tool/form.
 - T16 Paid audit report template (productize what we deliver by hand first).
 - T17 DIY kit contents — *only if T14 shows real demand.*
