@@ -38,14 +38,17 @@ Short living board. Strategy lives in `roadmap.md`; the executable cards live in
   `vercel --prod`). Routes verified 200; unknown route → 404.
 - GSC + Bing Webmaster verified; sitemap submitted (founder).
 
-## 🔄 Now — building T14 /stack-kit offer test (Phase 5 demand test)
-- Founder chose: **Stripe refundable $97 pre-order** for "The Local AI Visibility
-  Stack." Design approved + spec written
-  (`docs/superpowers/specs/2026-06-05-stack-kit-offer-test-design.md`).
-- Build: `/stack-kit` page + `/api/checkout` + `/api/stripe/webhook` + success page;
-  add `stripe`; wire sitemap+llms.txt; tests; build/lint/test green.
-- After build: add STRIPE_* to Vercel prod, register webhook in Stripe Dashboard, deploy.
-- Open recurring: formal Lighthouse/axe ≥90 pass.
+## ✅ T14 /stack-kit LIVE (2026-06-05)
+- $97 Stripe refundable pre-order for "The Local AI Visibility Stack." Built, tested
+  (18/18), deployed; prod /api/checkout returns real Stripe session. STRIPE_* env in
+  Vercel prod. Spec: `docs/superpowers/specs/2026-06-05-stack-kit-offer-test-design.md`.
+
+## 🔄 Now — founder + next
+- **Founder TODO:** register webhook endpoint in Stripe Dashboard →
+  `https://www.queryclear.com/api/stripe/webhook` (event `checkout.session.completed`)
+  so order-notification emails fire. Confirm keys are test vs live before driving traffic.
+- **Decide next build:** Phase 6 first deep vertical (med spa) → then template; or the
+  audit delivery/report system. Open recurring: formal Lighthouse/axe ≥90 pass.
 
 ## ⏭️ Next
 - Phase 6: one deep vertical (med spa) then template — only after deploy + verify

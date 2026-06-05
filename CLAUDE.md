@@ -46,7 +46,7 @@ We sell *readiness*, not outcomes. **Never** promise rankings or AI citations.
   - `app/not-found.tsx` — custom 404 (T13, 2026-06-04; full chrome, returns HTTP 404)
   - `app/opengraph-image.tsx` — sitewide social card (T13, 2026-06-04; next/og 1200×630)
   - `app/stack-kit/page.tsx` + `app/stack-kit/success/page.tsx` — $97 DIY-kit
-    offer-test (T14, 2026-06-05; Stripe refundable pre-order, NOT yet deployed)
+    offer-test (T14, 2026-06-05; Stripe refundable pre-order, LIVE in prod)
   - `app/api/checkout/route.ts` — Stripe Checkout Session for the pre-order
   - `app/api/stripe/webhook/route.ts` — verify sig → Resend order notify to info@
   - `app/api/lead/route.ts` — lead capture → Resend email (info@queryclear.com)

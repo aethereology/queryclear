@@ -36,7 +36,16 @@ Update the "Current state" line whenever it changes.
 
 ## Current state (update this line)
 
-2026-06-05 (latest) — T14 /stack-kit BUILT + VERIFIED IN CODE (not yet deployed).
+2026-06-05 (latest) — T14 /stack-kit DEPLOYED + LIVE. Pushed (0196ee1), `vercel --prod`,
+aliased to www.queryclear.com. Verified in prod: /stack-kit + /stack-kit/success → 200;
+prod /api/checkout → real checkout.stripe.com session (STRIPE_* env vars added to Vercel
+production via CLI). In sitemap. ONLY remaining founder step: register the webhook
+endpoint https://www.queryclear.com/api/stripe/webhook (event checkout.session.completed)
+in the Stripe Dashboard so its signing secret matches STRIPE_WEBHOOK_SECRET — until then
+checkout/payments work but order-notification emails won't fire (orders still show in
+Stripe Dashboard). Also: keys may be test or live mode — confirm before driving traffic.
+
+2026-06-05 (earlier) — T14 /stack-kit BUILT + VERIFIED IN CODE.
 Pages `/stack-kit` + `/stack-kit/success`; `/api/checkout` (Stripe Checkout Session)
 + `/api/stripe/webhook` (sig verify → Resend order email to info@); `PreorderButton`;
 `stripe` SDK added; `lib/site.ts` gained `stackKit` config. build 25 routes clean,

@@ -145,7 +145,7 @@ Progress 2026-06-04:
 - ☐ **Still open (recurring):** formal axe/Lighthouse ≥90 pass; keep sitemap +
   llms.txt in sync as new pages ship.
 
-## T14 — /stack-kit offer test ▣ in progress (design approved 2026-06-05)
+## T14 — /stack-kit offer test ✅ LIVE 2026-06-05 (founder TODO: register Stripe webhook endpoint)
 **Phase 5.** Demand test for "The Local AI Visibility Stack" ($97). Landing page +
 **Stripe refundable pre-order** — built before the product exists to measure intent.
 Position as a funnel into the paid audit/build, not the whole business. Decision
