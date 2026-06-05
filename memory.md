@@ -36,24 +36,68 @@ Update the "Current state" line whenever it changes.
 
 ## Current state (update this line)
 
-2026-05-29 — Phase 1 MVP BUILT + merged to `main` LOCALLY (4 commits ahead of
-origin/main). Next.js 16 + React 19 + Tailwind v4. Landing page (hero H1 "Your
-customers ask AI. We make sure it knows you." + human/machine-view motif, problem,
-solution, what-we-build, how-it-works, deliverables, FAQ, lead-form CTA), sample
-audit page (/audit, Brightleaf demo), GEO infra (llms.txt, sitemap.xml, robots.txt,
-JSON-LD Organization/WebSite/Service/FAQPage). Lead form → /api/lead now emails via
-Resend when RESEND_API_KEY set (always logs; see .env.example). Build green, 0
-console errors, verified in browser. Design: Fraunces + IBM Plex, paper/pine/lime.
+2026-06-04 — PHASES 1–3 NOW VERIFIED ON WINDOWS + T13 STARTED. `npm run build`
+(21 routes, TS pass) + `npm run lint` (clean) + `npm test` (9/9) all green — the
+prior sandbox "can't run next build" blocker is CLEARED. Added two T13 artifacts,
+both visually verified via Playwright: `app/not-found.tsx` (custom 404, full chrome,
+returns real HTTP 404) and `app/opengraph-image.tsx` (next/og 1200×630 brand card,
+auto-wired into OG+Twitter sitewide). STILL pending (need founder accounts/creds):
+deploy the 12 new pages to Vercel, Google Search Console + Bing Webmaster, submit
+updated sitemap, formal Lighthouse/axe ≥90. NOTE: only the original Phase-1 MVP is
+live in production; the 12 newer routes exist in code (green) but are NOT deployed yet.
 
-LAUNCHED 2026-05-29: LIVE at https://www.queryclear.com (apex queryclear.com 307→www).
-Deployed on Vercel (team `sparkcreativesinc`, project `queryclear`, scope flag required
-on CLI: --scope sparkcreativesinc). Deployment Protection disabled (public). Production
-env set: RESEND_API_KEY, LEAD_TO=info@queryclear.com, LEAD_FROM="queryclear <info@queryclear.com>".
-queryclear.com verified in Resend (sending enabled); DNS/nameservers on Cloudflare.
-End-to-end lead form VERIFIED: submit → /api/lead → Resend → delivered to info@queryclear.com
-(reply-to = lead's email). GitHub push works via gh credential override.
-Tools installed: resend-cli (global), vercel CLI. info@queryclear.com receives via Cloudflare Email Routing.
+2026-06-03 — ROADMAP CLARIFIED + PHASES 1–3 BUILT IN CODE (not yet deployed/verified).
+See `roadmap.md` (canonical), `docs/build/BUILD_QUEUE.md` (executable task cards),
+and `CLAUDE.md` (auto-loaded orientation — supersedes the stale `claude.md.txt`).
 
-OPEN POLISH: canonical mismatch — code declares apex (site.url=https://queryclear.com) but
-live canonical is www. Decide: make apex primary in Vercel (www→apex) OR set site.url=www.
-NOT yet done: resolve canonical, optional OG image, real audit prompt-runner tooling.
+DOC OVERHAUL (this session): the three competing roadmaps (lean `roadmap.md`, the
+big uploaded website roadmap, and a $97-product brainstorm) were reconciled into one.
+Added root `CLAUDE.md` (ground truth + conventions + guardrails + how-to-pick-up-work),
+rewrote `roadmap.md` (phases + decision gates + DoD), added `docs/build/BUILD_QUEUE.md`
+(self-contained T0–T18+ cards) and `docs/build/page-template.md` (the reusable page recipe).
+
+DECISION GATES CLOSED 2026-06-03 (logged in `Decisions.md`):
+- Canonical = **www** (`https://www.queryclear.com`). `site.url` updated to www (T0). 
+  Apex still 307→www in production; verify redirect type on deploy.
+- Model = **audit-first**; the $97 "Local AI Visibility Stack" kit is only a future
+  DEMAND TEST (landing+waitlist, BUILD_QUEUE T14) — do NOT build kit contents until validated.
+- Pricing = public **"starting at $750"** for the audit; build/upgrade + product prices stay private.
+
+PAGES NOW IN CODE (12 routes total; Phases 1–3 of BUILD_QUEUE):
+- Phase 1 (trust): `/about` (AboutPage schema), `/contact` (ContactPage+ContactPoint,
+  reuses LeadForm), `/privacy`, `/terms` (WebPage+BreadcrumbList). Legal copy is a
+  sensible draft — NOT lawyer-reviewed; flag if entering regulated space / GDPR/CCPA.
+- Phase 2 (proof+commercial): `/ai-visibility-stack` (the 7-layer method, our proprietary
+  framework), `/audit` promoted (CTAs now point to /ai-visibility-audit + /ai-visibility-stack),
+  `/ai-visibility-audit` (commercial landing, 7 scoring categories, CTA top+bottom,
+  WebPage+Service+FAQPage+BreadcrumbList, LeadForm).
+- Phase 3 (category/intent): `/local-ai-search-optimization`, `/geo-audit`,
+  `/ai-search-ready-website`, `/schema-for-ai-search`, `/llms-txt-for-businesses`.
+  Each distinct (no thin dupes), Service/FAQPage schema where it fits, "$750" CTA.
+
+WIRING: all routes added to `app/sitemap.ts` and `app/llms.txt/route.ts`. Header nav
+leads with "AI visibility audit" + "The method". Footer restructured into
+Services / Resources / Company groups (no orphan pages). Note: Header "Free audit"
+button + footer "Get started" link still point to `/#audit-cta` (homepage form) —
+fine, but consider pointing to /ai-visibility-audit later.
+
+VERIFICATION STATUS: `npm test` (lead-route) passes 9/9. `next build` and `tsc`
+could NOT be run in the cowork Linux sandbox (blocked SWC binary download + a
+file-mount sync lag that serves stale/truncated reads — authoritative file state is
+correct). Lint: one earlier 'Reveal' unused-import warning in `/about` already fixed
+(import trimmed to Stagger/StaggerItem). ACTION FOR FOUNDER: run
+`npm run build && npm run lint` on Windows, then deploy all 12 pages to Vercel and
+submit the updated sitemap to Search Console. NONE of the new pages are live yet.
+
+NEXT (per roadmap): BUILD_QUEUE **T13 technical hardening** — Google Search Console +
+Bing Webmaster (needs founder account access), OG image, custom 404 (`app/not-found.tsx`),
+Lighthouse/axe pass. Then Phase 6 = ONE deep vertical (med spa) before templating others.
+Phase 5 ($97 test, T14) stays gated/deferred until the audit motion is proven.
+
+PRIOR LAUNCH FACTS (still true): LIVE at https://www.queryclear.com on Vercel
+(team `sparkcreativesinc`, CLI needs `--scope sparkcreativesinc`). Deployment Protection
+off. Prod env: RESEND_API_KEY, LEAD_TO=info@queryclear.com, LEAD_FROM="queryclear <info@queryclear.com>".
+queryclear.com verified in Resend; DNS on Cloudflare; info@ via Cloudflare Email Routing.
+End-to-end lead form verified (submit → /api/lead → Resend → inbox, reply-to=lead).
+GitHub push via gh credential override. Stack: Next.js 16 + React 19 + Tailwind v4,
+Bricolage Grotesque + IBM Plex, paper/pine/lime. Tools: resend-cli (global), vercel CLI.

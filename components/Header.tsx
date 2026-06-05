@@ -6,9 +6,11 @@ import { Container, Cta, Mark } from "@/components/ui";
 import { site } from "@/lib/site";
 
 const links = [
-  { href: "/#solution", label: "What we optimize" },
-  { href: "/#how", label: "How it works" },
+  { href: "/ai-visibility-audit", label: "AI visibility audit" },
+  { href: "/ai-visibility-stack", label: "The method" },
   { href: "/audit", label: "Sample audit" },
+  { href: "/about", label: "About" },
+  { href: "/contact", label: "Contact" },
 ];
 
 export function Header() {

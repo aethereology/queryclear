@@ -3,7 +3,8 @@
 
 export const site = {
   name: "queryclear",
-  url: "https://queryclear.com",
+  // Canonical = www (apex 307 → www in production). Decided 2026-06-03; see Decisions.md.
+  url: "https://www.queryclear.com",
   tagline: "Get found in AI answers.",
   description:
     "queryclear makes your website easier for search engines and AI answer engines like ChatGPT, Claude, Perplexity, Gemini, and Google AI Overviews to crawl, understand, trust, and cite.",

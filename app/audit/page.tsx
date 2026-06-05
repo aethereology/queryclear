@@ -4,7 +4,6 @@ import { Footer } from "@/components/Footer";
 import { Container, MonoLabel, Cta } from "@/components/ui";
 import { Reveal, Stagger, StaggerItem } from "@/components/motion";
 import { CountUp } from "@/components/CountUp";
-import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Sample AI Search Audit",
@@ -178,10 +177,20 @@ export default function AuditPage() {
               <h2 className="text-3xl text-paper sm:text-4xl">Want this for your business?</h2>
               <p className="mt-3 max-w-xl text-paper/70">
                 We&apos;ll run a real audit on your actual site — using only your
-                verified details — and show you exactly what to fix.
+                verified details — and show you exactly what to fix. It&apos;s scored
+                against the{" "}
+                <a href="/ai-visibility-stack" className="font-medium text-paper underline hover:text-lime">
+                  AI Visibility Stack
+                </a>
+                .
               </p>
             </div>
-            <Cta href={`/#${site.primaryCta.href.replace("#", "")}`}>Book a free AI search audit</Cta>
+            <div className="flex flex-wrap gap-3">
+              <Cta href="/ai-visibility-audit">Book a free AI search audit</Cta>
+              <Cta href="/ai-visibility-stack" variant="ghost" className="!text-paper !border-paper/30 hover:!bg-white/10">
+                See our method
+              </Cta>
+            </div>
           </Container>
         </section>
       </main>

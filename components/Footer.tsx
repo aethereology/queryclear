@@ -17,22 +17,55 @@ export function Footer() {
             </p>
           </div>
 
-          <nav className="flex gap-12 text-sm" aria-label="Footer">
+          <nav className="flex flex-wrap gap-10 text-sm sm:gap-12" aria-label="Footer">
             <div className="flex flex-col gap-3">
-              <span className="mono-label !text-paper/40">Product</span>
-              <Link href="#solution" className="text-paper/80 hover:text-lime">
-                What we optimize
+              <span className="mono-label !text-paper/40">Services</span>
+              <Link href="/ai-visibility-audit" className="text-paper/80 hover:text-lime">
+                AI visibility audit
               </Link>
-              <Link href="#how" className="text-paper/80 hover:text-lime">
-                How it works
+              <Link href="/geo-audit" className="text-paper/80 hover:text-lime">
+                GEO audit
+              </Link>
+              <Link href="/ai-search-ready-website" className="text-paper/80 hover:text-lime">
+                AI-search-ready websites
+              </Link>
+              <Link href="/local-ai-search-optimization" className="text-paper/80 hover:text-lime">
+                Local AI search
+              </Link>
+            </div>
+            <div className="flex flex-col gap-3">
+              <span className="mono-label !text-paper/40">Resources</span>
+              <Link href="/ai-visibility-stack" className="text-paper/80 hover:text-lime">
+                The AI Visibility Stack
               </Link>
               <Link href="/audit" className="text-paper/80 hover:text-lime">
                 Sample audit
               </Link>
+              <Link href="/schema-for-ai-search" className="text-paper/80 hover:text-lime">
+                Schema for AI search
+              </Link>
+              <Link href="/llms-txt-for-businesses" className="text-paper/80 hover:text-lime">
+                llms.txt for businesses
+              </Link>
+            </div>
+            <div className="flex flex-col gap-3">
+              <span className="mono-label !text-paper/40">Company</span>
+              <Link href="/about" className="text-paper/80 hover:text-lime">
+                About
+              </Link>
+              <Link href="/contact" className="text-paper/80 hover:text-lime">
+                Contact
+              </Link>
+              <Link href="/privacy" className="text-paper/80 hover:text-lime">
+                Privacy
+              </Link>
+              <Link href="/terms" className="text-paper/80 hover:text-lime">
+                Terms
+              </Link>
             </div>
             <div className="flex flex-col gap-3">
               <span className="mono-label !text-paper/40">Get started</span>
-              <Link href={site.primaryCta.href} className="text-paper/80 hover:text-lime">
+              <Link href={`/${site.primaryCta.href}`} className="text-paper/80 hover:text-lime">
                 Free AI search audit
               </Link>
               <a href={`mailto:${site.email}`} className="text-paper/80 hover:text-lime">

@@ -9,9 +9,64 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     {
+      url: `${site.url}/ai-visibility-audit`,
+      changeFrequency: "monthly",
+      priority: 0.9,
+    },
+    {
+      url: `${site.url}/ai-visibility-stack`,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
       url: `${site.url}/audit`,
       changeFrequency: "monthly",
       priority: 0.8,
+    },
+    {
+      url: `${site.url}/local-ai-search-optimization`,
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    {
+      url: `${site.url}/geo-audit`,
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    {
+      url: `${site.url}/ai-search-ready-website`,
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    {
+      url: `${site.url}/schema-for-ai-search`,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
+      url: `${site.url}/llms-txt-for-businesses`,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
+      url: `${site.url}/about`,
+      changeFrequency: "monthly",
+      priority: 0.6,
+    },
+    {
+      url: `${site.url}/contact`,
+      changeFrequency: "yearly",
+      priority: 0.6,
+    },
+    {
+      url: `${site.url}/privacy`,
+      changeFrequency: "yearly",
+      priority: 0.3,
+    },
+    {
+      url: `${site.url}/terms`,
+      changeFrequency: "yearly",
+      priority: 0.3,
     },
   ];
 }

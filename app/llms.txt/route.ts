@@ -22,7 +22,18 @@ guaranteed AI citations — we deliver technical readiness, clarity, and structu
 
 ## Key pages
 - Home: ${site.url}/
+- AI Visibility Audit (request an audit): ${site.url}/ai-visibility-audit
+- The AI Visibility Stack (our method): ${site.url}/ai-visibility-stack
 - Sample GEO audit (demo): ${site.url}/audit
+- Local AI Search Optimization: ${site.url}/local-ai-search-optimization
+- GEO Audit: ${site.url}/geo-audit
+- AI-Search-Ready Websites: ${site.url}/ai-search-ready-website
+- Schema for AI Search: ${site.url}/schema-for-ai-search
+- llms.txt for Businesses: ${site.url}/llms-txt-for-businesses
+- About: ${site.url}/about
+- Contact / request a free audit: ${site.url}/contact
+- Privacy Policy: ${site.url}/privacy
+- Terms of Service: ${site.url}/terms
 
 ## Organization
 - Product of ${site.parentOrg} (${site.parentOrgUrl}), under SparkCreatives Inc.

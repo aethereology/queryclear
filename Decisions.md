@@ -5,6 +5,23 @@ Format: date · decision · rationale · status.
 
 ---
 
+## 2026-06-03 · Closed the three roadmap decision gates
+- **GATE-CANONICAL → www.** Canonical domain is `https://www.queryclear.com`; apex
+  redirects to www (already the live behavior). Action: set `site.url` to the www
+  form so code matches production. *Rationale:* least work (matches live), no SEO
+  difference at this size. **Status: Closed.**
+- **GATE-MODEL → audit-first; $97 kit deferred.** Primary motion stays the GEO audit
+  → build → Aethelo ladder. The $97 "Local AI Visibility Stack" is only a demand
+  test (landing page + waitlist, BUILD_QUEUE T14); the actual product is not built
+  until that test shows real demand. *Rationale:* local owners buy done-for-you, not
+  self-serve kits; validate before building supply. **Status: Closed.**
+- **GATE-PRICING → "starting at $750".** Public site shows the audit entry price as
+  "starting at $750"; build/upgrade and any product prices stay private for now.
+  *Rationale:* a concrete entry number converts skeptical owners better than
+  "contact us" while keeping upside flexible. **Status: Closed.**
+
+---
+
 ## 2026-05-29 · Stack = Next.js (App Router) + Tailwind + shadcn/ui on Vercel
 - **Decision:** Build queryclear on Next.js App Router + Tailwind + shadcn/ui,
   deploy on Vercel. (Founder raised SvelteKit; CTO call after delegation.)
