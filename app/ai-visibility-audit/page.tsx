@@ -47,6 +47,7 @@ const faqs = [
   { q: "How long does it take?", a: "Submitting the form takes about two minutes. We usually send your findings within a couple of business days." },
   { q: "Do you guarantee I'll rank or get cited?", a: "No — and you should distrust anyone who does. We make your site genuinely clearer and more trustworthy to search and AI systems. That's the part we control, and we do it well." },
   { q: "What do you need from me?", a: "Your website URL and a few real details about your business. We only ever work from accurate, verified information." },
+  { q: "Can I do it myself instead?", a: "Yes. We offer a $97 DIY kit — The Local AI Visibility Stack — with the playbook and copy-paste templates to apply the same method on your own. It's a refundable founding pre-order; find it at queryclear.com/stack-kit." },
 ];
 
 const webPageSchema = {

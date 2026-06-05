@@ -16,21 +16,21 @@ export const metadata: Metadata = {
   },
 };
 
-const sample = `# Acme Plumbing
+const sample = `# Goldleaf Aesthetics & Med Spa
 
-> Licensed residential & emergency plumbing in the Riverton metro.
+> Medical aesthetics & med spa in the Westhaven metro, with licensed RN injectors under a medical director.
 
 ## Key pages
 - Home: https://example.com/
-- Services: https://example.com/services
-- Service area: https://example.com/areas
+- Treatments: https://example.com/treatments
+- Providers: https://example.com/providers
 - Contact: https://example.com/contact
 
 ## What we do
-- Drain cleaning, water heater repair, leak detection, emergency plumbing
+- Botox & Dysport, dermal fillers, laser hair removal, medical-grade facials, microneedling
 
 ## Notes
-- Service area: Riverton metro. Hours: Mon-Sat.`;
+- Service area: Westhaven metro. Providers: licensed RN injectors, medical director.`;
 
 const faqs = [
   { q: "Should my business have an llms.txt file?", a: "It's a reasonable, low-cost thing to add — but it's optional. It won't rescue a site that AI systems can't otherwise understand. Treat it as a small supporting signal, not a strategy." },

@@ -56,6 +56,10 @@ const faqs = [
     q: "What do I get from the free audit?",
     a: "A real review of how AI answer engines currently see your business, the gaps holding you back, and a prioritized fix list. No obligation.",
   },
+  {
+    q: "Can I do this myself?",
+    a: "If you're hands-on, yes — we offer a $97 DIY kit (The Local AI Visibility Stack) with our playbook and copy-paste templates so you can apply the method on your own. It's a refundable founding pre-order at queryclear.com/stack-kit. Most owners still start with the free audit — it's the easiest way to see what to fix first.",
+  },
 ];
 
 const serviceSchema = {
@@ -134,25 +138,25 @@ export default function Home() {
                   <span key="c" className="text-paper/40"># llms.txt</span>,
                   <span key="b">
                     <span className="k">Business</span>:{" "}
-                    <span className="s">Brightleaf Plumbing Co.</span>
+                    <span className="s">Goldleaf Aesthetics &amp; Med Spa</span>
                   </span>,
                   <span key="se">
                     <span className="k">Serves</span>:{" "}
-                    <span className="s">Riverton metro — 24/7 emergency</span>
+                    <span className="s">Westhaven metro</span>
                   </span>,
                   <span key="o">
                     <span className="k">Offers</span>:{" "}
-                    <span className="s">drain cleaning, water heaters, leaks</span>
+                    <span className="s">Botox, fillers, laser, facials</span>
                   </span>,
                   <span key="j" className="mt-2 block">
                     <span className="text-paper/40">
                       &#123; &quot;@type&quot;: &quot;
                     </span>
-                    <span className="k">LocalBusiness</span>
+                    <span className="k">MedicalBusiness</span>
                     <span className="text-paper/40">
                       &quot;, &quot;name&quot;: &quot;
                     </span>
-                    <span className="s">Brightleaf…</span>
+                    <span className="s">Goldleaf…</span>
                     <span className="text-paper/40">&quot; &#125;</span>
                   </span>,
                   <span key="ok" className="mt-3 block text-lime">
@@ -212,16 +216,16 @@ export default function Home() {
                   <div className="card p-5">
                     <p className="mono-label mb-2">Human view</p>
                     <p className="font-display text-2xl leading-tight">
-                      Fast, leak-free water — same-day in Riverton.
+                      Look refreshed, not done — Botox &amp; fillers in Westhaven.
                     </p>
                   </div>
                 }
                 machine={
                   <div className="machine-panel">
-                    <div><span className="k">name</span>: <span className="s">Brightleaf</span></div>
-                    <div><span className="k">service</span>: <span className="s">plumbing</span></div>
-                    <div><span className="k">area</span>: <span className="s">Riverton</span></div>
-                    <div><span className="k">hours</span>: <span className="s">24/7</span></div>
+                    <div><span className="k">name</span>: <span className="s">Goldleaf Aesthetics</span></div>
+                    <div><span className="k">service</span>: <span className="s">med spa</span></div>
+                    <div><span className="k">area</span>: <span className="s">Westhaven</span></div>
+                    <div><span className="k">providers</span>: <span className="s">licensed RN injectors</span></div>
                     <div className="mt-2 text-lime">↳ citable</div>
                   </div>
                 }

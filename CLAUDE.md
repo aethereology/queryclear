@@ -34,7 +34,9 @@ We sell *readiness*, not outcomes. **Never** promise rankings or AI citations.
 - **Routes that exist today:**
   - `app/page.tsx` — landing page (hero, problem, solution, what-we-build,
     how-it-works, deliverables, FAQ, lead form)
-  - `app/audit/page.tsx` — sample GEO audit (fictional "Brightleaf Plumbing" demo)
+  - `app/audit/page.tsx` — sample GEO audit (fictional "Goldleaf Aesthetics" med-spa
+    demo, rebuilt 2026-06-05: 7-layer scorecard, visibility tests, WebPage+BreadcrumbList
+    schema; doubles as Phase 6 med-spa vertical groundwork)
   - `app/about/page.tsx` — entity-trust About page (T1, 2026-06-03)
   - `app/contact/page.tsx` — contact + lead form (T2, 2026-06-03)
   - `app/privacy/page.tsx`, `app/terms/page.tsx` — legal pages (T3, 2026-06-03)

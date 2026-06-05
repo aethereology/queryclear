@@ -36,7 +36,15 @@ Update the "Current state" line whenever it changes.
 
 ## Current state (update this line)
 
-2026-06-05 (latest) — T14 /stack-kit DEPLOYED + LIVE. Pushed (0196ee1), `vercel --prod`,
+2026-06-05 (latest+) — T14 FULLY OPERATIONAL IN LIVE MODE. Founder verified the webhook
+code path in Stripe SANDBOX (test mode has its own endpoint+secret), then switched back
+to LIVE. Re-confirmed prod is consistent: Vercel STRIPE_* untouched since setup; live
+webhook endpoint enabled w/ checkout.session.completed; prod /api/checkout returns a real
+LIVE checkout.stripe.com session. Keys are sk_live — real $97 charges. End-to-end flow is
+go: pre-order → charge → /stack-kit/success → order email to info@. Optional 100% live
+proof: Stripe Dashboard (live) → Webhooks → endpoint → "Send test event" → expect 200.
+
+2026-06-05 (earlier+) — T14 /stack-kit DEPLOYED + LIVE. Pushed (0196ee1), `vercel --prod`,
 aliased to www.queryclear.com. Verified in prod: /stack-kit + /stack-kit/success → 200;
 prod /api/checkout → real checkout.stripe.com session (STRIPE_* env vars added to Vercel
 production via CLI). In sitemap. ONLY remaining founder step: register the webhook

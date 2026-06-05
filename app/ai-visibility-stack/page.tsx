@@ -170,7 +170,12 @@ export default function StackPage() {
             </div>
             <div className="flex flex-wrap gap-3">
               <Cta href="/ai-visibility-audit">Get an AI search audit</Cta>
-              <Cta href="/audit" variant="ghost">See a sample audit</Cta>
+              <Cta href="/audit" variant="ghost" className="!text-paper !border-paper/30 hover:!bg-white/10">
+                See a sample audit
+              </Cta>
+              <Cta href="/stack-kit" variant="ghost" className="!text-paper !border-paper/30 hover:!bg-white/10">
+                Do it yourself — $97 kit
+              </Cta>
             </div>
           </Container>
         </section>

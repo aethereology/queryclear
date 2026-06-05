@@ -59,7 +59,7 @@ how we use it in an audit · CTA.
 **Accept:** explains the method plainly; reads as a linkable standalone asset; no hype.
 
 ## T6 — Promote the sample audit (/audit) ✅ done 2026-06-03 (CTAs now link to /ai-visibility-audit + /ai-visibility-stack; demo banner already present)
-**Phase 2.** The existing `/audit` (Brightleaf demo) becomes a sendable proof page.
+**Phase 2.** The existing `/audit` (Goldleaf Aesthetics med-spa demo; was Brightleaf) becomes a sendable proof page.
 **Do:** ensure clear "fictional demo" labeling; show a score format; show prioritized
 fixes + a before→after framing; strong CTA to request a real audit. Confirm it's in
 sitemap + llms.txt. (Optional: alias `/sample-audit` → `/audit` if useful for SEO intent.)

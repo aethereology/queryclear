@@ -26,6 +26,7 @@ export const site = {
   // pre-order to measure demand (GATE-MODEL). Keep every claim honest.
   stackKit: {
     name: "The Local AI Visibility Stack",
+    path: "/stack-kit",
     priceUsd: 97,
     priceLabel: "$97",
     currency: "usd",

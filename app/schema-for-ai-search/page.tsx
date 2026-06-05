@@ -37,10 +37,10 @@ const mistakes = [
 const example = `<script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "LocalBusiness",
-  "name": "Brightleaf Plumbing Co.",
+  "@type": "MedicalBusiness",
+  "name": "Goldleaf Aesthetics & Med Spa",
   "url": "https://example.com",
-  "areaServed": "Riverton",
+  "areaServed": "Westhaven",
   "telephone": "+1-555-0100"
 }
 </script>`;

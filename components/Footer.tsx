@@ -47,6 +47,9 @@ export function Footer() {
               <Link href="/llms-txt-for-businesses" className="text-paper/80 hover:text-lime">
                 llms.txt for businesses
               </Link>
+              <Link href={site.stackKit.path} className="text-paper/80 hover:text-lime">
+                The DIY kit ({site.stackKit.priceLabel})
+              </Link>
             </div>
             <div className="flex flex-col gap-3">
               <span className="mono-label !text-paper/40">Company</span>
