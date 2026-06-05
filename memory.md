@@ -36,6 +36,21 @@ Update the "Current state" line whenever it changes.
 
 ## Current state (update this line)
 
+2026-06-05 (latest++) — NEW SAMPLE AUDIT LIVE + DEMO UNIFIED. Rebuilt /audit as a
+best-practice, methodology-driven page on a fictional med spa (Goldleaf Aesthetics &
+Med Spa, Westhaven) — 7-layer AI Visibility Stack scorecard (per-layer bars), richer
+AI-visibility test table, findings tagged to layers, added WebPage+BreadcrumbList
+JSON-LD (page had none). Honesty boundary: med-spa schema shown only as illustrative
+machine-view text, never emitted as real structured data. Unified the running demo
+business sitewide (homepage machine-view, /schema-for-ai-search example,
+/llms-txt-for-businesses sample) from Brightleaf plumbing → Goldleaf med spa; seed_data.md
+updated (Brightleaf retired). Also committed the earlier Phase 5 discoverability work
+(/stack-kit footer link + method CTA + homepage/audit FAQ + docs/marketing playbook).
+Committed c872191, pushed, `vercel --prod` → live; verified in prod (audit 200, scorecard,
+schema present, no emitted MedicalBusiness JSON-LD, no leftover Brightleaf; unified
+examples live). Doubles as Phase 6 med-spa vertical groundwork. build 25 routes / lint /
+tests 18/18 green.
+
 2026-06-05 (latest+) — T14 FULLY OPERATIONAL IN LIVE MODE. Founder verified the webhook
 code path in Stripe SANDBOX (test mode has its own endpoint+secret), then switched back
 to LIVE. Re-confirmed prod is consistent: Vercel STRIPE_* untouched since setup; live
