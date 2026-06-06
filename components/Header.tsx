@@ -229,36 +229,70 @@ export function Header() {
       >
         <nav className="grid gap-5 px-4 py-5" aria-label="Mobile">
           <div className="grid gap-3 border border-dashed border-line p-4">
-            <p className="mono-label !text-lime-deep">[ Services ]</p>
-            {services.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={() => setOpen(false)}
-                className={`${navBlock} ${navText}`}
-              >
-                {link.label}
-              </Link>
-            ))}
+            <button
+              type="button"
+              aria-expanded={activeMega === "services"}
+              aria-controls="mobile-services"
+              onClick={() => setActiveMega(activeMega === "services" ? null : "services")}
+              className="flex items-center justify-between text-left"
+            >
+              <span className="mono-label !text-lime-deep">[ Services ]</span>
+              <Chevron open={activeMega === "services"} />
+            </button>
+            <div
+              id="mobile-services"
+              className={`${activeMega === "services" ? "grid" : "hidden"} gap-3 pt-3`}
+            >
+              {services.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => {
+                    setOpen(false);
+                    setActiveMega(null);
+                  }}
+                  className={`${navBlock} ${navText}`}
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
           </div>
 
           <div className="grid gap-3 border border-dashed border-line p-4">
-            <p className="mono-label !text-lime-deep">[ Resources ]</p>
-            {resources.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={() => setOpen(false)}
-                className={`${navBlock} ${navText}`}
-              >
-                {link.label}
-              </Link>
-            ))}
+            <button
+              type="button"
+              aria-expanded={activeMega === "resources"}
+              aria-controls="mobile-resources"
+              onClick={() => setActiveMega(activeMega === "resources" ? null : "resources")}
+              className="flex items-center justify-between text-left"
+            >
+              <span className="mono-label !text-lime-deep">[ Resources ]</span>
+              <Chevron open={activeMega === "resources"} />
+            </button>
+            <div
+              id="mobile-resources"
+              className={`${activeMega === "resources" ? "grid" : "hidden"} gap-3 pt-3`}
+            >
+              {resources.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => {
+                    setOpen(false);
+                    setActiveMega(null);
+                  }}
+                  className={`${navBlock} ${navText}`}
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
           </div>
 
           <div className="grid gap-3 border border-dashed border-line p-4">
-            <p className="mono-label !text-lime-deep">[ Company ]</p>
-            {[...directLinks.filter((link) => link.href === "/about"), { href: "/contact", label: "Contact" }].map((link) => (
+            <p className="mono-label !text-lime-deep">[ Explore ]</p>
+            {[...directLinks, { href: "/contact", label: "Contact" }].map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
