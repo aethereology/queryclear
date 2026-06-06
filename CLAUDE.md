@@ -24,7 +24,7 @@ We sell *readiness*, not outcomes. **Never** promise rankings or AI citations.
 
 ## 2. Ground-truth state (keep this section current)
 
-> Last verified: 2026-06-04. If you change the site, update this section and
+> Last verified: 2026-06-06. If you change the site, update this section and
 > `memory.md` at the end of your session.
 
 - **LIVE** at https://www.queryclear.com (apex 307 → www). Deployed on Vercel
@@ -34,9 +34,9 @@ We sell *readiness*, not outcomes. **Never** promise rankings or AI citations.
 - **Routes that exist today:**
   - `app/page.tsx` — landing page (hero, problem, solution, what-we-build,
     how-it-works, deliverables, FAQ, lead form)
-  - `app/audit/page.tsx` — sample GEO audit (fictional "Goldleaf Aesthetics" med-spa
-    demo, rebuilt 2026-06-05: 7-layer scorecard, visibility tests, WebPage+BreadcrumbList
-    schema; doubles as Phase 6 med-spa vertical groundwork)
+  - `app/audit/page.tsx` — public sample GEO audit (fictional "Goldleaf Aesthetics"
+    med-spa demo). As of T16 (2026-06-06) it is data-driven: renders the
+    `<AuditReport>` template from `lib/reports/goldleaf-demo.ts` (output unchanged).
   - `app/about/page.tsx` — entity-trust About page (T1, 2026-06-03)
   - `app/contact/page.tsx` — contact + lead form (T2, 2026-06-03)
   - `app/privacy/page.tsx`, `app/terms/page.tsx` — legal pages (T3, 2026-06-03)
@@ -53,23 +53,32 @@ We sell *readiness*, not outcomes. **Never** promise rankings or AI citations.
     client-side quiz over the 7 layers → 0–100 score; open result + optional lead with
     self-score attached to /api/lead. Logic in `lib/scorecard.ts`, UI in
     `components/Scorecard.tsx`. Built + verified in code; NOT yet deployed to prod.)
+  - `app/reports/[slug]/page.tsx` — **private** per-client paid-audit report (T16,
+    2026-06-06). Productizes the $750 audit: each report is a typed `AuditReport`
+    data file (`lib/reports/`), rendered by the shared `<AuditReport>` template
+    (`components/AuditReport.tsx`). NOINDEX + robots-disallowed + excluded from
+    sitemap/llms.txt; unguessable slugs; print-to-PDF styles. Registry +
+    one fictional example in `lib/reports/index.ts`. Model in `lib/audit-report.ts`.
+    SOP: `docs/playbooks/running-an-audit.md`. Built + verified in code; NOT deployed.
   - `app/api/checkout/route.ts` — Stripe Checkout Session for the pre-order
   - `app/api/stripe/webhook/route.ts` — verify sig → Resend order notify to info@
   - `app/api/lead/route.ts` — lead capture → Resend email (info@queryclear.com)
   - `app/llms.txt/route.ts`, `app/robots.ts`, `app/sitemap.ts` — GEO infra
 - **Lead flow VERIFIED working** end-to-end (form → /api/lead → Resend → inbox).
 - **Canonical now = www in code** (`site.url = https://www.queryclear.com`, T0 done).
-- **BUILD/LINT/TEST VERIFIED ON WINDOWS (2026-06-05):** `npm run build` → 26 routes
-  compile + TS passes; `npm run lint` clean; `npm test` 33/33 (lead 9 + checkout 4 +
-  webhook 5 + scorecard 15). `stripe` SDK added. Code is green. NOTE: `npm test` lists
-  files explicitly (`node --test tests/lead-route... tests/checkout-route...
-  tests/stripe-webhook... tests/scorecard...`) because `node --test tests/` errors on
+- **BUILD/LINT/TEST VERIFIED ON WINDOWS (2026-06-06):** `npm run build` → 27 routes
+  compile + TS passes; `npm run lint` clean; `npm test` 45/45 (lead 9 + checkout 4 +
+  webhook 5 + scorecard 15 + audit-report 12). `stripe` SDK added. Code is green. Also
+  served the production build via `next start` to verify `/reports/[slug]` (200,
+  noindex meta, unknown slug → 404). NOTE: `npm test` lists files explicitly
+  (`node --test tests/lead-route... tests/checkout-route... tests/stripe-webhook...
+  tests/scorecard... tests/audit-report...`) because `node --test tests/` errors on
   this Node (22.14) — add new test files to that list in `package.json`.
-- **What does NOT exist yet:** vertical pages (Phase 6), productization (Phase 5).
-  T13 partially done (custom 404 ✅, OG image ✅); STILL pending = Search Console +
-  Bing verification, deploy of the 12 new pages, formal Lighthouse/axe ≥90 — all
-  need founder accounts/creds. Phases 1–3 (12 routes) built + verified in code but
-  the new pages are NOT yet deployed to production (only the original Phase-1 MVP is live).
+- **What does NOT exist yet:** vertical pages (Phase 6); the actual $97 kit contents
+  (T17, deferred until T14 validates). Phases 1–4 + T14 are DEPLOYED and live
+  (verified 2026-06-05, GSC + Bing configured). STILL pending = founder-gated: deploy
+  T15 `/scorecard` and T16 `/reports` (push + `vercel --prod`), register the Stripe
+  webhook endpoint in the Stripe Dashboard, and a formal Lighthouse/axe ≥90 pass.
 
 ### Decision gates — ALL CLOSED 2026-06-03 (see `Decisions.md`)
 - **Canonical = www** (`https://www.queryclear.com`). Action pending: set `site.url`

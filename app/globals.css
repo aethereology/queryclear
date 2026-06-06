@@ -275,6 +275,41 @@
   animation: fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
+/* ──────────────────────────────────────────────────────────
+   Print / Save-as-PDF — used to export a client audit report
+   (/reports/[slug]) as a clean document. Drop site chrome and
+   interactive CTAs; keep brand colours so score rings/bars survive.
+   ────────────────────────────────────────────────────────── */
+@media print {
+  @page {
+    margin: 16mm;
+  }
+  /* sticky site header + footer are navigation noise on paper */
+  header,
+  footer,
+  .print-hide {
+    display: none !important;
+  }
+  body {
+    background: #fff;
+  }
+  /* force backgrounds (conic-gradient score ring, lime layer bars, panels) */
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  /* keep report cards and sections from splitting awkwardly across pages */
+  .card,
+  .machine-panel,
+  section {
+    break-inside: avoid;
+  }
+  .fade-up {
+    animation: none;
+    opacity: 1;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

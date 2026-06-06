@@ -51,17 +51,29 @@ Short living board. Strategy lives in `roadmap.md`; the executable cards live in
   `tests/scorecard.test.mjs`. build ✅ 26 routes · lint ✅ · test ✅ 33/33. Drove
   the full flow in a browser. **Founder-gated:** commit/push + `vercel --prod` to ship.
 
+## ✅ T16 paid audit report template BUILT + verified in code (2026-06-06)
+- Productized the $750 audit. `/audit` refactored onto a data-driven `<AuditReport>`
+  template (output unchanged); new **private** `/reports/[slug]` route delivers a
+  client's report as a noindexed link + Save-as-PDF. Typed model `lib/audit-report.ts`
+  (incl. `scoreFromLayers` — Goldleaf layer scores → 33), data in `lib/reports/`
+  (goldleaf-demo public sample + one fictional example in the registry). robots
+  disallows `/reports/`; excluded from sitemap + llms.txt; print CSS in globals.css.
+  SOP: `docs/playbooks/running-an-audit.md`.
+- build ✅ 27 routes · lint ✅ · test ✅ 45/45 (12 new). Verified `/reports/[slug]`
+  via `next start`: 200 + noindex; unknown slug → 404; `/audit` unchanged.
+  **Founder-gated:** commit/push + `vercel --prod` to ship.
+
 ## 🔄 Now — founder + next
-- **Founder TODO #1:** deploy T15 — `vercel --prod` (and `git push`) to put `/scorecard` live.
+- **Founder TODO #1:** deploy T15 `/scorecard` + T16 `/reports` — `git push` + `vercel --prod`.
 - **Founder TODO #2:** register webhook endpoint in Stripe Dashboard →
   `https://www.queryclear.com/api/stripe/webhook` (event `checkout.session.completed`)
   so order-notification emails fire. Confirm keys are test vs live before driving traffic.
-- **Decide next build:** Phase 6 first deep vertical (med spa) → then template; or the
-  audit delivery/report system (T16). Open recurring: formal Lighthouse/axe ≥90 pass.
+- **Next build (decide):** Phase 6 first deep vertical (med spa) → then template.
+  Open recurring: formal Lighthouse/axe ≥90 pass.
 
 ## ⏭️ Next
 - Phase 6: one deep vertical (med spa) then template — only after deploy + verify
-- T16: paid audit report template (productize what we deliver by hand)
+- First real paid-audit delivery: run the SOP, add `lib/reports/<slug>.ts`, ship
 
 ## 🗓️ Later
 - T13 technical hardening (recurring): formal Lighthouse/axe ≥90 pass on all pages

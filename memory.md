@@ -36,7 +36,32 @@ Update the "Current state" line whenever it changes.
 
 ## Current state (update this line)
 
-2026-06-05 (latest+++) — T15 FREE SCORECARD TOOL BUILT + VERIFIED (not yet deployed).
+2026-06-06 (latest) — T16 PAID AUDIT REPORT TEMPLATE BUILT + VERIFIED (not yet deployed).
+Founder picked T16 over Phase 6 verticals as the next build: the revenue bottleneck is
+*repeatable delivery* of a paid audit, not traffic. Productized it — the hand-built
+`/audit` page is now a data-driven `<AuditReport>` template (output unchanged), and a new
+**private** `/reports/[slug]` route delivers a client's report as a noindexed link + clean
+Save-as-PDF. Founder decisions this session: delivery = private web link + print-to-PDF
+(no standalone PDF lib); scope = template + client route + playbook. New files:
+`lib/audit-report.ts` (typed model + pure helpers — `scoreFromLayers` derives the headline
+0–100 from the 0–10 layer scores so it can't contradict the scorecard; Goldleaf → 33),
+`components/AuditReport.tsx` (sample vs client CTA variant, `print-hide`), `lib/reports/
+goldleaf-demo.ts` (public sample) + `lib/reports/index.ts` (private registry + one
+clearly-fictional example, Rivermark Family Dental), `app/reports/[slug]/page.tsx`
+(noindex, generateStaticParams, notFound), `docs/playbooks/running-an-audit.md` (SOP),
+`tests/audit-report.test.mjs` (12 tests). Edited: `app/audit/page.tsx` (onto template),
+`app/robots.ts` (disallow /reports/), `app/globals.css` (@media print), `package.json`
+(test list). /reports kept OUT of sitemap + llms.txt. VERIFIED on Windows: build ✅
+27 routes + TS · lint ✅ · test ✅ 45/45 (12 new). Served prod build via `next start`:
+`/reports/[slug]` 200 + `noindex,nofollow` meta, unknown slug → 404, robots disallows
+/reports/, /audit unchanged. (Side note: founder's long-running `next dev` on :3000 had a
+stale broken Header.tsx in memory throwing 500s — not our code; on-disk builds clean.)
+NEXT (founder-gated): `git push` + `vercel --prod` ships BOTH /scorecard (T15) and
+/reports (T16). Still also pending: register the Stripe webhook endpoint for T14;
+formal Lighthouse/axe ≥90 pass. To deliver a real audit: follow the playbook → add
+`lib/reports/<unguessable-slug>.ts` (demo:false) → register → deploy → send the link.
+
+2026-06-05 (prev+++) — T15 FREE SCORECARD TOOL BUILT + VERIFIED (not yet deployed).
 New `/scorecard`: a client-side self-assessment — 19 plain-English Yes/Not-sure/No
 questions across the 7 AI Visibility Stack layers → instant 0–100 readiness score with
 per-layer bars, weakest-layer guidance, and an honest "readiness not rankings" disclaimer.

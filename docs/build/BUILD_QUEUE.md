@@ -190,9 +190,32 @@ form submit → success state + accepted lead with the self-score in the message
 WebPage+BreadcrumbList JSON-LD present; `/scorecard` in sitemap.xml + llms.txt.
 **Pending to go live:** commit/push + `vercel --prod` (founder-gated deploy).
 
-## T16–T18+ — Later (see roadmap.md) 🔒
-Paid audit report template · DIY kit contents (only if T14 validates) · one deep
-vertical (med spa) then templated verticals. Do not start until prior phases ship.
+## T16 — Paid audit report template ✅ done 2026-06-06
+**Phase 5.** Productize the $750 audit we deliver by hand into a repeatable artifact.
+**Delivery (founder-chosen):** private, noindexed web report at an unguessable URL
+(`/reports/[slug]`), styled for clean Save-as-PDF. No standalone PDF lib; no admin UI.
+**What was built:**
+- `lib/audit-report.ts` — typed `AuditReport` model + pure helpers (`scoreFromLayers`
+  derives the 0–100 headline from the 0–10 layer scores → Goldleaf 23/70 = 33;
+  `sortedFixes` Critical→High→Medium; `layerMeta` reuses `lib/scorecard.ts` layers).
+- `components/AuditReport.tsx` — the report body lifted from `/audit`, data-driven,
+  with `sample` (public CTA) vs `client` (paid next-steps) variants + `print-hide`.
+- `lib/reports/goldleaf-demo.ts` (public sample data) + `lib/reports/index.ts`
+  (private registry + one clearly-fictional example "Rivermark Family Dental").
+- `app/audit/page.tsx` refactored onto the template (output unchanged).
+- `app/reports/[slug]/page.tsx` — `generateStaticParams` + `notFound()`;
+  `robots:{index:false,follow:false}`.
+- `app/robots.ts` disallows `/reports/`; route kept OUT of sitemap + llms.txt.
+- `app/globals.css` `@media print` block (drop chrome/CTA, keep brand colors).
+- `docs/playbooks/running-an-audit.md` — SOP to run an audit + produce/ship a report.
+- `tests/audit-report.test.mjs` (12 tests) wired into `package.json`.
+**Verified 2026-06-06 (Windows):** build ✅ 27 routes + TS · lint ✅ · test ✅ 45/45.
+Served prod build via `next start`: `/reports/[slug]` 200 + noindex, unknown → 404,
+`/audit` unchanged. **Pending to go live:** commit/push + `vercel --prod` (founder-gated).
+
+## T17–T18+ — Later (see roadmap.md) 🔒
+DIY kit contents (only if T14 validates) · one deep vertical (med spa) then templated
+verticals. Do not start until prior phases ship.
 
 ---
 
