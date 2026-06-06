@@ -25,6 +25,7 @@ guaranteed AI citations — we deliver technical readiness, clarity, and structu
 - AI Visibility Audit (request an audit): ${site.url}/ai-visibility-audit
 - The AI Visibility Stack (our method): ${site.url}/ai-visibility-stack
 - Sample GEO audit (demo): ${site.url}/audit
+- Free AI Visibility Scorecard (self-assessment tool): ${site.url}/scorecard
 - Local AI Search Optimization: ${site.url}/local-ai-search-optimization
 - GEO Audit: ${site.url}/geo-audit
 - AI-Search-Ready Websites: ${site.url}/ai-search-ready-website

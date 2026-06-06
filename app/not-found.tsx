@@ -51,7 +51,7 @@ export default function NotFound() {
                 <li key={d.href}>
                   <Link
                     href={d.href}
-                    className="card card-marker block h-full rounded-[10px] p-6 pl-10"
+                    className="card card-marker block h-full p-6 pl-10"
                   >
                     <span className="font-display text-xl tracking-tight">
                       {d.label}

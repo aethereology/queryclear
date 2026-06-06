@@ -135,7 +135,7 @@ export default function LocalPage() {
             <h2 className="mt-3 text-3xl sm:text-4xl">Built for appointment-based local businesses.</h2>
             <div className="mt-8 flex flex-wrap gap-3">
               {industries.map((i) => (
-                <span key={i} className="rounded-full border border-line bg-paper px-4 py-2 text-sm text-ink">{i}</span>
+                <span key={i} className="border border-dashed border-line bg-paper px-4 py-2 font-mono text-xs uppercase tracking-wider text-ink">{i}</span>
               ))}
             </div>
             <p className="mt-6 max-w-2xl text-sm text-muted">

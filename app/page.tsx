@@ -175,7 +175,7 @@ export default function Home() {
               lines={["Your customers are asking AI.", "Is it recommending you?"]}
             />
           </h2>
-          <div className="mt-12 grid gap-px overflow-hidden rounded-card border border-line bg-line sm:grid-cols-3">
+          <div className="mt-12 grid gap-px overflow-hidden border border-dashed border-line bg-line sm:grid-cols-3">
             {[
               ["Invisible in AI answers", "When someone asks an assistant for a business like yours, you're not in the answer."],
               ["Unclear to machines", "Most sites don't state plainly what they do, where, and for whom — so AI can't trust them."],
@@ -204,7 +204,7 @@ export default function Home() {
               <ul className="mt-7 grid gap-2.5 text-sm">
                 {["Structured content & clear entities", "JSON-LD schema markup", "Service pages & FAQs", "llms.txt & crawlability", "AI-readable business summary"].map((x) => (
                   <li key={x} className="flex items-center gap-3">
-                    <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-lime" />
+                    <span className="h-1.5 w-1.5 shrink-0 bg-lime" />
                     {x}
                   </li>
                 ))}
@@ -261,7 +261,7 @@ export default function Home() {
           <div className="mt-8">
             <LineDraw />
           </div>
-          <Stagger className="mt-6 grid gap-px overflow-hidden rounded-[10px] border border-line bg-line md:grid-cols-5">
+          <Stagger className="mt-6 grid gap-px overflow-hidden border border-dashed border-line bg-line md:grid-cols-5">
             {steps.map((s) => (
               <StaggerItem key={s.n} className="flex flex-col bg-paper p-6">
                 <span className="font-mono text-sm text-lime-deep tnum">{s.n}</span>

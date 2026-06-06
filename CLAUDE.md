@@ -49,17 +49,22 @@ We sell *readiness*, not outcomes. **Never** promise rankings or AI citations.
   - `app/opengraph-image.tsx` — sitewide social card (T13, 2026-06-04; next/og 1200×630)
   - `app/stack-kit/page.tsx` + `app/stack-kit/success/page.tsx` — $97 DIY-kit
     offer-test (T14, 2026-06-05; Stripe refundable pre-order, LIVE in prod)
+  - `app/scorecard/page.tsx` — free AI-visibility self-scorecard tool (T15, 2026-06-05;
+    client-side quiz over the 7 layers → 0–100 score; open result + optional lead with
+    self-score attached to /api/lead. Logic in `lib/scorecard.ts`, UI in
+    `components/Scorecard.tsx`. Built + verified in code; NOT yet deployed to prod.)
   - `app/api/checkout/route.ts` — Stripe Checkout Session for the pre-order
   - `app/api/stripe/webhook/route.ts` — verify sig → Resend order notify to info@
   - `app/api/lead/route.ts` — lead capture → Resend email (info@queryclear.com)
   - `app/llms.txt/route.ts`, `app/robots.ts`, `app/sitemap.ts` — GEO infra
 - **Lead flow VERIFIED working** end-to-end (form → /api/lead → Resend → inbox).
 - **Canonical now = www in code** (`site.url = https://www.queryclear.com`, T0 done).
-- **BUILD/LINT/TEST VERIFIED ON WINDOWS (2026-06-05):** `npm run build` → 25 routes
-  compile + TS passes; `npm run lint` clean; `npm test` 18/18 (lead 9 + checkout 4 +
-  webhook 5). `stripe` SDK added. Code is green. NOTE: `npm test` now lists files
-  explicitly (`node --test tests/lead-route... tests/checkout-route... tests/stripe-webhook...`)
-  because `node --test tests/` errors on this Node (22.14).
+- **BUILD/LINT/TEST VERIFIED ON WINDOWS (2026-06-05):** `npm run build` → 26 routes
+  compile + TS passes; `npm run lint` clean; `npm test` 33/33 (lead 9 + checkout 4 +
+  webhook 5 + scorecard 15). `stripe` SDK added. Code is green. NOTE: `npm test` lists
+  files explicitly (`node --test tests/lead-route... tests/checkout-route...
+  tests/stripe-webhook... tests/scorecard...`) because `node --test tests/` errors on
+  this Node (22.14) — add new test files to that list in `package.json`.
 - **What does NOT exist yet:** vertical pages (Phase 6), productization (Phase 5).
   T13 partially done (custom 404 ✅, OG image ✅); STILL pending = Search Console +
   Bing verification, deploy of the 12 new pages, formal Lighthouse/axe ≥90 — all

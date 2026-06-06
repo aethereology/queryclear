@@ -43,18 +43,28 @@ Short living board. Strategy lives in `roadmap.md`; the executable cards live in
   (18/18), deployed; prod /api/checkout returns real Stripe session. STRIPE_* env in
   Vercel prod. Spec: `docs/superpowers/specs/2026-06-05-stack-kit-offer-test-design.md`.
 
+## ✅ T15 free scorecard tool BUILT + verified in code (2026-06-05)
+- `/scorecard` — client-side self-assessment, 19 Qs across the 7 layers → instant
+  0–100 readiness score + per-layer bars + weakest-layer guidance. Open result, no
+  email gate; optional inline lead form attaches the self-score to `/api/lead`.
+- New: `lib/scorecard.ts`, `components/Scorecard.tsx`, `app/scorecard/page.tsx`,
+  `tests/scorecard.test.mjs`. build ✅ 26 routes · lint ✅ · test ✅ 33/33. Drove
+  the full flow in a browser. **Founder-gated:** commit/push + `vercel --prod` to ship.
+
 ## 🔄 Now — founder + next
-- **Founder TODO:** register webhook endpoint in Stripe Dashboard →
+- **Founder TODO #1:** deploy T15 — `vercel --prod` (and `git push`) to put `/scorecard` live.
+- **Founder TODO #2:** register webhook endpoint in Stripe Dashboard →
   `https://www.queryclear.com/api/stripe/webhook` (event `checkout.session.completed`)
   so order-notification emails fire. Confirm keys are test vs live before driving traffic.
 - **Decide next build:** Phase 6 first deep vertical (med spa) → then template; or the
-  audit delivery/report system. Open recurring: formal Lighthouse/axe ≥90 pass.
+  audit delivery/report system (T16). Open recurring: formal Lighthouse/axe ≥90 pass.
 
 ## ⏭️ Next
 - Phase 6: one deep vertical (med spa) then template — only after deploy + verify
-- Phase 5 (gated/deferred): $97 offer test page (T14)
+- T16: paid audit report template (productize what we deliver by hand)
 
 ## 🗓️ Later
-- T8–T12 category pages · T13 technical hardening · T14 $97 offer test (gated)
+- T13 technical hardening (recurring): formal Lighthouse/axe ≥90 pass on all pages
 - Re-home Aethelo work into its own repo (currently in .git.aethelo-backup)
 - Real audit/report generator + AI-visibility prompt runner (prompts.md)
+- T17 DIY kit contents — only if T14 ($97 pre-order) shows real demand

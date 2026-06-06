@@ -35,7 +35,7 @@ export function PreorderButton({
         type="button"
         onClick={startCheckout}
         disabled={loading}
-        className="group inline-flex items-center justify-center gap-2 rounded-full bg-lime px-6 py-3 text-sm font-medium text-pine-2 transition-colors duration-200 hover:bg-lime-deep active:scale-[0.97] disabled:opacity-70"
+        className="btn-hex group inline-flex items-center justify-center gap-2 border border-lime bg-lime px-6 py-3 font-mono text-sm font-medium uppercase tracking-wider text-pine-2 hover:border-pine-2 hover:bg-pine-2 hover:text-lime active:border-pine-2 active:bg-pine-2 active:text-lime focus-visible:border-pine-2 focus-visible:bg-pine-2 focus-visible:text-lime disabled:opacity-70"
       >
         {loading ? (
           <>
@@ -50,7 +50,7 @@ export function PreorderButton({
             {label}
             <span
               aria-hidden="true"
-              className="transition-transform duration-200 ease-out group-hover:translate-x-1"
+              className="transition-transform duration-100 ease-out group-hover:translate-x-1 group-active:translate-x-1"
             >
               →
             </span>

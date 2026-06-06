@@ -198,7 +198,7 @@ export default function StackKitPage() {
         <section className="border-b border-line py-16">
           <Container>
             <MonoLabel index="04">The pre-order, plainly</MonoLabel>
-            <div className="mt-5 max-w-2xl rounded-[14px] border border-line bg-paper p-6 sm:p-8">
+            <div className="mt-5 max-w-2xl border border-dashed border-line bg-paper p-6 sm:p-8">
               <p className="leading-relaxed text-ink">{kit.terms}</p>
             </div>
           </Container>

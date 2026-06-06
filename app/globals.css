@@ -21,7 +21,7 @@
   --font-sans: var(--font-plex-sans), system-ui, sans-serif;
   --font-mono: var(--font-plex-mono), ui-monospace, monospace;
 
-  --radius-card: 14px;
+  --radius-card: 0px;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -64,7 +64,7 @@
   :where(a, button, input, textarea, select, [tabindex]):focus-visible {
     outline: 2px solid var(--color-pine);
     outline-offset: 3px;
-    border-radius: 2px;
+    border-radius: 0;
   }
 }
 
@@ -78,6 +78,61 @@
     color: var(--color-muted);
   }
 
+  .btn-hex {
+    --btn-cut: 12px;
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    border-radius: 0;
+    touch-action: manipulation;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    clip-path: polygon(
+      var(--btn-cut) 0,
+      100% 0,
+      100% calc(100% - var(--btn-cut)),
+      calc(100% - var(--btn-cut)) 100%,
+      0 100%,
+      0 var(--btn-cut)
+    );
+    transition:
+      background-color 0.08s steps(1, end),
+      border-color 0.08s steps(1, end),
+      color 0.08s steps(1, end),
+      transform 0.08s var(--ease);
+  }
+  .btn-hex::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(
+      135deg,
+      #ffffff38 0,
+      transparent 32%,
+      transparent 68%,
+      #17180f26 100%
+    );
+    opacity: 0;
+    transition: opacity 0.08s steps(1, end);
+  }
+  .btn-hex:hover::after,
+  .btn-hex:focus-visible::after,
+  .btn-hex:active::after {
+    opacity: 1;
+  }
+  .btn-hex:active {
+    transform: translateY(1px);
+  }
+  .btn-hex:focus-visible {
+    outline: 1px solid currentColor;
+    outline-offset: 3px;
+  }
+  .btn-hex:disabled,
+  .btn-hex[aria-disabled="true"] {
+    pointer-events: none;
+  }
+
   /* the "machine view" panel — what an AI reads */
   .machine-panel {
     font-family: var(--font-mono);
@@ -85,8 +140,8 @@
     line-height: 1.6;
     background: var(--color-pine-2);
     color: #cfe8c4;
-    border-radius: var(--radius-card);
-    border: 1px solid #ffffff14;
+    border-radius: 0;
+    border: 1px dashed #ffffff24;
     padding: 1.1rem 1.2rem;
     overflow-x: auto;
   }
@@ -102,16 +157,12 @@
     position: relative;
     background: var(--color-paper);
     border: 1px solid var(--color-line);
-    border-radius: 10px;
-    transition:
-      transform 0.25s var(--ease),
-      box-shadow 0.25s var(--ease),
-      border-color 0.25s var(--ease);
+    border-style: dashed;
+    border-radius: 0;
+    transition: border-color 0.2s var(--ease);
   }
   .card:hover {
-    transform: translateY(-4px);
     border-color: #17180933;
-    box-shadow: 0 16px 34px -22px #17180955;
   }
   /* small lime marker that appears on hover — replaces "encircling" decoration */
   .card-marker::before {
@@ -121,7 +172,6 @@
     top: 1.25rem;
     width: 6px;
     height: 6px;
-    border-radius: 9999px;
     background: var(--color-lime);
     transform: scale(0);
     transition: transform 0.25s var(--ease);
@@ -157,10 +207,45 @@
     transform: scaleX(1);
   }
 
-  /* soft focus halo for form inputs (in addition to border color) */
+  /* terminal/editor-style nav text selection block */
+  .nav-block {
+    position: relative;
+    isolation: isolate;
+    color: var(--color-muted);
+    transition: color 0.12s linear;
+  }
+  .nav-block::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--color-lime);
+    opacity: 0;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition:
+      transform 0.16s steps(4, end),
+      opacity 0.08s linear;
+  }
+  .nav-block:hover,
+  .nav-block:focus-visible,
+  .nav-block[aria-expanded="true"] {
+    color: var(--color-pine-2);
+  }
+  .nav-block:hover::before,
+  .nav-block:focus-visible::before,
+  .nav-block[aria-expanded="true"]::before {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+  /* hard focus edge for form inputs */
+  .input-halo {
+    border-radius: 0;
+    font-family: var(--font-mono);
+  }
   .input-halo:focus {
-    border-color: var(--color-pine);
-    box-shadow: 0 0 0 3px #12352a1f;
+    border-color: var(--color-lime-deep);
+    box-shadow: 0 0 0 1px var(--color-lime-deep);
   }
 
   /* brand mark: lime dot orbits the ring on hover (CSS-only, motion-safe) */
@@ -199,9 +284,16 @@
     opacity: 1;
   }
   .card,
+  .btn-hex,
+  .btn-hex::after,
   .ulink::after,
+  .nav-block,
+  .nav-block::before,
   .mark-orbit .orbit-dot {
     transition: none;
+  }
+  .btn-hex:active {
+    transform: none;
   }
   .mark-orbit:hover .orbit-dot {
     transform: none;

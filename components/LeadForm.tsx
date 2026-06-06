@@ -91,7 +91,7 @@ export function LeadForm() {
               autoComplete={"autoComplete" in f ? f.autoComplete : undefined}
               placeholder={"placeholder" in f ? f.placeholder : undefined}
               defaultValue={"defaultValue" in f ? f.defaultValue : undefined}
-              className="input-halo w-full rounded-lg border border-line bg-paper px-3.5 py-2.5 text-sm text-ink placeholder:text-muted outline-none transition-colors"
+              className="input-halo w-full border border-line bg-paper px-3.5 py-2.5 text-sm text-ink placeholder:text-muted outline-none transition-colors"
             />
           </div>
         ))}
@@ -103,7 +103,7 @@ export function LeadForm() {
             id="message"
             name="message"
             rows={3}
-            className="input-halo w-full rounded-lg border border-line bg-paper px-3.5 py-2.5 text-sm text-ink placeholder:text-muted outline-none transition-colors"
+            className="input-halo w-full border border-line bg-paper px-3.5 py-2.5 text-sm text-ink placeholder:text-muted outline-none transition-colors"
           />
         </div>
       </div>
@@ -117,7 +117,7 @@ export function LeadForm() {
       <button
         type="submit"
         disabled={status === "submitting"}
-        className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-lime px-6 py-3.5 text-sm font-medium text-pine-2 transition-colors hover:bg-lime-deep disabled:opacity-70 sm:w-auto"
+        className="btn-hex mt-6 inline-flex w-full items-center justify-center gap-2 border border-lime bg-lime px-6 py-3.5 font-mono text-sm font-medium uppercase tracking-wider text-pine-2 hover:border-pine-2 hover:bg-pine-2 hover:text-lime active:border-pine-2 active:bg-pine-2 active:text-lime focus-visible:border-pine-2 focus-visible:bg-pine-2 focus-visible:text-lime disabled:opacity-70 sm:w-auto"
       >
         {status === "submitting" ? (
           <>

@@ -63,18 +63,18 @@ export function Cta({
   showArrow = true,
 }: CtaProps) {
   const base =
-    "group inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-medium transition-colors duration-200 active:scale-[0.97]";
+    "btn-hex group inline-flex items-center justify-center gap-2 border px-6 py-3 font-mono text-sm font-medium uppercase tracking-wider";
   const styles =
     variant === "primary"
-      ? "bg-lime text-pine-2 hover:bg-lime-deep"
-      : "border border-line text-ink hover:border-ink/40 hover:bg-paper-2";
+      ? "border-lime bg-lime text-pine-2 hover:border-pine-2 hover:bg-pine-2 hover:text-lime active:border-pine-2 active:bg-pine-2 active:text-lime focus-visible:border-pine-2 focus-visible:bg-pine-2 focus-visible:text-lime"
+      : "border-line bg-transparent text-ink hover:border-lime hover:bg-lime hover:text-pine-2 active:border-lime active:bg-lime active:text-pine-2 focus-visible:border-lime focus-visible:bg-lime focus-visible:text-pine-2";
   return (
     <Link href={href} className={`${base} ${styles} ${className}`}>
       {children}
       {variant === "primary" && showArrow && (
         <span
           aria-hidden="true"
-          className="transition-transform duration-200 ease-out group-hover:translate-x-1"
+          className="transition-transform duration-100 ease-out group-hover:translate-x-1 group-active:translate-x-1"
         >
           →
         </span>

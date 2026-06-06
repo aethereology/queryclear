@@ -41,6 +41,9 @@ export function Footer() {
               <Link href="/audit" className="text-paper/80 hover:text-lime">
                 Sample audit
               </Link>
+              <Link href="/scorecard" className="text-paper/80 hover:text-lime">
+                Free scorecard
+              </Link>
               <Link href="/schema-for-ai-search" className="text-paper/80 hover:text-lime">
                 Schema for AI search
               </Link>

@@ -197,7 +197,9 @@ export default function AboutPage() {
             </div>
             <div className="flex flex-wrap gap-3">
               <Cta href={`/${site.primaryCta.href}`}>Book a free AI search audit</Cta>
-              <Cta href="/audit" variant="ghost">See a sample audit</Cta>
+              <Cta href="/audit" variant="ghost" className="!border-paper/30 !text-paper hover:!bg-white/10">
+                See a sample audit
+              </Cta>
             </div>
           </Container>
         </section>

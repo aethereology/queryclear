@@ -103,11 +103,11 @@ function LayerBar({ score }: { score: number }) {
   return (
     <div className="flex items-center gap-3">
       <div
-        className="h-2 flex-1 overflow-hidden rounded-full bg-paper-2"
+        className="h-2 flex-1 overflow-hidden border border-line bg-paper-2"
         role="img"
         aria-label={`Layer score ${score} out of 10`}
       >
-        <div className="h-full rounded-full bg-lime" style={{ width: `${score * 10}%` }} />
+        <div className="h-full bg-lime" style={{ width: `${score * 10}%` }} />
       </div>
       <span className="mono-label tnum w-11 shrink-0 text-right">{score}/10</span>
     </div>
@@ -165,7 +165,7 @@ export default function AuditPage() {
               engines — and record whether the business surfaces, and whether the
               answer is accurate.
             </p>
-            <div className="mt-8 overflow-hidden rounded-card border border-line">
+            <div className="mt-8 overflow-hidden border border-dashed border-line">
               <div className="hidden gap-2 border-b border-line bg-paper-2 p-5 sm:grid sm:grid-cols-[1.4fr_0.6fr_1fr]">
                 <span className="mono-label">Prompt</span>
                 <span className="mono-label">Surfaced?</span>
@@ -177,7 +177,7 @@ export default function AuditPage() {
                   className={`grid gap-2 p-5 sm:grid-cols-[1.4fr_0.6fr_1fr] sm:items-center ${i % 2 ? "bg-paper-2" : "bg-paper"}`}
                 >
                   <p className="font-mono text-sm">&ldquo;{v.prompt}&rdquo;</p>
-                  <span className="inline-flex w-fit rounded-full border border-red-200 bg-red-100 px-3 py-1 text-xs font-medium text-red-800">
+                  <span className="inline-flex w-fit border border-red-200 bg-red-100 px-3 py-1 font-mono text-xs font-medium uppercase tracking-wider text-red-800">
                     {v.result}
                   </span>
                   <p className="text-sm text-muted">{v.note}</p>
@@ -227,7 +227,7 @@ export default function AuditPage() {
             <Stagger className="mt-8 grid gap-4">
               {findings.map((f) => (
                 <StaggerItem key={f.t} className="card grid gap-4 p-6 sm:grid-cols-[auto_1fr] sm:items-start">
-                  <span className={`inline-flex h-fit w-fit rounded-full border px-3 py-1 text-xs font-medium ${sevColor[f.sev]}`}>
+                  <span className={`inline-flex h-fit w-fit border px-3 py-1 font-mono text-xs font-medium uppercase tracking-wider ${sevColor[f.sev]}`}>
                     {f.sev}
                   </span>
                   <div>
@@ -300,6 +300,9 @@ export default function AuditPage() {
             </div>
             <div className="flex flex-wrap gap-3">
               <Cta href="/ai-visibility-audit">Book a free AI search audit</Cta>
+              <Cta href="/scorecard" variant="ghost" className="!text-paper !border-paper/30 hover:!bg-white/10">
+                Score your own site
+              </Cta>
               <Cta href="/ai-visibility-stack" variant="ghost" className="!text-paper !border-paper/30 hover:!bg-white/10">
                 See our method
               </Cta>

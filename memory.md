@@ -36,7 +36,25 @@ Update the "Current state" line whenever it changes.
 
 ## Current state (update this line)
 
-2026-06-05 (latest++) — NEW SAMPLE AUDIT LIVE + DEMO UNIFIED. Rebuilt /audit as a
+2026-06-05 (latest+++) — T15 FREE SCORECARD TOOL BUILT + VERIFIED (not yet deployed).
+New `/scorecard`: a client-side self-assessment — 19 plain-English Yes/Not-sure/No
+questions across the 7 AI Visibility Stack layers → instant 0–100 readiness score with
+per-layer bars, weakest-layer guidance, and an honest "readiness not rankings" disclaimer.
+Founder chose the open-result model (no email gate); below the result is an optional lead
+form that POSTs to the existing `/api/lead` with the self-score summary auto-attached in
+the `message` field (no API change). New files: `lib/scorecard.ts` (rubric + pure,
+unit-tested scoring — weights sum to exactly 100), `components/Scorecard.tsx`,
+`app/scorecard/page.tsx`, `tests/scorecard.test.mjs` (15 tests). Added to sitemap +
+llms.txt; linked from Footer and the /ai-visibility-stack & /audit CTA blocks. Reuses the
+ScoreRing/LayerBar patterns from /audit, CountUp, and ui primitives. VERIFIED on Windows:
+build ✅ 26 routes + TS · lint ✅ · test ✅ 33/33 (added scorecard 15). Drove the live
+page in a browser: all-yes→100 ("Strong"), all-no→0 ("Hard for AI to read"), weakest
+cards render, lead submit → success + accepted lead carrying the self-score in the
+message; WebPage+BreadcrumbList JSON-LD present; /scorecard in sitemap.xml + llms.txt.
+NEXT (founder-gated): `git push` + `vercel --prod` to ship /scorecard. Still also pending:
+register the Stripe webhook endpoint for T14.
+
+2026-06-05 (latest++) — NEW SAMPLE AUDIT LIVE + DEMO UNIFIED. Rebuilt /audit as a Rebuilt /audit as a
 best-practice, methodology-driven page on a fictional med spa (Goldleaf Aesthetics &
 Med Spa, Westhaven) — 7-layer AI Visibility Stack scorecard (per-layer bars), richer
 AI-visibility test table, findings tagged to layers, added WebPage+BreadcrumbList

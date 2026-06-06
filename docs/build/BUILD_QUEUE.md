@@ -167,10 +167,32 @@ checkout.stripe.com session with founder's keys. **Pending to go live:** commit/
 `vercel --prod`, add STRIPE_* to Vercel prod env, register webhook endpoint
 (`/api/stripe/webhook`) in Stripe Dashboard so its signing secret matches.
 
-## T15–T18+ — Later (see roadmap.md) 🔒
-Scorecard tool · paid audit report template · DIY kit contents (only if T14 validates) ·
-one deep vertical (med spa) then templated verticals. Do not start until prior phases
-ship and gates close.
+## T15 — Free AI-visibility scorecard tool ✅ (built + verified 2026-06-05)
+**Route:** `/scorecard`. A lightweight, client-side self-assessment (NOT a SaaS app):
+an owner answers 19 plain-English Yes/Not sure/No questions across the 7 layers of the
+AI Visibility Stack and gets an instant 0–100 readiness score with per-layer bars,
+weakest-layer guidance, and an honest "readiness, not rankings" disclaimer.
+**Lead model (founder-chosen):** open result (no email gate) + optional inline lead form
+that POSTs to the existing `/api/lead` with the self-score summary auto-attached in the
+`message` field (no API change). Reuses the lead route's honeypot/rate-limit/email path.
+**Files:** `lib/scorecard.ts` (rubric + pure scoring helpers, single source of truth) ·
+`components/Scorecard.tsx` (`"use client"` quiz + result + lead form) · `app/scorecard/page.tsx`
+(server shell). Reuses `ScoreRing`/`LayerBar` patterns from `/audit`, `CountUp`, `ui.tsx`.
+**Schema:** WebPage + BreadcrumbList. Added to `app/sitemap.ts` + `app/llms.txt/route.ts`;
+linked from Footer + the `/ai-visibility-stack` and `/audit` CTA blocks.
+**Tests:** `tests/scorecard.test.mjs` (15 unit tests: weights sum to 100, all-no→0,
+all-yes→100, partial→half, weakestLayers ordering, band boundaries, summary cap) wired
+into `package.json` test script.
+**Verified 2026-06-05 (Windows):** `npm run build` ✅ 26 routes + TS · `npm run lint` ✅ ·
+`npm test` ✅ 33/33 (18 prior + 15 new). Drove `/scorecard` end-to-end in a browser:
+all-yes→100 ("Strong"), all-no→0 ("Hard for AI to read"), 2 weakest cards render, lead
+form submit → success state + accepted lead with the self-score in the message field;
+WebPage+BreadcrumbList JSON-LD present; `/scorecard` in sitemap.xml + llms.txt.
+**Pending to go live:** commit/push + `vercel --prod` (founder-gated deploy).
+
+## T16–T18+ — Later (see roadmap.md) 🔒
+Paid audit report template · DIY kit contents (only if T14 validates) · one deep
+vertical (med spa) then templated verticals. Do not start until prior phases ship.
 
 ---
 
