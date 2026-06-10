@@ -13,7 +13,9 @@ export const site = {
   // The free audit is the primary action everywhere.
   primaryCta: { label: "Book a free AI search audit", href: "#audit-cta" },
   secondaryCta: { label: "See what we optimize", href: "#solution" },
-  email: "info@queryclear.com",
+  // Public contact. info@ remains a live forwarding alias; hello@ is the
+  // public-facing address (deliverability update 2026-06-10).
+  email: "hello@queryclear.com",
   answerEngines: [
     "ChatGPT",
     "Claude",

@@ -351,7 +351,7 @@ async function sendEmails(lead: Lead) {
             from,
             to: lead.email,
             replyTo: to,
-            subject: "Your free AI search audit — here's what happens next",
+            subject: "We got your audit request — next steps",
             html: confirmationHtml(lead),
             text: confirmationText(lead),
           });

@@ -84,7 +84,7 @@ function loadRoute() {
     if (id === "@/lib/site") {
       return {
         site: {
-          email: "info@queryclear.com",
+          email: "hello@queryclear.com",
           stackKit: { name: "The Local AI Visibility Stack", currency: "usd", unitAmount: 9700, shipDays: 30 },
         },
       };
@@ -142,7 +142,7 @@ test("on checkout.session.completed sends an order email and returns received:tr
   assert.equal(res.status, 200);
   assert.deepEqual(await res.json(), { received: true });
   assert.equal(sent.length, 1);
-  assert.equal(sent[0].to, "info@queryclear.com");
+  assert.equal(sent[0].to, "hello@queryclear.com");
   assert.equal(sent[0].replyTo, "buyer@example.com");
   assert.match(sent[0].html, /Sam Buyer/);
   assert.match(sent[0].html, /97\.00/);

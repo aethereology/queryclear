@@ -87,7 +87,7 @@ function loadRoute({ sendImpl } = {}) {
     if (id === "@/lib/site") {
       return {
         site: {
-          email: "info@queryclear.com",
+          email: "hello@queryclear.com",
           name: "queryclear",
           url: "https://queryclear.com",
         },

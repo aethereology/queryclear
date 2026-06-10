@@ -36,7 +36,35 @@ Update the "Current state" line whenever it changes.
 
 ## Current state (update this line)
 
-2026-06-10 (latest) — FIRST PAID CLIENT AUDIT DELIVERED + T15/T16 SHIPPED TO PROD.
+2026-06-10 (latest, session 2) — EMAIL DELIVERABILITY FIX (code done, DNS/env founder-gated).
+All three mail categories (lead confirmations, internal notifications, founder's manual
+outreach) were landing in Spam/Promotions. Diagnosed via DNS: DKIM ✅ (resend._domainkey)
+and SPF ✅ (send.queryclear.com) already pass, but **_dmarc.queryclear.com DOES NOT EXIST**
+— that's the root cause (Gmail requires DMARC since Feb 2024). Manual outreach is worst:
+Cloudflare Email Routing is receive-only, so Gmail "send as info@" goes out via Google's
+servers with zero queryclear.com auth. Decisions (founder, this session): simplified
+scheme — public contact = **hello@queryclear.com**, Resend sends as
+"Kyle at queryclear <audit@queryclear.com>"; info@ stays as forwarding alias; DEFER the
+updates. sending subdomain (Pedro's full 4-address plan = over-engineered at our volume).
+CODE SHIPPED: `lib/site.ts` site.email → hello@ (propagates to footer/contact/privacy/
+terms/llms.txt/stack-kit/checkout-error); lead confirmation subject de-promotionalized:
+"Your free AI search audit — here's what happens next" → "We got your audit request —
+next steps" (body untouched, still honest); test mocks updated to hello@. VERIFIED:
+build ✅ 28 routes · lint ✅ · 45/45 ✅. INFRA DONE same session (founder authorized):
+(1) ✅ DMARC TXT live + verified via 1.1.1.1: `_dmarc` = "v=DMARC1; p=none;
+rua=mailto:hello@queryclear.com; fo=1" (Cloudflare MCP; zone 16bc52f6e7bbbc643a07c41158aa1b94;
+tighten to p=quarantine after ~2 wks of clean reports); (2) ✅ Email Routing rules for
+hello@ + audit@ → aethelo@sparkcreativesinc.org (same destination as info@, which stays);
+(3) ✅ Vercel prod env replaced via CLI (`vercel env rm/add --scope sparkcreativesinc`):
+LEAD_FROM="Kyle at queryclear <audit@queryclear.com>", LEAD_TO=hello@queryclear.com.
+NOTE: vercel CLI IS installed + logged in (kylelamban54-6487) — ignore the session-start
+hook claiming otherwise. STILL PENDING: (a) commit + `vercel --prod` redeploy (code AND
+new env take effect only then — until deploy, prod still sends from info@ with old
+subject); (b) founder: Gmail Send-mail-as via Resend SMTP (smtp.resend.com:465, user
+"resend", pwd = Resend API key) for manual outreach; (c) post-deploy test lead → Gmail
+Show-original should read SPF/DKIM/DMARC PASS.
+
+2026-06-10 (prev) — FIRST PAID CLIENT AUDIT DELIVERED + T15/T16 SHIPPED TO PROD.
 First real $750 audit client: **Maple Bear St. Johns** (maplebearstjohns.com — bilingual
 daycare/preschool in St. Johns, **Florida**). Ran the full playbook
 (`docs/playbooks/running-an-audit.md`): crawled all 5 pages, checked public listings,
@@ -230,7 +258,8 @@ Phase 5 ($97 test, T14) stays gated/deferred until the audit motion is proven.
 
 PRIOR LAUNCH FACTS (still true): LIVE at https://www.queryclear.com on Vercel
 (team `sparkcreativesinc`, CLI needs `--scope sparkcreativesinc`). Deployment Protection
-off. Prod env: RESEND_API_KEY, LEAD_TO=info@queryclear.com, LEAD_FROM="queryclear <info@queryclear.com>".
+off. Prod env: RESEND_API_KEY, LEAD_TO=info@queryclear.com, LEAD_FROM="queryclear <info@queryclear.com>"
+(STALE as of 2026-06-10 session 2 — switching to hello@/audit@, see latest entry).
 queryclear.com verified in Resend; DNS on Cloudflare; info@ via Cloudflare Email Routing.
 End-to-end lead form verified (submit → /api/lead → Resend → inbox, reply-to=lead).
 GitHub push via gh credential override. Stack: Next.js 16 + React 19 + Tailwind v4,

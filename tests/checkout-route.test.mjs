@@ -62,7 +62,7 @@ function loadRoute({ createImpl } = {}) {
     if (id === "@/lib/site") {
       return {
         site: {
-          email: "info@queryclear.com",
+          email: "hello@queryclear.com",
           url: "https://www.queryclear.com",
           stackKit: { currency: "usd", unitAmount: 9700, shipDays: 30, name: "The Local AI Visibility Stack" },
         },

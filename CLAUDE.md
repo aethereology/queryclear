@@ -67,10 +67,22 @@ We sell *readiness*, not outcomes. **Never** promise rankings or AI citations.
     `tests/audit-report.test.mjs` now auto-loads all `lib/reports/*.ts`, so new
     client reports need no test edit.
   - `app/api/checkout/route.ts` — Stripe Checkout Session for the pre-order
-  - `app/api/stripe/webhook/route.ts` — verify sig → Resend order notify to info@
-  - `app/api/lead/route.ts` — lead capture → Resend email (info@queryclear.com)
+  - `app/api/stripe/webhook/route.ts` — verify sig → Resend order notify (LEAD_TO)
+  - `app/api/lead/route.ts` — lead capture → Resend email (LEAD_TO, default `site.email`)
   - `app/llms.txt/route.ts`, `app/robots.ts`, `app/sitemap.ts` — GEO infra
 - **Lead flow VERIFIED working** end-to-end (form → /api/lead → Resend → inbox).
+- **Email deliverability update (2026-06-10):** all outbound mail was hitting
+  Spam/Promotions. Root cause: NO DMARC record (DKIM + SPF via Resend already pass).
+  Code side done: `site.email` is now `hello@queryclear.com` (public contact
+  everywhere); confirmation subject de-promotionalized ("We got your audit request —
+  next steps"). `info@` stays alive as a forwarding alias. DONE same day (founder
+  authorized, via Cloudflare MCP + Vercel CLI): `_dmarc.queryclear.com` TXT live
+  ("v=DMARC1; p=none; rua=mailto:hello@queryclear.com; fo=1" — tighten to
+  p=quarantine after ~2 wks), hello@/audit@ Email Routing aliases forward to
+  aethelo@sparkcreativesinc.org, Vercel prod env LEAD_FROM="Kyle at queryclear
+  <audit@queryclear.com>" + LEAD_TO=hello@queryclear.com. STILL PENDING: redeploy
+  (env + code take effect then), founder's Gmail send-as via Resend SMTP.
+  Deliberately deferred: `updates.` sending subdomain (premature at current volume).
 - **Canonical now = www in code** (`site.url = https://www.queryclear.com`, T0 done).
 - **BUILD/LINT/TEST VERIFIED ON WINDOWS (2026-06-06):** `npm run build` → 27 routes
   compile + TS passes; `npm run lint` clean; `npm test` 45/45 (lead 9 + checkout 4 +
