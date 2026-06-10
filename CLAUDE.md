@@ -24,7 +24,7 @@ We sell *readiness*, not outcomes. **Never** promise rankings or AI citations.
 
 ## 2. Ground-truth state (keep this section current)
 
-> Last verified: 2026-06-06. If you change the site, update this section and
+> Last verified: 2026-06-10. If you change the site, update this section and
 > `memory.md` at the end of your session.
 
 - **LIVE** at https://www.queryclear.com (apex 307 → www). Deployed on Vercel
@@ -52,14 +52,20 @@ We sell *readiness*, not outcomes. **Never** promise rankings or AI citations.
   - `app/scorecard/page.tsx` — free AI-visibility self-scorecard tool (T15, 2026-06-05;
     client-side quiz over the 7 layers → 0–100 score; open result + optional lead with
     self-score attached to /api/lead. Logic in `lib/scorecard.ts`, UI in
-    `components/Scorecard.tsx`. Built + verified in code; NOT yet deployed to prod.)
+    `components/Scorecard.tsx`. LIVE in prod since 2026-06-10.)
   - `app/reports/[slug]/page.tsx` — **private** per-client paid-audit report (T16,
     2026-06-06). Productizes the $750 audit: each report is a typed `AuditReport`
     data file (`lib/reports/`), rendered by the shared `<AuditReport>` template
     (`components/AuditReport.tsx`). NOINDEX + robots-disallowed + excluded from
     sitemap/llms.txt; unguessable slugs; print-to-PDF styles. Registry +
     one fictional example in `lib/reports/index.ts`. Model in `lib/audit-report.ts`.
-    SOP: `docs/playbooks/running-an-audit.md`. Built + verified in code; NOT deployed.
+    SOP: `docs/playbooks/running-an-audit.md`. LIVE in prod since 2026-06-10.
+    **First real client report delivered 2026-06-10:** Maple Bear St. Johns
+    (daycare/preschool, St. Johns FL) at `lib/reports/maplebear-stjohns-4caf31.ts`,
+    score 49/100. ChatGPT/Gemini/Copilot visibility rows = "Unknown" pending the
+    founder's manual runs — update the data file + redeploy when recorded.
+    `tests/audit-report.test.mjs` now auto-loads all `lib/reports/*.ts`, so new
+    client reports need no test edit.
   - `app/api/checkout/route.ts` — Stripe Checkout Session for the pre-order
   - `app/api/stripe/webhook/route.ts` — verify sig → Resend order notify to info@
   - `app/api/lead/route.ts` — lead capture → Resend email (info@queryclear.com)
@@ -75,10 +81,12 @@ We sell *readiness*, not outcomes. **Never** promise rankings or AI citations.
   tests/scorecard... tests/audit-report...`) because `node --test tests/` errors on
   this Node (22.14) — add new test files to that list in `package.json`.
 - **What does NOT exist yet:** vertical pages (Phase 6); the actual $97 kit contents
-  (T17, deferred until T14 validates). Phases 1–4 + T14 are DEPLOYED and live
-  (verified 2026-06-05, GSC + Bing configured). STILL pending = founder-gated: deploy
-  T15 `/scorecard` and T16 `/reports` (push + `vercel --prod`), register the Stripe
-  webhook endpoint in the Stripe Dashboard, and a formal Lighthouse/axe ≥90 pass.
+  (T17, deferred until T14 validates). Phases 1–4 + T14 + T15 + T16 are DEPLOYED and
+  live (T15/T16 shipped 2026-06-10 with the first client report; prod smoke-checked:
+  report 200+noindex, 404 on unknown slugs, no sitemap/llms leakage). STILL pending =
+  founder-gated: register the Stripe webhook endpoint in the Stripe Dashboard, the
+  founder's manual ChatGPT/Gemini/Copilot visibility runs for the Maple Bear report,
+  and a formal Lighthouse/axe ≥90 pass.
 
 ### Decision gates — ALL CLOSED 2026-06-03 (see `Decisions.md`)
 - **Canonical = www** (`https://www.queryclear.com`). Action pending: set `site.url`

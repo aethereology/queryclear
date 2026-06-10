@@ -36,7 +36,35 @@ Update the "Current state" line whenever it changes.
 
 ## Current state (update this line)
 
-2026-06-06 (latest) — T16 PAID AUDIT REPORT TEMPLATE BUILT + VERIFIED (not yet deployed).
+2026-06-10 (latest) — FIRST PAID CLIENT AUDIT DELIVERED + T15/T16 SHIPPED TO PROD.
+First real $750 audit client: **Maple Bear St. Johns** (maplebearstjohns.com — bilingual
+daycare/preschool in St. Johns, **Florida**). Ran the full playbook
+(`docs/playbooks/running-an-audit.md`): crawled all 5 pages, checked public listings,
+ran web-grounded visibility tests, scored the 7 layers → **49/100** (34/70), scoreAfter 80.
+Key findings: schema = bare Organization (name+url only, despite NAP+hours published on
+site); NO H1 on any page (Elementor heroes are H2s); zero FAQ/answer content (layer score
+2); business name splinters across web ("Maple Bear St. Johns" vs Yelp "Maple Bear Early
+Learning Center" vs Care.com "...LLC"); homepage/Programs page CONTRADICT on infant age
+range (24 vs 17 months); main Book-a-Tour CTA has rel="nofollow" on an internal link;
+og:type=article sitewide; 10-required-field contact form. Strengths: real Google reviews
+on-site, consistent footer NAP, hours published. Visibility: NOT surfaced for "best
+preschools St Johns FL", infant-daycare, or even bilingual/Spanish-immersion (their core
+differentiator — Primrose got called "bilingual" instead); branded lookups resolve but
+identity splinters. ChatGPT/Gemini/Copilot tests = "Unknown" pending founder's manual
+runs (update the data file + redeploy when recorded). Report =
+`lib/reports/maplebear-stjohns-4caf31.ts` (variant client, demo:false), registered in
+index.ts. Also improved `tests/audit-report.test.mjs` to auto-load all lib/reports/*.ts
+so future clients need no test edit. VERIFIED: build ✅ 28 routes · lint ✅ · 45/45 ✅ ·
+prod-build serve checks ✅. Founder approved content → DEPLOYED `vercel --prod`
+(founder authorized deploy this session): T15 /scorecard + T16 /reports now LIVE.
+Prod smoke ✅: report 200+noindex, unknown slug 404, slug absent from sitemap/llms.txt,
+robots disallows /reports/, /scorecard 200. Private client link:
+https://www.queryclear.com/reports/maplebear-stjohns-4caf31 (founder sends; Save-as-PDF
+for attachment). STILL PENDING: founder's 3-engine manual visibility runs; Stripe
+webhook endpoint registration (T14); formal Lighthouse/axe ≥90 pass. NEXT natural step:
+pitch the client on the fix-implementation engagement (8 fixes scoped in the report).
+
+2026-06-06 (prev) — T16 PAID AUDIT REPORT TEMPLATE BUILT + VERIFIED (not yet deployed).
 Founder picked T16 over Phase 6 verticals as the next build: the revenue bottleneck is
 *repeatable delivery* of a paid audit, not traffic. Productized it — the hand-built
 `/audit` page is now a data-driven `<AuditReport>` template (output unchanged), and a new
