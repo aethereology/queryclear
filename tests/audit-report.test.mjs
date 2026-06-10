@@ -32,7 +32,16 @@ function loadTs(relPath, requireMap = {}) {
 const scorecard = loadTs("lib/scorecard.ts");
 const ar = loadTs("lib/audit-report.ts", { "@/lib/scorecard": scorecard });
 const { goldleafDemo } = loadTs("lib/reports/goldleaf-demo.ts");
-const registry = loadTs("lib/reports/index.ts");
+
+// Pre-load every report data file so the registry's runtime imports resolve
+// without a per-client test edit (report modules have only type-only imports).
+const reportRequireMap = {};
+for (const f of fs.readdirSync(path.join(projectRoot, "lib", "reports"))) {
+  if (f.endsWith(".ts") && f !== "index.ts") {
+    reportRequireMap[`@/lib/reports/${f.slice(0, -3)}`] = loadTs(`lib/reports/${f}`);
+  }
+}
+const registry = loadTs("lib/reports/index.ts", reportRequireMap);
 
 const LAYER_IDS = [
   "entity-clarity",
