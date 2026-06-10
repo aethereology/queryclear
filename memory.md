@@ -78,8 +78,18 @@ ALSO FOUND (sparkcreativesinc.org, DNS NOT in this Cloudflare account — unfixe
 no M365 DKIM selectors published (selector1/2 missing → enable in Defender portal +
 add CNAMEs wherever that DNS lives), 5 STALE Google aspmx MX records alongside the
 outlook.com MX (mail-loss risk — delete), DMARC bare "p=none" with no rua.
-STILL PENDING: (a) test lead + manual Outlook send → Gmail Show-original should read
-SPF/DKIM/DMARC PASS; (b) ~2026-06-24: tighten queryclear DMARC p=none → p=quarantine
+TEST LEAD SENT to bluwhatsright@gmail.com (founder's test Gmail): /api/lead 200, no
+delivery failures in Vercel logs — founder checking inbox placement + auth headers.
+BRANDED EMAIL SYSTEM SHIPPED (commit 4ba0334, deployed): `lib/email.ts` (Pedro built
+the system + wiring, Aethos polished): brand-token templates for audit confirmation /
+lead alert / kit order, pine masthead + logotype, dashed step chips, machine panel,
+MSO-safe CTA. Two email-client bugs fixed during polish: font tokens must be
+SINGLE-quoted (double quotes inside style="" terminate the attribute → serif
+fallback everywhere) and position:absolute is stripped by Gmail/Outlook (old brand
+mark replaced with table-safe logotype). Verified via Playwright screenshots of
+rendered HTML + lint/tsc/45 tests/build. Second test lead sent post-deploy.
+STILL PENDING: (a) founder confirms Gmail placement + SPF/DKIM/DMARC PASS on the
+test emails; (b) ~2026-06-24: tighten queryclear DMARC p=none → p=quarantine
 if reports clean; (c) fix sparkcreativesinc.org DKIM/MX/DMARC when DNS host located.
 
 2026-06-10 (prev) — FIRST PAID CLIENT AUDIT DELIVERED + T15/T16 SHIPPED TO PROD.

@@ -69,6 +69,10 @@ We sell *readiness*, not outcomes. **Never** promise rankings or AI citations.
   - `app/api/checkout/route.ts` — Stripe Checkout Session for the pre-order
   - `app/api/stripe/webhook/route.ts` — verify sig → Resend order notify (LEAD_TO)
   - `app/api/lead/route.ts` — lead capture → Resend email (LEAD_TO, default `site.email`)
+  - `lib/email.ts` — branded HTML email system (2026-06-10, Pedro + Aethos): brand
+    tokens + table-based templates (audit confirmation, lead alert, kit order) used
+    by both API routes. Email-client constraints: single-quoted font names ONLY
+    (double quotes break style="" attributes), no position:absolute, tables not divs.
   - `app/llms.txt/route.ts`, `app/robots.ts`, `app/sitemap.ts` — GEO infra
 - **Lead flow VERIFIED working** end-to-end (form → /api/lead → Resend → inbox).
 - **Email deliverability update (2026-06-10):** all outbound mail was hitting
