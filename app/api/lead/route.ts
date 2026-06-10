@@ -1,6 +1,11 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
 import { promises as dns } from "dns";
+import {
+  renderAuditConfirmationEmail,
+  renderAuditConfirmationText,
+  renderLeadNotificationEmail,
+} from "@/lib/email";
 import { site } from "@/lib/site";
 
 // Lead capture endpoint.
@@ -70,25 +75,6 @@ function isLeadField(field: string): field is LeadField {
 
 function isAllowedField(field: string): field is LeadField | HoneypotField {
   return isLeadField(field) || field === HONEYPOT_FIELD;
-}
-
-function escapeHtml(value: string) {
-  return value.replace(/[&<>"']/g, (char) => {
-    switch (char) {
-      case "&":
-        return "&amp;";
-      case "<":
-        return "&lt;";
-      case ">":
-        return "&gt;";
-      case '"':
-        return "&quot;";
-      case "'":
-        return "&#39;";
-      default:
-        return char;
-    }
-  });
 }
 
 function genericValidationError(): ValidationResult {
@@ -249,73 +235,15 @@ async function validateWebsiteDomain(
 }
 
 function teamHtml(lead: Lead) {
-  const rows = leadFields
-    .filter((field) => lead[field])
-    .map(
-      (field) =>
-        `<tr><td style="padding:4px 12px 4px 0;color:#5b5a4d">${escapeHtml(fieldLabels[field])}</td><td>${escapeHtml(lead[field] ?? "")}</td></tr>`,
-    )
-    .join("");
-  return `<h2>New audit request</h2><table>${rows}</table>`;
+  return renderLeadNotificationEmail(lead, site);
 }
 
 function confirmationHtml(lead: Lead) {
-  const name = escapeHtml(lead.name.split(" ")[0] || "there");
-  const business = escapeHtml(lead.business);
-  const website = escapeHtml(lead.website);
-  const auditUrl = escapeHtml(`${site.url}/audit`);
-  return `
-  <div style="background:#f7f4ee;padding:32px 0;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#17180f">
-    <div style="max-width:560px;margin:0 auto;background:#ffffff;border:1px solid #17180914;border-radius:14px;overflow:hidden">
-      <div style="background:#12352a;padding:20px 28px;color:#f7f4ee;font-size:20px;font-weight:600">
-        queryclear<span style="color:#b6f03c">.</span>
-      </div>
-      <div style="padding:28px">
-        <p style="margin:0 0 16px;font-size:16px">Hi ${name},</p>
-        <p style="margin:0 0 16px;line-height:1.6">
-          Thanks for requesting a free AI search audit${business ? ` for <strong>${business}</strong>` : ""}.
-          We've got your details and we're on it.
-        </p>
-        <p style="margin:0 0 8px;font-weight:600">Here's what happens next:</p>
-        <ol style="margin:0 0 20px;padding-left:20px;line-height:1.7">
-          <li>We review how AI answer engines — ChatGPT, Claude, Perplexity, Gemini, and Google AI Overviews — currently see <strong>${website}</strong>.</li>
-          <li>We run real visibility tests for your category and check your site's structure, schema, and clarity.</li>
-          <li>We send you a scored report with a prioritized, plain-English fix list — no jargon, no obligation.</li>
-        </ol>
-        <p style="margin:0 0 20px;line-height:1.6">
-          Most audits go out within a couple of business days. Want a preview of what you'll get?
-          <a href="${auditUrl}" style="color:#12352a;font-weight:600">See a sample audit →</a>
-        </p>
-        <p style="margin:0 0 4px;line-height:1.6">Questions? Just reply to this email — a real person will answer.</p>
-        <p style="margin:20px 0 0">— The queryclear team</p>
-      </div>
-      <div style="padding:16px 28px;border-top:1px solid #17180914;color:#5b5a4d;font-size:12px;line-height:1.5">
-        queryclear makes websites easier for search engines and AI answer engines to understand, trust, and recommend.
-        We don't guarantee rankings or AI citations.
-      </div>
-    </div>
-  </div>`;
+  return renderAuditConfirmationEmail(lead, site);
 }
 
 function confirmationText(lead: Lead) {
-  const name = lead.name.split(" ")[0] || "there";
-  const business = lead.business;
-  return [
-    `Hi ${name},`,
-    "",
-    `Thanks for requesting a free AI search audit${business ? ` for ${business}` : ""}. We've got your details and we're on it.`,
-    "",
-    "Here's what happens next:",
-    "1. We review how AI answer engines (ChatGPT, Claude, Perplexity, Gemini, Google AI Overviews) currently see your site.",
-    "2. We run real visibility tests for your category and check your site's structure, schema, and clarity.",
-    "3. We send you a scored report with a prioritized, plain-English fix list — no jargon, no obligation.",
-    "",
-    `Most audits go out within a couple of business days. See a sample audit: ${site.url}/audit`,
-    "",
-    "Questions? Just reply to this email — a real person will answer.",
-    "",
-    "— The queryclear team",
-  ].join("\n");
+  return renderAuditConfirmationText(lead, site);
 }
 
 async function sendEmails(lead: Lead) {

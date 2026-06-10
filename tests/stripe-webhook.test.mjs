@@ -8,6 +8,7 @@ import ts from "typescript";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(__dirname, "..");
 const routePath = path.join(projectRoot, "app", "api", "stripe", "webhook", "route.ts");
+const emailModulePath = path.join(projectRoot, "lib", "email.ts");
 
 function makeRequest(eventObj, { signature } = {}) {
   const headers = new Headers({ "content-type": "application/json" });
@@ -31,6 +32,34 @@ function clearEnv() {
   delete process.env.STRIPE_SECRET_KEY;
   delete process.env.STRIPE_WEBHOOK_SECRET;
   delete process.env.RESEND_API_KEY;
+}
+
+function loadEmailModule() {
+  const source = fs.readFileSync(emailModulePath, "utf8");
+  const output = ts.transpileModule(source, {
+    compilerOptions: {
+      esModuleInterop: true,
+      module: ts.ModuleKind.CommonJS,
+      target: ts.ScriptTarget.ES2022,
+    },
+    fileName: emailModulePath,
+  }).outputText;
+
+  const emailModule = { exports: {} };
+  const mockRequire = (id) => {
+    throw new Error(`Unexpected email module import: ${id}`);
+  };
+  const run = new Function(
+    "exports",
+    "require",
+    "module",
+    "__filename",
+    "__dirname",
+    output,
+  );
+  run(emailModule.exports, mockRequire, emailModule, emailModulePath, path.dirname(emailModulePath));
+
+  return emailModule.exports;
 }
 
 function loadRoute() {
@@ -81,6 +110,7 @@ function loadRoute() {
     }
     if (id === "stripe") return MockStripe;
     if (id === "resend") return { Resend: MockResend };
+    if (id === "@/lib/email") return loadEmailModule();
     if (id === "@/lib/site") {
       return {
         site: {

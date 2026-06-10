@@ -8,6 +8,7 @@ import ts from "typescript";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(__dirname, "..");
 const routePath = path.join(projectRoot, "app", "api", "lead", "route.ts");
+const emailModulePath = path.join(projectRoot, "lib", "email.ts");
 
 let ipCounter = 0;
 
@@ -42,6 +43,34 @@ function clearLeadEnv() {
   delete process.env.RESEND_API_KEY;
   delete process.env.LEAD_TO;
   delete process.env.LEAD_FROM;
+}
+
+function loadEmailModule() {
+  const source = fs.readFileSync(emailModulePath, "utf8");
+  const output = ts.transpileModule(source, {
+    compilerOptions: {
+      esModuleInterop: true,
+      module: ts.ModuleKind.CommonJS,
+      target: ts.ScriptTarget.ES2022,
+    },
+    fileName: emailModulePath,
+  }).outputText;
+
+  const emailModule = { exports: {} };
+  const mockRequire = (id) => {
+    throw new Error(`Unexpected email module import: ${id}`);
+  };
+  const run = new Function(
+    "exports",
+    "require",
+    "module",
+    "__filename",
+    "__dirname",
+    output,
+  );
+  run(emailModule.exports, mockRequire, emailModule, emailModulePath, path.dirname(emailModulePath));
+
+  return emailModule.exports;
 }
 
 function loadRoute({ sendImpl } = {}) {
@@ -82,6 +111,10 @@ function loadRoute({ sendImpl } = {}) {
 
     if (id === "resend") {
       return { Resend: MockResend };
+    }
+
+    if (id === "@/lib/email") {
+      return loadEmailModule();
     }
 
     if (id === "@/lib/site") {

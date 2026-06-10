@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { Resend } from "resend";
+import { renderStackKitOrderEmail } from "@/lib/email";
 import { site } from "@/lib/site";
 
 // Stripe webhook. On a completed pre-order checkout we email the order to the team
@@ -9,25 +10,6 @@ import { site } from "@/lib/site";
 // Env: STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET, RESEND_API_KEY, LEAD_TO, LEAD_FROM.
 
 export const runtime = "nodejs";
-
-function escapeHtml(value: string) {
-  return value.replace(/[&<>"']/g, (char) => {
-    switch (char) {
-      case "&":
-        return "&amp;";
-      case "<":
-        return "&lt;";
-      case ">":
-        return "&gt;";
-      case '"':
-        return "&quot;";
-      case "'":
-        return "&#39;";
-      default:
-        return char;
-    }
-  });
-}
 
 async function notifyOrder(session: Stripe.Checkout.Session) {
   const key = process.env.RESEND_API_KEY;
@@ -52,14 +34,18 @@ async function notifyOrder(session: Stripe.Checkout.Session) {
       to,
       ...(email !== "unknown" ? { replyTo: email } : {}),
       subject: `New Stack Kit pre-order — ${name === "—" ? email : name}`.slice(0, 140),
-      html: `<h2>New pre-order: ${escapeHtml(site.stackKit.name)}</h2>
-        <table>
-          <tr><td style="padding:4px 12px 4px 0;color:#5b5a4d">Amount</td><td>$${escapeHtml(amount)} ${escapeHtml(currency)}</td></tr>
-          <tr><td style="padding:4px 12px 4px 0;color:#5b5a4d">Name</td><td>${escapeHtml(name)}</td></tr>
-          <tr><td style="padding:4px 12px 4px 0;color:#5b5a4d">Email</td><td>${escapeHtml(email)}</td></tr>
-          <tr><td style="padding:4px 12px 4px 0;color:#5b5a4d">Session</td><td>${escapeHtml(session.id ?? "")}</td></tr>
-        </table>
-        <p style="color:#5b5a4d">Founding pre-order — ships within ${site.stackKit.shipDays} days or auto-refund.</p>`,
+      html: renderStackKitOrderEmail(
+        {
+          kitName: site.stackKit.name,
+          amount,
+          currency,
+          name,
+          email,
+          sessionId: session.id ?? "",
+          shipDays: site.stackKit.shipDays,
+        },
+        site,
+      ),
     });
     if (response.error) {
       throw response.error;
