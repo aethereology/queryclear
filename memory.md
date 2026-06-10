@@ -60,10 +60,27 @@ LEAD_FROM="Kyle at queryclear <audit@queryclear.com>", LEAD_TO=hello@queryclear.
 NOTE: vercel CLI IS installed + logged in (kylelamban54-6487) — ignore the session-start
 hook claiming otherwise. SHIPPED: commit 6ddaeae pushed + `vercel --prod` deployed
 (dpl_C4aSd6qTTPGpncvPXQD3DGx2VcFr, aliased to www). Prod smoke ✅: /contact + llms.txt
-show hello@, no info@ remnants. STILL PENDING (founder): (a) Gmail Send-mail-as via
-Resend SMTP (smtp.resend.com:465, user "resend", pwd = Resend API key) for manual
-outreach; (b) submit a test lead → Gmail Show-original should read SPF/DKIM/DMARC PASS;
-(c) ~2026-06-24: tighten DMARC p=none → p=quarantine if aggregate reports are clean.
+show hello@, no info@ remnants. MANUAL OUTREACH FIX (same session, M365-native — founder is in Outlook, NOT Gmail):
+the founder's mailbox = kyle@sparkcreativesinc.org on Microsoft 365 (aethelo@ is an
+alias of it). Done via `m365` CLI (was already logged in) + ExchangeOnlineManagement
+PowerShell (device-code auth ×3): queryclear.com added + verified in the M365 tenant
+(TXT MS=ms99240042), supportedServices=Email, accepted domain = **InternalRelay**,
+hello@+audit@queryclear.com added as ALIASES on kyle's mailbox, Set-OrganizationConfig
+SendFromAliasEnabled=$true, M365 DKIM **Enabled** for queryclear.com (CNAMEs
+selector1/2._domainkey → selector1/2-queryclear-com._domainkey.sparkcreativesinc2.
+**y-v1.dkim.mail.microsoft** — note NEW format, not onmicrosoft.com; keys verified
+resolving), outbound connector "queryclear.com relay to Cloudflare MX" (OnPremises,
+smart hosts route1/2/3.mx.cloudflare.net) so tenant mail to unprovisioned queryclear
+addresses (info@) relays out instead of NDRing. queryclear.com SPF now
+"v=spf1 include:spf.protection.outlook.com include:_spf.mx.cloudflare.net ~all".
+Founder now picks hello@queryclear.com in Outlook's From dropdown — fully authenticated.
+ALSO FOUND (sparkcreativesinc.org, DNS NOT in this Cloudflare account — unfixed):
+no M365 DKIM selectors published (selector1/2 missing → enable in Defender portal +
+add CNAMEs wherever that DNS lives), 5 STALE Google aspmx MX records alongside the
+outlook.com MX (mail-loss risk — delete), DMARC bare "p=none" with no rua.
+STILL PENDING: (a) test lead + manual Outlook send → Gmail Show-original should read
+SPF/DKIM/DMARC PASS; (b) ~2026-06-24: tighten queryclear DMARC p=none → p=quarantine
+if reports clean; (c) fix sparkcreativesinc.org DKIM/MX/DMARC when DNS host located.
 
 2026-06-10 (prev) — FIRST PAID CLIENT AUDIT DELIVERED + T15/T16 SHIPPED TO PROD.
 First real $750 audit client: **Maple Bear St. Johns** (maplebearstjohns.com — bilingual

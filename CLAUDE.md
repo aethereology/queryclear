@@ -81,8 +81,13 @@ We sell *readiness*, not outcomes. **Never** promise rankings or AI citations.
   p=quarantine after ~2 wks), hello@/audit@ Email Routing aliases forward to
   aethelo@sparkcreativesinc.org, Vercel prod env LEAD_FROM="Kyle at queryclear
   <audit@queryclear.com>" + LEAD_TO=hello@queryclear.com. DEPLOYED to prod same day
-  (commit 6ddaeae; smoke-checked: hello@ live on /contact + llms.txt). STILL PENDING:
-  founder's Gmail send-as via Resend SMTP; tighten DMARC to p=quarantine ~2026-06-24.
+  (commit 6ddaeae; smoke-checked: hello@ live on /contact + llms.txt). Manual-outreach
+  fix is M365-native (founder is in Outlook, mailbox kyle@sparkcreativesinc.org):
+  queryclear.com is a verified InternalRelay accepted domain in the M365 tenant,
+  hello@/audit@ are mailbox aliases, send-from-alias on, M365 DKIM enabled, outbound
+  connector → Cloudflare MX. Founder sends as hello@ from Outlook's From dropdown.
+  STILL PENDING: tighten DMARC to p=quarantine ~2026-06-24; sparkcreativesinc.org has
+  its own issues (no M365 DKIM, stale Google MX) — DNS not in our Cloudflare account.
   Deliberately deferred: `updates.` sending subdomain (premature at current volume).
 - **Canonical now = www in code** (`site.url = https://www.queryclear.com`, T0 done).
 - **BUILD/LINT/TEST VERIFIED ON WINDOWS (2026-06-06):** `npm run build` → 27 routes
