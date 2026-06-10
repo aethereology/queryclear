@@ -80,8 +80,9 @@ We sell *readiness*, not outcomes. **Never** promise rankings or AI citations.
   ("v=DMARC1; p=none; rua=mailto:hello@queryclear.com; fo=1" — tighten to
   p=quarantine after ~2 wks), hello@/audit@ Email Routing aliases forward to
   aethelo@sparkcreativesinc.org, Vercel prod env LEAD_FROM="Kyle at queryclear
-  <audit@queryclear.com>" + LEAD_TO=hello@queryclear.com. STILL PENDING: redeploy
-  (env + code take effect then), founder's Gmail send-as via Resend SMTP.
+  <audit@queryclear.com>" + LEAD_TO=hello@queryclear.com. DEPLOYED to prod same day
+  (commit 6ddaeae; smoke-checked: hello@ live on /contact + llms.txt). STILL PENDING:
+  founder's Gmail send-as via Resend SMTP; tighten DMARC to p=quarantine ~2026-06-24.
   Deliberately deferred: `updates.` sending subdomain (premature at current volume).
 - **Canonical now = www in code** (`site.url = https://www.queryclear.com`, T0 done).
 - **BUILD/LINT/TEST VERIFIED ON WINDOWS (2026-06-06):** `npm run build` → 27 routes

@@ -58,11 +58,12 @@ hello@ + audit@ → aethelo@sparkcreativesinc.org (same destination as info@, wh
 (3) ✅ Vercel prod env replaced via CLI (`vercel env rm/add --scope sparkcreativesinc`):
 LEAD_FROM="Kyle at queryclear <audit@queryclear.com>", LEAD_TO=hello@queryclear.com.
 NOTE: vercel CLI IS installed + logged in (kylelamban54-6487) — ignore the session-start
-hook claiming otherwise. STILL PENDING: (a) commit + `vercel --prod` redeploy (code AND
-new env take effect only then — until deploy, prod still sends from info@ with old
-subject); (b) founder: Gmail Send-mail-as via Resend SMTP (smtp.resend.com:465, user
-"resend", pwd = Resend API key) for manual outreach; (c) post-deploy test lead → Gmail
-Show-original should read SPF/DKIM/DMARC PASS.
+hook claiming otherwise. SHIPPED: commit 6ddaeae pushed + `vercel --prod` deployed
+(dpl_C4aSd6qTTPGpncvPXQD3DGx2VcFr, aliased to www). Prod smoke ✅: /contact + llms.txt
+show hello@, no info@ remnants. STILL PENDING (founder): (a) Gmail Send-mail-as via
+Resend SMTP (smtp.resend.com:465, user "resend", pwd = Resend API key) for manual
+outreach; (b) submit a test lead → Gmail Show-original should read SPF/DKIM/DMARC PASS;
+(c) ~2026-06-24: tighten DMARC p=none → p=quarantine if aggregate reports are clean.
 
 2026-06-10 (prev) — FIRST PAID CLIENT AUDIT DELIVERED + T15/T16 SHIPPED TO PROD.
 First real $750 audit client: **Maple Bear St. Johns** (maplebearstjohns.com — bilingual
