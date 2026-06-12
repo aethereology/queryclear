@@ -8,12 +8,12 @@ import { site } from "@/lib/site";
 export const metadata: Metadata = {
   title: "About",
   description:
-    "queryclear is an AI search optimization (GEO) service and the first product of Aethelo, under SparkCreatives Inc. We make websites easier for search and AI answer engines to understand, trust, and cite — without guaranteeing rankings.",
+    "queryclear is a modern SEO service for the AI search era, a SparkCreatives Inc. brand. We make websites easier for search engines and AI-powered results to understand and trust — without guaranteeing rankings.",
   alternates: { canonical: "/about" },
   openGraph: {
     title: "About queryclear",
     description:
-      "Who we are and why queryclear exists: honest, structural AI search optimization for businesses. A product of Aethelo, under SparkCreatives Inc.",
+      "Who we are and why queryclear exists: honest, structural website optimization for modern search. A SparkCreatives Inc. brand.",
   },
 };
 
@@ -32,7 +32,7 @@ const principles = [
   },
   {
     t: "Our own site is the proof",
-    d: "queryclear.com is built to the exact standard we recommend: structured data, llms.txt, clean crawlability, fast and accessible. We won't sell a standard we don't meet ourselves.",
+    d: "queryclear.com is built to the exact standard we recommend: structured data, clean crawlability, clear service pages, fast and accessible. We won't sell a standard we don't meet ourselves.",
   },
 ];
 
@@ -42,7 +42,7 @@ const webPageSchema = {
   name: "About queryclear",
   url: `${site.url}/about`,
   description:
-    "queryclear is an AI search optimization (GEO) service and the first product of Aethelo, under SparkCreatives Inc.",
+    "queryclear is a modern SEO service for the AI search era, a SparkCreatives Inc. brand.",
   isPartOf: { "@type": "WebSite", name: site.name, url: site.url },
   about: {
     "@type": "Organization",
@@ -99,18 +99,19 @@ export default function AboutPage() {
             </div>
             <div className="max-w-2xl space-y-4 leading-relaxed text-muted">
               <p>
-                queryclear is an <strong className="text-ink">AI search
-                optimization</strong> service — also called GEO, Generative Engine
-                Optimization. We audit and improve the parts of a website that
-                decide whether a search engine or AI answer engine can crawl it,
-                understand who you are and what you do, trust it, and summarize it
-                accurately: structured data, clear service pages, FAQs, an
-                AI-readable business summary, <code className="font-mono text-ink">llms.txt</code>,
-                sitemaps, metadata, and crawlability.
+                queryclear is <strong className="text-ink">modern SEO for the AI
+                search era</strong> — some people call this work GEO or AEO. We
+                audit and improve the parts of a website that decide whether a
+                search engine or AI-powered result can crawl it, understand who
+                you are and what you do, trust it, and summarize it accurately:
+                clear service pages, useful FAQs, structured data, local business
+                details, metadata, sitemaps, and crawlability.
               </p>
               <p>
-                It&apos;s the next layer on top of solid SEO. Traditional SEO
-                competes for blue links; GEO shapes the answer itself.
+                It isn&apos;t separate from SEO — it builds on it. Useful content,
+                crawlable pages, clear structure, and accurate business
+                information are still the foundation; we make sure that
+                foundation holds up in AI-powered search experiences too.
               </p>
             </div>
           </Container>
@@ -130,15 +131,14 @@ export default function AboutPage() {
                 exists.
               </p>
               <p>
-                queryclear is the first product of{" "}
+                queryclear is a{" "}
                 <a href={site.parentOrgUrl} className="font-medium text-ink underline hover:text-lime-deep">
-                  Aethelo
-                </a>
-                , our AI automation company, which operates under{" "}
-                <strong className="text-ink">SparkCreatives Inc.</strong> We started
-                with AI search readiness because it&apos;s a sharp, concrete problem
-                we can solve well and measure honestly — and because it&apos;s the
-                natural front door to the broader automation work Aethelo does.
+                  SparkCreatives Inc.
+                </a>{" "}
+                brand. We started with search readiness because it&apos;s a sharp,
+                concrete problem we can solve well and measure honestly — and
+                because a website that machines and people both understand is the
+                foundation everything else builds on.
               </p>
             </div>
           </Container>
@@ -188,15 +188,15 @@ export default function AboutPage() {
         <section className="bg-pine py-20 text-paper">
           <Container className="flex flex-col items-start gap-6 md:flex-row md:items-center md:justify-between">
             <div>
-              <h2 className="text-3xl text-paper sm:text-4xl">See how AI sees you.</h2>
+              <h2 className="text-3xl text-paper sm:text-4xl">See how modern search sees you.</h2>
               <p className="mt-3 max-w-xl text-paper/70">
-                Start with a free AI search audit — a real review of how answer
-                engines describe your business today, and what to fix first. Audits
-                start at $750 if you want the full paid report.
+                Start with a free AI Search Snapshot — a plain-English review of
+                your site&apos;s biggest search-readiness opportunities. The full
+                scored AI Search Audit is $497 if you want the deep report.
               </p>
             </div>
             <div className="flex flex-wrap gap-3">
-              <Cta href={`/${site.primaryCta.href}`}>Book a free AI search audit</Cta>
+              <Cta href={`/${site.primaryCta.href}`}>Get your free Snapshot</Cta>
               <Cta href="/audit" variant="ghost" className="!border-paper/30 !text-paper hover:!bg-white/10">
                 See a sample audit
               </Cta>

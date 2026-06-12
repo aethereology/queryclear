@@ -22,7 +22,7 @@ const miss = [
   "No structured data, so machines have nothing reliable to read",
   "Service pages merged into one thin list",
   "No FAQs, so there's no clear Q&A to quote",
-  "No llms.txt or AI-readable business summary",
+  "No clear, machine-readable business summary",
   "Important content hidden behind scripts crawlers can't run",
 ];
 
@@ -66,7 +66,7 @@ export default function ReadyWebsitePage() {
               works. We hold our own site to this exact standard.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Cta href="/ai-visibility-audit">Start with an audit</Cta>
+              <Cta href="/ai-visibility-audit">Start with a free Snapshot</Cta>
               <Cta href="/ai-visibility-stack" variant="ghost">See our method</Cta>
             </div>
           </Container>
@@ -109,10 +109,10 @@ export default function ReadyWebsitePage() {
         <section className="bg-pine py-20 text-paper">
           <Container className="flex flex-col items-start gap-6 md:flex-row md:items-center md:justify-between">
             <div>
-              <h2 className="text-3xl text-paper sm:text-4xl">Build or optimize for AI search.</h2>
-              <p className="mt-3 max-w-xl text-paper/70">Start with a free audit so we know what your site needs. Paid reports start at $750.</p>
+              <h2 className="text-3xl text-paper sm:text-4xl">Build or optimize for modern search.</h2>
+              <p className="mt-3 max-w-xl text-paper/70">Start with a free Snapshot so we know what your site needs. Upgrades start at $2,500; full builds at $6,500.</p>
             </div>
-            <Cta href="/ai-visibility-audit">Start with an audit</Cta>
+            <Cta href="/ai-visibility-audit">Start with a free Snapshot</Cta>
           </Container>
         </section>
       </main>

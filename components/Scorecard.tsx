@@ -236,16 +236,17 @@ export function Scorecard() {
               <p className="mono-label text-lime-deep">[ received ]</p>
               <h3 className="text-2xl">Thanks — we&apos;ve got your scorecard.</h3>
               <p className="text-muted">
-                We&apos;ll review your site against these answers and reply with a real,
-                verified AI search audit. No spam, no obligation.
+                We&apos;ll review your site against these answers and reply with
+                your free AI Search Snapshot. No spam, no obligation.
               </p>
             </div>
           ) : (
             <form onSubmit={onLeadSubmit} noValidate className="card mt-6 p-6 text-ink sm:p-8">
-              <h3 className="text-xl">Want this verified? Get a free audit.</h3>
+              <h3 className="text-xl">Want this verified? Get a free Snapshot.</h3>
               <p className="mt-1.5 text-sm text-muted">
-                We&apos;ll check these answers against your live site and send a scored,
-                prioritized fix list. Your self-scorecard comes with it — no obligation.
+                We&apos;ll check these answers against your live site and send a
+                plain-English review of what to fix first. Your self-scorecard
+                comes with it — no obligation.
               </p>
 
               {/* honeypot */}
@@ -315,11 +316,12 @@ export function Scorecard() {
                     Sending…
                   </>
                 ) : (
-                  "Email me my scorecard + book a free audit"
+                  "Email me my scorecard + free Snapshot"
                 )}
               </button>
               <p className="mt-3 text-xs text-muted">
-                Free, no obligation. We reply with a real audit, not a sales bot.
+                Free, no obligation. We&apos;ll send a plain-English review —
+                not a sales bot. We do not sell your information.
               </p>
             </form>
           )}

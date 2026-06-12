@@ -83,12 +83,12 @@ export default function ScorecardPage() {
             <div>
               <h2 className="text-3xl text-paper sm:text-4xl">Prefer we do it for you?</h2>
               <p className="mt-3 max-w-xl text-paper/70">
-                A free AI search audit checks your live site against all seven layers and
-                shows what to fix first. Paid audits start at $750.
+                A free AI Search Snapshot checks your live site and shows what to
+                fix first, in plain English. The full scored audit is $497.
               </p>
             </div>
             <div className="flex flex-wrap gap-3">
-              <Cta href="/ai-visibility-audit">Get a free AI search audit</Cta>
+              <Cta href="/ai-visibility-audit">Get a free Snapshot</Cta>
               <Cta href="/stack-kit" variant="ghost" className="!text-paper !border-paper/30 hover:!bg-white/10">
                 Do it yourself — $97 kit
               </Cta>

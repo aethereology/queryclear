@@ -3,68 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Cta, Mark } from "@/components/ui";
+import { directLinks, megaMenus, type NavMenu } from "@/lib/navigation";
 import { site } from "@/lib/site";
-
-type NavLink = {
-  href: string;
-  label: string;
-  desc?: string;
-};
-
-type MegaMenu = {
-  id: "services" | "resources";
-  label: string;
-  columns: Array<{
-    eyebrow: string;
-    links: NavLink[];
-  }>;
-};
-
-const services: NavLink[] = [
-  { href: "/ai-visibility-audit", label: "AI visibility audit", desc: "A verified crawl, clarity, trust, and conversion-path review." },
-  { href: "/geo-audit", label: "GEO audit", desc: "Generative-engine optimization review for answer engines." },
-  { href: "/ai-search-ready-website", label: "AI-search-ready websites", desc: "Build and optimize pages that machines can parse." },
-  { href: "/local-ai-search-optimization", label: "Local AI search", desc: "Local entity clarity, proof, services, and market coverage." },
-];
-
-const resources: NavLink[] = [
-  { href: "/ai-visibility-stack", label: "The AI Visibility Stack", desc: "The seven-layer method behind every audit." },
-  { href: "/audit", label: "Sample audit", desc: "See how the scoring and recommendations work." },
-  { href: "/scorecard", label: "Free scorecard", desc: "Self-grade your site against the same 100-point rubric." },
-  { href: "/schema-for-ai-search", label: "Schema for AI search", desc: "Plain-English structured data guidance." },
-  { href: "/llms-txt-for-businesses", label: "llms.txt for businesses", desc: "What it does, what it does not, and how to use it." },
-  { href: site.stackKit.path, label: `The DIY kit (${site.stackKit.priceLabel})`, desc: "A refundable founding pre-order for hands-on owners." },
-];
-
-const megaMenus: MegaMenu[] = [
-  {
-    id: "services",
-    label: "Services",
-    columns: [
-      { eyebrow: "Audit", links: services.slice(0, 2) },
-      { eyebrow: "Build", links: services.slice(2) },
-      { eyebrow: "Method", links: [resources[0]] },
-      { eyebrow: "Proof", links: [resources[1], resources[2]] },
-      { eyebrow: "Talk", links: [{ href: "/contact", label: "Contact", desc: "Ask what fits your site before you book." }] },
-    ],
-  },
-  {
-    id: "resources",
-    label: "Resources",
-    columns: [
-      { eyebrow: "Start", links: resources.slice(1, 3) },
-      { eyebrow: "Method", links: resources.slice(0, 1) },
-      { eyebrow: "Machine files", links: resources.slice(3, 5) },
-      { eyebrow: "DIY", links: resources.slice(5) },
-    ],
-  },
-];
-
-const directLinks: NavLink[] = [
-  { href: "/ai-visibility-stack", label: "Method" },
-  { href: "/audit", label: "Sample audit" },
-  { href: "/about", label: "About" },
-];
 
 const navText =
   "font-mono text-xs font-medium uppercase tracking-wider";
@@ -91,8 +31,14 @@ function Chevron({ open }: { open: boolean }) {
 
 export function Header() {
   const [open, setOpen] = useState(false);
-  const [activeMega, setActiveMega] = useState<MegaMenu["id"] | null>(null);
+  const [activeMega, setActiveMega] = useState<NavMenu["id"] | null>(null);
   const activeMenu = megaMenus.find((menu) => menu.id === activeMega);
+  const megaGridClass =
+    activeMenu?.columns.length === 3
+      ? "grid-cols-3"
+      : activeMenu?.columns.length === 4
+        ? "grid-cols-4"
+        : "grid-cols-5";
 
   return (
     <header className="sticky top-0 z-50 bg-paper">
@@ -156,7 +102,7 @@ export function Header() {
               showArrow={false}
               className="px-3 py-2 text-xs sm:px-5 sm:py-2.5 lg:px-4 lg:py-1.5"
             >
-              Free audit
+              Free Snapshot
             </Cta>
 
             <button
@@ -190,7 +136,7 @@ export function Header() {
             id={`mega-${activeMenu.id}`}
             className="absolute left-0 right-0 top-full hidden border-b border-dashed border-line bg-paper lg:block"
           >
-            <div className={`mx-auto grid max-w-[1600px] border-x border-dashed border-line ${activeMenu.columns.length === 5 ? "grid-cols-5" : "grid-cols-4"}`}>
+            <div className={`mx-auto grid max-w-[1600px] border-x border-dashed border-line ${megaGridClass}`}>
               {activeMenu.columns.map((column, index) => (
                 <div
                   key={column.eyebrow}
@@ -228,71 +174,49 @@ export function Header() {
         }`}
       >
         <nav className="grid gap-5 px-4 py-5" aria-label="Mobile">
-          <div className="grid gap-3 border border-dashed border-line p-4">
-            <button
-              type="button"
-              aria-expanded={activeMega === "services"}
-              aria-controls="mobile-services"
-              onClick={() => setActiveMega(activeMega === "services" ? null : "services")}
-              className="flex items-center justify-between text-left"
-            >
-              <span className="mono-label !text-lime-deep">[ Services ]</span>
-              <Chevron open={activeMega === "services"} />
-            </button>
-            <div
-              id="mobile-services"
-              className={`${activeMega === "services" ? "grid" : "hidden"} gap-3 pt-3`}
-            >
-              {services.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => {
-                    setOpen(false);
-                    setActiveMega(null);
-                  }}
-                  className={`${navBlock} ${navText}`}
-                >
-                  {link.label}
-                </Link>
-              ))}
+          {megaMenus.map((menu) => (
+            <div key={menu.id} className="grid gap-3 border border-dashed border-line p-4">
+              <button
+                type="button"
+                aria-expanded={activeMega === menu.id}
+                aria-controls={`mobile-${menu.id}`}
+                onClick={() => setActiveMega(activeMega === menu.id ? null : menu.id)}
+                className="flex items-center justify-between text-left"
+              >
+                <span className="mono-label !text-lime-deep">[ {menu.label} ]</span>
+                <Chevron open={activeMega === menu.id} />
+              </button>
+              <div
+                id={`mobile-${menu.id}`}
+                className={`${activeMega === menu.id ? "grid" : "hidden"} gap-4 pt-3`}
+              >
+                {menu.columns.map((column) => (
+                  <div key={column.eyebrow} className="grid gap-2">
+                    <p className="font-mono text-[0.65rem] font-medium uppercase tracking-wider text-muted">
+                      {column.eyebrow}
+                    </p>
+                    {column.links.map((link) => (
+                      <Link
+                        key={link.href}
+                        href={link.href}
+                        onClick={() => {
+                          setOpen(false);
+                          setActiveMega(null);
+                        }}
+                        className={`${navBlock} ${navText}`}
+                      >
+                        {link.label}
+                      </Link>
+                    ))}
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-
-          <div className="grid gap-3 border border-dashed border-line p-4">
-            <button
-              type="button"
-              aria-expanded={activeMega === "resources"}
-              aria-controls="mobile-resources"
-              onClick={() => setActiveMega(activeMega === "resources" ? null : "resources")}
-              className="flex items-center justify-between text-left"
-            >
-              <span className="mono-label !text-lime-deep">[ Resources ]</span>
-              <Chevron open={activeMega === "resources"} />
-            </button>
-            <div
-              id="mobile-resources"
-              className={`${activeMega === "resources" ? "grid" : "hidden"} gap-3 pt-3`}
-            >
-              {resources.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => {
-                    setOpen(false);
-                    setActiveMega(null);
-                  }}
-                  className={`${navBlock} ${navText}`}
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </div>
-          </div>
+          ))}
 
           <div className="grid gap-3 border border-dashed border-line p-4">
             <p className="mono-label !text-lime-deep">[ Explore ]</p>
-            {[...directLinks, { href: "/contact", label: "Contact" }].map((link) => (
+            {directLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
@@ -317,7 +241,7 @@ export function Header() {
             showArrow={false}
             className="w-full py-2.5 text-xs"
           >
-            Free audit
+            Free Snapshot
           </Cta>
         </nav>
       </div>

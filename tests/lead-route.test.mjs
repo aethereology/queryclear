@@ -264,6 +264,34 @@ test("HTML injection payloads are escaped in rendered email HTML", async () => {
   assert.doesNotMatch(serializedLogs, /alert/);
 });
 
+test("interest field is optional, capped, and shown in both emails when present", async () => {
+  clearLeadEnv();
+  process.env.RESEND_API_KEY = "test_key";
+  const { route, sent } = loadRoute();
+
+  const withInterest = await route.POST(
+    makeRequest(baseLead({ interest: "Website Upgrade" })),
+  );
+  assert.equal(withInterest.status, 200);
+  assert.equal(sent.length, 2);
+  const html = sent.map((message) => message.html).join("\n");
+  assert.match(html, /Interested in/);
+  assert.match(html, /Website Upgrade/);
+
+  // Absent interest: still accepted, no "Interested in" row rendered.
+  const { route: route2, sent: sent2 } = loadRoute();
+  const withoutInterest = await route2.POST(makeRequest(baseLead()));
+  assert.equal(withoutInterest.status, 200);
+  assert.doesNotMatch(sent2.map((m) => m.html).join("\n"), /Interested in/);
+
+  // Oversized interest is rejected like any overlong field, never a 500.
+  const { route: route3 } = loadRoute();
+  const oversized = await route3.POST(
+    makeRequest(baseLead({ interest: "x".repeat(121) })),
+  );
+  assert.equal(oversized.status, 422);
+});
+
 test("email delivery failure still returns success after accepted validation", async () => {
   clearLeadEnv();
   process.env.RESEND_API_KEY = "test_key";

@@ -18,8 +18,9 @@ understand, summarize, trust, and cite**.
 
 We sell *readiness*, not outcomes. **Never** promise rankings or AI citations.
 
-- **queryclear** = first product of **Aethelo** (`aethelo.sparkcreativesinc.org`)
-- **SparkCreatives Inc.** = parent entity (real 501(c)(3))
+- **queryclear** = a **SparkCreatives Inc.** brand (real 501(c)(3), `sparkcreativesinc.org`).
+  Internally it grew out of Aethelo, but Aethelo no longer appears in public
+  copy/schema (decided 2026-06-11; see Decisions.md).
 - Our own site IS our first case study, so it must be a flawless GEO example.
 
 ## 2. Ground-truth state (keep this section current)
@@ -29,11 +30,29 @@ We sell *readiness*, not outcomes. **Never** promise rankings or AI citations.
 
 - **LIVE** at https://www.queryclear.com (apex 307 → www). Deployed on Vercel
   (team `sparkcreativesinc`, project `queryclear`; CLI needs `--scope sparkcreativesinc`).
+- **REPOSITIONED 2026-06-11 (NOT YET DEPLOYED — founder-gated):** sitewide reframe
+  to **"Modern SEO for the AI search era"** after Google's official generative-AI
+  guidance (GEO=SEO; llms.txt not needed for Google). Free offer renamed **"free
+  AI Search Snapshot"** (the "audit" is now exclusively the paid product, **$497**
+  flat). Public offer ladder: Snapshot free → Audit $497 → Upgrade from $2,500 →
+  Build from $6,500 (in `site.offers`). llms.txt demoted everywhere to "optional
+  supplemental file". Aethelo dropped from all public copy/schema → "queryclear is
+  a SparkCreatives Inc. brand" (parentOrgUrl = sparkcreativesinc.org). **No Google
+  citations in site copy** — we align quietly. New `/thank-you` route (noindex,
+  deliberately NOT in sitemap/llms.txt; LeadForm now redirects there on success).
+  **CountUp SSR bug fixed:** score figures used to render `0` in static HTML
+  (scrapers saw "0/100" on /audit — how the CEO caught it); `CountUp` now
+  server-renders the real value and animates 0→to only after hydration. Verified
+  2026-06-11: lint clean, 45/45 tests, build = 29 routes, prerendered /audit shows
+  33/86, zero stale strings ($750/Aethelo/"next layer"/"free AI search audit") in
+  built output. See Decisions.md 2026-06-11 (three ADRs).
 - **Stack:** Next.js 16 (App Router) + React 19 + Tailwind v4. Fonts: Bricolage
   Grotesque + IBM Plex Sans/Mono. Palette: paper / pine / lime.
 - **Routes that exist today:**
   - `app/page.tsx` — landing page (hero, problem, solution, what-we-build,
-    how-it-works, deliverables, FAQ, lead form)
+    how-it-works, deliverables, FAQ, **offer ladder**, lead form)
+  - `app/thank-you/page.tsx` — post-conversion success page (2026-06-11; noindex,
+    excluded from sitemap + llms.txt by design)
   - `app/audit/page.tsx` — public sample GEO audit (fictional "Goldleaf Aesthetics"
     med-spa demo). As of T16 (2026-06-06) it is data-driven: renders the
     `<AuditReport>` template from `lib/reports/goldleaf-demo.ts` (output unchanged).
@@ -115,7 +134,9 @@ We sell *readiness*, not outcomes. **Never** promise rankings or AI citations.
   to the www form so code matches live (BUILD_QUEUE T0).
 - **Model = audit-first**; the $97 kit is only a demand test (T14), product deferred
   until validated. Do not build the kit contents yet.
-- **Pricing = "starting at $750"** public for the audit; other prices stay private.
+- **Pricing — SUPERSEDED 2026-06-11:** audit is now **$497 flat** with a public
+  four-tier offer ladder (Snapshot free / Audit $497 / Upgrade from $2,500 / Build
+  from $6,500). The old "starting at $750, other prices private" gate is closed.
 
 ## 3. Conventions — reuse these, don't reinvent
 

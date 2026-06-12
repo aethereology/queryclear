@@ -13,7 +13,7 @@ const kit = site.stackKit;
 export const metadata: Metadata = {
   title: "The Local AI Visibility Stack — DIY kit ($97 pre-order)",
   description:
-    "Do the work yourself: a $97 DIY kit to apply queryclear's 7-layer AI Visibility method to your own site — playbook, schema templates, llms.txt, AI-visibility prompts, and a self-scoring scorecard. Founding pre-order, fully refundable.",
+    "Do the work yourself: a $97 DIY kit to apply queryclear's 7-layer AI Visibility method to your own site — playbook, schema templates, AI-visibility prompts, and a self-scoring scorecard. Founding pre-order, fully refundable.",
   alternates: { canonical: "/stack-kit" },
   openGraph: {
     title: "The Local AI Visibility Stack — DIY kit ($97 pre-order)",
@@ -29,7 +29,7 @@ const whoFor = [
 ];
 
 const whoSkip = [
-  "You'd rather we just do it — start with a free audit, then our done-for-you work.",
+  "You'd rather we just do it — start with a free Snapshot, then our done-for-you work.",
   "You don't have time to implement changes on your own site.",
 ];
 
@@ -40,7 +40,7 @@ const faqs = [
   },
   {
     q: "What if I'd rather you just do it for me?",
-    a: "Then skip the kit. Start with a free AI search audit and we'll handle the work for you — done-for-you audits start at $750.",
+    a: "Then skip the kit. Start with a free AI Search Snapshot and we'll handle the work for you — the full done-for-you audit is $497.",
   },
   {
     q: "Does this guarantee I'll rank or get cited by AI?",
@@ -52,7 +52,7 @@ const faqs = [
   },
   {
     q: "What format is it?",
-    a: "Digital: a written playbook plus copy-paste templates (schema, llms.txt, a service-page structure) and a self-scoring scorecard. No physical product.",
+    a: "Digital: a written playbook plus copy-paste templates (schema, a service-page structure, an optional llms.txt) and a self-scoring scorecard. No physical product.",
   },
 ];
 
@@ -71,7 +71,7 @@ const productSchema = {
   "@type": "Product",
   name: kit.name,
   description:
-    "A do-it-yourself kit to apply the 7-layer AI Visibility Stack to a local business website: playbook, schema templates, llms.txt template, AI-visibility prompt set, and a self-scoring scorecard.",
+    "A do-it-yourself kit to apply the 7-layer AI Visibility Stack to a local business website: playbook, schema templates, AI-visibility prompt set, a self-scoring scorecard, and an optional llms.txt template.",
   brand: { "@type": "Brand", name: site.name },
   offers: {
     "@type": "Offer",
@@ -187,7 +187,7 @@ export default function StackKitPage() {
               </ul>
               <p className="mt-5 text-sm">
                 <Link href="/ai-visibility-audit" className="font-medium text-ink underline hover:text-lime-deep">
-                  Rather we did it? Start with a free audit →
+                  Rather we did it? Start with a free Snapshot →
                 </Link>
               </p>
             </div>

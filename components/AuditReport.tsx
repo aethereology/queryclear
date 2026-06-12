@@ -73,15 +73,17 @@ export function AuditReport({ data }: { data: AuditReportData }) {
       <section className="border-b border-line">
         <Container className="grid items-center gap-10 py-16 md:grid-cols-[1fr_auto]">
           <div>
-            <MonoLabel index="audit">AI search readiness report</MonoLabel>
+            <MonoLabel index="audit">Modern search readiness report</MonoLabel>
             <h1 className="mt-5 text-4xl sm:text-5xl">{data.business}</h1>
             <p className="mt-4 max-w-xl leading-relaxed text-muted">
-              {data.sector ? `${data.sector} · ` : ""}{data.market} metro. Here&apos;s how AI answer engines
-              see this business today — scored against our seven-layer{" "}
+              {data.sector ? `${data.sector} · ` : ""}{data.market} metro. Here&apos;s how this
+              business performs across modern search foundations — crawlability,
+              service clarity, local relevance, useful content, metadata, schema,
+              and AI-search readiness — scored against our seven-layer{" "}
               <a href="/ai-visibility-stack" className="font-medium text-ink underline hover:text-lime-deep">
                 AI Visibility Stack
-              </a>{" "}
-              — and what we&apos;d fix to make it clear, structured, and citable.
+              </a>
+              .
             </p>
             {data.preparedOn && (
               <p className="mono-label mt-4">Prepared {data.preparedOn}</p>
@@ -234,10 +236,12 @@ export function AuditReport({ data }: { data: AuditReportData }) {
         {variant === "sample" ? (
           <Container className="flex flex-col items-start gap-6 md:flex-row md:items-center md:justify-between">
             <div>
-              <h2 className="text-3xl text-paper sm:text-4xl">Want this for your business?</h2>
+              <h2 className="text-3xl text-paper sm:text-4xl">Want this for your website?</h2>
               <p className="mt-3 max-w-xl text-paper/70">
-                We&apos;ll run a real audit on your actual site — using only your
-                verified details — and show you exactly what to fix, scored against the{" "}
+                Start with a free AI Search Snapshot. If your site needs deeper
+                work, we&apos;ll recommend the paid AI Search Audit — a real
+                scored report like this one, built on your verified details and
+                scored against the{" "}
                 <a href="/ai-visibility-stack" className="font-medium text-paper underline hover:text-lime">
                   AI Visibility Stack
                 </a>
@@ -245,7 +249,7 @@ export function AuditReport({ data }: { data: AuditReportData }) {
               </p>
             </div>
             <div className="flex flex-wrap gap-3">
-              <Cta href="/ai-visibility-audit">Book a free AI search audit</Cta>
+              <Cta href="/ai-visibility-audit">Request your free Snapshot</Cta>
               <Cta href="/scorecard" variant="ghost" className="!text-paper !border-paper/30 hover:!bg-white/10">
                 Score your own site
               </Cta>

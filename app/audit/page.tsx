@@ -6,24 +6,24 @@ import { goldleafDemo } from "@/lib/reports/goldleaf-demo";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Sample AI Search Audit",
+  title: "Sample Modern Search Readiness Report",
   description:
-    "A sample GEO / AI search readiness audit — scored against the seven-layer AI Visibility Stack, with real visibility tests and a prioritized fix list. Built on a fictional med-spa demo business.",
+    "A sample modern-search readiness report — crawlability, service clarity, local relevance, useful content, metadata, schema, and AI-search readiness, scored against the seven-layer AI Visibility Stack. Built on a fictional med-spa demo business.",
   alternates: { canonical: "/audit" },
   openGraph: {
-    title: "Sample AI Search Audit — queryclear",
+    title: "Sample Modern Search Readiness Report — queryclear",
     description:
-      "See exactly how we score a site's readiness for AI answer engines, and what we'd fix first. A fictional med-spa demo.",
+      "See exactly how we score a site's readiness for modern search, and what we'd fix first. A fictional med-spa demo.",
   },
 };
 
 const webPageSchema = {
   "@context": "https://schema.org",
   "@type": "WebPage",
-  name: "Sample AI Search Audit",
+  name: "Sample Modern Search Readiness Report",
   url: `${site.url}/audit`,
   description:
-    "A sample GEO / AI search readiness audit, scored against the AI Visibility Stack, on a fictional med-spa demo business.",
+    "A sample modern-search readiness report, scored against the AI Visibility Stack, on a fictional med-spa demo business.",
   isPartOf: { "@type": "WebSite", name: site.name, url: site.url },
 };
 

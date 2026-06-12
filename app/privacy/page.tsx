@@ -56,8 +56,8 @@ export default function PrivacyPage() {
           <Container className="prose-legal max-w-2xl space-y-10 leading-relaxed text-muted">
             <p>
               This policy explains what information queryclear collects when you use
-              this site or request an audit, how we use it, and the choices you have.
-              queryclear is a product of Aethelo, under SparkCreatives Inc. Plain
+              this site or request a Snapshot or audit, how we use it, and the
+              choices you have. queryclear is a SparkCreatives Inc. brand. Plain
               language, no surprises.
             </p>
 

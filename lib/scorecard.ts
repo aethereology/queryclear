@@ -207,7 +207,7 @@ export const questions: Question[] = [
   {
     id: "mr-2",
     layer: "machine-readability",
-    text: "Do you have an llms.txt file — a plain-text summary for AI engines — at your domain?",
+    text: "Does your site have a clear, plain-language summary of who you are, what you offer, and where — readable by machines? (An optional llms.txt file is one way to do this.)",
     points: 4,
   },
   {

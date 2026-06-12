@@ -7,13 +7,13 @@ import { Accordion } from "@/components/Accordion";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "GEO Audit — Generative Engine Optimization",
+  title: "GEO Audit — Modern SEO for AI Search",
   description:
-    "A GEO (Generative Engine Optimization) audit from queryclear identifies the gaps in your site's structure, content, proof, and crawlability that keep AI answer engines from understanding you. GEO is a layer on top of solid SEO — not a replacement, and not magic.",
+    "A GEO audit from queryclear is a modern SEO review: it finds the gaps in your site's structure, content, proof, local details, and crawlability that keep search engines and AI-powered results from understanding you. GEO done right is SEO done right — not a separate magic system.",
   alternates: { canonical: "/geo-audit" },
   openGraph: {
     title: "GEO Audit — queryclear",
-    description: "Find the gaps that keep AI answer engines from understanding your business. GEO is a layer on top of good SEO.",
+    description: "Find the gaps that keep search engines and AI-powered results from understanding your business. GEO done right is modern SEO.",
   },
 };
 
@@ -27,13 +27,13 @@ const includes = [
 ];
 
 const faqs = [
-  { q: "What is GEO?", a: "GEO — Generative Engine Optimization — is making your site easy for AI answer engines (ChatGPT, Claude, Perplexity, Gemini, Google AI Overviews) to crawl, understand, summarize, trust, and cite. It's the answer-engine counterpart to SEO." },
-  { q: "Is GEO a replacement for SEO?", a: "No. GEO sits on top of solid SEO fundamentals — crawlable, helpful, well-structured content. If your SEO basics are broken, GEO can't paper over them. We treat GEO as the next layer, not a substitute." },
-  { q: "Is this just hype?", a: "We're deliberately skeptical of hype. GEO isn't magic and there are no secret tricks. It's disciplined clarity and structure so machines can understand you. We won't promise rankings or citations." },
+  { q: "What is GEO?", a: "GEO — Generative Engine Optimization — is a name some people use for optimizing visibility in AI-powered search (ChatGPT, Claude, Perplexity, Gemini, Google AI Overviews). In practice, it's modern SEO: useful content, crawlable pages, clear structure, and accurate business information, applied with AI-powered results in mind." },
+  { q: "Is GEO different from SEO?", a: "Not really — and you should be wary of anyone selling GEO as a separate magic system. The work that helps AI-powered search understand you is the same work that makes a website genuinely good: clear service pages, helpful content, solid technical foundations, and honest business details." },
+  { q: "Is this just hype?", a: "We're deliberately skeptical of hype. There are no secret tricks or special AI files that buy visibility. It's disciplined clarity and structure so people and machines can understand you. We won't promise rankings or citations." },
 ];
 
 const webPageSchema = { "@context": "https://schema.org", "@type": "WebPage", name: "GEO Audit", url: `${site.url}/geo-audit`, description: "A Generative Engine Optimization audit of a website's AI-search readiness.", isPartOf: { "@type": "WebSite", name: site.name, url: site.url } };
-const serviceSchema = { "@context": "https://schema.org", "@type": "Service", name: "GEO Audit", serviceType: "Generative Engine Optimization audit", provider: { "@type": "Organization", name: site.name, url: site.url }, description: "An audit identifying gaps in a site's structure, content, proof, and crawlability for AI answer engines.", areaServed: "United States" };
+const serviceSchema = { "@context": "https://schema.org", "@type": "Service", name: "GEO Audit", serviceType: "Modern SEO / AI search readiness audit", provider: { "@type": "Organization", name: site.name, url: site.url }, description: "A modern SEO audit identifying gaps in a site's structure, content, proof, local details, and crawlability for search engines and AI-powered results.", areaServed: "United States" };
 const faqSchema = { "@context": "https://schema.org", "@type": "FAQPage", mainEntity: faqs.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })) };
 const breadcrumbSchema = { "@context": "https://schema.org", "@type": "BreadcrumbList", itemListElement: [ { "@type": "ListItem", position: 1, name: "Home", item: `${site.url}/` }, { "@type": "ListItem", position: 2, name: "GEO Audit", item: `${site.url}/geo-audit` } ] };
 
@@ -51,14 +51,14 @@ export default function GeoAuditPage() {
             <MonoLabel index="geo">GEO audit</MonoLabel>
             <h1 className="mt-5 max-w-3xl text-4xl sm:text-5xl">A GEO audit, without the hype.</h1>
             <p className="mt-5 max-w-2xl leading-relaxed text-muted">
-              Generative Engine Optimization is the work of making your site clear and
-              structured enough for AI answer engines to understand and summarize.
-              Our GEO audit finds the concrete gaps holding you back — and we&apos;re
-              honest that GEO is a layer on top of good SEO, not a magic switch.
+              GEO is a name people use for optimizing AI-powered search — but done
+              right, it&apos;s modern SEO, not a separate magic system. Our audit
+              finds the concrete gaps holding your site back: clarity, structure,
+              content, local details, proof, and crawlability.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Cta href="/ai-visibility-audit">Get a GEO audit</Cta>
-              <Cta href="/audit" variant="ghost">See a sample audit</Cta>
+              <Cta href="/ai-visibility-audit">Get the audit</Cta>
+              <Cta href="/audit" variant="ghost">See a sample report</Cta>
             </div>
           </Container>
         </section>
@@ -67,8 +67,8 @@ export default function GeoAuditPage() {
           <Container className="grid gap-10 md:grid-cols-[0.8fr_1.2fr]">
             <div><MonoLabel index="01">How GEO relates to SEO</MonoLabel></div>
             <div className="max-w-2xl space-y-4 leading-relaxed text-muted">
-              <p>Traditional SEO competes for a ranked list of blue links. GEO shapes the <em>answer</em> an AI gives when someone asks about your category — whether it can describe you accurately and consider recommending you.</p>
-              <p>They aren&apos;t rivals. GEO depends on SEO fundamentals: if a page can&apos;t be crawled or isn&apos;t helpful, no amount of structure saves it. We assess both, and we won&apos;t sell GEO as a way around doing the basics well.</p>
+              <p>People now meet your business in two ways: a ranked list of links, and an AI-generated answer that summarizes what it found. Both run on the same fundamentals — crawlable pages, helpful content, clear structure, and accurate business details.</p>
+              <p>That&apos;s why we treat GEO as modern SEO, not a rival to it. If a page can&apos;t be crawled or isn&apos;t helpful, no amount of structure saves it. We assess the whole foundation, and we won&apos;t sell GEO as a way around doing the basics well.</p>
             </div>
           </Container>
         </section>
@@ -111,10 +111,10 @@ export default function GeoAuditPage() {
         <section className="bg-pine py-20 text-paper">
           <Container className="flex flex-col items-start gap-6 md:flex-row md:items-center md:justify-between">
             <div>
-              <h2 className="text-3xl text-paper sm:text-4xl">Ready for a straight GEO audit?</h2>
-              <p className="mt-3 max-w-xl text-paper/70">Start free. Paid reports start at $750.</p>
+              <h2 className="text-3xl text-paper sm:text-4xl">Ready for a straight audit?</h2>
+              <p className="mt-3 max-w-xl text-paper/70">Start with a free AI Search Snapshot. The full scored audit is $497.</p>
             </div>
-            <Cta href="/ai-visibility-audit">Get a GEO audit</Cta>
+            <Cta href="/ai-visibility-audit">Get the audit</Cta>
           </Container>
         </section>
       </main>

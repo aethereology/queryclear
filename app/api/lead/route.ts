@@ -21,6 +21,7 @@ type Lead = {
   business: string;
   service?: string;
   city?: string;
+  interest?: string;
   message?: string;
 };
 
@@ -39,7 +40,7 @@ const RATE_LIMIT_MAX = 5;
 const WEBSITE_URL_ERROR =
   "Please add a valid website URL. Valid websites must start with https://.";
 
-const leadFields = ["name", "email", "website", "business", "service", "city", "message"] as const;
+const leadFields = ["name", "email", "website", "business", "service", "city", "interest", "message"] as const;
 const fieldLimits: Record<LeadField | HoneypotField, number> = {
   name: 120,
   email: 254,
@@ -47,6 +48,7 @@ const fieldLimits: Record<LeadField | HoneypotField, number> = {
   business: 160,
   service: 120,
   city: 120,
+  interest: 120,
   message: 2000,
   company: 200,
 };
@@ -57,6 +59,7 @@ const fieldLabels: Record<LeadField, string> = {
   business: "Business",
   service: "Main service",
   city: "City / market",
+  interest: "Interested in",
   message: "Message",
 };
 const rateLimitBuckets = new Map<string, { count: number; resetAt: number }>();
@@ -155,6 +158,7 @@ function validateLead(body: unknown): ValidationResult {
       business,
       ...(values.service ? { service: values.service } : {}),
       ...(values.city ? { city: values.city } : {}),
+      ...(values.interest ? { interest: values.interest } : {}),
       ...(values.message ? { message: values.message } : {}),
     },
   };
@@ -262,7 +266,7 @@ async function sendEmails(lead: Lead) {
             from,
             to,
             replyTo: lead.email,
-            subject: `New AI search audit request — ${emailSubjectText(lead.business || lead.name)}`,
+            subject: `New AI Search Snapshot request — ${emailSubjectText(lead.business || lead.name)}`,
             html: teamHtml(lead),
           });
           assertEmailSent(response);
@@ -279,7 +283,7 @@ async function sendEmails(lead: Lead) {
             from,
             to: lead.email,
             replyTo: to,
-            subject: "We got your audit request — next steps",
+            subject: "We got your Snapshot request — next steps",
             html: confirmationHtml(lead),
             text: confirmationText(lead),
           });

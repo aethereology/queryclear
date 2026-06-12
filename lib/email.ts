@@ -55,6 +55,7 @@ export type AuditLeadEmail = {
   business: string;
   service?: string;
   city?: string;
+  interest?: string;
   message?: string;
 };
 
@@ -344,20 +345,21 @@ export function renderAuditConfirmationEmail(lead: AuditLeadEmail, site?: EmailS
 
   return renderQueryclearEmail({
     site,
-    preheader: `We received your free AI search audit request for ${lead.business}.`,
-    eyebrow: "free AI search audit",
-    title: "Your audit request is in.",
+    preheader: `We received your free AI Search Snapshot request for ${lead.business}.`,
+    eyebrow: "free AI Search Snapshot",
+    title: "Your Snapshot request is in.",
     intro: [
-      `Hi ${firstName}, thanks for requesting a free AI search audit for ${lead.business}. We have your details and we are reviewing how answer engines understand your site.`,
-      "Most audits go out within a couple of business days. You will get a scored report and a prioritized, plain-English fix list.",
+      `Hi ${firstName}, thanks for requesting a free AI Search Snapshot for ${lead.business}. We have your details and we are reviewing how modern search understands your site.`,
+      "Most Snapshots go out within a couple of business days. You will get a quick, plain-English review of your biggest search-readiness opportunities — and if your site needs deeper work, we will point you to the right next step.",
     ],
     cta: {
-      label: "See a sample audit",
+      label: "See a sample report",
       href: `${siteUrl}/audit`,
     },
     summary: [
       { label: "Business", value: lead.business },
       { label: "Website", value: lead.website, href: lead.website },
+      { label: "Interested in", value: lead.interest },
       { label: "Service", value: lead.service },
       { label: "Market", value: lead.city },
     ],
@@ -374,19 +376,19 @@ export function renderAuditConfirmationEmail(lead: AuditLeadEmail, site?: EmailS
       },
       {
         number: "03",
-        title: "You get the fix list",
-        body: "The report explains what matters, what is missing, and what to fix first.",
+        title: "You get the review",
+        body: "The Snapshot explains, in plain English, what matters most and what to fix first.",
       },
     ],
     machinePanel: {
-      label: "// audit_queue.snapshot",
+      label: "// snapshot_queue",
       lines: [
         { key: "business", value: lead.business },
         { key: "site", value: lead.website },
-        { key: "engines", value: "ChatGPT, Claude, Perplexity, Gemini, AI Overviews" },
-        { key: "output", value: "scorecard + prioritized fixes" },
+        { key: "engines", value: "Google, ChatGPT, Claude, Perplexity, Gemini" },
+        { key: "output", value: "plain-English review + next steps" },
       ],
-      status: "clear - structured - citable",
+      status: "clear - crawlable - useful",
     },
     closing: "Questions? Just reply to this email - a real person will answer.",
   });
@@ -395,11 +397,11 @@ export function renderAuditConfirmationEmail(lead: AuditLeadEmail, site?: EmailS
 export function renderLeadNotificationEmail(lead: AuditLeadEmail, site?: EmailSite) {
   return renderQueryclearEmail({
     site,
-    preheader: `New AI search audit request from ${lead.business}.`,
+    preheader: `New AI Search Snapshot request from ${lead.business}.`,
     eyebrow: "new lead",
-    title: "New audit request.",
+    title: "New Snapshot request.",
     intro: [
-      `${lead.name} requested a free AI search audit. Reply directly to start the conversation while the context is fresh.`,
+      `${lead.name} requested a free AI Search Snapshot. Reply directly to start the conversation while the context is fresh.`,
     ],
     cta: {
       label: "Reply to lead",
@@ -410,6 +412,7 @@ export function renderLeadNotificationEmail(lead: AuditLeadEmail, site?: EmailSi
       { label: "Email", value: lead.email, href: `mailto:${lead.email}` },
       { label: "Website", value: lead.website, href: lead.website },
       { label: "Business", value: lead.business },
+      { label: "Interested in", value: lead.interest },
       { label: "Service", value: lead.service },
       { label: "Market", value: lead.city },
       { label: "Message", value: lead.message },
@@ -466,14 +469,15 @@ export function renderAuditConfirmationText(lead: AuditLeadEmail, site?: EmailSi
   return [
     `Hi ${firstName},`,
     "",
-    `Thanks for requesting a free AI search audit for ${lead.business}. We have your details and we are reviewing how answer engines understand your site.`,
+    `Thanks for requesting a free AI Search Snapshot for ${lead.business}. We have your details and we are reviewing how modern search understands your site.`,
+    ...(lead.interest ? ["", `You told us you're interested in: ${lead.interest}.`] : []),
     "",
     "Here's what happens next:",
     "1. We inspect how ChatGPT, Claude, Perplexity, Gemini, and Google AI Overviews describe your business.",
     "2. We review structure, schema, headings, service clarity, proof, crawlability, and conversion paths.",
-    "3. We send you a scored report with a prioritized, plain-English fix list.",
+    "3. We send you a quick, plain-English review of what to fix first — and the right next step if your site needs deeper work.",
     "",
-    `Most audits go out within a couple of business days. See a sample audit: ${siteUrl}/audit`,
+    `Most Snapshots go out within a couple of business days. See a sample report: ${siteUrl}/audit`,
     "",
     "Questions? Just reply to this email - a real person will answer.",
     "",

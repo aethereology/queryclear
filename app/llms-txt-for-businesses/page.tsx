@@ -33,7 +33,7 @@ const sample = `# Goldleaf Aesthetics & Med Spa
 - Service area: Westhaven metro. Providers: licensed RN injectors, medical director.`;
 
 const faqs = [
-  { q: "Should my business have an llms.txt file?", a: "It's a reasonable, low-cost thing to add — but it's optional. It won't rescue a site that AI systems can't otherwise understand. Treat it as a small supporting signal, not a strategy." },
+  { q: "Do I need an llms.txt file?", a: "No. It isn't required to appear in search or AI results, and it isn't a ranking factor. It's a reasonable, low-cost optional extra — a supplemental file for AI-oriented tools. It won't rescue a site that machines can't otherwise understand. Treat it as a small supporting signal, never a strategy." },
   { q: "Will llms.txt make AI cite me?", a: "No. There's no guarantee any AI system reads or acts on it, and adoption is still early and uneven. It may help a machine find a clean summary of your pages; it does not make you get cited." },
   { q: "What matters more than llms.txt?", a: "Crawlable, helpful, well-structured pages with valid schema and clear entities. If you only do one thing, make your actual content and structure legible — that's what AI systems mostly rely on." },
 ];
@@ -56,8 +56,9 @@ export default function LlmsTxtPage() {
             <h1 className="mt-5 max-w-3xl text-4xl sm:text-5xl">llms.txt for businesses, honestly.</h1>
             <p className="mt-5 max-w-2xl leading-relaxed text-muted">
               <code className="font-mono text-ink">llms.txt</code> is a plain-text file
-              that gives AI systems a clean summary of your business and key pages.
-              It&apos;s a sensible thing to add — but it&apos;s optional, and it
+              that gives AI-oriented tools a clean summary of your business and key
+              pages. It&apos;s not required for search visibility and it isn&apos;t
+              a ranking factor — it&apos;s an optional supplemental file, and it
               won&apos;t do the heavy lifting. Here&apos;s the straight version.
             </p>
           </Container>
@@ -97,8 +98,8 @@ export default function LlmsTxtPage() {
           <Container className="grid gap-10 md:grid-cols-[0.8fr_1.2fr]">
             <div><MonoLabel index="04">Our recommendation</MonoLabel></div>
             <div className="max-w-2xl space-y-4 leading-relaxed text-muted">
-              <p>Add an llms.txt — it&apos;s cheap and tidy. But spend your real effort on the things AI systems actually depend on: clear, crawlable pages, valid schema, and unambiguous entities.</p>
-              <p>If you ever hear someone sell llms.txt as <em>the</em> way to win AI search, be skeptical. It&apos;s a small supporting signal, not a strategy.</p>
+              <p>Add an llms.txt if you like — it&apos;s cheap and tidy. But spend your real effort on the things search systems actually depend on: useful content, clear service pages, crawlability, local details, metadata, and a better user experience.</p>
+              <p>If you ever hear someone sell llms.txt as <em>the</em> way to win AI search, be skeptical. It&apos;s a small optional extra, not a strategy — and nobody should charge you much for one.</p>
             </div>
           </Container>
         </section>
@@ -115,9 +116,9 @@ export default function LlmsTxtPage() {
           <Container className="flex flex-col items-start gap-6 md:flex-row md:items-center md:justify-between">
             <div>
               <h2 className="text-3xl text-paper sm:text-4xl">Want the whole picture, not just a file?</h2>
-              <p className="mt-3 max-w-xl text-paper/70">Our audit covers llms.txt and the structure and content that matter more. Paid reports start at $750.</p>
+              <p className="mt-3 max-w-xl text-paper/70">Our audit covers the structure and content that actually matter — llms.txt included as a footnote. Start with a free Snapshot; the full audit is $497.</p>
             </div>
-            <Cta href="/ai-visibility-audit">Get an AI search audit</Cta>
+            <Cta href="/ai-visibility-audit">Get your free Snapshot</Cta>
           </Container>
         </section>
       </main>

@@ -10,12 +10,17 @@ Update the "Current state" line whenever it changes.
 
 ## Fixed facts
 
-- **queryclear.com** = first product of **Aethelo** (the company), under
-  **SparkCreatives Inc.** (parent 501(c)(3), EIN 33-4477854, FL reg CH79169).
-- Aethelo lives at `aethelo.sparkcreativesinc.org`. queryclear has its own domain.
-- Product = GEO / AI Search Optimization service. Sells readiness, not guarantees.
-- First revenue target: local business owner buying a GEO audit (~$750–1.5k).
-- Money ladder: audit → build → Aethelo automation.
+- **queryclear.com** = a **SparkCreatives Inc.** brand publicly (since 2026-06-11;
+  parent 501(c)(3), EIN 33-4477854, FL reg CH79169). Internally still grew out of
+  Aethelo (`aethelo.sparkcreativesinc.org`), but Aethelo no longer appears in
+  public copy/schema.
+- Product = **modern SEO for the AI search era** (formerly pitched as "GEO, the
+  next layer on SEO" — repositioned 2026-06-11 after Google's official guidance).
+  Sells readiness, not guarantees.
+- Offer ladder (public since 2026-06-11): free AI Search Snapshot → AI Search
+  Audit **$497** → Website Upgrade from $2,500 → Modern Search Website Build from
+  $6,500 → (later) care plan. "Free audit" naming is dead; the free thing is a
+  **Snapshot**, "audit" = paid product only.
 
 ## Repo facts
 
@@ -36,7 +41,59 @@ Update the "Current state" line whenever it changes.
 
 ## Current state (update this line)
 
-2026-06-10 (latest, session 2) — EMAIL DELIVERABILITY FIX (code done, DNS/env founder-gated).
+2026-06-11 (latest) — FULL REPOSITIONING: "Modern SEO for the AI search era" (code
+done + verified, NOT yet committed/deployed — founder-gated). Trigger: Google
+published official guidance on generative-AI features in Search (GEO/AEO = SEO;
+llms.txt + special AI files NOT needed for Google; no special schema). Pedro
+delivered a full edit brief; founder approved: (1) adopt Pedro's $497 ladder
+(supersedes $750 gate), (2) drop Aethelo from public copy → "a SparkCreatives Inc.
+brand" (parentOrgUrl=sparkcreativesinc.org), (3) full sitewide pass, (4) do NOT
+cite Google by name in site copy — align quietly. Rejected from Pedro's brief:
+Brightleaf Plumbing example (kept Goldleaf med-spa), hardcoded "42/100", his 5-URL
+sitemap, "create privacy/terms/404" (already existed). REAL BUG Pedro found
+(misdiagnosed as score bug): CountUp started its motion value at 0, so static HTML
+showed "0/100" to scrapers/no-JS readers on /audit — fixed by server-rendering the
+real value (`useMotionValue(to)` + keyframes [0,to] after in-view). SHIPPED IN
+CODE: lib/site.ts (tagline/description/primaryCta="Get your free AI Search
+Snapshot"/parentOrg/`offers` ladder/stack-kit contents reorder); homepage reframe
+(hero "Modern SEO for the AI search era", new problem cards, 8 FAQs incl. "Do I
+need llms.txt?", steps Snapshot→Plan→Build→Submit/measure→Monitor, 14 deliverables,
+offer-ladder section, TypingPanel "# business profile" instead of "# llms.txt");
+LeadForm → router.push("/thank-you") + privacy reassurance; NEW /thank-you route
+(noindex, deliberately excluded from sitemap+llms.txt); email templates + /api/lead
+subjects → Snapshot wording (Snapshot promises plain-English review, NOT the scored
+report — that's the paid audit's deliverable); Header/Footer (GEO audit→"AI Search
+Audit", footer "queryclear is a SparkCreatives Inc. brand"); $497 sweep (12 spots);
+Aethelo removal (layout schema, about, contact, privacy, terms, llms.txt route);
+goldleaf-demo + rivermark fixes reframed ("No llms.txt" Critical → "No clear
+business summary" High; added generic-content/local-alignment/buyer-questions
+framing; LAYER SCORES UNCHANGED so computed 33/86 stable, tests green); scorecard
+Q6 reworded (id/points unchanged); /geo-audit rewritten as "GEO done right IS
+modern SEO" honest-authority page; /ai-visibility-audit = paid $497 landing w/
+Offer schema; category pages + stack-kit + OG image updated; llms.txt route
+self-aware ("supplemental, not required, not a ranking signal"). Maple Bear client
+report data UNTOUCHED. VERIFIED: lint ✅, 45/45 tests ✅, build ✅ 29 routes,
+prerendered /audit shows 33/86 (not 0), built-output sweep = zero stale strings
+($750/Aethelo/"next layer"/"free AI search audit"). Three ADRs appended to
+Decisions.md; CLAUDE.md §2 updated. NEXT: founder commit+deploy, then verify prod
+(/, /audit static score, /thank-you noindex, llms.txt). Still pending from before:
+Stripe webhook registration, Maple Bear manual engine runs, Lighthouse/axe pass,
+DMARC p=quarantine ~2026-06-24.
+SAME-DAY ADDENDUM (button audit, founder-requested): no broken links sitewide.
+Ladder tiers 3/4 ("Upgrade my site"/"Talk about a build") retargeted from the
+generic /ai-search-ready-website page to #audit-cta (form sits right below the
+ladder); LeadForm gained an optional "What do you need?" select (interest field:
+Snapshot/Audit $497/Upgrade/Build) which flows through /api/lead (validated,
+120-char cap) into both emails as "Interested in" + the plain-text confirmation.
+Two stale hero labels fixed (ai-search-ready-website "Start with an audit",
+local-ai-search-optimization "Get a local AI visibility audit" → Snapshot
+wording). Tests now 46/46 (new interest test in lead-route.test.mjs). Dedicated
+/services/website-upgrade + /services/modern-search-website-build offer pages
+stay NEXT-PHASE per Pedro's defer-until-real-content rule — build them after the
+first Upgrade/Build client. Pre-selecting interest from the clicked tier also
+deferred — revisit if form data shows tier-3/4 clickers skip the select.
+
+2026-06-10 (session 2) — EMAIL DELIVERABILITY FIX (code done, DNS/env founder-gated).
 All three mail categories (lead confirmations, internal notifications, founder's manual
 outreach) were landing in Spam/Promotions. Diagnosed via DNS: DKIM ✅ (resend._domainkey)
 and SPF ✅ (send.queryclear.com) already pass, but **_dmarc.queryclear.com DOES NOT EXIST**

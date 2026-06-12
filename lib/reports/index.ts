@@ -35,12 +35,12 @@ const rivermarkExample: AuditReport = {
     { layer: "proof-density", score: 3, finding: "Dentist bios are thin and reviews live only on third-party sites — little structured proof a system can trust." },
     { layer: "local-relevance", score: 5, finding: "City is mentioned, but there's no clear service-area copy and no alignment with the Google Business Profile." },
     { layer: "answer-coverage", score: 3, finding: "No FAQ on insurance, new-patient steps, pricing ranges, or what to expect — the questions patients ask first." },
-    { layer: "machine-readability", score: 2, finding: "No JSON-LD schema and no llms.txt; metadata is thin, so answer engines have little to parse." },
+    { layer: "machine-readability", score: 2, finding: "No JSON-LD schema and no machine-readable business summary; metadata is thin, so answer engines have little to parse." },
     { layer: "conversion-path", score: 6, finding: "A 'Request appointment' link exists but is buried in the menu; an AI-referred visitor has no obvious next step." },
   ],
   fixes: [
     { sev: "Critical", title: "No structured data (schema)", layer: "Machine Readability", why: "Engines have nothing reliable to read — no Dentist/LocalBusiness, Service, or FAQPage markup.", fix: "Add JSON-LD for the practice, each service, and FAQs — verified details only.", effort: "Medium" },
-    { sev: "Critical", title: "No llms.txt", layer: "Machine Readability", why: "There's no machine-readable summary of who you are, what you offer, and where.", fix: "Publish an llms.txt with services, service area, providers, and key pages.", effort: "Low" },
+    { sev: "High", title: "No clear business summary", layer: "Machine Readability", why: "The site never clearly summarizes who the practice serves, what it offers, and where it operates.", fix: "Add a clear practice profile section in plain language, mark it up with schema — and optionally publish an llms.txt support file that points to key pages.", effort: "Low" },
     { sev: "High", title: "Services lumped into one page", layer: "Service Specificity", why: "A single 'Services' list can't match queries like 'Invisalign' or 'dental implants near me'.", fix: "Give each core service its own crawlable page: what it is, who it's for, what to expect.", effort: "Medium" },
     { sev: "High", title: "No FAQ / new-patient answers", layer: "Answer Coverage", why: "Patients ask about insurance, first-visit steps, and pricing ranges before booking — there's no clear Q&A to cite.", fix: "Add an FAQ (insurance, new-patient process, financing, what to expect) with FAQPage schema.", effort: "Low" },
     { sev: "Medium", title: "Service area isn't machine-clear", layer: "Local Relevance", why: "Without explicit service-area copy, 'near me' and city questions can't connect you.", fix: "State the neighborhoods served in copy and align the site with your Google Business Profile.", effort: "Low" },
@@ -48,7 +48,7 @@ const rivermarkExample: AuditReport = {
   ],
   machineView: {
     before: [
-      "# llms.txt → 404",
+      "# business summary → none",
       "# schema → none",
       "# services → unclear",
       "# new patients → unknown",

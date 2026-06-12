@@ -1,6 +1,9 @@
 import type { MetadataRoute } from "next";
 import { site } from "@/lib/site";
 
+// Every public route belongs here AND in app/llms.txt/route.ts.
+// Deliberate exceptions: /thank-you (noindex post-conversion page) and
+// /reports/* (private client reports, noindex).
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
     {

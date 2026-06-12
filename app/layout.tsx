@@ -33,13 +33,14 @@ export const metadata: Metadata = {
   description: site.description,
   applicationName: site.name,
   keywords: [
+    "modern SEO",
     "AI search optimization",
     "GEO",
-    "generative engine optimization",
-    "get cited by ChatGPT",
-    "AI answer engine optimization",
+    "AI Overviews",
+    "answer engine optimization",
     "schema markup",
-    "llms.txt",
+    "local SEO",
+    "service business websites",
   ],
   alternates: { canonical: "/" },
   openGraph: {
@@ -63,6 +64,7 @@ const orgSchema = {
   name: site.name,
   url: site.url,
   description: site.description,
+  brand: { "@type": "Brand", name: site.name },
   parentOrganization: {
     "@type": "Organization",
     name: site.parentOrg,

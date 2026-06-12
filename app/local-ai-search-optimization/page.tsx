@@ -53,7 +53,7 @@ const serviceSchema = {
   "@context": "https://schema.org",
   "@type": "Service",
   name: "Local AI Search Optimization",
-  serviceType: "Local AI search optimization (GEO)",
+  serviceType: "Local SEO / AI search optimization",
   provider: { "@type": "Organization", name: site.name, url: site.url },
   description: "Optimizing local and service-business websites so search and AI answer engines can understand, trust, and recommend them.",
   areaServed: "United States",
@@ -94,7 +94,7 @@ export default function LocalPage() {
               understood and considered when it counts.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Cta href="/ai-visibility-audit">Get a local AI visibility audit</Cta>
+              <Cta href="/ai-visibility-audit">Get your free Snapshot</Cta>
               <Cta href="/ai-visibility-stack" variant="ghost">See our method</Cta>
             </div>
           </Container>
@@ -156,13 +156,13 @@ export default function LocalPage() {
         <section className="bg-pine py-20 text-paper">
           <Container className="flex flex-col items-start gap-6 md:flex-row md:items-center md:justify-between">
             <div>
-              <h2 className="text-3xl text-paper sm:text-4xl">See how AI sees your local business.</h2>
+              <h2 className="text-3xl text-paper sm:text-4xl">See how modern search sees your local business.</h2>
               <p className="mt-3 max-w-xl text-paper/70">
-                A free audit shows how answer engines describe you today and what to
-                fix first. Paid reports start at $750.
+                A free Snapshot shows what to fix first, in plain English. The
+                full scored audit is $497.
               </p>
             </div>
-            <Cta href="/ai-visibility-audit">Get a local AI visibility audit</Cta>
+            <Cta href="/ai-visibility-audit">Get your free Snapshot</Cta>
           </Container>
         </section>
       </main>

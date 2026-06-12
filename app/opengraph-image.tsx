@@ -71,8 +71,8 @@ export default function OpengraphImage() {
             {site.tagline}
           </div>
           <div style={{ marginTop: 28, fontSize: 30, lineHeight: 1.35, color: MUTED }}>
-            We make your website easier for AI answer engines to crawl,
-            understand, trust, and cite.
+            Websites built to be clearer, more useful, and easier to understand
+            — for Google, AI search, and real customers.
           </div>
         </div>
 
@@ -88,7 +88,7 @@ export default function OpengraphImage() {
           }}
         >
           <div style={{ display: "flex", width: 12, height: 12, borderRadius: 9999, backgroundColor: LIME }} />
-          <div style={{ display: "flex" }}>AI Search Optimization · GEO · www.queryclear.com</div>
+          <div style={{ display: "flex" }}>Modern SEO · AI search · www.queryclear.com</div>
         </div>
       </div>
     ),

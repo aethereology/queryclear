@@ -5,13 +5,14 @@ export const site = {
   name: "queryclear",
   // Canonical = www (apex 307 → www in production). Decided 2026-06-03; see Decisions.md.
   url: "https://www.queryclear.com",
-  tagline: "Get found in AI answers.",
+  tagline: "Modern SEO for the AI search era.",
   description:
-    "queryclear makes your website easier for search engines and AI answer engines like ChatGPT, Claude, Perplexity, Gemini, and Google AI Overviews to crawl, understand, trust, and cite.",
-  parentOrg: "Aethelo",
-  parentOrgUrl: "https://aethelo.sparkcreativesinc.org",
-  // The free audit is the primary action everywhere.
-  primaryCta: { label: "Book a free AI search audit", href: "#audit-cta" },
+    "queryclear helps service businesses upgrade their websites for modern search — clearer service pages, crawlability, metadata, schema, local signals, and AI-search readiness across Google, ChatGPT, Claude, Perplexity, Gemini, and Bing Copilot.",
+  parentOrg: "SparkCreatives Inc.",
+  parentOrgUrl: "https://sparkcreativesinc.org",
+  // The free Snapshot is the primary action everywhere. (Renamed from "free
+  // audit" 2026-06-11 — "audit" is now the paid product.)
+  primaryCta: { label: "Get your free AI Search Snapshot", href: "#audit-cta" },
   secondaryCta: { label: "See what we optimize", href: "#solution" },
   // Public contact. info@ remains a live forwarding alias; hello@ is the
   // public-facing address (deliverability update 2026-06-10).
@@ -23,6 +24,43 @@ export const site = {
     "Gemini",
     "Google AI Overviews",
     "Bing Copilot",
+  ],
+  // Public offer ladder (decided 2026-06-11; see Decisions.md). Free Snapshot
+  // is the lead magnet; Audit is the paid diagnostic; Upgrade is the main
+  // offer; Build is the top tier. "from" prices are floors, not quotes.
+  offers: [
+    {
+      name: "Free AI Search Snapshot",
+      price: "Free",
+      desc: "A quick plain-English review of your website's search clarity, technical foundation, and biggest opportunities.",
+      href: "#audit-cta",
+      cta: "Request my free Snapshot",
+    },
+    {
+      name: "AI Search Audit",
+      price: "$497",
+      desc: "A deeper scored report: prompt testing, page review, technical findings, local visibility review, and a prioritized fix roadmap.",
+      href: "/ai-visibility-audit",
+      cta: "See what's in the audit",
+    },
+    // Tiers 3/4 point at the lead form (the ladder renders directly above it
+    // on the homepage). Dedicated /services offer pages are deferred until we
+    // have real client content; the form's "interest" field captures which
+    // offer pulled them. See Decisions.md 2026-06-11.
+    {
+      name: "Website Upgrade",
+      price: "from $2,500",
+      desc: "Done-for-you improvements to the site you have: service pages, metadata, FAQs, schema, crawlability, internal links, and conversion paths.",
+      href: "#audit-cta",
+      cta: "Upgrade my site",
+    },
+    {
+      name: "Modern Search Website Build",
+      price: "from $6,500",
+      desc: "A full website build for businesses that need a clearer, faster, more useful, and more search-ready foundation.",
+      href: "#audit-cta",
+      cta: "Talk about a build",
+    },
   ],
   // T14 demand-test offer. The product is NOT built yet — this is a refundable
   // pre-order to measure demand (GATE-MODEL). Keep every claim honest.
@@ -42,11 +80,7 @@ export const site = {
       },
       {
         title: "Copy-paste schema templates",
-        desc: "Fill-in-the-blanks JSON-LD for Organization, LocalBusiness, Service, and FAQPage — the structured data AI engines read.",
-      },
-      {
-        title: "An llms.txt template",
-        desc: "A ready-to-edit llms.txt for your business, plus exactly where to put it so answer engines can find it.",
+        desc: "Fill-in-the-blanks JSON-LD for Organization, LocalBusiness, Service, and FAQPage — the structured data search systems read.",
       },
       {
         title: "The AI-visibility prompt set",
@@ -58,7 +92,11 @@ export const site = {
       },
       {
         title: "A service-page structure template",
-        desc: "The page layout that reads cleanly to AI systems and gives a visitor an obvious next step.",
+        desc: "The page layout that reads cleanly to people and search systems, and gives a visitor an obvious next step.",
+      },
+      {
+        title: "An optional llms.txt template",
+        desc: "A ready-to-edit llms.txt support file — an optional extra for AI-oriented tools, not a ranking factor, with notes on when it's worth publishing.",
       },
     ],
     terms:

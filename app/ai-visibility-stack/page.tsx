@@ -52,7 +52,7 @@ const layers = [
     n: "06",
     name: "Machine Readability",
     what: "Search engines and AI systems can actually crawl, parse, and summarize the site without tripping over it.",
-    needs: "Valid JSON-LD schema, a sitemap, sensible robots rules, llms.txt, semantic HTML, and unique metadata per page.",
+    needs: "Valid JSON-LD schema, a sitemap, sensible robots rules, semantic HTML, unique metadata per page — and optionally an llms.txt support file.",
   },
   {
     n: "07",
@@ -164,12 +164,12 @@ export default function StackPage() {
             <div>
               <h2 className="text-3xl text-paper sm:text-4xl">See your stack scored.</h2>
               <p className="mt-3 max-w-xl text-paper/70">
-                A free AI search audit scores your site against all seven layers and
-                shows what to fix first. Paid audits start at $750.
+                Start with a free AI Search Snapshot. The full $497 audit scores
+                your site against all seven layers and shows what to fix first.
               </p>
             </div>
             <div className="flex flex-wrap gap-3">
-              <Cta href="/ai-visibility-audit">Get an AI search audit</Cta>
+              <Cta href="/ai-visibility-audit">Get the AI Search Audit</Cta>
               <Cta href="/scorecard" variant="ghost" className="!text-paper !border-paper/30 hover:!bg-white/10">
                 Score your own site
               </Cta>

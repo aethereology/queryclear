@@ -9,64 +9,78 @@ import { Accordion } from "@/components/Accordion";
 import { site } from "@/lib/site";
 
 const whatWeBuild = [
-  { t: "New AI-search-ready websites", d: "Built from the ground up to be crawlable, clear, and citable." },
-  { t: "Existing website optimization", d: "We add the structure, schema, and clarity your current site is missing." },
-  { t: "GEO audits", d: "A scored review of how AI answer engines see you, with a prioritized fix list." },
-  { t: "Service page rebuilds", d: "Pages that state plainly what you do, where, and for whom." },
-  { t: "Local AI visibility", d: "Help the answer engines connect your business to your city and services." },
+  { t: "Modern-search-ready websites", d: "Built from the ground up with clear service pages, fast performance, useful content, and search-friendly structure." },
+  { t: "Existing website optimization", d: "We tighten the pages you have: structure, content clarity, metadata, schema, internal links, local details, and conversion paths." },
+  { t: "AI Search Snapshots & Audits", d: "A quick free review of how your site reads to modern search — or a deeper scored audit with a prioritized fix roadmap." },
+  { t: "Service page rebuilds", d: "Pages that state plainly what you do, who you serve, where, why you're credible, and what to do next." },
+  { t: "Local visibility improvements", d: "We align your website, service pages, FAQs, and local business details so customers and search systems understand your market." },
 ];
 
 const steps = [
-  { n: "01", t: "Audit", d: "We test how the answer engines describe you today and find what's blocking them." },
-  { n: "02", t: "Plan", d: "A prioritized, plain-English fix list — biggest impact first." },
-  { n: "03", t: "Build / optimize", d: "We implement: schema, llms.txt, structure, content clarity, speed." },
-  { n: "04", t: "Submit / index", d: "Sitemaps, robots, and Search Console setup so you get crawled." },
+  { n: "01", t: "Snapshot", d: "We review your site's search clarity, service pages, local signals, technical foundations, and AI-search readiness." },
+  { n: "02", t: "Plan", d: "A practical, plain-English roadmap showing what to fix first — biggest impact at the top." },
+  { n: "03", t: "Build / optimize", d: "We implement: technical SEO fixes, page structure, metadata, service content, FAQs, schema where useful, speed, accessibility." },
+  { n: "04", t: "Submit / measure", d: "Sitemap, robots, Search Console, and Bing Webmaster Tools setup so the site can be discovered and monitored." },
   { n: "05", t: "Monitor", d: "We re-run the AI visibility tests and track what changed." },
 ];
 
 const deliverables = [
-  "Title tags & meta descriptions",
+  "Search-focused titles & meta descriptions",
+  "Clear homepage & service-page structure",
+  "Helpful FAQ sections",
+  "Local business & service-area clarity",
+  "Internal linking improvements",
+  "JSON-LD schema where useful",
   "Open Graph metadata",
-  "JSON-LD schema",
-  "FAQ sections",
-  "llms.txt",
   "sitemap.xml & robots.txt",
-  "AI-readable business profile",
-  "Clear heading hierarchy",
-  "Internal linking",
+  "Search Console & Bing setup guidance",
   "Accessible forms & CTAs",
-  "Search Console setup guidance",
-  "AI visibility test prompts",
+  "Page experience & speed recommendations",
+  "AI-search prompt testing",
+  "Optional llms.txt support file",
+  "Plain-English implementation roadmap",
 ];
 
 const faqs = [
   {
-    q: "What is AI Search Optimization (GEO)?",
-    a: "GEO — Generative Engine Optimization — is making your website easy for AI answer engines like ChatGPT, Claude, Perplexity, and Google AI Overviews to crawl, understand, summarize, trust, and cite. It's the next layer on top of traditional SEO.",
+    q: "What is AI Search Optimization?",
+    a: "AI Search Optimization is modern SEO for the way people search now. It improves your website's technical structure, content clarity, service pages, local details, metadata, and trust signals so search engines and AI-powered search experiences can better understand your business. Some people call this GEO or AEO, but the foundation is still strong SEO: useful content, crawlable pages, clear structure, and accurate business information.",
   },
   {
-    q: "Do you guarantee I'll rank or get cited?",
-    a: "No, and you should distrust anyone who does. We make your site genuinely more readable and trustworthy to search and AI systems. That's the part we control, and we do it well.",
+    q: "Do you guarantee rankings or AI citations?",
+    a: "No, and you should distrust anyone who does. What we control is the quality of your website's foundation: clear pages, useful content, crawlability, metadata, schema where appropriate, local details, and a better experience for visitors. That's the part we do well.",
   },
   {
     q: "How is this different from regular SEO?",
-    a: "Traditional SEO targets blue links. GEO targets the answer itself — structured data, clear entities, and machine-readable summaries so an AI can confidently describe and recommend you.",
+    a: "It isn't separate from SEO — it's a modern version of it that accounts for AI-powered search experiences, answer summaries, and future AI agents. Traditional SEO still matters. We build on it by making your website clearer, more useful, better structured, and easier for both people and search systems to evaluate.",
   },
   {
-    q: "What do I get from the free audit?",
-    a: "A real review of how AI answer engines currently see your business, the gaps holding you back, and a prioritized fix list. No obligation.",
+    q: "What do I get from the free Snapshot?",
+    a: "A quick, plain-English review of your website's biggest search-readiness opportunities. It is not a full audit. If you want a deeper scored report with prompt testing and a prioritized implementation roadmap, that's our paid AI Search Audit.",
+  },
+  {
+    q: "Do I need llms.txt?",
+    a: "No. An llms.txt file isn't required to appear in search or AI results, and it isn't a ranking factor. We sometimes publish one as a small supplemental file for AI-oriented tools, but the core strategy is stronger SEO: useful content, clear service pages, crawlability, local details, metadata, and a better user experience.",
+  },
+  {
+    q: "Do you use AI to write content?",
+    a: "We may use AI tools to help draft, organize, or speed up content work, but we don't publish generic AI filler. The goal is to capture the real expertise, services, process, proof, and customer questions behind your business — then turn that into clear, useful website content.",
+  },
+  {
+    q: "Who is queryclear for?",
+    a: "Service businesses that depend on search, trust, and high-intent leads — med spas, aesthetic practices, contractors, clinics, consultants, attorneys, dentists, and local professional firms.",
   },
   {
     q: "Can I do this myself?",
-    a: "If you're hands-on, yes — we offer a $97 DIY kit (The Local AI Visibility Stack) with our playbook and copy-paste templates so you can apply the method on your own. It's a refundable founding pre-order at queryclear.com/stack-kit. Most owners still start with the free audit — it's the easiest way to see what to fix first.",
+    a: "If you're hands-on, yes — we offer a $97 DIY kit (The Local AI Visibility Stack) with our playbook and copy-paste templates so you can apply the method on your own. It's a refundable founding pre-order at queryclear.com/stack-kit. Most owners still start with the free Snapshot — it's the easiest way to see what to fix first.",
   },
 ];
 
 const serviceSchema = {
   "@context": "https://schema.org",
   "@type": "Service",
-  serviceType: "AI Search Optimization (Generative Engine Optimization)",
-  name: "AI Search Optimization Audit",
+  serviceType: "Modern SEO / AI Search Optimization",
+  name: "Modern Search Website Optimization",
   description: site.description,
   provider: { "@type": "Organization", name: site.name, url: site.url },
   areaServed: "United States",
@@ -102,22 +116,23 @@ export default function Home() {
           <Container className="relative grid items-center gap-12 py-20 md:grid-cols-[1.05fr_0.95fr] md:py-28">
             <div>
               <div className="fade-up">
-                <MonoLabel>AI search optimization · GEO</MonoLabel>
+                <MonoLabel>Modern SEO · AI search</MonoLabel>
               </div>
               <h1
                 className="fade-up mt-6 text-balance text-5xl leading-[1.02] sm:text-6xl"
                 style={{ animationDelay: "0.08s" }}
               >
-                Your customers ask AI. We make sure it knows you.
+                Modern SEO for the AI search era.
               </h1>
               <p
                 className="fade-up mt-6 max-w-xl text-lg leading-relaxed text-muted"
                 style={{ animationDelay: "0.16s" }}
               >
-                When someone asks ChatGPT, Claude, or Google&apos;s AI for a
-                business like yours, the answer is assembled from what machines
-                can read about you. We make your site clear, structured, and
-                trustworthy — so you&apos;re the one they recommend.
+                Websites built to be understood — by Google, AI search, and
+                real customers. We help service businesses make their sites
+                clearer, more useful, and easier to discover across Google
+                Search, AI Overviews, ChatGPT-style answer engines, and future
+                AI agents.
               </p>
               <div
                 className="fade-up mt-9 flex flex-wrap items-center gap-3"
@@ -132,10 +147,10 @@ export default function Home() {
 
             {/* the signature: what the machine reads */}
             <div className="fade-up" style={{ animationDelay: "0.32s" }}>
-              <p className="mono-label mb-2">{"// what the AI reads about you"}</p>
+              <p className="mono-label mb-2">{"// what modern search can understand"}</p>
               <TypingPanel
                 lines={[
-                  <span key="c" className="text-paper/40"># llms.txt</span>,
+                  <span key="c" className="text-paper/40"># business profile</span>,
                   <span key="b">
                     <span className="k">Business</span>:{" "}
                     <span className="s">Goldleaf Aesthetics &amp; Med Spa</span>
@@ -160,7 +175,7 @@ export default function Home() {
                     <span className="text-paper/40">&quot; &#125;</span>
                   </span>,
                   <span key="ok" className="mt-3 block text-lime">
-                    ✓ clear · structured · citable
+                    ✓ clear · crawlable · useful · structured
                   </span>,
                 ]}
               />
@@ -172,14 +187,14 @@ export default function Home() {
         <Section id="problem" index="01" label="The problem">
           <h2 className="max-w-2xl text-4xl sm:text-5xl">
             <ClipReveal
-              lines={["Your customers are asking AI.", "Is it recommending you?"]}
+              lines={["Your customers search differently now.", "Is your site clear enough to be chosen?"]}
             />
           </h2>
           <div className="mt-12 grid gap-px overflow-hidden border border-dashed border-line bg-line sm:grid-cols-3">
             {[
-              ["Invisible in AI answers", "When someone asks an assistant for a business like yours, you're not in the answer."],
-              ["Unclear to machines", "Most sites don't state plainly what they do, where, and for whom — so AI can't trust them."],
-              ["SEO alone isn't enough", "Ranking for blue links doesn't mean an AI will summarize or cite you."],
+              ["Hard to understand", "Many business websites look good but never clearly say what the business does, where it serves, and why it should be trusted."],
+              ["Weak search foundations", "Pages that are hard to crawl, thin, duplicated, slow, or missing key business details give modern search systems less to work with."],
+              ["Generic content doesn't stand out", "AI-powered search compares many sources at once. Helpful, specific, experience-based content matters more than recycled SEO copy."],
             ].map(([t, d]) => (
               <div key={t} className="bg-paper p-7">
                 <h3 className="text-xl">{t}</h3>
@@ -197,12 +212,13 @@ export default function Home() {
                 We make your site legible — to people and to machines.
               </h2>
               <p className="mt-5 max-w-lg leading-relaxed text-muted">
-                Same site, two readers. We give the answer engines the structure
-                and clarity they need, without making your site feel robotic to
-                the humans you&apos;re actually selling to.
+                We improve the foundations that help search engines, AI-powered
+                results, and future browser agents understand your business. The
+                goal isn&apos;t to write for robots — it&apos;s to make your
+                site clearer, more useful, and easier to evaluate.
               </p>
               <ul className="mt-7 grid gap-2.5 text-sm">
-                {["Structured content & clear entities", "JSON-LD schema markup", "Service pages & FAQs", "llms.txt & crawlability", "AI-readable business summary"].map((x) => (
+                {["Technical SEO foundation", "Crawlability & indexability", "Service-page clarity & helpful FAQs", "Local business & service-area details", "Schema & metadata where useful", "Internal links & content structure", "Page experience & accessibility", "Optional llms.txt support file"].map((x) => (
                   <li key={x} className="flex items-center gap-3">
                     <span className="h-1.5 w-1.5 shrink-0 bg-lime" />
                     {x}
@@ -237,7 +253,7 @@ export default function Home() {
         {/* ── WHAT WE BUILD ────────────────────────────────── */}
         <Section id="build" index="03" label="What we build">
           <h2 className="max-w-2xl text-4xl sm:text-5xl">
-            From a quick audit to a full AI-ready rebuild.
+            From a quick search snapshot to a full modern-search upgrade.
           </h2>
           <Stagger className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {whatWeBuild.map((c) => (
@@ -249,7 +265,7 @@ export default function Home() {
             <StaggerItem className="card flex flex-col justify-between bg-pine p-6 text-paper">
               <h3 className="text-xl text-paper">Not sure where you stand?</h3>
               <div className="mt-4">
-                <Cta href={site.primaryCta.href}>Start with a free audit</Cta>
+                <Cta href={site.primaryCta.href}>Start with a free Snapshot</Cta>
               </div>
             </StaggerItem>
           </Stagger>
@@ -298,18 +314,47 @@ export default function Home() {
           />
         </Section>
 
+        {/* ── OFFER LADDER ─────────────────────────────────── */}
+        <Section id="offers" index="07" label="Start here">
+          <h2 className="max-w-2xl text-4xl sm:text-5xl">
+            Start with the right level of help.
+          </h2>
+          <Stagger className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {site.offers.map((o) => (
+              <StaggerItem key={o.name} className="card flex flex-col p-6">
+                <p className="mono-label">{o.price}</p>
+                <h3 className="mt-3 text-xl">{o.name}</h3>
+                <p className="mt-2 flex-1 text-sm leading-relaxed text-muted">
+                  {o.desc}
+                </p>
+                <div className="mt-5">
+                  <Cta href={o.href} variant="ghost">
+                    {o.cta}
+                  </Cta>
+                </div>
+              </StaggerItem>
+            ))}
+          </Stagger>
+          <p className="mt-6 text-sm text-muted">
+            &quot;From&quot; prices are starting points — every project is
+            scoped and confirmed in writing before work begins.
+          </p>
+        </Section>
+
         {/* ── CTA + LEAD FORM ──────────────────────────────── */}
         <section id="audit-cta" className="scroll-mt-20 bg-pine py-20 text-paper md:py-28">
           <Container className="grid gap-12 md:grid-cols-[0.9fr_1.1fr] md:items-center">
             <div>
-              <MonoLabel index="07">Get started</MonoLabel>
+              <MonoLabel index="08">Get started</MonoLabel>
               <h2 className="mt-5 text-4xl text-paper sm:text-5xl">
-                <ClipReveal lines={["Book a free", "AI search audit."]} />
+                <ClipReveal lines={["Get your free", "AI Search Snapshot."]} />
               </h2>
               <p className="mt-5 max-w-md leading-relaxed text-paper/70">
-                Tell us about your business and we&apos;ll show you how the answer
-                engines see you today — and exactly what to fix. Free, no
-                obligation.
+                Tell us about your business and we&apos;ll review your
+                website&apos;s biggest opportunities for modern search:
+                clarity, crawlability, service pages, local signals, and
+                AI-search readiness. Free, no obligation — you get a
+                plain-English review, not a sales bot.
               </p>
             </div>
             <LeadForm />

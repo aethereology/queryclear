@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
-type Status = "idle" | "submitting" | "success" | "error";
+type Status = "idle" | "submitting" | "error";
 
 const fields = [
   { name: "name", label: "Your name", type: "text", required: true, autoComplete: "name" },
@@ -21,7 +22,16 @@ const fields = [
   { name: "city", label: "City / market", type: "text", required: false, autoComplete: "address-level2" },
 ] as const;
 
+// Mirrors site.offers; captured so the intake records which offer pulled them.
+const interestOptions = [
+  "Free AI Search Snapshot",
+  "AI Search Audit ($497)",
+  "Website Upgrade",
+  "Modern Search Website Build",
+] as const;
+
 export function LeadForm() {
+  const router = useRouter();
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState<string>("");
 
@@ -37,27 +47,12 @@ export function LeadForm() {
         body: JSON.stringify(data),
       });
       if (!res.ok) throw new Error((await res.json()).error ?? "Something went wrong.");
-      setStatus("success");
+      // Single success surface: /thank-you (stable URL for conversion tracking).
+      router.push("/thank-you");
     } catch (err) {
       setStatus("error");
       setError(err instanceof Error ? err.message : "Something went wrong.");
     }
-  }
-
-  if (status === "success") {
-    return (
-      <div
-        role="status"
-        className="card grid-texture flex flex-col items-start gap-3 p-8 text-ink"
-      >
-        <p className="mono-label text-lime-deep">[ received ]</p>
-        <h3 className="text-2xl">Thanks — your audit request is in.</h3>
-        <p className="text-muted">
-          We&apos;ll review your site and reply with your free AI search audit.
-          No spam, no obligation.
-        </p>
-      </div>
-    );
   }
 
   return (
@@ -96,6 +91,24 @@ export function LeadForm() {
           </div>
         ))}
         <div className="sm:col-span-2">
+          <label htmlFor="interest" className="mb-1.5 block text-sm font-medium">
+            What do you need?
+          </label>
+          <select
+            id="interest"
+            name="interest"
+            defaultValue=""
+            className="input-halo w-full border border-line bg-paper px-3.5 py-2.5 text-sm text-ink outline-none transition-colors"
+          >
+            <option value="">Not sure yet — start with the free Snapshot</option>
+            {interestOptions.map((o) => (
+              <option key={o} value={o}>
+                {o}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="sm:col-span-2">
           <label htmlFor="message" className="mb-1.5 block text-sm font-medium">
             Anything else?
           </label>
@@ -128,11 +141,13 @@ export function LeadForm() {
             Sending…
           </>
         ) : (
-          "Book my free AI search audit"
+          "Request my free Snapshot"
         )}
       </button>
       <p className="mt-3 text-xs text-muted">
-        Free, no obligation. We reply with a real audit, not a sales bot.
+        Free, no obligation. We&apos;ll send a plain-English review — not a
+        sales bot. By submitting, you agree to be contacted about your request.
+        We do not sell your information.
       </p>
     </form>
   );

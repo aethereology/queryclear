@@ -56,18 +56,19 @@ export default function TermsPage() {
           <Container className="max-w-2xl space-y-10 leading-relaxed text-muted">
             <p>
               These terms apply when you use the queryclear website or engage our
-              services. queryclear is a product of Aethelo, under SparkCreatives Inc.
-              By using the site or requesting an audit, you agree to what&apos;s below.
+              services. queryclear is a SparkCreatives Inc. brand. By using the
+              site or requesting a Snapshot or audit, you agree to what&apos;s below.
             </p>
 
             <div>
               <h2 className="text-2xl text-ink">What we do</h2>
               <p className="mt-3">
-                queryclear provides AI search optimization (GEO) services: audits and
-                improvements to a website&apos;s structure, structured data, content
-                clarity, crawlability, and machine-readable summaries so that search
-                engines and AI answer engines can better crawl, understand, trust, and
-                summarize a business.
+                queryclear provides website review, search-readiness, content, and
+                optimization services — modern SEO for the AI search era: audits
+                and improvements to a website&apos;s structure, structured data,
+                content clarity, local details, crawlability, and metadata so that
+                search engines and AI-powered results can better crawl,
+                understand, trust, and summarize a business.
               </p>
             </div>
 
@@ -99,10 +100,11 @@ export default function TermsPage() {
             <div>
               <h2 className="text-2xl text-ink">Audits and deliverables</h2>
               <p className="mt-3">
-                A free audit is provided as-is for your information and carries no
-                obligation on either side. Paid engagements (such as a paid audit
-                report or a website upgrade) are governed by the specific scope,
-                price, and terms we agree with you in writing before work begins.
+                A free Snapshot is provided as-is for your information and carries
+                no obligation on either side. Paid engagements (such as a paid
+                audit report, a website upgrade, or a website build) are governed
+                by the specific scope, price, and terms we agree with you in
+                writing before work begins.
               </p>
             </div>
 
@@ -110,7 +112,7 @@ export default function TermsPage() {
               <h2 className="text-2xl text-ink">Intellectual property</h2>
               <p className="mt-3">
                 The content, frameworks, and methods on this site are owned by
-                queryclear / Aethelo. Deliverables we create for you become yours as
+                queryclear / SparkCreatives Inc. Deliverables we create for you become yours as
                 set out in our written agreement, while we retain our general methods,
                 templates, and know-how.
               </p>

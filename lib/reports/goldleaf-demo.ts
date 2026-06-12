@@ -35,24 +35,24 @@ export const goldleafDemo: AuditReport = {
     { layer: "proof-density", score: 2, finding: "No provider credentials, medical oversight, or structured reviews a system can trust — critical for medical aesthetics." },
     { layer: "local-relevance", score: 4, finding: "The city appears only in the footer; no service-area language and no alignment with a Google Business Profile." },
     { layer: "answer-coverage", score: 3, finding: "No FAQ on the questions buyers actually ask — pricing ranges, downtime, safety, what to expect." },
-    { layer: "machine-readability", score: 1, finding: "No JSON-LD schema, no llms.txt, and thin metadata — answer engines have almost nothing to parse." },
+    { layer: "machine-readability", score: 1, finding: "No JSON-LD schema, no machine-readable business summary, and thin metadata — answer engines have almost nothing to parse." },
     { layer: "conversion-path", score: 6, finding: "A 'Book now' button exists but is buried; an AI-referred visitor has no obvious consultation path." },
   ],
 
   // Prioritized fixes, each tied to the layer it lifts.
   fixes: [
     { sev: "Critical", title: "No structured data (schema)", layer: "Machine Readability", why: "Engines have nothing reliable to read — no LocalBusiness/MedicalBusiness, Service, or FAQPage markup.", fix: "Add JSON-LD for the business, each treatment, and FAQs — using real, verified details only.", effort: "Medium" },
-    { sev: "Critical", title: "No llms.txt", layer: "Machine Readability", why: "There's no machine-readable summary of who you are, what you treat, and where.", fix: "Publish an llms.txt with treatments, service area, providers, and key pages.", effort: "Low" },
+    { sev: "High", title: "No clear business summary", layer: "Machine Readability", why: "The site never clearly summarizes who the business serves, what it offers, where it operates, and which pages matter most.", fix: "Add a clear business profile section in plain language, mark it up with schema — and optionally publish an llms.txt support file that points to key pages.", effort: "Low" },
     { sev: "High", title: "Providers & medical oversight not stated", layer: "Proof Density", why: "For medical aesthetics, trust hinges on who performs treatments — neither patients nor engines can verify licensed injectors or a medical director.", fix: "Add a providers section with real licenses and medical oversight, and mark it up with schema.", effort: "Low" },
-    { sev: "High", title: "Treatments lumped into one vague page", layer: "Service Specificity", why: "A single 'Services' list can't match specific queries like 'lip filler' or 'laser hair removal'.", fix: "Give each treatment its own clear, crawlable page: what it is, who it's for, what to expect.", effort: "Medium" },
-    { sev: "High", title: "No FAQ content", layer: "Answer Coverage", why: "Buyers ask about pricing ranges, downtime, pain, and safety before booking — there's no clear Q&A to cite.", fix: "Add an FAQ (downtime, pricing ranges, safety, consultation) with FAQPage schema.", effort: "Low" },
-    { sev: "Medium", title: "Service area isn't machine-clear", layer: "Local Relevance", why: "The city appears only in the footer, so 'near me' and city-based questions can't connect you.", fix: "State the service area in copy, add location context, and align with your Google Business Profile.", effort: "Low" },
+    { sev: "High", title: "Generic, lumped service content", layer: "Service Specificity", why: "The treatments page reads like any med spa could have written it, and a single 'Services' list can't match specific queries like 'lip filler' or 'laser hair removal'. Modern search rewards useful, specific, experience-led content.", fix: "Give each treatment its own clear, crawlable page: what it is, who it's for, what to expect, common scenarios, and real process details.", effort: "Medium" },
+    { sev: "High", title: "Missing buyer questions", layer: "Answer Coverage", why: "Customers ask about pricing ranges, downtime, pain, and safety before booking. If those answers aren't on the site, search systems and AI summaries have fewer useful details to work with.", fix: "Add FAQs based on real customer questions, grouped by treatment and buying intent, with FAQPage schema.", effort: "Low" },
+    { sev: "Medium", title: "Weak local business alignment", layer: "Local Relevance", why: "Local search and AI-powered results rely on clear, consistent business details across the website and Google Business Profile — here the city appears only in the footer.", fix: "State the service area in copy, align services, contact details, category, and FAQs with your Google Business Profile.", effort: "Medium" },
     { sev: "Medium", title: "Thin metadata & buried booking", layer: "Conversion Path", why: "Weak titles/descriptions reduce clarity, and the booking path isn't obvious to an AI-referred visitor.", fix: "Write specific title/description/OG tags per page and surface a clear consultation CTA.", effort: "Low" },
   ],
 
   machineView: {
     before: [
-      "# llms.txt → 404",
+      "# business summary → none",
       "# schema → none",
       "# treatments → unclear",
       "# providers → unknown",

@@ -36,6 +36,7 @@ Thumbs.db
 
 # Playwright / local verification artifacts (root-level screenshots)
 .playwright-mcp/
+.firecrawl/
 /*.png
 
 # Reference docs we don't track in git (kept locally)

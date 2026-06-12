@@ -5,6 +5,43 @@ Format: date · decision · rationale · status.
 
 ---
 
+## 2026-06-11 · Repositioning: "Modern SEO for the AI search era"
+- **Decision:** Sitewide reframe away from "GEO is the next layer on top of SEO"
+  and llms.txt-as-headline-feature, to "Modern SEO for the AI search era." llms.txt
+  is demoted everywhere to an optional supplemental file (not required, not a
+  ranking factor). Free offer renamed **"free AI Search Snapshot"** ("audit" is now
+  exclusively the paid product). Multi-engine framing (ChatGPT/Claude/Perplexity/
+  Gemini) retained. The site does NOT cite Google's guidance by name — we align
+  quietly; honesty comes from what we don't claim.
+- **Rationale:** Google published official guidance on generative AI features in
+  Search stating GEO/AEO is just SEO, llms.txt and special AI files are not needed,
+  and no special schema is required. Our old framing was on the wrong side of that
+  document, and prospects can find it. CEO (Pedro) brief 2026-06-11; founder
+  approved. Also fixes free-audit/paid-audit name cannibalization.
+- **Status:** Adopted (supersedes the "next layer" positioning everywhere).
+
+## 2026-06-11 · Pricing: audit $497 flat; public offer ladder
+- **Decision:** Paid AI Search Audit is **$497** (was "starting at $750"). Public
+  four-tier ladder on the site: Free Snapshot → AI Search Audit $497 → Website
+  Upgrade from $2,500 → Modern Search Website Build from $6,500. "From" prices are
+  floors; scopes confirmed in writing.
+- **Rationale:** CEO brief: lower-friction paid diagnostic plus visible upgrade
+  anchors sells the main offer (Website Upgrade). Founder approved 2026-06-11.
+- **Status:** Adopted (supersedes GATE-PRICING "starting at $750" and the
+  prices-stay-private rule).
+
+## 2026-06-11 · Brand: drop Aethelo from public copy/schema
+- **Decision:** All public copy and JSON-LD now say "queryclear is a SparkCreatives
+  Inc. brand" (parentOrgUrl → https://sparkcreativesinc.org). Aethelo no longer
+  appears on the public site. Internal docs keep historical references.
+- **Rationale:** One fewer unknown name for a prospect to parse; SparkCreatives is
+  the real registered entity. CEO brief; founder approved 2026-06-11. (Amends the
+  2026-05-29 "Aethelo is the company" decision's public-facing expression only —
+  org structure itself is unchanged.)
+- **Status:** Adopted.
+
+---
+
 ## 2026-06-03 · Closed the three roadmap decision gates
 - **GATE-CANONICAL → www.** Canonical domain is `https://www.queryclear.com`; apex
   redirects to www (already the live behavior). Action: set `site.url` to the www
