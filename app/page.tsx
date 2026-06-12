@@ -7,6 +7,7 @@ import { Stagger, StaggerItem, ClipReveal, LineDraw } from "@/components/motion"
 import { TypingPanel } from "@/components/TypingPanel";
 import { HumanMachineToggle } from "@/components/HumanMachineToggle";
 import { Accordion } from "@/components/Accordion";
+import { HeroCircuit } from "@/components/HeroCircuit";
 import { site } from "@/lib/site";
 
 const whatWeBuild = [
@@ -150,6 +151,7 @@ export default function Home() {
 
             {/* the signature: what the machine reads */}
             <div className="fade-up" style={{ animationDelay: "0.32s" }}>
+              <HeroCircuit />
               <p className="mono-label mb-2">{"// what modern search can understand"}</p>
               <TypingPanel
                 lines={[

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Bricolage_Grotesque, IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
+import { SiteBackground } from "@/components/SiteBackground";
 import { site } from "@/lib/site";
 import "./globals.css";
 
@@ -90,7 +91,8 @@ export default function RootLayout({
       lang="en"
       className={`${bricolage.variable} ${plexSans.variable} ${plexMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
+      <body className="relative isolate flex min-h-full flex-col overflow-x-hidden">
+        <SiteBackground />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }}
@@ -99,7 +101,9 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
         />
-        {children}
+        <div className="relative z-10 flex min-h-screen flex-1 flex-col">
+          {children}
+        </div>
       </body>
     </html>
   );

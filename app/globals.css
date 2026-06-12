@@ -30,7 +30,10 @@
     scroll-behavior: smooth;
   }
   body {
-    background-color: var(--color-paper);
+    background:
+      radial-gradient(circle at 18% 10%, #b6f03c24, transparent 24rem),
+      radial-gradient(circle at 86% 18%, #12352a1c, transparent 28rem),
+      linear-gradient(135deg, var(--color-paper), var(--color-paper-2));
     color: var(--color-ink);
     font-family: var(--font-sans);
     font-feature-settings: "ss01", "cv01";
@@ -186,6 +189,38 @@
     background-size: 22px 22px;
   }
 
+  .site-background {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .site-background::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(to right, #12352a0b 1px, transparent 1px),
+      linear-gradient(to bottom, #12352a0b 1px, transparent 1px);
+    background-size: 36px 36px;
+    mask-image: linear-gradient(to bottom, black, transparent 88%);
+  }
+  .site-background::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 22% 18%, #b6f03c18, transparent 20rem),
+      radial-gradient(circle at 78% 12%, #12352a18, transparent 24rem);
+  }
+  .site-background__canvas {
+    position: absolute;
+    inset: 0;
+    opacity: 0.9;
+    mix-blend-mode: multiply;
+  }
+
   /* animated nav/inline link underline */
   .ulink {
     position: relative;
@@ -293,6 +328,9 @@
   body {
     background: #fff;
   }
+  .site-background {
+    display: none !important;
+  }
   /* force backgrounds (conic-gradient score ring, lime layer bars, panels) */
   * {
     -webkit-print-color-adjust: exact;
@@ -332,5 +370,8 @@
   }
   .mark-orbit:hover .orbit-dot {
     transform: none;
+  }
+  .site-background__canvas {
+    display: none;
   }
 }
