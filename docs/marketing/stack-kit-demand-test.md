@@ -65,7 +65,7 @@ Run a focused 2–4 week push, then decide:
   visits → refund everyone, shelve the kit, stay audit-first. A weak result is a *win* —
   it saved you from building something nobody wanted.
 - **MIDDLE (4–9 pre-orders):** real but soft. Consider a second outreach round, or pivot
-  the offer toward the $750 done-for-you audit (warm leads who almost bought).
+  the offer toward the $497 done-for-you audit (warm leads who almost bought).
 
 Measure pre-orders in the **Stripe Dashboard**; tally by channel via the UTM tags above.
 Whatever happens, honor the page's promise: ship ≤30 days or refund automatically.
@@ -74,5 +74,5 @@ Whatever happens, honor the page's promise: ship ≤30 days or refund automatica
 
 - Never promise rankings or AI citations.
 - "Pre-order," not "buy now." Always restate refundable + ship window.
-- The kit is the funnel, not the headline — the free-audit → $750 motion stays primary
-  (GATE-MODEL). Don't let kit promotion crowd out the audit.
+- The kit is the funnel, not the headline — the free Snapshot → $497 audit motion
+  stays primary (GATE-MODEL). Don't let kit promotion crowd out the audit.

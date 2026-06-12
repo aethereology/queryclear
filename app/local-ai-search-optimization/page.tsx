@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Container, MonoLabel, Cta } from "@/components/ui";
+import { SnapshotCta } from "@/components/SnapshotCta";
 import { Stagger, StaggerItem } from "@/components/motion";
 import { Accordion } from "@/components/Accordion";
 import { site } from "@/lib/site";
@@ -94,7 +95,7 @@ export default function LocalPage() {
               understood and considered when it counts.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Cta href="/ai-visibility-audit">Get your free Snapshot</Cta>
+              <SnapshotCta href="/ai-visibility-audit#audit-cta">Get your free Snapshot</SnapshotCta>
               <Cta href="/ai-visibility-stack" variant="ghost">See our method</Cta>
             </div>
           </Container>
@@ -162,7 +163,7 @@ export default function LocalPage() {
                 full scored audit is $497.
               </p>
             </div>
-            <Cta href="/ai-visibility-audit">Get your free Snapshot</Cta>
+            <SnapshotCta href="/ai-visibility-audit#audit-cta">Get your free Snapshot</SnapshotCta>
           </Container>
         </section>
       </main>

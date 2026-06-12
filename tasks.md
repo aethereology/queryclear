@@ -13,7 +13,8 @@ Short living board. Strategy lives in `roadmap.md`; the executable cards live in
 
 ## ✅ Decision gates — all closed 2026-06-03 (see Decisions.md)
 - GATE-CANONICAL → **www** · GATE-MODEL → **audit-first ($97 kit deferred)** ·
-  GATE-PRICING → **"starting at $750"**
+  GATE-PRICING → ~~"starting at $750"~~ **superseded 2026-06-11 → $497 flat +
+  public offer ladder** (see Decisions.md)
 
 ## ✅ Phase 1 complete (2026-06-03)
 - T0 canonical→www · T1 /about · T2 /contact · T3 /privacy+/terms · T4 footer/nav
@@ -52,7 +53,7 @@ Short living board. Strategy lives in `roadmap.md`; the executable cards live in
   the full flow in a browser. **Founder-gated:** commit/push + `vercel --prod` to ship.
 
 ## ✅ T16 paid audit report template BUILT + verified in code (2026-06-06)
-- Productized the $750 audit. `/audit` refactored onto a data-driven `<AuditReport>`
+- Productized the paid audit (then $750, now $497). `/audit` refactored onto a data-driven `<AuditReport>`
   template (output unchanged); new **private** `/reports/[slug]` route delivers a
   client's report as a noindexed link + Save-as-PDF. Typed model `lib/audit-report.ts`
   (incl. `scoreFromLayers` — Goldleaf layer scores → 33), data in `lib/reports/`

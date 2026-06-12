@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Container, MonoLabel, Cta } from "@/components/ui";
+import { SnapshotCta } from "@/components/SnapshotCta";
 import { Stagger, StaggerItem } from "@/components/motion";
 import { site } from "@/lib/site";
 
@@ -196,7 +197,7 @@ export default function AboutPage() {
               </p>
             </div>
             <div className="flex flex-wrap gap-3">
-              <Cta href={`/${site.primaryCta.href}`}>Get your free Snapshot</Cta>
+              <SnapshotCta href={site.primaryCta.href}>Get your free Snapshot</SnapshotCta>
               <Cta href="/audit" variant="ghost" className="!border-paper/30 !text-paper hover:!bg-white/10">
                 See a sample audit
               </Cta>

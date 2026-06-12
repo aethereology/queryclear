@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { Container, MonoLabel, Cta } from "@/components/ui";
+import { Container, MonoLabel } from "@/components/ui";
+import { SnapshotCta } from "@/components/SnapshotCta";
 import { Accordion } from "@/components/Accordion";
 import { site } from "@/lib/site";
 
@@ -118,7 +119,7 @@ export default function LlmsTxtPage() {
               <h2 className="text-3xl text-paper sm:text-4xl">Want the whole picture, not just a file?</h2>
               <p className="mt-3 max-w-xl text-paper/70">Our audit covers the structure and content that actually matter — llms.txt included as a footnote. Start with a free Snapshot; the full audit is $497.</p>
             </div>
-            <Cta href="/ai-visibility-audit">Get your free Snapshot</Cta>
+            <SnapshotCta href="/ai-visibility-audit#audit-cta">Get your free Snapshot</SnapshotCta>
           </Container>
         </section>
       </main>

@@ -9,14 +9,18 @@
 
 ## The thesis (don't lose this)
 
-queryclear's edge is the intersection of **AI search/GEO + local-service-business
+queryclear's edge is the intersection of **modern SEO for the AI search era
+(GEO = part of SEO, not a separate discipline) + local-service-business
 reality + operator execution**. The site's job is to (1) make that credible to a
-skeptical local business owner, and (2) feed the money ladder:
+skeptical local business owner, and (2) feed the money ladder
+(public ladder repositioned 2026-06-11 — see `Decisions.md`):
 
-> **free audit (lead)** → **paid GEO audit ($750–1.5k)** → **GEO build/upgrade ($2.5–5k)**
-> → **Aethelo automation (the real margin)**.
+> **free AI Search Snapshot (lead)** → **paid AI Search Audit ($497)**
+> → **Website Upgrade (from $2,500) / Build (from $6,500)**
+> → **Aethelo automation (internal upsell — not public-facing)**.
 
-The site itself is the proof asset — it must be a flawless GEO example.
+The site itself is the proof asset — it must be a flawless example of a modern,
+AI-search-ready site.
 
 ## Strategy notes carried from review (read before Phase 3+)
 
@@ -25,7 +29,7 @@ The site itself is the proof asset — it must be a flawless GEO example.
   and *proof* (sample audit + methodology), not 15 landing pages.
 - **The $97 kit is a funnel/qualifier, not the business.** Local owners are the
   worst buyers for a self-serve DIY product; they buy done-for-you. Treat a cheap
-  product as bait that surfaces warm leads for the $750+ work — and validate it with
+  product as bait that surfaces warm leads for the $497 audit → upgrade work — and validate it with
   a landing-page/waitlist test *before* building the actual kit.
 - **Avoid thin duplicate pages.** Category and vertical pages must each be
   meaningfully different and genuinely useful, or they hurt us (we sell the opposite).
@@ -41,8 +45,10 @@ These forks change *what* gets built. If a gate is open, do not build past it.
   (apex redirects to www, already live). Action: set `site.url` to the www form. (T0)
 - **GATE-MODEL** — ✅ CLOSED → **audit-first; $97 kit deferred**. The kit is only a
   demand test (T14 landing page + waitlist); product build waits on validation.
-- **GATE-PRICING** — ✅ CLOSED → **"starting at $750"** public for the audit;
-  build/upgrade and product prices stay private for now.
+- **GATE-PRICING** — ✅ CLOSED, then **SUPERSEDED 2026-06-11** → audit is **$497
+  flat** with a public four-tier offer ladder (Snapshot free / Audit $497 /
+  Upgrade from $2,500 / Build from $6,500). The old "starting at $750,
+  other prices private" rule is retired. See `Decisions.md` 2026-06-11.
 
 ---
 
@@ -53,15 +59,16 @@ ahead. Task IDs (Tn) map to cards in `docs/build/BUILD_QUEUE.md`.
 
 ### Phase 0 — Foundation ✅ (done)
 Clean repo, strategy, docs, stack locked, **MVP built and LIVE** (landing + sample
-audit + lead flow + GEO infra). See `CLAUDE.md` §2 for current state.
+audit + lead flow + SEO/AI-search infra). See `CLAUDE.md` §2 for current state.
 
 ### Phase 1 — Credibility & trust  *(do this first)*
 **Goal:** a skeptical owner can see who's behind this and trust it before we send traffic.
 - T0  Resolve GATE-CANONICAL + make `site.url` correct (unblocks everything)
-- T1  `/about` (entity trust; Aethelo/SparkCreatives relationship)
+- T1  `/about` (entity trust; SparkCreatives Inc. relationship — Aethelo dropped
+      from public copy 2026-06-11)
 - T2  `/contact` (real contact path + form)
 - T3  `/privacy` and `/terms` (data use + no-guarantee language)
-- T4  Footer + nav links to all of the above; persistent free-audit CTA
+- T4  Footer + nav links to all of the above; persistent free-Snapshot CTA
 **Exit:** footer-complete site; every page reachable; trust signals present.
 
 ### Phase 2 — Proof & methodology  *(highest sales leverage)*
@@ -80,7 +87,9 @@ Build in this order; each must be genuinely useful, not boilerplate:
 - T9  `/geo-audit`
 - T10 `/ai-search-ready-website`
 - T11 `/schema-for-ai-search`
-- T12 `/llms-txt-for-businesses` (stay credible: optional, not a substitute for content)
+- T12 `/llms-txt-for-businesses` (stay credible: llms.txt is an **optional
+      supplemental file** — not required, not a ranking factor, not a substitute
+      for content; framing per the 2026-06-11 repositioning)
 **Exit:** ≥10 strong indexable pages; core query clusters covered.
 
 ### Phase 4 — Technical AI/search hardening  *(can run in parallel with 1–3)*
@@ -107,7 +116,8 @@ Tracked as T18+. No thin duplicates.
 
 ### Phase 7 — Aethelo automation expansion
 Upsell path from queryclear clients into Aethelo automation systems. Out of scope
-until queryclear has paying clients asking for more.
+until queryclear has paying clients asking for more. Internal strategy only —
+Aethelo does not appear in public copy/schema (Decisions.md 2026-06-11).
 
 ---
 

@@ -2,6 +2,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { LeadForm } from "@/components/LeadForm";
 import { Container, MonoLabel, Cta } from "@/components/ui";
+import { SnapshotCta } from "@/components/SnapshotCta";
 import { Stagger, StaggerItem, ClipReveal, LineDraw } from "@/components/motion";
 import { TypingPanel } from "@/components/TypingPanel";
 import { HumanMachineToggle } from "@/components/HumanMachineToggle";
@@ -138,7 +139,9 @@ export default function Home() {
                 className="fade-up mt-9 flex flex-wrap items-center gap-3"
                 style={{ animationDelay: "0.24s" }}
               >
-                <Cta href={site.primaryCta.href}>{site.primaryCta.label}</Cta>
+                <SnapshotCta href={site.primaryCta.href}>
+                  {site.primaryCta.label}
+                </SnapshotCta>
                 <Cta href={site.secondaryCta.href} variant="ghost">
                   {site.secondaryCta.label}
                 </Cta>
@@ -265,7 +268,9 @@ export default function Home() {
             <StaggerItem className="card flex flex-col justify-between bg-pine p-6 text-paper">
               <h3 className="text-xl text-paper">Not sure where you stand?</h3>
               <div className="mt-4">
-                <Cta href={site.primaryCta.href}>Start with a free Snapshot</Cta>
+                <SnapshotCta href={site.primaryCta.href}>
+                  Start with a free Snapshot
+                </SnapshotCta>
               </div>
             </StaggerItem>
           </Stagger>
@@ -328,9 +333,15 @@ export default function Home() {
                   {o.desc}
                 </p>
                 <div className="mt-5">
-                  <Cta href={o.href} variant="ghost">
-                    {o.cta}
-                  </Cta>
+                  {o.need === null ? (
+                    <Cta href={o.href} variant="ghost">
+                      {o.cta}
+                    </Cta>
+                  ) : (
+                    <SnapshotCta href={o.href} variant="ghost" defaultNeed={o.need}>
+                      {o.cta}
+                    </SnapshotCta>
+                  )}
                 </div>
               </StaggerItem>
             ))}

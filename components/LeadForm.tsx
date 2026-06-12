@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import { useRouter } from "next/navigation";
 
 type Status = "idle" | "submitting" | "error";
@@ -23,15 +23,20 @@ const fields = [
 ] as const;
 
 // Mirrors site.offers; captured so the intake records which offer pulled them.
-const interestOptions = [
+export const interestOptions = [
   "Free AI Search Snapshot",
   "AI Search Audit ($497)",
   "Website Upgrade",
   "Modern Search Website Build",
 ] as const;
 
-export function LeadForm() {
+export type InterestOption = (typeof interestOptions)[number];
+
+export function LeadForm({ defaultNeed = "" }: { defaultNeed?: InterestOption | "" }) {
   const router = useRouter();
+  // The form can render twice on one page (embedded section + SnapshotCta
+  // overlay), so every id/htmlFor must be instance-unique.
+  const uid = useId();
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState<string>("");
 
@@ -58,9 +63,9 @@ export function LeadForm() {
   return (
     <form onSubmit={onSubmit} noValidate className="card p-6 text-ink sm:p-8">
       <div aria-hidden="true" className="absolute left-[-9999px] top-auto h-px w-px overflow-hidden">
-        <label htmlFor="company">Company</label>
+        <label htmlFor={`${uid}-company`}>Company</label>
         <input
-          id="company"
+          id={`${uid}-company`}
           name="company"
           type="text"
           tabIndex={-1}
@@ -74,12 +79,12 @@ export function LeadForm() {
             key={f.name}
             className={f.name === "service" || f.name === "city" ? "" : "sm:col-span-1"}
           >
-            <label htmlFor={f.name} className="mb-1.5 block text-sm font-medium">
+            <label htmlFor={`${uid}-${f.name}`} className="mb-1.5 block text-sm font-medium">
               {f.label}
               {f.required && <span className="text-lime-deep"> *</span>}
             </label>
             <input
-              id={f.name}
+              id={`${uid}-${f.name}`}
               name={f.name}
               type={f.type}
               required={f.required}
@@ -91,13 +96,13 @@ export function LeadForm() {
           </div>
         ))}
         <div className="sm:col-span-2">
-          <label htmlFor="interest" className="mb-1.5 block text-sm font-medium">
+          <label htmlFor={`${uid}-interest`} className="mb-1.5 block text-sm font-medium">
             What do you need?
           </label>
           <select
-            id="interest"
+            id={`${uid}-interest`}
             name="interest"
-            defaultValue=""
+            defaultValue={defaultNeed}
             className="input-halo w-full border border-line bg-paper px-3.5 py-2.5 text-sm text-ink outline-none transition-colors"
           >
             <option value="">Not sure yet — start with the free Snapshot</option>
@@ -109,11 +114,11 @@ export function LeadForm() {
           </select>
         </div>
         <div className="sm:col-span-2">
-          <label htmlFor="message" className="mb-1.5 block text-sm font-medium">
+          <label htmlFor={`${uid}-message`} className="mb-1.5 block text-sm font-medium">
             Anything else?
           </label>
           <textarea
-            id="message"
+            id={`${uid}-message`}
             name="message"
             rows={3}
             className="input-halo w-full border border-line bg-paper px-3.5 py-2.5 text-sm text-ink placeholder:text-muted outline-none transition-colors"

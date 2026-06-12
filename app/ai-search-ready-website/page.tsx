@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Container, MonoLabel, Cta } from "@/components/ui";
+import { SnapshotCta } from "@/components/SnapshotCta";
 import { Stagger, StaggerItem } from "@/components/motion";
 import { Accordion } from "@/components/Accordion";
 import { site } from "@/lib/site";
@@ -66,7 +67,7 @@ export default function ReadyWebsitePage() {
               works. We hold our own site to this exact standard.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Cta href="/ai-visibility-audit">Start with a free Snapshot</Cta>
+              <SnapshotCta href="/ai-visibility-audit#audit-cta">Start with a free Snapshot</SnapshotCta>
               <Cta href="/ai-visibility-stack" variant="ghost">See our method</Cta>
             </div>
           </Container>
@@ -112,7 +113,7 @@ export default function ReadyWebsitePage() {
               <h2 className="text-3xl text-paper sm:text-4xl">Build or optimize for modern search.</h2>
               <p className="mt-3 max-w-xl text-paper/70">Start with a free Snapshot so we know what your site needs. Upgrades start at $2,500; full builds at $6,500.</p>
             </div>
-            <Cta href="/ai-visibility-audit">Start with a free Snapshot</Cta>
+            <SnapshotCta href="/ai-visibility-audit#audit-cta">Start with a free Snapshot</SnapshotCta>
           </Container>
         </section>
       </main>

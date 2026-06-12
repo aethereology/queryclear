@@ -1,6 +1,6 @@
 # Playbook — running a paid audit & producing the report
 
-> How to deliver a paid AI-search readiness audit (the ~$750 front-door service)
+> How to deliver a paid AI Search Audit (the $497 front-door service)
 > as a repeatable artifact. The report is a typed data file rendered by the
 > `<AuditReport>` template, delivered as a private web link (and Save-as-PDF).
 >

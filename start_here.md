@@ -7,44 +7,45 @@ Read this first, then follow the links.
 
 ## What this is
 
-**queryclear.com** — a productized **GEO / AI Search Optimization** service.
+**queryclear.com** — a productized **modern-SEO-for-the-AI-search-era** service
+(GEO is part of modern SEO, not a separate discipline — repositioned 2026-06-11).
 We make a business's website easier for search engines and AI answer engines
 (ChatGPT, Claude, Perplexity, Gemini, Google AI Overviews, Bing Copilot) to
 **crawl, understand, summarize, trust, and cite**.
 
 We sell *readiness* — clear content, structured data, crawlability, schema,
-`llms.txt`, conversion strategy. We do **not** promise guaranteed rankings or
-guaranteed AI citations. Honest claims only.
+conversion strategy (llms.txt only as an optional supplemental file). We do
+**not** promise guaranteed rankings or guaranteed AI citations. Honest claims only.
 
 ## Where this sits
 
-- **Aethelo** = the company (AI automation, everything) → `aethelo.sparkcreativesinc.org`
-- **queryclear.com** = the FIRST product under Aethelo (this repo)
+- **queryclear.com** = a **SparkCreatives Inc.** brand (this repo)
 - **SparkCreatives Inc.** = parent org / entity (real 501(c)(3))
+- Internal history: queryclear grew out of **Aethelo** (AI automation), but
+  Aethelo no longer appears in public copy/schema — `Decisions.md` 2026-06-11.
 
 ## The money ladder (how this pays the bills)
 
-> queryclear **GEO audit** ($750–1.5k, fast yes for local business owners)
-> → queryclear **build / optimization** ($2.5k–5k)
-> → **Aethelo automation systems** (higher ticket, the real margin)
+> **free AI Search Snapshot** (lead) → **AI Search Audit** ($497, fast yes for
+> local business owners) → **Website Upgrade** (from $2,500) / **Build** (from
+> $6,500) → **Aethelo automation systems** (internal upsell, the real margin)
 
-The GEO audit is the low-friction front door. First check comes from a **local
+The $497 audit is the low-friction front door. First check comes from a **local
 business owner who's invisible in AI answers** — not from a custom automation buyer.
 
-## Current state (2026-05-29)
+## Current state
 
-- ✅ Clean repo set up, tracking `github.com/aethereology/queryclear`
-- ✅ Strategy + structure decided (see `Decisions.md`)
-- ✅ Project docs scaffolded (this set of 11)
-- ⬜ Nothing built yet — next is the **sellable MVP**
+Ground truth lives in **`CLAUDE.md` §2** (kept current every session) — don't
+duplicate it here. Headlines: site is **LIVE** at https://www.queryclear.com,
+repositioned 2026-06-11 ("Modern SEO for the AI search era"), first real client
+audit report delivered 2026-06-10 (Maple Bear St. Johns).
 
 ## Current priority
 
-**Build the smallest sellable thing:**
-1. One landing page (hero → offer → lead form)
-2. One real **sample GEO audit** to show on sales calls (the highest-leverage asset)
+See `tasks.md` (Now / Next / Later) and `roadmap.md` for the current phase.
 
-Our own site must be a flawless GEO example — it's our first case study.
+Our own site must be a flawless example of a modern, AI-search-ready site —
+it's our first case study.
 
 ## Document map
 
@@ -52,7 +53,7 @@ Our own site must be a flawless GEO example — it's our first case study.
 |---|---|
 | `product_spec.md` | What queryclear is, the offer, deliverables, pricing, what we don't promise |
 | `UI_direction.md` | Brand voice, visual direction, page structure, conversion + a11y bar |
-| `roadmap.md` | Phased plan from MVP to Aethelo expansion |
+| `roadmap.md` | Phased plan + decision gates (MVP → productization → verticals) |
 | `Decisions.md` | Decision log (ADRs) — why we chose what we chose |
 | `tasks.md` | Living task board: Now / Next / Later |
 | `test_plan.md` | Definition-of-done / quality gate for every queryclear page |

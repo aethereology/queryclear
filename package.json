@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "node --test tests/lead-route.test.mjs tests/checkout-route.test.mjs tests/stripe-webhook.test.mjs tests/scorecard.test.mjs tests/audit-report.test.mjs",
+    "test": "node --test tests/lead-route.test.mjs tests/checkout-route.test.mjs tests/stripe-webhook.test.mjs tests/scorecard.test.mjs tests/audit-report.test.mjs tests/snapshot-overlay.test.mjs",
     "test:lead": "node --test tests/lead-route.test.mjs"
   },
   "dependencies": {

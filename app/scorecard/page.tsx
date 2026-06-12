@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Container, MonoLabel, Cta } from "@/components/ui";
+import { SnapshotCta } from "@/components/SnapshotCta";
 import { Scorecard } from "@/components/Scorecard";
 import { TOTAL_QUESTIONS } from "@/lib/scorecard";
 import { site } from "@/lib/site";
@@ -88,7 +89,7 @@ export default function ScorecardPage() {
               </p>
             </div>
             <div className="flex flex-wrap gap-3">
-              <Cta href="/ai-visibility-audit">Get a free Snapshot</Cta>
+              <SnapshotCta href="/ai-visibility-audit#audit-cta">Get a free Snapshot</SnapshotCta>
               <Cta href="/stack-kit" variant="ghost" className="!text-paper !border-paper/30 hover:!bg-white/10">
                 Do it yourself — $97 kit
               </Cta>

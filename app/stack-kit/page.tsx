@@ -6,6 +6,7 @@ import { Container, MonoLabel } from "@/components/ui";
 import { Stagger, StaggerItem } from "@/components/motion";
 import { Accordion } from "@/components/Accordion";
 import { PreorderButton } from "@/components/PreorderButton";
+import { SnapshotCta } from "@/components/SnapshotCta";
 import { site } from "@/lib/site";
 
 const kit = site.stackKit;
@@ -186,9 +187,13 @@ export default function StackKitPage() {
                 ))}
               </ul>
               <p className="mt-5 text-sm">
-                <Link href="/ai-visibility-audit" className="font-medium text-ink underline hover:text-lime-deep">
+                <SnapshotCta
+                  variant="link"
+                  href="/ai-visibility-audit#audit-cta"
+                  className="font-medium text-ink underline hover:text-lime-deep"
+                >
                   Rather we did it? Start with a free Snapshot →
-                </Link>
+                </SnapshotCta>
               </p>
             </div>
           </Container>

@@ -21,9 +21,10 @@
    - `WebPage` always; `BreadcrumbList` for any page below the root.
    - `FAQPage` if the page has a real FAQ block.
    - `Service` for service/offer pages. Only fields backed by real data.
-4. **Internal links**: link to `/ai-visibility-audit` (or the free-audit CTA) and to
+4. **Internal links**: link to `/ai-visibility-audit` (or the free-Snapshot CTA) and to
    `/ai-visibility-stack`; link to any sibling pages named in the card.
-5. **A CTA** — primary is the free audit. Use `site.primaryCta` from `lib/site.ts`.
+5. **A CTA** — primary is the free AI Search Snapshot ("audit" = the paid $497
+   product). Use `site.primaryCta` from `lib/site.ts`.
 6. **Add the route** to `app/sitemap.ts` AND to `app/llms.txt/route.ts`.
 
 ## Copy rules (see UI_direction.md)

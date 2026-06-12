@@ -4,7 +4,7 @@
 > sample audit. Do NOT present as a real business. When we audit a real client,
 > we use ONLY their real, verified details (brand rule: no invented business info).
 
-Purpose: a believable demo business to build the **sample GEO audit** against,
+Purpose: a believable demo business to build the **sample AI Search Audit** against,
 so we have a sales asset without misrepresenting anyone real.
 
 ---

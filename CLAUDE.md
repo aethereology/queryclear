@@ -25,11 +25,28 @@ We sell *readiness*, not outcomes. **Never** promise rankings or AI citations.
 
 ## 2. Ground-truth state (keep this section current)
 
-> Last verified: 2026-06-11. If you change the site, update this section and
+> Last verified: 2026-06-12. If you change the site, update this section and
 > `memory.md` at the end of your session.
 
 - **LIVE** at https://www.queryclear.com (apex 307 → www). Deployed on Vercel
   (team `sparkcreativesinc`, project `queryclear`; CLI needs `--scope sparkcreativesinc`).
+- **SNAPSHOT OVERLAY 2026-06-12 (code-complete, NOT yet committed/deployed):**
+  every free-Snapshot CTA sitewide (incl. the /audit sample-report bottom CTA in
+  `AuditReport.tsx` — sample variant only; private client reports keep their
+  own CTAs) now morphs into a full-screen pine lead-form
+  overlay via the new `components/SnapshotCta.tsx` (bespoke motion/react
+  `layoutId` morph, portaled to body, sharp corners — NOT Cult UI/shadcn; no new
+  deps). Triggers remain real `<a href>` anchors as SEO/no-JS fallback and the
+  embedded `#audit-cta` form sections were kept. Offer-ladder Snapshot/Upgrade/
+  Build buttons preselect the form's "What do you need?" via `LeadForm`'s new
+  `defaultNeed` prop + `need` field on `site.offers`; the $497 Audit button
+  (`need: null`) still navigates to /ai-visibility-audit. `site.primaryCta.href`
+  is now `/#audit-cta` (root-relative; all `` `/${...}` `` concats removed).
+  LeadForm ids are `useId`-prefixed (overlay + embedded form can coexist).
+  Verified: lint clean, 52/52 tests (new `tests/snapshot-overlay.test.mjs`),
+  build 29 routes, Playwright a11y pass (dialog/Escape/focus-return/Tab-trap/
+  scroll-lock/ctrl-click-new-tab). **When adding any future snapshot CTA, use
+  `SnapshotCta`, not `Cta`/`Link`.**
 - **REPOSITIONED 2026-06-11 — DEPLOYED TO PROD same day** (commit b312cb8,
   `vercel --prod`; prod smoke-checked: $497 + Snapshot live on /, zero stale
   Aethelo/$750 strings, /thank-you 200 + noindex + not in sitemap, /audit
@@ -49,6 +66,12 @@ We sell *readiness*, not outcomes. **Never** promise rankings or AI citations.
   2026-06-11: lint clean, 45/45 tests, build = 29 routes, prerendered /audit shows
   33/86, zero stale strings ($750/Aethelo/"next layer"/"free AI search audit") in
   built output. See Decisions.md 2026-06-11 (three ADRs).
+  **Docs cohesion pass 2026-06-12:** all living .md docs (roadmap, product_spec,
+  UI_direction, readme, start_here, tasks, BUILD_QUEUE, page-template,
+  running-an-audit SOP, stack-kit-demand-test, seed_data) updated to match the
+  repositioning — $497/Snapshot/ladder/SparkCreatives/llms.txt-optional.
+  Historical artifacts (Decisions.md, claude.md.txt, docs/superpowers/*) left
+  as dated records by design.
 - **Stack:** Next.js 16 (App Router) + React 19 + Tailwind v4. Fonts: Bricolage
   Grotesque + IBM Plex Sans/Mono. Palette: paper / pine / lime.
 - **Routes that exist today:**
@@ -56,7 +79,7 @@ We sell *readiness*, not outcomes. **Never** promise rankings or AI citations.
     how-it-works, deliverables, FAQ, **offer ladder**, lead form)
   - `app/thank-you/page.tsx` — post-conversion success page (2026-06-11; noindex,
     excluded from sitemap + llms.txt by design)
-  - `app/audit/page.tsx` — public sample GEO audit (fictional "Goldleaf Aesthetics"
+  - `app/audit/page.tsx` — public sample audit (fictional "Goldleaf Aesthetics"
     med-spa demo). As of T16 (2026-06-06) it is data-driven: renders the
     `<AuditReport>` template from `lib/reports/goldleaf-demo.ts` (output unchanged).
   - `app/about/page.tsx` — entity-trust About page (T1, 2026-06-03)
@@ -76,7 +99,7 @@ We sell *readiness*, not outcomes. **Never** promise rankings or AI citations.
     self-score attached to /api/lead. Logic in `lib/scorecard.ts`, UI in
     `components/Scorecard.tsx`. LIVE in prod since 2026-06-10.)
   - `app/reports/[slug]/page.tsx` — **private** per-client paid-audit report (T16,
-    2026-06-06). Productizes the $750 audit: each report is a typed `AuditReport`
+    2026-06-06). Productizes the paid audit (then $750, now $497): each report is a typed `AuditReport`
     data file (`lib/reports/`), rendered by the shared `<AuditReport>` template
     (`components/AuditReport.tsx`). NOINDEX + robots-disallowed + excluded from
     sitemap/llms.txt; unguessable slugs; print-to-PDF styles. Registry +

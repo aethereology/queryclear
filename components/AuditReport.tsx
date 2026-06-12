@@ -1,4 +1,5 @@
 import { Container, MonoLabel, Cta } from "@/components/ui";
+import { SnapshotCta } from "@/components/SnapshotCta";
 import { Reveal, Stagger, StaggerItem } from "@/components/motion";
 import { CountUp } from "@/components/CountUp";
 import {
@@ -249,7 +250,7 @@ export function AuditReport({ data }: { data: AuditReportData }) {
               </p>
             </div>
             <div className="flex flex-wrap gap-3">
-              <Cta href="/ai-visibility-audit">Request your free Snapshot</Cta>
+              <SnapshotCta href="/ai-visibility-audit#audit-cta">Request your free Snapshot</SnapshotCta>
               <Cta href="/scorecard" variant="ghost" className="!text-paper !border-paper/30 hover:!bg-white/10">
                 Score your own site
               </Cta>

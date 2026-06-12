@@ -31,22 +31,26 @@ vague hype. Concrete claims, plain words, real benefits.
 
 ## Landing page structure (from the brief)
 
-1. **Hero** — headline + subheadline (what AI Search Optimization is) +
-   primary CTA "Book a Free AI Search Audit" + secondary "See What We Optimize"
+1. **Hero** — headline + subheadline (modern SEO for the AI search era) +
+   primary CTA "Get your free AI Search Snapshot" (= `site.primaryCta`) +
+   secondary "See what we optimize"
 2. **Problem** — businesses going invisible in AI answers; sites unclear to AI;
    generic SEO isn't enough
 3. **Solution** — AI-search-optimized sites: structured content, schema, service
-   pages, FAQs, `llms.txt`, crawlability
-4. **What We Build** — new sites · existing-site optimization · GEO audits ·
+   pages, FAQs, crawlability (`llms.txt` only as an optional extra)
+4. **What We Build** — new sites · existing-site optimization · AI Search Audits ·
    service-page rebuilds · local AI visibility
 5. **How It Works** — Audit → Plan → Build/Optimize → Submit/Index → Monitor
 6. **Deliverables** — the checklist (see product_spec.md)
-7. **CTA** — "Book a Free AI Search Audit"
+7. **Offer ladder** — the public four tiers from `site.offers` (Snapshot free /
+   Audit $497 / Upgrade from $2,500 / Build from $6,500) — live on / since 2026-06-11
+8. **CTA** — "Get your free AI Search Snapshot"
 
 ## Conversion priorities
 
 - Primary CTA above the fold and repeated at the bottom.
-- The free audit is the hook — make it the loudest action.
+- The free Snapshot is the hook — make it the loudest action. ("Audit" = the
+  paid $497 product; never call the free offer an audit.)
 - Lead form short and accessible (fields in product_spec.md).
 
 ## Quality bar (non-negotiable — see test_plan.md)

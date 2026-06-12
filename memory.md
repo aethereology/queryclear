@@ -41,7 +41,46 @@ Update the "Current state" line whenever it changes.
 
 ## Current state (update this line)
 
-2026-06-11 (latest) — FULL REPOSITIONING: "Modern SEO for the AI search era" —
+2026-06-12 (latest) — SNAPSHOT OVERLAY SHIPPED (code-complete, NOT yet
+committed/deployed): every free-Snapshot CTA sitewide (header desktop+mobile,
+home hero, "Not sure where you stand?" card, offer-ladder Snapshot/Upgrade/Build,
+about, ai-visibility-audit hero, 3 category pages, scorecard, stack-kit text
+link, footer text link, 404, and the /audit sample-report bottom CTA in
+AuditReport.tsx — sample variant only, client reports untouched) now morphs
+into a full-screen pine lead-form
+overlay (new `components/SnapshotCta.tsx`, bespoke motion/react layoutId morph
+portaled to body — NOT the Cult UI/shadcn component; sharp corners on-brand).
+Ladder buttons preselect the form's "What do you need?" (Snapshot/Upgrade/Build);
+the $497 Audit button still navigates to its sales page (`need: null` in
+`site.offers`). Triggers stay real `<a href>` anchors (SEO/no-JS fallback;
+embedded #audit-cta form sections kept); `site.primaryCta.href` is now
+`/#audit-cta` and all `/${...}` concat hacks are gone. LeadForm gained
+`defaultNeed` + useId-prefixed ids (fixes duplicate-id when overlay + embedded
+form coexist). A11y verified in dev via Playwright: dialog semantics, Escape,
+focus to close-btn + return to trigger, Tab trap wraps, scroll lock+restore,
+ctrl-click opens new tab. New `tests/snapshot-overlay.test.mjs` (7 tests, added
+to package.json test list). lint clean, 52/52 tests, build 29 routes.
+Pre-existing Next 16 console advisory about `scroll-behavior: smooth` on <html>
+(suggests data-scroll-behavior attr) noted, untouched.
+
+2026-06-12 — DOCS COHESION PASS: all living .md docs brought in line
+with the 2026-06-11 repositioning. Updated: roadmap.md (money ladder → Snapshot/
+$497/$2.5k/$6.5k, GATE-PRICING marked superseded, Phase 7 flagged internal-only),
+product_spec.md (offer section rewritten to the four public tiers matching
+`site.offers`), UI_direction.md (CTAs → "Get your free AI Search Snapshot",
+offer-ladder section added to landing structure), readme.md (modern-SEO framing,
+"a SparkCreatives Inc. brand", status → LIVE, four-tier What-we-do),
+start_here.md (framing + ladder updated; stale "Current state 2026-05-29"
+replaced with a pointer to CLAUDE.md §2), tasks.md + BUILD_QUEUE.md (gate +
+done-log lines annotated "then $750, now $497"; free-audit CTA → free-Snapshot),
+page-template.md (CTA rule → Snapshot), running-an-audit.md ($497),
+stack-kit-demand-test.md (Snapshot → $497 motion), seed_data.md ("sample AI
+Search Audit"). Left as dated historical records by design: Decisions.md,
+claude.md.txt, docs/superpowers/plans+specs. Sweep verified: remaining
+$750/Aethelo/free-audit hits in living docs are only superseded-markers or
+internal-strategy notes. Docs-only change; build/lint/test sanity-checked.
+
+2026-06-11 — FULL REPOSITIONING: "Modern SEO for the AI search era" —
 **DEPLOYED TO PROD same day** (commit b312cb8, `vercel --prod --scope
 sparkcreativesinc`, founder-authorized). Prod smoke-checked: homepage has
 $497 + Snapshot, zero Aethelo/$750; /thank-you 200 + noindex + not in sitemap;

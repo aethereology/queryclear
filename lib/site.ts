@@ -11,8 +11,10 @@ export const site = {
   parentOrg: "SparkCreatives Inc.",
   parentOrgUrl: "https://sparkcreativesinc.org",
   // The free Snapshot is the primary action everywhere. (Renamed from "free
-  // audit" 2026-06-11 — "audit" is now the paid product.)
-  primaryCta: { label: "Get your free AI Search Snapshot", href: "#audit-cta" },
+  // audit" 2026-06-11 — "audit" is now the paid product.) The href is the
+  // no-JS/crawler fallback — hydrated snapshot CTAs open the <SnapshotCta>
+  // overlay instead. Root-relative so it works from any route.
+  primaryCta: { label: "Get your free AI Search Snapshot", href: "/#audit-cta" },
   secondaryCta: { label: "See what we optimize", href: "#solution" },
   // Public contact. info@ remains a live forwarding alias; hello@ is the
   // public-facing address (deliverability update 2026-06-10).
@@ -28,6 +30,11 @@ export const site = {
   // Public offer ladder (decided 2026-06-11; see Decisions.md). Free Snapshot
   // is the lead magnet; Audit is the paid diagnostic; Upgrade is the main
   // offer; Build is the top tier. "from" prices are floors, not quotes.
+  // `need` preselects the lead form's "What do you need?" select when the
+  // offer's CTA opens the Snapshot overlay (must match LeadForm's
+  // interestOptions — enforced by tests/snapshot-overlay.test.mjs). `null` =
+  // the CTA navigates instead of opening the overlay ($497 Audit needs its
+  // sales page before the ask).
   offers: [
     {
       name: "Free AI Search Snapshot",
@@ -35,6 +42,7 @@ export const site = {
       desc: "A quick plain-English review of your website's search clarity, technical foundation, and biggest opportunities.",
       href: "#audit-cta",
       cta: "Request my free Snapshot",
+      need: "Free AI Search Snapshot",
     },
     {
       name: "AI Search Audit",
@@ -42,6 +50,7 @@ export const site = {
       desc: "A deeper scored report: prompt testing, page review, technical findings, local visibility review, and a prioritized fix roadmap.",
       href: "/ai-visibility-audit",
       cta: "See what's in the audit",
+      need: null,
     },
     // Tiers 3/4 point at the lead form (the ladder renders directly above it
     // on the homepage). Dedicated /services offer pages are deferred until we
@@ -53,6 +62,7 @@ export const site = {
       desc: "Done-for-you improvements to the site you have: service pages, metadata, FAQs, schema, crawlability, internal links, and conversion paths.",
       href: "#audit-cta",
       cta: "Upgrade my site",
+      need: "Website Upgrade",
     },
     {
       name: "Modern Search Website Build",
@@ -60,6 +70,7 @@ export const site = {
       desc: "A full website build for businesses that need a clearer, faster, more useful, and more search-ready foundation.",
       href: "#audit-cta",
       cta: "Talk about a build",
+      need: "Modern Search Website Build",
     },
   ],
   // T14 demand-test offer. The product is NOT built yet — this is a refundable

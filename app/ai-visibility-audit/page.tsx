@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Container, MonoLabel, Cta } from "@/components/ui";
+import { SnapshotCta } from "@/components/SnapshotCta";
 import { Stagger, StaggerItem } from "@/components/motion";
 import { Accordion } from "@/components/Accordion";
 import { LeadForm } from "@/components/LeadForm";
@@ -119,7 +120,7 @@ export default function AuditLandingPage() {
               sure yet? Start with the free AI Search Snapshot.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Cta href="#audit-cta">Start with a free Snapshot</Cta>
+              <SnapshotCta href="#audit-cta">Start with a free Snapshot</SnapshotCta>
               <Cta href="/audit" variant="ghost">See a sample report</Cta>
             </div>
           </Container>

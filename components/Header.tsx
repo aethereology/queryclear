@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Cta, Mark } from "@/components/ui";
+import { SnapshotCta } from "@/components/SnapshotCta";
 import { directLinks, megaMenus, type NavMenu } from "@/lib/navigation";
 import { site } from "@/lib/site";
 
@@ -97,13 +98,13 @@ export function Header() {
                 Contact
               </Cta>
             </div>
-            <Cta
-              href={`/${site.primaryCta.href}`}
+            <SnapshotCta
+              href={site.primaryCta.href}
               showArrow={false}
               className="px-3 py-2 text-xs sm:px-5 sm:py-2.5 lg:px-4 lg:py-1.5"
             >
               Free Snapshot
-            </Cta>
+            </SnapshotCta>
 
             <button
               type="button"
@@ -236,13 +237,13 @@ export function Header() {
           >
             Contact
           </Cta>
-          <Cta
-            href={`/${site.primaryCta.href}`}
+          <SnapshotCta
+            href={site.primaryCta.href}
             showArrow={false}
             className="w-full py-2.5 text-xs"
           >
             Free Snapshot
-          </Cta>
+          </SnapshotCta>
         </nav>
       </div>
     </header>
