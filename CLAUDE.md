@@ -25,12 +25,15 @@ We sell *readiness*, not outcomes. **Never** promise rankings or AI citations.
 
 ## 2. Ground-truth state (keep this section current)
 
-> Last verified: 2026-06-10. If you change the site, update this section and
+> Last verified: 2026-06-11. If you change the site, update this section and
 > `memory.md` at the end of your session.
 
 - **LIVE** at https://www.queryclear.com (apex 307 → www). Deployed on Vercel
   (team `sparkcreativesinc`, project `queryclear`; CLI needs `--scope sparkcreativesinc`).
-- **REPOSITIONED 2026-06-11 (NOT YET DEPLOYED — founder-gated):** sitewide reframe
+- **REPOSITIONED 2026-06-11 — DEPLOYED TO PROD same day** (commit b312cb8,
+  `vercel --prod`; prod smoke-checked: $497 + Snapshot live on /, zero stale
+  Aethelo/$750 strings, /thank-you 200 + noindex + not in sitemap, /audit
+  prerenders 33): sitewide reframe
   to **"Modern SEO for the AI search era"** after Google's official generative-AI
   guidance (GEO=SEO; llms.txt not needed for Google). Free offer renamed **"free
   AI Search Snapshot"** (the "audit" is now exclusively the paid product, **$497**

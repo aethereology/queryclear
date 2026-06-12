@@ -41,8 +41,12 @@ Update the "Current state" line whenever it changes.
 
 ## Current state (update this line)
 
-2026-06-11 (latest) — FULL REPOSITIONING: "Modern SEO for the AI search era" (code
-done + verified, NOT yet committed/deployed — founder-gated). Trigger: Google
+2026-06-11 (latest) — FULL REPOSITIONING: "Modern SEO for the AI search era" —
+**DEPLOYED TO PROD same day** (commit b312cb8, `vercel --prod --scope
+sparkcreativesinc`, founder-authorized). Prod smoke-checked: homepage has
+$497 + Snapshot, zero Aethelo/$750; /thank-you 200 + noindex + not in sitemap;
+/audit prerenders 33 (CountUp fix live). `.firecrawl/` added to .gitignore
+(scrape cache, not committed). Trigger: Google
 published official guidance on generative-AI features in Search (GEO/AEO = SEO;
 llms.txt + special AI files NOT needed for Google; no special schema). Pedro
 delivered a full edit brief; founder approved: (1) adopt Pedro's $497 ladder
@@ -75,10 +79,10 @@ self-aware ("supplemental, not required, not a ranking signal"). Maple Bear clie
 report data UNTOUCHED. VERIFIED: lint ✅, 45/45 tests ✅, build ✅ 29 routes,
 prerendered /audit shows 33/86 (not 0), built-output sweep = zero stale strings
 ($750/Aethelo/"next layer"/"free AI search audit"). Three ADRs appended to
-Decisions.md; CLAUDE.md §2 updated. NEXT: founder commit+deploy, then verify prod
-(/, /audit static score, /thank-you noindex, llms.txt). Still pending from before:
-Stripe webhook registration, Maple Bear manual engine runs, Lighthouse/axe pass,
-DMARC p=quarantine ~2026-06-24.
+Decisions.md; CLAUDE.md §2 updated. Commit+deploy DONE (see top of this entry).
+Still pending from before: Stripe webhook registration, Maple Bear manual engine
+runs, Lighthouse/axe pass, DMARC p=quarantine ~2026-06-24. NEXT BUILD: Phase 6
+first deep vertical (med spa).
 SAME-DAY ADDENDUM (button audit, founder-requested): no broken links sitewide.
 Ladder tiers 3/4 ("Upgrade my site"/"Talk about a build") retargeted from the
 generic /ai-search-ready-website page to #audit-cta (form sits right below the

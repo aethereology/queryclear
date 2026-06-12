@@ -63,13 +63,20 @@ Short living board. Strategy lives in `roadmap.md`; the executable cards live in
   via `next start`: 200 + noindex; unknown slug → 404; `/audit` unchanged.
   **Founder-gated:** commit/push + `vercel --prod` to ship.
 
+## ✅ Repositioning DEPLOYED (2026-06-11)
+- "Modern SEO for the AI search era" reframe live in prod (commit b312cb8,
+  `vercel --prod`). Smoke-checked: $497 + Snapshot on /, no stale Aethelo/$750,
+  /thank-you noindex + out of sitemap, /audit prerenders 33. T15/T16 shipped
+  earlier (2026-06-10) with first client report (Maple Bear).
+
 ## 🔄 Now — founder + next
-- **Founder TODO #1:** deploy T15 `/scorecard` + T16 `/reports` — `git push` + `vercel --prod`.
-- **Founder TODO #2:** register webhook endpoint in Stripe Dashboard →
+- **Founder TODO #1:** register webhook endpoint in Stripe Dashboard →
   `https://www.queryclear.com/api/stripe/webhook` (event `checkout.session.completed`)
   so order-notification emails fire. Confirm keys are test vs live before driving traffic.
+- **Founder TODO #2:** manual ChatGPT/Gemini/Copilot visibility runs for the
+  Maple Bear report → update `lib/reports/maplebear-stjohns-4caf31.ts` + redeploy.
 - **Next build (decide):** Phase 6 first deep vertical (med spa) → then template.
-  Open recurring: formal Lighthouse/axe ≥90 pass.
+  Open recurring: formal Lighthouse/axe ≥90 pass · DMARC → p=quarantine ~2026-06-24.
 
 ## ⏭️ Next
 - Phase 6: one deep vertical (med spa) then template — only after deploy + verify
