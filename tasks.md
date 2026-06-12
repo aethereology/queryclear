@@ -70,10 +70,13 @@ Short living board. Strategy lives in `roadmap.md`; the executable cards live in
   earlier (2026-06-10) with first client report (Maple Bear).
 
 ## 🔄 Now — founder + next
-- **Founder TODO #1:** register webhook endpoint in Stripe Dashboard →
-  `https://www.queryclear.com/api/stripe/webhook` (event `checkout.session.completed`)
-  so order-notification emails fire. Confirm keys are test vs live before driving traffic.
-- **Founder TODO #2:** manual ChatGPT/Gemini/Copilot visibility runs for the
+- ✅ Stripe webhook REGISTERED in Dashboard (founder, 2026-06-11). Verified:
+  prod env has all STRIPE_* vars; unsigned POST → 400 (sig check active).
+  **Remaining check:** send a test `checkout.session.completed` from the
+  Dashboard — if 400, the endpoint's signing secret is newer than the
+  6-day-old `STRIPE_WEBHOOK_SECRET` in Vercel → update env + redeploy.
+  Also confirm keys are test vs live before driving traffic.
+- **Founder TODO:** manual ChatGPT/Gemini/Copilot visibility runs for the
   Maple Bear report → update `lib/reports/maplebear-stjohns-4caf31.ts` + redeploy.
 - **Next build (decide):** Phase 6 first deep vertical (med spa) → then template.
   Open recurring: formal Lighthouse/axe ≥90 pass · DMARC → p=quarantine ~2026-06-24.
