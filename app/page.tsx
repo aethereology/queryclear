@@ -3,7 +3,7 @@ import { Footer } from "@/components/Footer";
 import { LeadForm } from "@/components/LeadForm";
 import { Container, MonoLabel, Cta } from "@/components/ui";
 import { SnapshotCta } from "@/components/SnapshotCta";
-import { Stagger, StaggerItem, ClipReveal, LineDraw } from "@/components/motion";
+import { Stagger, StaggerItem, ClipReveal } from "@/components/motion";
 import { TypingPanel } from "@/components/TypingPanel";
 import { HumanMachineToggle } from "@/components/HumanMachineToggle";
 import { Accordion } from "@/components/Accordion";
@@ -113,8 +113,7 @@ export default function Home() {
 
       <main>
         {/* ── HERO ─────────────────────────────────────────── */}
-        <section className="relative overflow-hidden border-b border-line">
-          <div className="grid-texture pointer-events-none absolute inset-0 opacity-60" />
+        <section className="site-section relative overflow-hidden">
           <Container className="relative grid items-center gap-12 py-20 md:grid-cols-[1.05fr_0.95fr] md:py-28">
             <div>
               <div className="fade-up">
@@ -195,7 +194,7 @@ export default function Home() {
               lines={["Your customers search differently now.", "Is your site clear enough to be chosen?"]}
             />
           </h2>
-          <div className="mt-12 grid gap-px overflow-hidden border border-dashed border-line bg-line sm:grid-cols-3">
+          <div className="mt-12 grid gap-4 sm:grid-cols-3">
             {[
               ["Hard to understand", "Many business websites look good but never clearly say what the business does, where it serves, and why it should be trusted."],
               ["Weak search foundations", "Pages that are hard to crawl, thin, duplicated, slow, or missing key business details give modern search systems less to work with."],
@@ -281,10 +280,7 @@ export default function Home() {
         {/* ── HOW IT WORKS ─────────────────────────────────── */}
         <Section id="how" index="04" label="How it works" tinted>
           <h2 className="max-w-2xl text-4xl sm:text-5xl">A clear path, every time.</h2>
-          <div className="mt-8">
-            <LineDraw />
-          </div>
-          <Stagger className="mt-6 grid gap-px overflow-hidden border border-dashed border-line bg-line md:grid-cols-5">
+          <Stagger className="mt-10 grid gap-4 md:grid-cols-5">
             {steps.map((s) => (
               <StaggerItem key={s.n} className="flex flex-col bg-paper p-6">
                 <span className="font-mono text-sm text-lime-deep tnum">{s.n}</span>
@@ -302,7 +298,7 @@ export default function Home() {
             <Stagger className="grid gap-x-8 gap-y-3 sm:grid-cols-2">
               {deliverables.map((d) => (
                 <StaggerItem key={d}>
-                  <span className="flex items-center gap-3 border-b border-line pb-3 text-sm">
+                  <span className="flex items-center gap-3 pb-3 text-sm">
                     <span className="font-mono text-lime-deep">✓</span>
                     {d}
                   </span>
@@ -384,7 +380,6 @@ function Section({
   id,
   index,
   label,
-  tinted = false,
   children,
 }: {
   id: string;
@@ -396,7 +391,7 @@ function Section({
   return (
     <section
       id={id}
-      className={`scroll-mt-20 border-b border-line py-20 md:py-24 ${tinted ? "bg-paper-2" : ""}`}
+      className="site-section scroll-mt-20 py-20 md:py-24"
     >
       <Container>
         <div className="mb-3">

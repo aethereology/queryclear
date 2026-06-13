@@ -189,6 +189,11 @@
     background-size: 22px 22px;
   }
 
+  .site-section {
+    position: relative;
+    overflow: hidden;
+  }
+
   .site-background {
     position: fixed;
     inset: 0;
@@ -200,11 +205,10 @@
     content: "";
     position: absolute;
     inset: 0;
-    background-image:
-      linear-gradient(to right, #12352a0b 1px, transparent 1px),
-      linear-gradient(to bottom, #12352a0b 1px, transparent 1px);
-    background-size: 36px 36px;
-    mask-image: linear-gradient(to bottom, black, transparent 88%);
+    background:
+      radial-gradient(circle at 14% 24%, #b6f03c12, transparent 30rem),
+      radial-gradient(circle at 72% 42%, #12352a12, transparent 34rem),
+      linear-gradient(145deg, #f7f4ee00, #efeae066);
   }
   .site-background::after {
     content: "";
