@@ -19,6 +19,16 @@ export type NavMenu = {
 
 export const serviceColumns: NavColumn[] = [
   {
+    eyebrow: "Operate",
+    links: [
+      {
+        href: "/ai-search-operator",
+        label: "AI Search Operator",
+        desc: "An agent that does the modern-search work continuously — you approve every move. Early access.",
+      },
+    ],
+  },
+  {
     eyebrow: "Diagnose",
     links: [
       {
@@ -45,6 +55,11 @@ export const serviceColumns: NavColumn[] = [
         href: "/local-ai-search-optimization",
         label: "Local AI search",
         desc: "Local entity clarity, proof, services, and market coverage.",
+      },
+      {
+        href: "/med-spa-ai-search-optimization",
+        label: "Med spa AI search",
+        desc: "Treatment pages, honest proof, and structured details for med spas.",
       },
     ],
   },

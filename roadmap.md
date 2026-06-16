@@ -22,6 +22,15 @@ skeptical local business owner, and (2) feed the money ladder
 The site itself is the proof asset — it must be a flawless example of a modern,
 AI-search-ready site.
 
+**Two tracks as of 2026-06-15 (see `Decisions.md`).** The ladder above is the
+**local / done-for-you** track. A second, recurring **AI Search Operator** track —
+the agentic offering for **B2B SaaS**, powered by the separate `queryclearagent`
+product — now launches as a founder-led **early-access / design-partner** program
+(`/ai-search-operator`). It is sold Review-mode / human-approved / staging-first;
+Auto-publish & Autopilot are roadmap and gated on `queryclearagent` Phase 1
+(live-site writes, multi-domain, brand-safety guardrails). The local track is
+unchanged and keeps running alongside it.
+
 ## Strategy notes carried from review (read before Phase 3+)
 
 - **Build demand before supply.** Don't build a large product catalog before

@@ -5,6 +5,30 @@ Format: date · decision · rationale · status.
 
 ---
 
+## 2026-06-15 · Two-track reposition: add the agentic "AI Search Operator"
+- **Decision:** queryclear now runs **two tracks**, not one. (1) The existing
+  **done-for-you local/service track** (Snapshot → $497 audit → Upgrade → Build)
+  is unchanged. (2) A new **AI Search Operator** track — the recurring, agentic
+  offering for **B2B SaaS** teams, powered by the separate `queryclearagent`
+  product (the autonomous SEO/AEO/GEO operator). The operator launches as a
+  founder-led **early-access / design-partner program**, sold now, delivered with
+  a human in the loop while the autonomous loop hardens. New page
+  `/ai-search-operator`; homepage gains a two-track band; lead form gains an
+  "AI Search Operator (early access)" interest. No public monthly price yet.
+- **Rationale:** The audit/report is commoditized; the defensible product is the
+  *operator that does the work* ("Searchable tells your team what to do; QueryClear
+  does it"). The founder has declared `queryclearagent` the real pivot. We sell the
+  operator now to build the right (B2B SaaS) pipeline and recruit design partners,
+  without abandoning the local cash flow. Founder approved 2026-06-15.
+- **Honesty constraint (binding):** The agent is at M0 — **Review mode, staging/
+  draft only**. Public copy MUST lead with "agent proposes, human approves," frame
+  Auto-publish/Autopilot as roadmap, and use "early access," never "fully
+  autonomous, live today." No guaranteed rankings/citations. The agent is NOT yet
+  wired into the live site — early-access delivery is concierge. Live-site autonomy
+  is gated on `queryclearagent` Phase 1 (live-writes, multi-domain, guardrails).
+- **Status:** Adopted. Amends the single-track local-service framing in
+  `product_spec.md` / `roadmap.md` (the local track persists alongside the new one).
+
 ## 2026-06-11 · Repositioning: "Modern SEO for the AI search era"
 - **Decision:** Sitewide reframe away from "GEO is the next layer on top of SEO"
   and llms.txt-as-headline-feature, to "Modern SEO for the AI search era." llms.txt

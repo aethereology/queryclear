@@ -18,6 +18,7 @@ promise guaranteed rankings or guaranteed AI citations — we deliver technical
 readiness, clarity, useful content, and structure.
 
 ## Services
+- AI Search Operator (early access, for B2B SaaS) — a human-approved agent that continuously monitors AI search visibility, drafts answer-first content, and prepares on-page fixes. The agent proposes; a person approves every action. Not a guarantee of rankings or citations.
 - Free AI Search Snapshot — a quick plain-English review of search clarity, technical foundation, and biggest opportunities.
 - AI Search Audit ($497) — a scored report with prompt testing, page review, technical findings, local visibility review, and a prioritized fix roadmap.
 - Website Upgrade (from $2,500) — done-for-you improvements: service pages, metadata, FAQs, schema, crawlability, internal links, conversion paths.
@@ -25,11 +26,13 @@ readiness, clarity, useful content, and structure.
 
 ## Key pages
 - Home: ${site.url}/
+- AI Search Operator (early access, for B2B SaaS): ${site.url}/ai-search-operator
 - AI Search Audit (request a Snapshot or audit): ${site.url}/ai-visibility-audit
 - The AI Visibility Stack (our method): ${site.url}/ai-visibility-stack
 - Sample readiness report (demo): ${site.url}/audit
 - Free AI Visibility Scorecard (self-assessment tool): ${site.url}/scorecard
 - Local AI Search Optimization: ${site.url}/local-ai-search-optimization
+- AI Search Optimization for Med Spas: ${site.url}/med-spa-ai-search-optimization
 - GEO Audit: ${site.url}/geo-audit
 - AI-Search-Ready Websites: ${site.url}/ai-search-ready-website
 - Schema for AI Search: ${site.url}/schema-for-ai-search

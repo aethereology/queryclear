@@ -140,6 +140,7 @@ export default function LocalPage() {
               ))}
             </div>
             <p className="mt-6 max-w-2xl text-sm text-muted">
+              We go deepest on <a href="/med-spa-ai-search-optimization" className="font-medium text-ink underline hover:text-lime-deep">med spas</a>.
               Don&apos;t see yours? The approach applies to most local and service
               businesses — <a href="/contact" className="font-medium text-ink underline hover:text-lime-deep">ask us</a>.
             </p>

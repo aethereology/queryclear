@@ -17,6 +17,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
     },
     {
+      url: `${site.url}/ai-search-operator`,
+      changeFrequency: "monthly",
+      priority: 0.9,
+    },
+    {
       url: `${site.url}/ai-visibility-stack`,
       changeFrequency: "monthly",
       priority: 0.7,
@@ -33,6 +38,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     {
       url: `${site.url}/local-ai-search-optimization`,
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    {
+      url: `${site.url}/med-spa-ai-search-optimization`,
       changeFrequency: "monthly",
       priority: 0.8,
     },

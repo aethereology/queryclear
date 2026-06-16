@@ -22,17 +22,35 @@ const fields = [
   { name: "city", label: "City / market", type: "text", required: false, autoComplete: "address-level2" },
 ] as const;
 
-// Mirrors site.offers; captured so the intake records which offer pulled them.
+// Mirrors site.offers (+ the AI Search Operator early-access track); captured so
+// the intake records which offer pulled them.
 export const interestOptions = [
   "Free AI Search Snapshot",
   "AI Search Audit ($497)",
   "Website Upgrade",
   "Modern Search Website Build",
+  "AI Search Operator (early access)",
 ] as const;
 
 export type InterestOption = (typeof interestOptions)[number];
 
-export function LeadForm({ defaultNeed = "" }: { defaultNeed?: InterestOption | "" }) {
+const DEFAULT_NOTE = (
+  <>
+    Free, no obligation. We&apos;ll send a plain-English review — not a sales bot.
+    By submitting, you agree to be contacted about your request. We do not sell
+    your information.
+  </>
+);
+
+export function LeadForm({
+  defaultNeed = "",
+  submitLabel = "Request my free Snapshot",
+  note = DEFAULT_NOTE,
+}: {
+  defaultNeed?: InterestOption | "";
+  submitLabel?: string;
+  note?: React.ReactNode;
+}) {
   const router = useRouter();
   // The form can render twice on one page (embedded section + SnapshotCta
   // overlay), so every id/htmlFor must be instance-unique.
@@ -146,14 +164,10 @@ export function LeadForm({ defaultNeed = "" }: { defaultNeed?: InterestOption | 
             Sending…
           </>
         ) : (
-          "Request my free Snapshot"
+          submitLabel
         )}
       </button>
-      <p className="mt-3 text-xs text-muted">
-        Free, no obligation. We&apos;ll send a plain-English review — not a
-        sales bot. By submitting, you agree to be contacted about your request.
-        We do not sell your information.
-      </p>
+      <p className="mt-3 text-xs text-muted">{note}</p>
     </form>
   );
 }

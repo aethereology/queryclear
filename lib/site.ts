@@ -113,4 +113,24 @@ export const site = {
     terms:
       "Founding pre-order. The Local AI Visibility Stack ships within 30 days of purchase. Full refund anytime before delivery — just email us. If we miss 30 days, we refund you automatically.",
   },
+  // Second track (added 2026-06-15; see Decisions.md). queryclear's recurring
+  // "operator" offering for B2B SaaS teams: an agent that does the modern-search
+  // work continuously while a human approves every action. The product is in
+  // EARLY ACCESS — sold as a founder-led design-partner program, delivered with a
+  // human in the loop while the autonomous loop hardens. Honest framing only: the
+  // agent proposes and a person approves (Review mode); it does not edit live sites
+  // unattended. No public monthly price yet — early access / talk to us.
+  operator: {
+    name: "AI Search Operator",
+    // One-liner reused on the homepage two-track band, the page hero, and nav.
+    tagline:
+      "An agent that does the modern-search work continuously — and you approve every move.",
+    status: "Early access",
+    forWho: "B2B SaaS teams",
+    path: "/ai-search-operator",
+    // The operator ask is its own embedded form (NOT the Snapshot overlay, whose
+    // copy is Snapshot-specific). Preselects this interest in the lead form.
+    interest: "AI Search Operator (early access)",
+    cta: { label: "Request early access", href: "/ai-search-operator#early-access" },
+  },
 } as const;

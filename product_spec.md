@@ -11,6 +11,9 @@ Local / SMB service business owners who are becoming invisible when someone asks
 an AI ("best plumber near me", "who does X in [city]") and whose site is unclear
 to AI systems. Fast, fear-shaped pain → fast yes.
 
+*Secondary (since 2026-06-15):* **B2B SaaS** teams for the recurring **AI Search
+Operator** track — see the dedicated section below.
+
 ## The offer (public four-tier ladder — repositioned 2026-06-11, see `Decisions.md`)
 
 Names and prices below are canonical and must match `site.offers` in `lib/site.ts`.
@@ -42,6 +45,27 @@ We implement the fixes on the client's existing site.
 A new, AI-search-ready website built from scratch.
 - **Deliverable:** everything in #3, plus a full site.
 - **Price:** from $6,500.
+
+## Second track — AI Search Operator (B2B SaaS, early access)
+
+*Added 2026-06-15; see `Decisions.md`. The four offers above are the **local /
+service** track. This is a separate, recurring **agentic** track for **B2B SaaS**
+teams, powered by the `queryclearagent` product (the autonomous SEO/AEO/GEO
+operator — a separate repo).*
+
+- **Who it's for:** B2B SaaS (≈ Series A–C) feeling AI search erode their funnel,
+  who already pay for SEO tooling and lack a dedicated AEO specialist.
+- **What it is:** an agent that continuously **monitors** AI-search visibility,
+  **drafts** answer-first content, and **prepares on-page fixes** — with a human
+  **approving every action** (Review mode). An audit is the first run, not the
+  whole product; the operator then works the roadmap continuously and re-measures.
+- **Status:** **Early access** — a founder-led design-partner program. Delivered
+  with a human in the loop while the autonomous loop hardens. **No public monthly
+  price yet** (handled case-by-case during early access). Page: `/ai-search-operator`.
+- **What we promise / don't (same guardrails):** the agent proposes, a person
+  approves; it works staging/draft first and does **not** edit live sites
+  unattended; Auto-publish / Autopilot are roadmap, opt-in only. No guaranteed
+  rankings or AI citations.
 
 ## What we promise / what we don't
 

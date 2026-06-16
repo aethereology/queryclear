@@ -187,6 +187,44 @@ export default function Home() {
           </Container>
         </section>
 
+        {/* ── TWO TRACKS ───────────────────────────────────── */}
+        <section className="site-section border-y border-line bg-paper-2 py-16 md:py-20">
+          <Container>
+            <MonoLabel index="00">Two ways to work with us</MonoLabel>
+            <h2 className="mt-3 max-w-2xl text-3xl sm:text-4xl">
+              Done-for-you optimization — or an operator that keeps doing it.
+            </h2>
+            <div className="mt-10 grid gap-4 md:grid-cols-2">
+              <div className="card flex flex-col p-7">
+                <p className="mono-label !text-lime-deep">For local &amp; service businesses</p>
+                <h3 className="mt-3 text-xl">Done-for-you optimization</h3>
+                <p className="mt-2 flex-1 text-sm leading-relaxed text-muted">
+                  We audit your site and implement the fixes — clearer service
+                  pages, schema, local signals, conversion paths. A free Snapshot,
+                  a $497 audit, a website upgrade, or a full build.
+                </p>
+                <div className="mt-5">
+                  <Cta href="#offers" variant="ghost">See the offers</Cta>
+                </div>
+              </div>
+              <div className="card flex flex-col p-7">
+                <p className="mono-label !text-lime-deep">
+                  For {site.operator.forWho} · {site.operator.status}
+                </p>
+                <h3 className="mt-3 text-xl">The {site.operator.name}</h3>
+                <p className="mt-2 flex-1 text-sm leading-relaxed text-muted">
+                  {site.operator.tagline} An agent monitors AI search visibility,
+                  drafts answer-first content, and prepares on-page fixes — you
+                  approve every step. Now onboarding founding design partners.
+                </p>
+                <div className="mt-5">
+                  <Cta href={site.operator.path}>Meet the operator</Cta>
+                </div>
+              </div>
+            </div>
+          </Container>
+        </section>
+
         {/* ── PROBLEM ──────────────────────────────────────── */}
         <Section id="problem" index="01" label="The problem">
           <h2 className="max-w-2xl text-4xl sm:text-5xl">

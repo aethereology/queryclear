@@ -70,6 +70,15 @@ Short living board. Strategy lives in `roadmap.md`; the executable cards live in
   /thank-you noindex + out of sitemap, /audit prerenders 33. T15/T16 shipped
   earlier (2026-06-10) with first client report (Maple Bear).
 
+## ✅ Phase 6 first vertical (med spa) BUILT in code (2026-06-15)
+- New `/med-spa-ai-search-optimization` — deep, med-spa-specific vertical (not a
+  thin dupe): treatment-intent invisibility, the 7 layers in a med-spa lens, per-
+  treatment fixes, Goldleaf `/audit` proof link, med-spa FAQ. WebPage+Service+
+  FAQPage+BreadcrumbList; Snapshot CTA top+bottom; no new deps/medical schema.
+  Wired into nav (serviceColumns→mega-menu+footer), sitemap, llms.txt; local page
+  cross-links it. build ✅ 30 routes · lint ✅ · test ✅ 52/52. **Founder-gated:**
+  commit/push + `vercel --prod --scope sparkcreativesinc` to ship.
+
 ## 🔄 Now — founder + next
 - ✅ Stripe webhook REGISTERED in Dashboard (founder, 2026-06-11). Verified:
   prod env has all STRIPE_* vars; unsigned POST → 400 (sig check active).
@@ -79,11 +88,13 @@ Short living board. Strategy lives in `roadmap.md`; the executable cards live in
   Also confirm keys are test vs live before driving traffic.
 - **Founder TODO:** manual ChatGPT/Gemini/Copilot visibility runs for the
   Maple Bear report → update `lib/reports/maplebear-stjohns-4caf31.ts` + redeploy.
-- **Next build (decide):** Phase 6 first deep vertical (med spa) → then template.
+- **Ship the med-spa vertical:** commit/push + `vercel --prod --scope
+  sparkcreativesinc` (founder-gated), then smoke-check the live route + sitemap.
   Open recurring: formal Lighthouse/axe ≥90 pass · DMARC → p=quarantine ~2026-06-24.
 
 ## ⏭️ Next
-- Phase 6: one deep vertical (med spa) then template — only after deploy + verify
+- Phase 6: template the other verticals (aesthetician, spa, salon, dentist, home
+  service) — only after the med-spa page deploys and shows it converts
 - First real paid-audit delivery: run the SOP, add `lib/reports/<slug>.ts`, ship
 
 ## 🗓️ Later

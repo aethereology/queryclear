@@ -22,14 +22,46 @@ We sell *readiness*, not outcomes. **Never** promise rankings or AI citations.
   Internally it grew out of Aethelo, but Aethelo no longer appears in public
   copy/schema (decided 2026-06-11; see Decisions.md).
 - Our own site IS our first case study, so it must be a flawless GEO example.
+- **Two tracks (since 2026-06-15; see Decisions.md):** (1) the **done-for-you
+  local/service track** (Snapshot → $497 audit → Upgrade → Build), and (2) the
+  **AI Search Operator** — the recurring agentic offering for **B2B SaaS**, powered
+  by the separate `queryclearagent` product, launched as a founder-led **early-access
+  / design-partner program**. The operator is **Review-mode / human-approved /
+  staging-first** today; market it honestly (no "fully autonomous, live" claims).
 
 ## 2. Ground-truth state (keep this section current)
 
-> Last verified: 2026-06-12. If you change the site, update this section and
+> Last verified: 2026-06-15. If you change the site, update this section and
 > `memory.md` at the end of your session.
 
 - **LIVE** at https://www.queryclear.com (apex 307 → www). Deployed on Vercel
   (team `sparkcreativesinc`, project `queryclear`; CLI needs `--scope sparkcreativesinc`).
+- **AI SEARCH OPERATOR / TWO-TRACK REPOSITION 2026-06-15 (code-complete, NOT yet
+  committed/deployed):** new `app/ai-search-operator/page.tsx` — the agentic
+  B2B-SaaS track (early access / design partners), powered by the `queryclearagent`
+  product. Honest framing: agent proposes → human approves (Review mode),
+  staging-first, Auto-publish/Autopilot are roadmap. Has its own embedded
+  early-access lead form (NOT the Snapshot overlay — different ask); `LeadForm`
+  gained an "AI Search Operator (early access)" interest option; `lib/site.ts`
+  gained an `operator` config block. Homepage (`app/page.tsx`) gained a two-track
+  band after the hero (done-for-you vs. operator). Wired into `lib/navigation.ts`
+  (new "Operate" group → mega-menu + footer), `app/sitemap.ts`, `app/llms.txt`.
+  WebPage+Service+FAQPage+BreadcrumbList JSON-LD. The local ladder + all existing
+  pages are unchanged. **Founder-gated:** commit/push + `vercel --prod`.
+- **MED-SPA VERTICAL 2026-06-15 (code-complete, NOT yet committed/deployed):**
+  Phase 6 first deep vertical — new `app/med-spa-ai-search-optimization/page.tsx`,
+  built from the `local-ai-search-optimization` pattern (Header/Footer/Container/
+  MonoLabel/Cta/SnapshotCta/Stagger/Accordion) but med-spa-specific (treatment-
+  intent queries, the 7 layers read through a med-spa lens, per-treatment fixes,
+  links the Goldleaf `/audit` sample as proof). WebPage+Service+FAQPage+
+  BreadcrumbList JSON-LD; Snapshot CTA top+bottom; no new deps/components/medical
+  schema. Wired into `lib/navigation.ts` serviceColumns "Improve" (auto-adds to
+  header mega-menu + footer), `app/sitemap.ts`, `app/llms.txt/route.ts`; the
+  `local-ai-search-optimization` page now cross-links to it. Verified on Windows:
+  build ✅ 30 routes (page prerenders static), lint ✅ clean, test ✅ 52/52;
+  prerendered HTML confirmed to carry the h1, canonical, title, and all four
+  JSON-LD types. **Founder-gated:** commit/push + `vercel --prod --scope
+  sparkcreativesinc` is a separate go.
 - **SNAPSHOT OVERLAY 2026-06-12 (code-complete, NOT yet committed/deployed):**
   every free-Snapshot CTA sitewide (incl. the /audit sample-report bottom CTA in
   `AuditReport.tsx` — sample variant only; private client reports keep their
@@ -87,9 +119,15 @@ We sell *readiness*, not outcomes. **Never** promise rankings or AI citations.
   - `app/privacy/page.tsx`, `app/terms/page.tsx` — legal pages (T3, 2026-06-03)
   - `app/ai-visibility-stack/page.tsx` — the 7-layer method page (T5, 2026-06-03)
   - `app/ai-visibility-audit/page.tsx` — commercial audit landing + form (T7, 2026-06-03)
+  - `app/ai-search-operator/page.tsx` — the AI Search Operator (B2B SaaS, early
+    access; 2026-06-15). Agentic recurring track; Review-mode/human-approved
+    framing; embedded early-access lead form. Built in code; founder-gated deploy.
   - Category pages (T8–T12, 2026-06-03): `app/local-ai-search-optimization`,
     `app/geo-audit`, `app/ai-search-ready-website`, `app/schema-for-ai-search`,
     `app/llms-txt-for-businesses`
+  - `app/med-spa-ai-search-optimization/page.tsx` — Phase 6 first deep vertical
+    (2026-06-15; med-spa-specific; WebPage+Service+FAQPage+BreadcrumbList; links
+    the Goldleaf `/audit` sample). Built in code; founder-gated deploy.
   - `app/not-found.tsx` — custom 404 (T13, 2026-06-04; full chrome, returns HTTP 404)
   - `app/opengraph-image.tsx` — sitewide social card (T13, 2026-06-04; next/og 1200×630)
   - `app/stack-kit/page.tsx` + `app/stack-kit/success/page.tsx` — $97 DIY-kit
@@ -147,8 +185,9 @@ We sell *readiness*, not outcomes. **Never** promise rankings or AI citations.
   (`node --test tests/lead-route... tests/checkout-route... tests/stripe-webhook...
   tests/scorecard... tests/audit-report...`) because `node --test tests/` errors on
   this Node (22.14) — add new test files to that list in `package.json`.
-- **What does NOT exist yet:** vertical pages (Phase 6); the actual $97 kit contents
-  (T17, deferred until T14 validates). Phases 1–4 + T14 + T15 + T16 are DEPLOYED and
+- **What does NOT exist yet:** more vertical pages (Phase 6's first one — med spa —
+  is now built in code; the rest are templated only *after* it proves out); the
+  actual $97 kit contents (T17, deferred until T14 validates). Phases 1–4 + T14 + T15 + T16 are DEPLOYED and
   live (T15/T16 shipped 2026-06-10 with the first client report; prod smoke-checked:
   report 200+noindex, 404 on unknown slugs, no sitemap/llms leakage). STILL pending =
   founder-gated: register the Stripe webhook endpoint in the Stripe Dashboard, the

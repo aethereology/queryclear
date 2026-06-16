@@ -41,7 +41,68 @@ Update the "Current state" line whenever it changes.
 
 ## Current state (update this line)
 
-2026-06-12 (latest) — SNAPSHOT OVERLAY SHIPPED (code-complete, NOT yet
+2026-06-15 (latest) — TWO-TRACK REPOSITION: AI SEARCH OPERATOR BUILT IN CODE (NOT
+yet committed/deployed). The founder declared `queryclearagent` (the autonomous
+SEO/AEO/GEO operator) the real pivot and the manual audit commoditized. Decision
+(founder, this session; ADR in Decisions.md): run TWO tracks — keep the local
+done-for-you ladder AND add a recurring agentic **AI Search Operator** track for
+**B2B SaaS**, launched as a founder-led **early-access / design-partner** program,
+delivered human-in-the-loop while the loop hardens. SHIPPED IN CODE: new
+`app/ai-search-operator/page.tsx` (hero → what it does [monitor/create/fix/measure]
+→ autonomy ladder [Review = available now; Auto-publish/Autopilot = roadmap] → "an
+audit is the first run, not the product" → FAQ → embedded early-access lead form),
+WebPage+Service+FAQPage+BreadcrumbList JSON-LD, honest Review-mode/human-approved/
+staging-first framing, NO guarantees, NO live-site-autonomy claims. `lib/site.ts`
+gained an `operator` block; `LeadForm` gained an "AI Search Operator (early access)"
+interest (parity test unaffected — `site.offers` unchanged, so it stays the local
+ladder); homepage gained a two-track band after the hero; `lib/navigation.ts` gained
+an "Operate" group (→ mega-menu + footer); added to sitemap + llms.txt. The operator
+ask uses its OWN embedded form, NOT the Snapshot overlay (different ask). The agent
+is NOT wired into the site — early-access delivery is concierge; live autonomy is
+gated on `queryclearagent` Phase 1. Docs reconciled: Decisions.md ADR, CLAUDE.md
+§1/§2, product_spec.md (second-track section), roadmap.md (two-track note).
+EYEBALLED via `next start` + Playwright (desktop): hero renders unclipped, two-track
+band sits right after the homepage hero, operator page on-brand. FIX from eyeballing:
+the embedded operator form was showing LeadForm's hardcoded "Request my free Snapshot"
+button + Snapshot helper (wrong for an early-access ask) — parametrized `LeadForm`
+with optional `submitLabel` + `note` props (defaults unchanged, so Snapshot/contact
+forms are untouched); operator form now reads "Request early access" + a personal-
+reply note. Founder calls on the three open items: (1) homepage = additive band (no
+hero teardown); (2) pricing = "early access / talk to us" (no public tiers); (3)
+design-partner terms kept qualitative (no fabricated spot count/discount — founder to
+set). VERIFIED: build ✅ 31 routes, lint ✅, test ✅ 52/52; built HTML confirms
+operator h1/canonical/title + 4 JSON-LD types + "Request early access" (0 "free
+Snapshot" on the operator page). **Founder-gated:** commit/push +
+`vercel --prod --scope sparkcreativesinc`.
+
+2026-06-15 — PHASE 6 FIRST DEEP VERTICAL (MED SPA) BUILT IN CODE (NOT yet
+committed/deployed). New `app/med-spa-ai-search-optimization/page.tsx`, modeled on
+the `local-ai-search-optimization` pattern but genuinely med-spa-specific (no thin
+dupe): why med spas go invisible (treatment-intent queries, franchise competition,
+no per-treatment pages), the 7-layer AI Visibility Stack read through a med-spa lens,
+what we fix (per-treatment pages, treatment FAQs, provider clarity, review/before-
+after proof, GBP↔site consistency, booking path), a proof band linking the Goldleaf
+`/audit` sample (clearly fictional), med-spa-specific FAQ, Snapshot CTA top+bottom.
+WebPage+Service+FAQPage+BreadcrumbList JSON-LD; honest claims only; NO emitted
+medical schema; no new deps/components. Wired: `lib/navigation.ts` serviceColumns
+"Improve" (auto-flows to header mega-menu + footer), `app/sitemap.ts`,
+`app/llms.txt/route.ts`; the local page now cross-links to it. VERIFIED on Windows:
+`npm run build` ✅ 30 routes (page prerenders static), `npm run lint` ✅, `npm test`
+✅ 52/52; prerendered HTML confirmed to carry the h1, canonical, title (layout
+suffix), and all four JSON-LD types. **Founder-gated:** commit/push + `vercel --prod
+--scope sparkcreativesinc` is a separate go. NEXT (after it proves out): template the
+other verticals (aesthetician, spa, salon, dentist, home service). Recurring still
+open: formal Lighthouse/axe ≥90 pass; DMARC → p=quarantine ~2026-06-24; Maple Bear
+manual ChatGPT/Gemini/Copilot visibility runs.
+
+RECONCILED stale memory: the entries below stopped at 2026-06-12, but the repo had
+already advanced — `git log` shows `4e18709 Finalize and deploy current queryclear
+changes` plus three background-styling commits (sitewide brand background, smoothed
+homepage transitions, flattened background color). So the Snapshot overlay + that
+styling work ARE committed and deployed; the 2026-06-12 "NOT yet committed" note was
+simply never updated. Working tree is clean and in sync with origin/main.
+
+2026-06-12 — SNAPSHOT OVERLAY SHIPPED (code-complete, NOT yet
 committed/deployed): every free-Snapshot CTA sitewide (header desktop+mobile,
 home hero, "Not sure where you stand?" card, offer-ladder Snapshot/Upgrade/Build,
 about, ai-visibility-audit hero, 3 category pages, scorecard, stack-kit text
