@@ -36,6 +36,13 @@ We sell *readiness*, not outcomes. **Never** promise rankings or AI citations.
 
 - **LIVE** at https://www.queryclear.com (apex 307 → www). Deployed on Vercel
   (team `sparkcreativesinc`, project `queryclear`; CLI needs `--scope sparkcreativesinc`).
+- **SHIPPED 2026-06-15 (commit a97f995, `vercel --prod`):** the **AI Search
+  Operator** track (two-track reposition) and the **med-spa vertical** are now LIVE
+  (`/ai-search-operator`, `/med-spa-ai-search-optimization`) — smoke-checked 200,
+  correct copy ("Request early access" / "five founding partners", no "free Snapshot"
+  leak), present in sitemap + llms.txt. The two detailed bullets immediately below
+  were written pre-deploy ("NOT yet committed/deployed") — that status is now
+  superseded by this line.
 - **AI SEARCH OPERATOR / TWO-TRACK REPOSITION 2026-06-15 (code-complete, NOT yet
   committed/deployed):** new `app/ai-search-operator/page.tsx` — the agentic
   B2B-SaaS track (early access / design partners), powered by the `queryclearagent`

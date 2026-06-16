@@ -69,11 +69,19 @@ with optional `submitLabel` + `note` props (defaults unchanged, so Snapshot/cont
 forms are untouched); operator form now reads "Request early access" + a personal-
 reply note. Founder calls on the three open items: (1) homepage = additive band (no
 hero teardown); (2) pricing = "early access / talk to us" (no public tiers); (3)
-design-partner terms kept qualitative (no fabricated spot count/discount — founder to
-set). VERIFIED: build ✅ 31 routes, lint ✅, test ✅ 52/52; built HTML confirms
-operator h1/canonical/title + 4 JSON-LD types + "Request early access" (0 "free
-Snapshot" on the operator page). **Founder-gated:** commit/push +
-`vercel --prod --scope sparkcreativesinc`.
+design-partner terms — founder delegated the call ("you decide"), so: **five founding
+partners** (capacity-based, honest scarcity for a solo concierge delivery) + founder-
+led setup + direct line + **founding pricing locked for year one** + optional case
+study; no guarantees. Copy updated on the operator page (hero label, early-access
+section, FAQ cost answer). VERIFIED: build ✅ 31 routes, lint ✅, test ✅ 52/52.
+**SHIPPED 2026-06-15** — commit a97f995 pushed to origin/main + `vercel --prod --scope
+sparkcreativesinc` (aliased www, READY). Live smoke-check passed: /ai-search-operator,
+/med-spa-ai-search-optimization, /, /sitemap.xml, /llms.txt all 200; operator copy
+correct ("Request early access" / "five founding partners", no "free Snapshot" leak);
+both routes in sitemap + llms.txt. The med-spa vertical shipped in the SAME commit (it
+had also been sitting uncommitted). Tree clean, in sync. Open next: founder may later
+publish operator pricing tiers; recurring Lighthouse/axe ≥90 pass; DMARC →
+p=quarantine ~2026-06-24.
 
 2026-06-15 — PHASE 6 FIRST DEEP VERTICAL (MED SPA) BUILT IN CODE (NOT yet
 committed/deployed). New `app/med-spa-ai-search-optimization/page.tsx`, modeled on
