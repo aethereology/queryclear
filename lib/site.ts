@@ -78,6 +78,17 @@ export const site = {
       need: "Modern Search Website Build",
     },
   ],
+  // The $497 AI Search Audit as a purchasable product (self-serve Stripe Checkout
+  // on /ai-visibility-audit). Marketing copy lives in `offers[1]`; this is the
+  // billing config. Human-delivered service — checkout captures the buyer's site.
+  auditProduct: {
+    name: "AI Search Audit",
+    path: "/ai-visibility-audit",
+    priceUsd: 497,
+    priceLabel: "$497",
+    currency: "usd",
+    unitAmount: 49700, // cents, for Stripe
+  },
   // T14 demand-test offer. The product is NOT built yet — this is a refundable
   // pre-order to measure demand (GATE-MODEL). Keep every claim honest.
   stackKit: {

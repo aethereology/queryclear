@@ -74,6 +74,15 @@ export type StackKitOrderEmail = {
   shipDays: number;
 };
 
+export type AuditOrderEmail = {
+  amount: string;
+  currency: string;
+  name: string;
+  email: string;
+  sessionId: string;
+  website: string;
+};
+
 // Email-safe copy of the web brand tokens from app/globals.css. Inline styles
 // still reference these values directly because many inboxes strip CSS vars.
 export const emailBrandTokens = {
@@ -558,6 +567,40 @@ export function renderPublicAuditReportEmail(
       },
     ],
     closing: "Questions? Just reply to this email — a real person will answer.",
+  });
+}
+
+// Team-notify when someone buys the $497 AI Search Audit via Stripe Checkout.
+// The audit is human-delivered, so the buyer's website (captured as a Stripe
+// custom field) is the key field — it's what we need to start fulfillment.
+export function renderAuditOrderEmail(order: AuditOrderEmail, site?: EmailSite) {
+  const who = order.name === "—" ? order.email : order.name;
+  return renderQueryclearEmail({
+    site,
+    preheader: `New AI Search Audit purchase from ${who} (${order.website || "no site given"}).`,
+    eyebrow: "new order",
+    title: "AI Search Audit purchased.",
+    intro: [
+      `${who} bought the $497 AI Search Audit. Stripe has recorded the payment; this is your fulfillment cue.`,
+      "Run the audit and send the report to the email on file — aim for a couple of business days.",
+    ],
+    summary: [
+      { label: "Website", value: order.website || "(not provided — ask the buyer)", href: order.website || undefined },
+      { label: "Amount", value: `$${order.amount} ${order.currency}` },
+      { label: "Name", value: order.name },
+      { label: "Email", value: order.email, href: order.email === "unknown" ? undefined : `mailto:${order.email}` },
+      { label: "Session", value: order.sessionId },
+    ],
+    machinePanel: {
+      label: "// audit.order",
+      lines: [
+        { key: "product", value: "AI Search Audit ($497)" },
+        { key: "site", value: order.website || "unknown" },
+        { key: "amount", value: `$${order.amount} ${order.currency}` },
+      ],
+      status: "paid - fulfillment required",
+    },
+    footerNote: "Paid AI Search Audit. We deliver the scored report to the buyer; refunds handled case-by-case if we can't complete it.",
   });
 }
 

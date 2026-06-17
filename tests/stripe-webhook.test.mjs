@@ -178,6 +178,32 @@ test("on checkout.session.completed sends an order email and returns received:tr
   assert.match(sent[0].html, /97\.00/);
 });
 
+const auditEvent = {
+  type: "checkout.session.completed",
+  data: {
+    object: {
+      id: "cs_test_audit",
+      amount_total: 49700,
+      currency: "usd",
+      metadata: { product: "ai-search-audit" },
+      customer_details: { email: "buyer@example.com", name: "Sam Buyer" },
+      custom_fields: [{ key: "website", text: { value: "https://example.com" } }],
+    },
+  },
+};
+
+test("on an ai-search-audit purchase sends the audit order email with amount + website", async () => {
+  setEnv();
+  const { route, sent } = loadRoute();
+  const res = await route.POST(makeRequest(auditEvent, { signature: "good" }));
+
+  assert.equal(res.status, 200);
+  assert.equal(sent.length, 1);
+  assert.match(sent[0].subject, /AI Search Audit purchase/i);
+  assert.match(sent[0].html, /497\.00/);
+  assert.match(sent[0].html, /example\.com/);
+});
+
 test("ignores non-checkout events without sending email", async () => {
   setEnv();
   const { route, sent } = loadRoute();

@@ -11,13 +11,15 @@ const routePath = path.join(projectRoot, "app", "api", "checkout", "route.ts");
 
 let ipCounter = 0;
 
-function makeRequest({ ip, origin } = {}) {
+function makeRequest({ ip, origin, product } = {}) {
   const headers = new Headers({
     "content-type": "application/json",
     "x-forwarded-for": ip ?? `203.0.113.${++ipCounter}`,
   });
   if (origin) headers.set("origin", origin);
-  return new Request("https://www.queryclear.com/api/checkout", { method: "POST", headers });
+  const init = { method: "POST", headers };
+  if (product) init.body = JSON.stringify({ product });
+  return new Request("https://www.queryclear.com/api/checkout", init);
 }
 
 function clearEnv() {
@@ -65,6 +67,7 @@ function loadRoute({ createImpl } = {}) {
           email: "hello@queryclear.com",
           url: "https://www.queryclear.com",
           stackKit: { currency: "usd", unitAmount: 9700, shipDays: 30, name: "The Local AI Visibility Stack" },
+          auditProduct: { currency: "usd", unitAmount: 49700, name: "AI Search Audit" },
         },
       };
     }
@@ -101,6 +104,32 @@ test("creates a Checkout Session with the right amount, currency, and metadata",
   assert.equal(params.metadata.product, "stack-kit");
   assert.match(params.success_url, /^https:\/\/www\.queryclear\.com\/stack-kit\/success/);
   assert.match(params.cancel_url, /\/stack-kit\?canceled=1$/);
+});
+
+test("creates an AI Search Audit session ($497) when product=ai-search-audit", async () => {
+  process.env.STRIPE_SECRET_KEY = "sk_test_x";
+  const { route, created } = loadRoute();
+  const res = await route.POST(
+    makeRequest({ origin: "https://www.queryclear.com", product: "ai-search-audit" }),
+  );
+
+  assert.equal(res.status, 200);
+  assert.equal(created.length, 1);
+  const params = created[0];
+  assert.equal(params.mode, "payment");
+  assert.equal(params.line_items[0].price_data.unit_amount, 49700);
+  assert.equal(params.metadata.product, "ai-search-audit");
+  assert.match(params.success_url, /\/ai-visibility-audit\/success/);
+  assert.match(params.cancel_url, /\/ai-visibility-audit\?canceled=1$/);
+  // Must capture the buyer's site for fulfillment.
+  assert.ok(params.custom_fields?.some((f) => f.key === "website"), "website custom field present");
+});
+
+test("returns 400 for an unknown product", async () => {
+  process.env.STRIPE_SECRET_KEY = "sk_test_x";
+  const { route } = loadRoute();
+  const res = await route.POST(makeRequest({ product: "nope" }));
+  assert.equal(res.status, 400);
 });
 
 test("returns 502 when Stripe throws", async () => {

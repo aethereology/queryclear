@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { Resend } from "resend";
-import { renderStackKitOrderEmail } from "@/lib/email";
+import { renderStackKitOrderEmail, renderAuditOrderEmail } from "@/lib/email";
 import { site } from "@/lib/site";
 
-// Stripe webhook. On a completed pre-order checkout we email the order to the team
-// so we know who pre-ordered. Signature is verified against STRIPE_WEBHOOK_SECRET.
+// Stripe webhook. On a completed checkout we email the order to the team so we
+// know who bought (stack-kit pre-order OR the $497 AI Search Audit — dispatched
+// off session.metadata.product). Signature is verified against STRIPE_WEBHOOK_SECRET.
 // Must read the raw body for verification, so do NOT parse JSON first.
 // Env: STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET, RESEND_API_KEY, LEAD_TO, LEAD_FROM.
 
@@ -27,14 +28,27 @@ async function notifyOrder(session: Stripe.Checkout.Session) {
   const resend = new Resend(key);
   const to = process.env.LEAD_TO ?? site.email;
   const from = process.env.LEAD_FROM ?? "queryclear <onboarding@resend.dev>";
+  const who = name === "—" ? email : name;
 
-  try {
-    const response = await resend.emails.send({
-      from,
-      to,
-      ...(email !== "unknown" ? { replyTo: email } : {}),
-      subject: `New Stack Kit pre-order — ${name === "—" ? email : name}`.slice(0, 140),
-      html: renderStackKitOrderEmail(
+  // Dispatch by product. Default (no/other metadata) stays the stack-kit path.
+  const isAudit = session.metadata?.product === "ai-search-audit";
+  const subject = isAudit
+    ? `New AI Search Audit purchase — ${who}`.slice(0, 140)
+    : `New Stack Kit pre-order — ${who}`.slice(0, 140);
+  const html = isAudit
+    ? renderAuditOrderEmail(
+        {
+          amount,
+          currency,
+          name,
+          email,
+          sessionId: session.id ?? "",
+          website:
+            session.custom_fields?.find((f) => f.key === "website")?.text?.value ?? "",
+        },
+        site,
+      )
+    : renderStackKitOrderEmail(
         {
           kitName: site.stackKit.name,
           amount,
@@ -45,7 +59,15 @@ async function notifyOrder(session: Stripe.Checkout.Session) {
           shipDays: site.stackKit.shipDays,
         },
         site,
-      ),
+      );
+
+  try {
+    const response = await resend.emails.send({
+      from,
+      to,
+      ...(email !== "unknown" ? { replyTo: email } : {}),
+      subject,
+      html,
     });
     if (response.error) {
       throw response.error;

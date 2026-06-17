@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Container, MonoLabel, Cta } from "@/components/ui";
+import { CheckoutButton } from "@/components/CheckoutButton";
 import { Stagger, StaggerItem } from "@/components/motion";
 import { Accordion } from "@/components/Accordion";
 import { LeadForm } from "@/components/LeadForm";
@@ -118,10 +119,15 @@ export default function AuditLandingPage() {
               readiness categories and gives you a prioritized fix roadmap. Not
               sure yet? Run a free instant audit first.
             </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Cta href="/free-audit">Run a free audit</Cta>
+            <div className="mt-8 flex flex-wrap items-center gap-3">
+              <CheckoutButton product="ai-search-audit" label="Buy the audit — $497" />
+              <Cta href="/free-audit" variant="ghost">Run a free audit</Cta>
               <Cta href="/audit" variant="ghost">See a sample report</Cta>
             </div>
+            <p className="mt-3 text-xs text-muted">
+              Secure checkout via Stripe. We start your audit as soon as it&apos;s
+              purchased and email the report — usually within a couple of business days.
+            </p>
           </Container>
         </section>
 
@@ -217,15 +223,19 @@ export default function AuditLandingPage() {
         <section id="audit-cta" className="scroll-mt-20 bg-pine py-20 text-paper">
           <Container className="grid gap-10 md:grid-cols-[1fr_1.1fr] md:items-start">
             <div>
-              <h2 className="text-3xl text-paper sm:text-4xl">Request your AI Search Audit.</h2>
+              <h2 className="text-3xl text-paper sm:text-4xl">Get your AI Search Audit.</h2>
               <p className="mt-4 max-w-md text-paper/70">
-                Tell us about your site and we&apos;ll scope the full $497 scored
-                audit. Prefer a free read first?{" "}
+                Ready to go? Buy the $497 audit now and we&apos;ll start as soon as
+                it&apos;s purchased. Want to talk first, or prefer a free read?
+                Tell us about your site below, or{" "}
                 <a href="/free-audit" className="underline hover:text-lime">
-                  Run a free audit
+                  run a free audit
                 </a>
                 .
               </p>
+              <div className="mt-6">
+                <CheckoutButton product="ai-search-audit" label="Buy now — $497" />
+              </div>
             </div>
             <LeadForm defaultNeed="AI Search Audit ($497)" submitLabel="Request my audit" />
           </Container>
