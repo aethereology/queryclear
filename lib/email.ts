@@ -1,3 +1,5 @@
+import type { AuditReportData } from "./agent-runtime";
+
 type EmailSite = {
   name?: string;
   url?: string;
@@ -37,6 +39,9 @@ type QueryclearEmailOptions = {
     label: string;
     href: string;
   };
+  // Stacked button group, rendered after the single `cta`. Used for offer
+  // ladders (e.g. the free-audit follow-up: $497 audit / upgrade / build).
+  ctas?: { label: string; href: string; sublabel?: string }[];
   summary?: EmailSummaryItem[];
   steps?: EmailStep[];
   machinePanel?: {
@@ -232,7 +237,37 @@ function renderCta(cta?: QueryclearEmailOptions["cta"]) {
   </table>`;
 }
 
-export function renderQueryclearEmail(options: QueryclearEmailOptions) {
+export function renderCtas(ctas?: QueryclearEmailOptions["ctas"]) {
+  if (!ctas || ctas.length === 0) return "";
+
+  const t = emailBrandTokens;
+  const buttons = ctas
+    .map(
+      (c) => `<tr>
+      <td style="padding:0 0 10px">
+        <table role="presentation" cellspacing="0" cellpadding="0" style="border-collapse:collapse">
+          <tr>
+            <td style="background:${t.colors.lime};border:1px solid ${t.colors.ink};border-radius:${t.radius.card};mso-padding-alt:13px 20px">
+              <a href="${escapeHtml(c.href)}" style="display:inline-block;padding:13px 20px;font-family:${t.fonts.mono};font-size:12px;line-height:1.2;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:${t.colors.pine2};text-decoration:none">${escapeHtml(c.label)} &nbsp;&rarr;</a>
+            </td>
+          </tr>
+        </table>
+        ${
+          c.sublabel
+            ? `<p style="margin:5px 0 0;font-size:12px;line-height:1.5;color:${t.colors.muted}">${escapeHtml(c.sublabel)}</p>`
+            : ""
+        }
+      </td>
+    </tr>`,
+    )
+    .join("");
+
+  return `<table role="presentation" cellspacing="0" cellpadding="0" style="margin:28px 0 0;border-collapse:collapse">
+    ${buttons}
+  </table>`;
+}
+
+function renderQueryclearEmail(options: QueryclearEmailOptions) {
   const t = emailBrandTokens;
   const siteName = siteValue(options.site, "name");
   const siteUrl = siteValue(options.site, "url");
@@ -314,6 +349,7 @@ export function renderQueryclearEmail(options: QueryclearEmailOptions) {
                 <h1 class="qc-title" style="margin:0 0 20px;font-family:${t.fonts.display};font-size:40px;line-height:1.05;font-weight:700;letter-spacing:-0.02em;color:${t.colors.ink}">${escapeHtml(options.title)}</h1>
                 ${introHtml}
                 ${renderCta(options.cta)}
+                ${renderCtas(options.ctas)}
                 ${renderSummary(options.summary)}
                 ${renderSteps(options.steps)}
                 ${renderMachinePanel(options.machinePanel)}
@@ -345,16 +381,16 @@ export function renderAuditConfirmationEmail(lead: AuditLeadEmail, site?: EmailS
 
   return renderQueryclearEmail({
     site,
-    preheader: `We received your free AI Search Snapshot request for ${lead.business}.`,
-    eyebrow: "free AI Search Snapshot",
-    title: "Your Snapshot request is in.",
+    preheader: `We received your website inquiry for ${lead.business}.`,
+    eyebrow: "website inquiry",
+    title: "Your inquiry is in.",
     intro: [
-      `Hi ${firstName}, thanks for requesting a free AI Search Snapshot for ${lead.business}. We have your details and we are reviewing how modern search understands your site.`,
-      "Most Snapshots go out within a couple of business days. You will get a quick, plain-English review of your biggest search-readiness opportunities — and if your site needs deeper work, we will point you to the right next step.",
+      `Hi ${firstName}, thanks for reaching out about ${lead.business}. We have your details and we are taking a first look at how modern search understands your site.`,
+      "A real person will reply within a couple of business days with a few specifics about your site and a recommended next step — whether that's an upgrade to the site you have or a new build.",
     ],
     cta: {
-      label: "See a sample report",
-      href: `${siteUrl}/audit`,
+      label: "Run a free audit while you wait",
+      href: `${siteUrl}/free-audit`,
     },
     summary: [
       { label: "Business", value: lead.business },
@@ -366,29 +402,29 @@ export function renderAuditConfirmationEmail(lead: AuditLeadEmail, site?: EmailS
     steps: [
       {
         number: "01",
-        title: "We inspect the machine view",
-        body: "We test how ChatGPT, Claude, Perplexity, Gemini, and Google AI Overviews describe your business.",
+        title: "We review your site",
+        body: "We look at structure, schema, headings, service clarity, proof, crawlability, and conversion paths.",
       },
       {
         number: "02",
-        title: "We check the readable signals",
-        body: "We review structure, schema, headings, service clarity, proof, crawlability, and conversion paths.",
+        title: "We check the machine view",
+        body: "We test how ChatGPT, Claude, Perplexity, Gemini, and Google AI Overviews describe your business.",
       },
       {
         number: "03",
-        title: "You get the review",
-        body: "The Snapshot explains, in plain English, what matters most and what to fix first.",
+        title: "We send a scoped recommendation",
+        body: "A plain-English next step — upgrade or build — with what to fix first and what it takes.",
       },
     ],
     machinePanel: {
-      label: "// snapshot_queue",
+      label: "// inquiry_queue",
       lines: [
         { key: "business", value: lead.business },
         { key: "site", value: lead.website },
-        { key: "engines", value: "Google, ChatGPT, Claude, Perplexity, Gemini" },
-        { key: "output", value: "plain-English review + next steps" },
+        { key: "interest", value: lead.interest || "not specified" },
+        { key: "output", value: "scoped recommendation + next steps" },
       ],
-      status: "clear - crawlable - useful",
+      status: "received - awaiting review",
     },
     closing: "Questions? Just reply to this email - a real person will answer.",
   });
@@ -397,11 +433,11 @@ export function renderAuditConfirmationEmail(lead: AuditLeadEmail, site?: EmailS
 export function renderLeadNotificationEmail(lead: AuditLeadEmail, site?: EmailSite) {
   return renderQueryclearEmail({
     site,
-    preheader: `New AI Search Snapshot request from ${lead.business}.`,
+    preheader: `New website inquiry from ${lead.business}.`,
     eyebrow: "new lead",
-    title: "New Snapshot request.",
+    title: "New website inquiry.",
     intro: [
-      `${lead.name} requested a free AI Search Snapshot. Reply directly to start the conversation while the context is fresh.`,
+      `${lead.name} sent a website inquiry. Reply directly to start the conversation while the context is fresh.`,
     ],
     cta: {
       label: "Reply to lead",
@@ -469,6 +505,62 @@ export function renderPublicAuditLeadEmail(lead: PublicAuditLeadEmail, site?: Em
   });
 }
 
+// Prospect-facing email sent when someone unlocks their free /free-audit report.
+// Carries the headline + the prioritized fix list (the most actionable part), then
+// the paid next steps. Honest framing: the free audit is an instant read-only read;
+// the $497 audit ADDS depth — never implies they're paying for what they got free.
+export function renderPublicAuditReportEmail(
+  report: AuditReportData,
+  opts: { siteUrl: string },
+  site?: EmailSite,
+) {
+  const domain = report.domain_url;
+  const issues = report.findings.length;
+  const invisible = report.queries.filter((q) => q.cited_count === 0).length;
+  const plural = (n: number, one: string, many: string) => (n === 1 ? one : many);
+  const siteUrl = opts.siteUrl.replace(/\/$/, "");
+
+  const intro = [
+    `We ran a free AI Search Audit on ${domain}: ${issues} technical ${plural(issues, "issue", "issues")} and ${invisible} ${plural(invisible, "query", "queries")} where AI answer engines didn't cite you. Your prioritized fix list is below.`,
+  ];
+  if (report.detected_voice) {
+    intro.push(`We also picked up your brand voice — "${report.detected_voice}" — and wrote the sample fix to match it.`);
+  }
+
+  const steps = report.recommendations.slice(0, 5).map((r) => ({
+    number: String(r.rank).padStart(2, "0"),
+    title: r.title,
+    body: r.action,
+  }));
+
+  return renderQueryclearEmail({
+    site,
+    preheader: `Your AI Search Audit for ${domain}.`,
+    eyebrow: "free AI search audit",
+    title: `Your audit for ${domain}.`,
+    intro,
+    steps,
+    ctas: [
+      {
+        label: "Get the full $497 audit",
+        href: `${siteUrl}/ai-visibility-audit`,
+        sublabel: "Full prompt testing, scoring across seven layers, and a prioritized roadmap.",
+      },
+      {
+        label: "Upgrade my site",
+        href: `${siteUrl}/contact`,
+        sublabel: "Done-for-you fixes to the site you have — from $2,500.",
+      },
+      {
+        label: "Talk about a build",
+        href: `${siteUrl}/contact`,
+        sublabel: "A new, search-ready website — from $6,500.",
+      },
+    ],
+    closing: "Questions? Just reply to this email — a real person will answer.",
+  });
+}
+
 export function renderStackKitOrderEmail(order: StackKitOrderEmail, site?: EmailSite) {
   const kitName = order.kitName || site?.stackKit?.name || "The Local AI Visibility Stack";
 
@@ -508,15 +600,15 @@ export function renderAuditConfirmationText(lead: AuditLeadEmail, site?: EmailSi
   return [
     `Hi ${firstName},`,
     "",
-    `Thanks for requesting a free AI Search Snapshot for ${lead.business}. We have your details and we are reviewing how modern search understands your site.`,
+    `Thanks for reaching out about ${lead.business}. We have your details and we are taking a first look at how modern search understands your site.`,
     ...(lead.interest ? ["", `You told us you're interested in: ${lead.interest}.`] : []),
     "",
     "Here's what happens next:",
-    "1. We inspect how ChatGPT, Claude, Perplexity, Gemini, and Google AI Overviews describe your business.",
-    "2. We review structure, schema, headings, service clarity, proof, crawlability, and conversion paths.",
-    "3. We send you a quick, plain-English review of what to fix first — and the right next step if your site needs deeper work.",
+    "1. We review your site's structure, schema, headings, service clarity, proof, crawlability, and conversion paths.",
+    "2. We check how ChatGPT, Claude, Perplexity, Gemini, and Google AI Overviews describe your business.",
+    "3. We reply with a plain-English, scoped recommendation — upgrade or build — and what to fix first.",
     "",
-    `Most Snapshots go out within a couple of business days. See a sample report: ${siteUrl}/audit`,
+    `A real person will reply within a couple of business days. Want a free read right now? Run a free audit: ${siteUrl}/free-audit`,
     "",
     "Questions? Just reply to this email - a real person will answer.",
     "",

@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { MonoLabel } from "@/components/ui";
+import { MonoLabel, Cta } from "@/components/ui";
+import { SnapshotCta } from "@/components/SnapshotCta";
 import { Reveal, Stagger, StaggerItem } from "@/components/motion";
+import { site } from "@/lib/site";
 import type { AuditReportData } from "@/lib/agent-runtime";
 
 // Lowercase agent severities mapped to the site's chip palette (see AuditReport.tsx).
@@ -158,7 +160,47 @@ export function AuditReportView({ report }: { report: AuditReportData }) {
           <Draft body={report.sample_draft.body} />
         </section>
       ) : null}
+
+      <OffersCta />
     </div>
+  );
+}
+
+// Conversion block shown at the bottom of the unlocked report. The free audit
+// above is honest about being read-only/estimated; these are the paid next
+// steps. Mirrors the homepage offer-ladder logic: `need === null` navigates
+// (the $497 audit), otherwise the inquiry overlay opens in place (Upgrade/Build).
+function OffersCta() {
+  const offers = site.offers.slice(1); // drop the free audit itself
+  return (
+    <section className="card bg-pine p-7 text-paper sm:p-9">
+      <MonoLabel index="05">Fix what we found</MonoLabel>
+      <h3 className="mt-3 text-2xl text-paper sm:text-3xl">Ready to close the gaps?</h3>
+      <p className="mt-3 max-w-xl text-sm leading-relaxed text-paper/70">
+        This free audit is an instant, read-only read. When you want it fixed —
+        with full prompt testing, scoring, and done-for-you work — here&apos;s where to go.
+      </p>
+      <Stagger className="mt-7 grid gap-4 sm:grid-cols-3">
+        {offers.map((o) => (
+          <StaggerItem key={o.name} className="flex flex-col border border-paper/15 bg-pine-2/40 p-5">
+            <p className="mono-label !text-lime">{o.price}</p>
+            <h4 className="mt-2 text-lg text-paper">{o.name}</h4>
+            <p className="mt-1.5 flex-1 text-xs leading-relaxed text-paper/65">{o.desc}</p>
+            <div className="mt-4">
+              {o.need === null ? (
+                <Cta href={o.href} className="w-full">
+                  {o.cta}
+                </Cta>
+              ) : (
+                <SnapshotCta href={site.inquiryAnchor} defaultNeed={o.need} className="w-full">
+                  {o.cta}
+                </SnapshotCta>
+              )}
+            </div>
+          </StaggerItem>
+        ))}
+      </Stagger>
+    </section>
   );
 }
 
