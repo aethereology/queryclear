@@ -73,7 +73,7 @@ const faqs = [
   },
   {
     q: "Who is this for?",
-    a: "B2B SaaS teams (roughly Series A–C) who feel AI search eating into their funnel, already pay for SEO tooling, and don't have a dedicated AEO specialist to do the execution. If you're a local or service business, our done-for-you optimization track is the better fit — start with a free Snapshot.",
+    a: "B2B SaaS teams (roughly Series A–C) who feel AI search eating into their funnel, already pay for SEO tooling, and don't have a dedicated AEO specialist to do the execution. If you're a local or service business, our done-for-you optimization track is the better fit — run a free audit.",
   },
   {
     q: "What does it cost?",

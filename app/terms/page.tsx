@@ -57,7 +57,7 @@ export default function TermsPage() {
             <p>
               These terms apply when you use the queryclear website or engage our
               services. queryclear is a SparkCreatives Inc. brand. By using the
-              site or requesting a Snapshot or audit, you agree to what&apos;s below.
+              site or requesting an audit or website inquiry, you agree to what&apos;s below.
             </p>
 
             <div>
@@ -100,7 +100,7 @@ export default function TermsPage() {
             <div>
               <h2 className="text-2xl text-ink">Audits and deliverables</h2>
               <p className="mt-3">
-                A free Snapshot is provided as-is for your information and carries
+                A free audit is provided as-is for your information and carries
                 no obligation on either side. Paid engagements (such as a paid
                 audit report, a website upgrade, or a website build) are governed
                 by the specific scope, price, and terms we agree with you in

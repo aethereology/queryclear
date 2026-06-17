@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Container, MonoLabel, Cta } from "@/components/ui";
-import { SnapshotCta } from "@/components/SnapshotCta";
 import { Scorecard } from "@/components/Scorecard";
 import { TOTAL_QUESTIONS } from "@/lib/scorecard";
 import { site } from "@/lib/site";
@@ -84,12 +83,12 @@ export default function ScorecardPage() {
             <div>
               <h2 className="text-3xl text-paper sm:text-4xl">Prefer we do it for you?</h2>
               <p className="mt-3 max-w-xl text-paper/70">
-                A free AI Search Snapshot checks your live site and shows what to
+                A free AI Search audit checks your live site and shows what to
                 fix first, in plain English. The full scored audit is $497.
               </p>
             </div>
             <div className="flex flex-wrap gap-3">
-              <SnapshotCta href="/ai-visibility-audit#audit-cta">Get a free Snapshot</SnapshotCta>
+              <Cta href="/free-audit">Run a free audit</Cta>
               <Cta href="/stack-kit" variant="ghost" className="!text-paper !border-paper/30 hover:!bg-white/10">
                 Do it yourself — $97 kit
               </Cta>

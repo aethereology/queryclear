@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Container, MonoLabel, Cta } from "@/components/ui";
-import { SnapshotCta } from "@/components/SnapshotCta";
 import { Stagger, StaggerItem } from "@/components/motion";
 import { site } from "@/lib/site";
 
@@ -191,13 +190,13 @@ export default function AboutPage() {
             <div>
               <h2 className="text-3xl text-paper sm:text-4xl">See how modern search sees you.</h2>
               <p className="mt-3 max-w-xl text-paper/70">
-                Start with a free AI Search Snapshot — a plain-English review of
-                your site&apos;s biggest search-readiness opportunities. The full
+                Run a free AI Search Audit — an instant, read-only read on your
+                site&apos;s biggest search-readiness opportunities. The full
                 scored AI Search Audit is $497 if you want the deep report.
               </p>
             </div>
             <div className="flex flex-wrap gap-3">
-              <SnapshotCta href={site.primaryCta.href}>Get your free Snapshot</SnapshotCta>
+              <Cta href="/free-audit">Run a free audit</Cta>
               <Cta href="/audit" variant="ghost" className="!border-paper/30 !text-paper hover:!bg-white/10">
                 See a sample audit
               </Cta>

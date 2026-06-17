@@ -10,12 +10,16 @@ export const site = {
     "queryclear helps service businesses upgrade their websites for modern search — clearer service pages, crawlability, metadata, schema, local signals, and AI-search readiness across Google, ChatGPT, Claude, Perplexity, Gemini, and Bing Copilot.",
   parentOrg: "SparkCreatives Inc.",
   parentOrgUrl: "https://sparkcreativesinc.org",
-  // The free Snapshot is the primary action everywhere. (Renamed from "free
-  // audit" 2026-06-11 — "audit" is now the paid product.) The href is the
-  // no-JS/crawler fallback — hydrated snapshot CTAs open the <SnapshotCta>
-  // overlay instead. Root-relative so it works from any route.
-  primaryCta: { label: "Get your free AI Search Snapshot", href: "/#audit-cta" },
+  // The free AI Search Audit is the primary action everywhere — an instant,
+  // read-only automated audit at /free-audit (replaced the manual "Snapshot"
+  // lead magnet 2026-06-17; see Decisions.md). This is a real page navigation,
+  // not an overlay trigger.
+  primaryCta: { label: "Run a free AI Search Audit", href: "/free-audit" },
   secondaryCta: { label: "See what we optimize", href: "#solution" },
+  // The lead form is now only the higher-intent "edit / rebuild my website"
+  // inquiry. The two service offers (Upgrade/Build) open it via <SnapshotCta>;
+  // this root-relative anchor is the no-JS/crawler fallback for that overlay.
+  inquiryAnchor: "/#audit-cta",
   // Public contact. info@ remains a live forwarding alias; hello@ is the
   // public-facing address (deliverability update 2026-06-10).
   email: "hello@queryclear.com",
@@ -27,22 +31,23 @@ export const site = {
     "Google AI Overviews",
     "Bing Copilot",
   ],
-  // Public offer ladder (decided 2026-06-11; see Decisions.md). Free Snapshot
-  // is the lead magnet; Audit is the paid diagnostic; Upgrade is the main
-  // offer; Build is the top tier. "from" prices are floors, not quotes.
-  // `need` preselects the lead form's "What do you need?" select when the
-  // offer's CTA opens the Snapshot overlay (must match LeadForm's
-  // interestOptions — enforced by tests/snapshot-overlay.test.mjs). `null` =
-  // the CTA navigates instead of opening the overlay ($497 Audit needs its
-  // sales page before the ask).
+  // Public offer ladder (free audit replaced the manual Snapshot 2026-06-17;
+  // see Decisions.md). Free Audit is the instant lead magnet; Audit is the
+  // paid diagnostic; Upgrade is the main offer; Build is the top tier. "from"
+  // prices are floors, not quotes. `need` preselects the lead form's "What do
+  // you need?" select when the offer's CTA opens the inquiry overlay (must
+  // match LeadForm's interestOptions — enforced by
+  // tests/snapshot-overlay.test.mjs). `null` = the CTA navigates to a real
+  // route instead of opening the overlay (Free Audit → /free-audit; $497 Audit
+  // → its sales page).
   offers: [
     {
-      name: "Free AI Search Snapshot",
+      name: "Free AI Search Audit",
       price: "Free",
-      desc: "A quick plain-English review of your website's search clarity, technical foundation, and biggest opportunities.",
-      href: "#audit-cta",
-      cta: "Request my free Snapshot",
-      need: "Free AI Search Snapshot",
+      desc: "An instant, read-only audit of your site's search clarity, technical foundation, and where AI answer engines can't yet find you.",
+      href: "/free-audit",
+      cta: "Run a free audit",
+      need: null,
     },
     {
       name: "AI Search Audit",

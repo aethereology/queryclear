@@ -3,7 +3,6 @@ import Link from "next/link";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Container, Cta, MonoLabel } from "@/components/ui";
-import { SnapshotCta } from "@/components/SnapshotCta";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -38,9 +37,9 @@ export default function NotFound() {
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Cta href="/">Back to home</Cta>
-              <SnapshotCta href={site.primaryCta.href} variant="ghost" showArrow={false}>
+              <Cta href="/free-audit" variant="ghost" showArrow={false}>
                 {site.primaryCta.label}
-              </SnapshotCta>
+              </Cta>
             </div>
           </Container>
         </section>

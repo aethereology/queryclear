@@ -6,7 +6,6 @@ import { Container, MonoLabel } from "@/components/ui";
 import { Stagger, StaggerItem } from "@/components/motion";
 import { Accordion } from "@/components/Accordion";
 import { PreorderButton } from "@/components/PreorderButton";
-import { SnapshotCta } from "@/components/SnapshotCta";
 import { site } from "@/lib/site";
 
 const kit = site.stackKit;
@@ -30,7 +29,7 @@ const whoFor = [
 ];
 
 const whoSkip = [
-  "You'd rather we just do it — start with a free Snapshot, then our done-for-you work.",
+  "You'd rather we just do it — run a free audit, then our done-for-you work.",
   "You don't have time to implement changes on your own site.",
 ];
 
@@ -41,7 +40,7 @@ const faqs = [
   },
   {
     q: "What if I'd rather you just do it for me?",
-    a: "Then skip the kit. Start with a free AI Search Snapshot and we'll handle the work for you — the full done-for-you audit is $497.",
+    a: "Then skip the kit. Run a free AI Search audit and we'll handle the work for you — the full done-for-you audit is $497.",
   },
   {
     q: "Does this guarantee I'll rank or get cited by AI?",
@@ -187,13 +186,12 @@ export default function StackKitPage() {
                 ))}
               </ul>
               <p className="mt-5 text-sm">
-                <SnapshotCta
-                  variant="link"
-                  href="/ai-visibility-audit#audit-cta"
+                <Link
+                  href="/free-audit"
                   className="font-medium text-ink underline hover:text-lime-deep"
                 >
-                  Rather we did it? Start with a free Snapshot →
-                </SnapshotCta>
+                  Rather we did it? Run a free audit →
+                </Link>
               </p>
             </div>
           </Container>

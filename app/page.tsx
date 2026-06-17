@@ -13,13 +13,13 @@ import { site } from "@/lib/site";
 const whatWeBuild = [
   { t: "Modern-search-ready websites", d: "Built from the ground up with clear service pages, fast performance, useful content, and search-friendly structure." },
   { t: "Existing website optimization", d: "We tighten the pages you have: structure, content clarity, metadata, schema, internal links, local details, and conversion paths." },
-  { t: "AI Search Snapshots & Audits", d: "A quick free review of how your site reads to modern search — or a deeper scored audit with a prioritized fix roadmap." },
+  { t: "AI Search Audits", d: "A free instant audit of how your site reads to modern search — or a deeper scored audit with a prioritized fix roadmap." },
   { t: "Service page rebuilds", d: "Pages that state plainly what you do, who you serve, where, why you're credible, and what to do next." },
   { t: "Local visibility improvements", d: "We align your website, service pages, FAQs, and local business details so customers and search systems understand your market." },
 ];
 
 const steps = [
-  { n: "01", t: "Snapshot", d: "We review your site's search clarity, service pages, local signals, technical foundations, and AI-search readiness." },
+  { n: "01", t: "Audit", d: "We review your site's search clarity, service pages, local signals, technical foundations, and AI-search readiness." },
   { n: "02", t: "Plan", d: "A practical, plain-English roadmap showing what to fix first — biggest impact at the top." },
   { n: "03", t: "Build / optimize", d: "We implement: technical SEO fixes, page structure, metadata, service content, FAQs, schema where useful, speed, accessibility." },
   { n: "04", t: "Submit / measure", d: "Sitemap, robots, Search Console, and Bing Webmaster Tools setup so the site can be discovered and monitored." },
@@ -57,8 +57,8 @@ const faqs = [
     a: "It isn't separate from SEO — it's a modern version of it that accounts for AI-powered search experiences, answer summaries, and future AI agents. Traditional SEO still matters. We build on it by making your website clearer, more useful, better structured, and easier for both people and search systems to evaluate.",
   },
   {
-    q: "What do I get from the free Snapshot?",
-    a: "A quick, plain-English review of your website's biggest search-readiness opportunities. It is not a full audit. If you want a deeper scored report with prompt testing and a prioritized implementation roadmap, that's our paid AI Search Audit.",
+    q: "What do I get from the free audit?",
+    a: "An instant, read-only audit of your site: on-page technical readiness, a test of whether AI answer engines surface you for buyer-intent questions, a prioritized fix list, and a sample draft in your brand voice. If you want a deeper scored report with full prompt testing and a complete implementation roadmap, that's our paid AI Search Audit.",
   },
   {
     q: "Do I need llms.txt?",
@@ -74,7 +74,7 @@ const faqs = [
   },
   {
     q: "Can I do this myself?",
-    a: "If you're hands-on, yes — we offer a $97 DIY kit (The Local AI Visibility Stack) with our playbook and copy-paste templates so you can apply the method on your own. It's a refundable founding pre-order at queryclear.com/stack-kit. Most owners still start with the free Snapshot — it's the easiest way to see what to fix first.",
+    a: "If you're hands-on, yes — we offer a $97 DIY kit (The Local AI Visibility Stack) with our playbook and copy-paste templates so you can apply the method on your own. It's a refundable founding pre-order at queryclear.com/stack-kit. Most owners still start with the free audit — it's the easiest way to see what to fix first.",
   },
 ];
 
@@ -139,9 +139,9 @@ export default function Home() {
                 className="fade-up mt-9 flex flex-wrap items-center gap-3"
                 style={{ animationDelay: "0.24s" }}
               >
-                <SnapshotCta href={site.primaryCta.href}>
+                <Cta href={site.primaryCta.href}>
                   {site.primaryCta.label}
-                </SnapshotCta>
+                </Cta>
                 <Cta href={site.secondaryCta.href} variant="ghost">
                   {site.secondaryCta.label}
                 </Cta>
@@ -200,7 +200,7 @@ export default function Home() {
                 <h3 className="mt-3 text-xl">Done-for-you optimization</h3>
                 <p className="mt-2 flex-1 text-sm leading-relaxed text-muted">
                   We audit your site and implement the fixes — clearer service
-                  pages, schema, local signals, conversion paths. A free Snapshot,
+                  pages, schema, local signals, conversion paths. A free audit,
                   a $497 audit, a website upgrade, or a full build.
                 </p>
                 <div className="mt-5">
@@ -295,7 +295,7 @@ export default function Home() {
         {/* ── WHAT WE BUILD ────────────────────────────────── */}
         <Section id="build" index="03" label="What we build">
           <h2 className="max-w-2xl text-4xl sm:text-5xl">
-            From a quick search snapshot to a full modern-search upgrade.
+            From a free instant audit to a full modern-search upgrade.
           </h2>
           <Stagger className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {whatWeBuild.map((c) => (
@@ -307,9 +307,9 @@ export default function Home() {
             <StaggerItem className="card flex flex-col justify-between bg-pine p-6 text-paper">
               <h3 className="text-xl text-paper">Not sure where you stand?</h3>
               <div className="mt-4">
-                <SnapshotCta href={site.primaryCta.href}>
-                  Start with a free Snapshot
-                </SnapshotCta>
+                <Cta href="/free-audit">
+                  Run a free audit
+                </Cta>
               </div>
             </StaggerItem>
           </Stagger>
@@ -394,14 +394,19 @@ export default function Home() {
             <div>
               <MonoLabel index="08">Get started</MonoLabel>
               <h2 className="mt-5 text-4xl text-paper sm:text-5xl">
-                <ClipReveal lines={["Get your free", "AI Search Snapshot."]} />
+                <ClipReveal lines={["Tell us about", "your website."]} />
               </h2>
               <p className="mt-5 max-w-md leading-relaxed text-paper/70">
-                Tell us about your business and we&apos;ll review your
-                website&apos;s biggest opportunities for modern search:
-                clarity, crawlability, service pages, local signals, and
-                AI-search readiness. Free, no obligation — you get a
-                plain-English review, not a sales bot.
+                Want us to upgrade the site you have or build a new one? Tell us
+                a little about your business and what you&apos;re after. A real
+                person reads every inquiry and replies — not a sales bot.
+              </p>
+              <p className="mt-4 max-w-md text-sm leading-relaxed text-paper/55">
+                Just want a free read on your current site?{" "}
+                <a href="/free-audit" className="underline hover:text-lime">
+                  Run a free AI Search Audit
+                </a>
+                .
               </p>
             </div>
             <LeadForm />

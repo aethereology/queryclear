@@ -196,18 +196,25 @@ export function SnapshotCta({
                   </div>
                   <div className="mx-auto my-auto grid w-full max-w-6xl gap-10 px-6 pb-16 pt-2 sm:px-8 md:grid-cols-[0.9fr_1.1fr] md:items-center md:gap-12 md:pb-16 md:pt-2">
                     <div>
-                      <p className="mono-label">Free snapshot</p>
+                      <p className="mono-label">Website project</p>
                       <h2
                         id={headingId}
                         className="mt-5 text-4xl text-paper sm:text-5xl"
                       >
-                        Get your free AI Search Snapshot.
+                        Tell us about your website.
                       </h2>
                       <p className="mt-5 max-w-md leading-relaxed text-paper/70">
-                        Tell us about your business and we&apos;ll review your
-                        website&apos;s biggest opportunities for modern search:
-                        clarity, crawlability, service pages, local signals,
-                        and AI-search readiness.
+                        Whether you want us to upgrade the site you have or build
+                        a new one, tell us a little about your business and what
+                        you&apos;re after. A real person reads every inquiry and
+                        replies — usually within a couple of business days.
+                      </p>
+                      <p className="mt-4 max-w-md text-sm leading-relaxed text-paper/55">
+                        Want a free read on your current site first?{" "}
+                        <a href="/free-audit" className="underline hover:text-lime">
+                          Run a free AI Search Audit
+                        </a>
+                        .
                       </p>
                     </div>
                     <LeadForm defaultNeed={defaultNeed} />

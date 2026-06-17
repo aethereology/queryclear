@@ -126,7 +126,7 @@ export default function SchemaPage() {
           <Container className="flex flex-col items-start gap-6 md:flex-row md:items-center md:justify-between">
             <div>
               <h2 className="text-3xl text-paper sm:text-4xl">Is your schema right — or just present?</h2>
-              <p className="mt-3 max-w-xl text-paper/70">Our audit checks what schema you have, what&apos;s missing, and what&apos;s invalid. Start with a free Snapshot; the full audit is $497.</p>
+              <p className="mt-3 max-w-xl text-paper/70">Our audit checks what schema you have, what&apos;s missing, and what&apos;s invalid. Run a free audit; the full audit is $497.</p>
             </div>
             <Cta href="/ai-visibility-audit">Audit my structured data</Cta>
           </Container>

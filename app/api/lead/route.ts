@@ -266,7 +266,7 @@ async function sendEmails(lead: Lead) {
             from,
             to,
             replyTo: lead.email,
-            subject: `New AI Search Snapshot request — ${emailSubjectText(lead.business || lead.name)}`,
+            subject: `New website inquiry — ${emailSubjectText(lead.business || lead.name)}`,
             html: teamHtml(lead),
           });
           assertEmailSent(response);
@@ -283,7 +283,7 @@ async function sendEmails(lead: Lead) {
             from,
             to: lead.email,
             replyTo: to,
-            subject: "We got your Snapshot request — next steps",
+            subject: "We got your inquiry — next steps",
             html: confirmationHtml(lead),
             text: confirmationText(lead),
           });

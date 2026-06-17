@@ -8,12 +8,12 @@ import { site } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Contact",
   description:
-    "Get in touch with queryclear or request a free AI Search Snapshot. Email us or send your site details and we'll review how modern search sees your business.",
+    "Get in touch with queryclear about upgrading or rebuilding your website. Email us or send your site details and we'll review how modern search sees your business.",
   alternates: { canonical: "/contact" },
   openGraph: {
     title: "Contact queryclear",
     description:
-      "Email us or request a free AI Search Snapshot. We reply with a real review, not a sales bot.",
+      "Email us or send a website inquiry. We reply with a real review, not a sales bot.",
   },
 };
 
@@ -23,7 +23,7 @@ const contactPageSchema = {
   name: "Contact queryclear",
   url: `${site.url}/contact`,
   description:
-    "Contact queryclear or request a free AI Search Snapshot.",
+    "Contact queryclear about a website upgrade, a new build, or an audit.",
   isPartOf: { "@type": "WebSite", name: site.name, url: site.url },
 };
 
@@ -82,8 +82,12 @@ export default function ContactPage() {
               Tell us about your site. We&apos;ll tell you how modern search sees it.
             </h1>
             <p className="mt-5 max-w-2xl leading-relaxed text-muted">
-              The fastest way to start is to request a free AI Search Snapshot below.
-              Prefer email? Reach us any time at{" "}
+              Tell us about your site below and what you&apos;re after — an
+              upgrade, a new build, or an audit. Want a free read first?{" "}
+              <a href="/free-audit" className="font-medium text-ink underline hover:text-lime-deep">
+                Run a free AI Search Audit
+              </a>
+              . Prefer email? Reach us any time at{" "}
               <a href={`mailto:${site.email}`} className="font-medium text-ink underline hover:text-lime-deep">
                 {site.email}
               </a>
@@ -114,8 +118,8 @@ export default function ContactPage() {
                 ))}
               </dl>
               <p className="mt-6 text-xs leading-relaxed text-muted">
-                We use the details you send only to prepare and deliver your
-                Snapshot or audit and to reply to you. We don&apos;t sell or
+                We use the details you send only to respond to your inquiry or
+                audit and to reply to you. We don&apos;t sell or
                 share them. See our{" "}
                 <a href="/privacy" className="underline hover:text-ink">privacy policy</a>.
                 We don&apos;t guarantee rankings or AI citations.
@@ -124,7 +128,7 @@ export default function ContactPage() {
 
             {/* Form */}
             <div id="audit-cta" className="scroll-mt-20">
-              <h2 className="mb-4 text-2xl sm:text-3xl">Request a free Snapshot</h2>
+              <h2 className="mb-4 text-2xl sm:text-3xl">Tell us about your site</h2>
               <LeadForm />
             </div>
           </Container>

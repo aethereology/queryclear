@@ -112,7 +112,7 @@ export default function GeoAuditPage() {
           <Container className="flex flex-col items-start gap-6 md:flex-row md:items-center md:justify-between">
             <div>
               <h2 className="text-3xl text-paper sm:text-4xl">Ready for a straight audit?</h2>
-              <p className="mt-3 max-w-xl text-paper/70">Start with a free AI Search Snapshot. The full scored audit is $497.</p>
+              <p className="mt-3 max-w-xl text-paper/70">Run a free AI Search audit. The full scored audit is $497.</p>
             </div>
             <Cta href="/ai-visibility-audit">Get the audit</Cta>
           </Container>

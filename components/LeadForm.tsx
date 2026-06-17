@@ -25,7 +25,6 @@ const fields = [
 // Mirrors site.offers (+ the AI Search Operator early-access track); captured so
 // the intake records which offer pulled them.
 export const interestOptions = [
-  "Free AI Search Snapshot",
   "AI Search Audit ($497)",
   "Website Upgrade",
   "Modern Search Website Build",
@@ -36,15 +35,15 @@ export type InterestOption = (typeof interestOptions)[number];
 
 const DEFAULT_NOTE = (
   <>
-    Free, no obligation. We&apos;ll send a plain-English review — not a sales bot.
-    By submitting, you agree to be contacted about your request. We do not sell
-    your information.
+    No obligation. A real person reads every inquiry and replies — not a sales
+    bot. By submitting, you agree to be contacted about your request. We do not
+    sell your information.
   </>
 );
 
 export function LeadForm({
   defaultNeed = "",
-  submitLabel = "Request my free Snapshot",
+  submitLabel = "Send my project details",
   note = DEFAULT_NOTE,
 }: {
   defaultNeed?: InterestOption | "";
@@ -123,7 +122,7 @@ export function LeadForm({
             defaultValue={defaultNeed}
             className="input-halo w-full border border-line bg-paper px-3.5 py-2.5 text-sm text-ink outline-none transition-colors"
           >
-            <option value="">Not sure yet — start with the free Snapshot</option>
+            <option value="">Not sure yet — tell us about your site</option>
             {interestOptions.map((o) => (
               <option key={o} value={o}>
                 {o}

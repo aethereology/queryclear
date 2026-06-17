@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { Container, Mark } from "@/components/ui";
-import { SnapshotCta } from "@/components/SnapshotCta";
 import { companyLinks, resourceColumns, serviceColumns, type NavLink } from "@/lib/navigation";
 import { site } from "@/lib/site";
 
@@ -30,13 +29,9 @@ export function Footer() {
             <FooterSection label="Company" links={companyLinks} />
             <div className="flex flex-col gap-3">
               <span className="mono-label !text-paper/40">Get started</span>
-              <SnapshotCta
-                variant="link"
-                href={site.primaryCta.href}
-                className={`text-left ${footerLinkClass}`}
-              >
-                Free AI Search Snapshot
-              </SnapshotCta>
+              <Link href="/free-audit" className={`text-left ${footerLinkClass}`}>
+                Free AI Search Audit
+              </Link>
               <a href={`mailto:${site.email}`} className={footerLinkClass}>
                 {site.email}
               </a>

@@ -236,17 +236,19 @@ export function Scorecard() {
               <p className="mono-label text-lime-deep">[ received ]</p>
               <h3 className="text-2xl">Thanks — we&apos;ve got your scorecard.</h3>
               <p className="text-muted">
-                We&apos;ll review your site against these answers and reply with
-                your free AI Search Snapshot. No spam, no obligation.
+                We&apos;ll review your site against these answers and follow up
+                about your project. No spam, no obligation.
               </p>
             </div>
           ) : (
             <form onSubmit={onLeadSubmit} noValidate className="card mt-6 p-6 text-ink sm:p-8">
-              <h3 className="text-xl">Want this verified? Get a free Snapshot.</h3>
+              <h3 className="text-xl">Want this verified? Run a free audit.</h3>
               <p className="mt-1.5 text-sm text-muted">
-                We&apos;ll check these answers against your live site and send a
-                plain-English review of what to fix first. Your self-scorecard
-                comes with it — no obligation.
+                Email yourself this scorecard, then run our{" "}
+                <a href="/free-audit" className="font-medium text-ink underline hover:text-lime-deep">
+                  instant free audit
+                </a>{" "}
+                to check these answers against your live site — no obligation.
               </p>
 
               {/* honeypot */}
@@ -316,11 +318,11 @@ export function Scorecard() {
                     Sending…
                   </>
                 ) : (
-                  "Email me my scorecard + free Snapshot"
+                  "Email me my scorecard"
                 )}
               </button>
               <p className="mt-3 text-xs text-muted">
-                Free, no obligation. We&apos;ll send a plain-English review —
+                Free, no obligation. We&apos;ll follow up in plain English —
                 not a sales bot. We do not sell your information.
               </p>
             </form>

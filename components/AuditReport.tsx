@@ -1,5 +1,4 @@
 import { Container, MonoLabel, Cta } from "@/components/ui";
-import { SnapshotCta } from "@/components/SnapshotCta";
 import { Reveal, Stagger, StaggerItem } from "@/components/motion";
 import { CountUp } from "@/components/CountUp";
 import {
@@ -239,7 +238,7 @@ export function AuditReport({ data }: { data: AuditReportData }) {
             <div>
               <h2 className="text-3xl text-paper sm:text-4xl">Want this for your website?</h2>
               <p className="mt-3 max-w-xl text-paper/70">
-                Start with a free AI Search Snapshot. If your site needs deeper
+                Run a free AI Search audit. If your site needs deeper
                 work, we&apos;ll recommend the paid AI Search Audit — a real
                 scored report like this one, built on your verified details and
                 scored against the{" "}
@@ -250,7 +249,7 @@ export function AuditReport({ data }: { data: AuditReportData }) {
               </p>
             </div>
             <div className="flex flex-wrap gap-3">
-              <SnapshotCta href="/ai-visibility-audit#audit-cta">Request your free Snapshot</SnapshotCta>
+              <Cta href="/free-audit">Run a free audit</Cta>
               <Cta href="/scorecard" variant="ghost" className="!text-paper !border-paper/30 hover:!bg-white/10">
                 Score your own site
               </Cta>

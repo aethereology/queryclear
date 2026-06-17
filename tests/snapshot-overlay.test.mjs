@@ -52,24 +52,33 @@ test("every offer.need is null, empty, or a LeadForm interest option", () => {
   }
 });
 
-test("exactly one offer navigates instead of opening the overlay: the $497 Audit", () => {
+test("navigating offers (need === null) point at real routes, including the free audit", () => {
   const navigating = site.offers.filter((o) => o.need === null);
-  assert.equal(navigating.length, 1);
-  assert.equal(navigating[0].name, "AI Search Audit");
-  assert.equal(navigating[0].href, "/ai-visibility-audit");
+  // Free Audit + the $497 Audit both navigate (no overlay).
+  const byName = Object.fromEntries(navigating.map((o) => [o.name, o.href]));
+  assert.equal(byName["Free AI Search Audit"], "/free-audit");
+  assert.equal(byName["AI Search Audit"], "/ai-visibility-audit");
+  for (const o of navigating) {
+    assert.ok(o.href.startsWith("/"), `navigating offer "${o.name}" must link to a root-relative route`);
+  }
 });
 
-test("primaryCta.href is root-relative so it works as a fallback from any route", () => {
-  assert.equal(site.primaryCta.href, "/#audit-cta");
+test("the free top-of-funnel CTA points at the automated /free-audit tool", () => {
+  assert.equal(site.primaryCta.href, "/free-audit");
 });
 
-test("no callsite still prefixes primaryCta.href with a slash (would yield //#audit-cta)", () => {
+test("inquiryAnchor is the root-relative fallback for the lead-form overlay", () => {
+  // Offers with a `need` open the SnapshotCta overlay; this is its no-JS fallback.
+  assert.equal(site.inquiryAnchor, "/#audit-cta");
+});
+
+test("no callsite double-slashes the inquiry anchor (would yield //#audit-cta)", () => {
   const offenders = [];
   const scan = (dir) => {
     for (const entry of fs.readdirSync(path.join(projectRoot, dir), { withFileTypes: true })) {
       const rel = path.join(dir, entry.name);
       if (entry.isDirectory()) scan(rel);
-      else if (/\.tsx?$/.test(entry.name) && readSource(rel).includes("`/${site.primaryCta.href}`")) {
+      else if (/\.tsx?$/.test(entry.name) && readSource(rel).includes("`/${site.inquiryAnchor}`")) {
         offenders.push(rel);
       }
     }
@@ -96,11 +105,21 @@ test("SnapshotCta keeps its accessibility and fallback contract", () => {
   assert.match(src, /<motion\.a[\s\S]*?href=\{href\}/, "trigger must render href on an anchor");
 });
 
-test("key callsites use SnapshotCta", () => {
-  for (const rel of ["components/Header.tsx", "components/Footer.tsx", "app/page.tsx"]) {
-    assert.ok(
-      readSource(rel).includes("SnapshotCta"),
-      `${rel} should render the SnapshotCta overlay trigger`,
-    );
+test("the lead-form overlay survives on the homepage for the service offers", () => {
+  // After retiring the manual Snapshot, only the homepage Upgrade/Build offers
+  // still open the SnapshotCta overlay (they have a `need`).
+  assert.ok(
+    readSource("app/page.tsx").includes("SnapshotCta"),
+    "app/page.tsx should still render the SnapshotCta overlay trigger for the service offers",
+  );
+  const modalOffers = site.offers.filter((o) => o.need !== null);
+  assert.ok(modalOffers.length >= 1, "at least one offer should open the overlay");
+});
+
+test("Header and Footer link to the free audit instead of the retired Snapshot", () => {
+  for (const rel of ["components/Header.tsx", "components/Footer.tsx"]) {
+    const src = readSource(rel);
+    assert.ok(src.includes("/free-audit"), `${rel} should link to /free-audit`);
+    assert.ok(!/free\s*snapshot/i.test(src), `${rel} should not mention the retired free Snapshot`);
   }
 });

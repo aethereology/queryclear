@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Container, MonoLabel, Cta } from "@/components/ui";
-import { SnapshotCta } from "@/components/SnapshotCta";
 import { Stagger, StaggerItem } from "@/components/motion";
 import { Accordion } from "@/components/Accordion";
 import { site } from "@/lib/site";
@@ -95,7 +94,7 @@ export default function LocalPage() {
               understood and considered when it counts.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <SnapshotCta href="/ai-visibility-audit#audit-cta">Get your free Snapshot</SnapshotCta>
+              <Cta href="/free-audit">Run a free audit</Cta>
               <Cta href="/ai-visibility-stack" variant="ghost">See our method</Cta>
             </div>
           </Container>
@@ -160,11 +159,11 @@ export default function LocalPage() {
             <div>
               <h2 className="text-3xl text-paper sm:text-4xl">See how modern search sees your local business.</h2>
               <p className="mt-3 max-w-xl text-paper/70">
-                A free Snapshot shows what to fix first, in plain English. The
+                A free audit shows what to fix first, in plain English. The
                 full scored audit is $497.
               </p>
             </div>
-            <SnapshotCta href="/ai-visibility-audit#audit-cta">Get your free Snapshot</SnapshotCta>
+            <Cta href="/free-audit">Run a free audit</Cta>
           </Container>
         </section>
       </main>

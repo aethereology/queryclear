@@ -164,7 +164,7 @@ export default function StackPage() {
             <div>
               <h2 className="text-3xl text-paper sm:text-4xl">See your stack scored.</h2>
               <p className="mt-3 max-w-xl text-paper/70">
-                Start with a free AI Search Snapshot. The full $497 audit scores
+                Run a free AI Search Audit. The full $497 audit scores
                 your site against all seven layers and shows what to fix first.
               </p>
             </div>

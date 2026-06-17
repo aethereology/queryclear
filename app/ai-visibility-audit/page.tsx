@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Container, MonoLabel, Cta } from "@/components/ui";
-import { SnapshotCta } from "@/components/SnapshotCta";
 import { Stagger, StaggerItem } from "@/components/motion";
 import { Accordion } from "@/components/Accordion";
 import { LeadForm } from "@/components/LeadForm";
@@ -11,7 +10,7 @@ import { site } from "@/lib/site";
 export const metadata: Metadata = {
   title: "AI Search Audit",
   description:
-    "See how clearly modern search understands your business. The queryclear AI Search Audit scores your site across seven readiness categories with a prioritized, plain-English fix roadmap. Start with a free AI Search Snapshot; the full scored audit is $497.",
+    "See how clearly modern search understands your business. The queryclear AI Search Audit scores your site across seven readiness categories with a prioritized, plain-English fix roadmap. Run a free instant audit first; the full scored audit is $497.",
   alternates: { canonical: "/ai-visibility-audit" },
   openGraph: {
     title: "AI Search Audit — queryclear",
@@ -38,13 +37,13 @@ const receive = [
 ];
 
 const steps = [
-  { t: "You submit", d: "Tell us your site and a little about your business — takes about two minutes. The Snapshot is free." },
-  { t: "We review", d: "You get a plain-English Snapshot of your biggest opportunities. Want depth? The $497 audit runs AI-visibility tests and scores all seven layers." },
+  { t: "Run a free audit", d: "Enter your site at /free-audit and get an instant, read-only read on your biggest opportunities — no form, no wait." },
+  { t: "Go deeper", d: "Want the full picture? The $497 audit runs AI-visibility tests and scores all seven layers with a prioritized roadmap." },
   { t: "You get the roadmap", d: "The audit report explains what matters, what's missing, and what to fix first — in plain English." },
 ];
 
 const faqs = [
-  { q: "How much does it cost?", a: "The AI Search Snapshot is free — a quick plain-English review of your biggest opportunities. The full AI Search Audit, with scoring, prompt testing, and a prioritized fix roadmap, is $497." },
+  { q: "How much does it cost?", a: "The free AI Search Audit at /free-audit is free — an instant, read-only read on your biggest opportunities. The full AI Search Audit, with scoring, prompt testing, and a prioritized fix roadmap, is $497." },
   { q: "How long does it take?", a: "Submitting the form takes about two minutes. We usually send your findings within a couple of business days." },
   { q: "Do you guarantee I'll rank or get cited?", a: "No — and you should distrust anyone who does. We make your site genuinely clearer and more trustworthy to search and AI systems. That's the part we control, and we do it well." },
   { q: "What do you need from me?", a: "Your website URL and a few real details about your business. We only ever work from accurate, verified information." },
@@ -117,10 +116,10 @@ export default function AuditLandingPage() {
               for a business like yours, do you show up — clearly and
               accurately? The AI Search Audit scores your site across seven
               readiness categories and gives you a prioritized fix roadmap. Not
-              sure yet? Start with the free AI Search Snapshot.
+              sure yet? Run a free instant audit first.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <SnapshotCta href="#audit-cta">Start with a free Snapshot</SnapshotCta>
+              <Cta href="/free-audit">Run a free audit</Cta>
               <Cta href="/audit" variant="ghost">See a sample report</Cta>
             </div>
           </Container>
@@ -218,14 +217,17 @@ export default function AuditLandingPage() {
         <section id="audit-cta" className="scroll-mt-20 bg-pine py-20 text-paper">
           <Container className="grid gap-10 md:grid-cols-[1fr_1.1fr] md:items-start">
             <div>
-              <h2 className="text-3xl text-paper sm:text-4xl">Get your free AI Search Snapshot.</h2>
+              <h2 className="text-3xl text-paper sm:text-4xl">Request your AI Search Audit.</h2>
               <p className="mt-4 max-w-md text-paper/70">
-                Tell us about your site and we&apos;ll review your biggest
-                modern-search opportunities — in plain English. Free, no
-                obligation. The full scored AI Search Audit is $497.
+                Tell us about your site and we&apos;ll scope the full $497 scored
+                audit. Prefer a free read first?{" "}
+                <a href="/free-audit" className="underline hover:text-lime">
+                  Run a free audit
+                </a>
+                .
               </p>
             </div>
-            <LeadForm />
+            <LeadForm defaultNeed="AI Search Audit ($497)" submitLabel="Request my audit" />
           </Container>
         </section>
       </main>
