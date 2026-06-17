@@ -17,10 +17,13 @@ Update the "Current state" line whenever it changes.
 - Product = **modern SEO for the AI search era** (formerly pitched as "GEO, the
   next layer on SEO" — repositioned 2026-06-11 after Google's official guidance).
   Sells readiness, not guarantees.
-- Offer ladder (public since 2026-06-11): free AI Search Snapshot → AI Search
-  Audit **$497** → Website Upgrade from $2,500 → Modern Search Website Build from
-  $6,500 → (later) care plan. "Free audit" naming is dead; the free thing is a
-  **Snapshot**, "audit" = paid product only.
+- Offer ladder (public): **free AI Search Audit (`/free-audit`, automated/instant)**
+  → AI Search Audit **$497** → Website Upgrade from $2,500 → Modern Search Website
+  Build from $6,500 → (later) care plan. **Updated 2026-06-17:** the manual "AI Search
+  Snapshot" free tier was retired in favour of the automated `/free-audit` tool — the
+  free thing is now an instant read-only **audit**, and "$497 audit" is the deeper paid
+  product. (Earlier note "free audit naming is dead; the free thing is a Snapshot" is
+  reversed.)
 
 ## Repo facts
 
@@ -41,7 +44,40 @@ Update the "Current state" line whenever it changes.
 
 ## Current state (update this line)
 
-2026-06-15 (latest) — TWO-TRACK REPOSITION: AI SEARCH OPERATOR BUILT IN CODE (NOT
+2026-06-17 (latest) — SNAPSHOT RETIRED + FREE-AUDIT UNLOCK MONETIZED — SHIPPED TO
+PROD (commits f4e7e36 "retire AI Search Snapshot" + c300757 "monetize free-audit
+unlock", pushed to origin/main → Vercel prod READY, smoke-checked queryclear.com:
+/ + /free-audit 200, home links /free-audit, no "free snapshot" in home HTML).
+Context: the public `/free-audit` lead magnet (automated, instant, read-only audit;
+separate Vercel Python `agent-runtime` project; Upstash Redis rate-limit + daily
+spend cap; Resend email gate) had already shipped and "worked great". This session
+did two things. (1) RETIREMENT: replaced the manual "AI Search Snapshot" free offer
+with `/free-audit` everywhere — sitewide free CTAs are now plain links to
+`/free-audit` (Header "Free audit", Footer, hero, all ~18 service/guide pages); the
+`SnapshotCta` overlay (name kept) now serves ONLY the homepage Website Upgrade/Build
+offers, reframed as the "edit/rebuild my website" inquiry; `site.primaryCta` →
+`/free-audit`; added `site.inquiryAnchor = "/#audit-cta"` (overlay fallback);
+`site.offers[0]` is now "Free AI Search Audit"; `LeadForm.interestOptions` dropped
+"Free AI Search Snapshot"; lead confirmation/notification emails reframed as a
+"website inquiry" (dropped the "we'll email you in a couple days" line — the free
+audit is instant); rewrote `tests/snapshot-overlay.test.mjs` to the new contract.
+(2) MONETIZED THE UNLOCK: the unlocked `/free-audit` report ends with the three
+paid-offer CTAs ($497 → /ai-visibility-audit; Upgrade/Build open the inquiry overlay
+in place); on unlock the prospect is now emailed their audit (summary + prioritized
+fix list + three clickable offer CTAs) via new `renderPublicAuditReportEmail` —
+team still notified; extended the email builder with a stacked `ctas[]` option; added
+`tests/public-audit-email.test.mjs`. Honesty held: the $497 tier is framed as ADDING
+depth (asserted in test), never as paying for the free read. VERIFIED: lint ✅,
+build ✅ 32 routes, test ✅ **56/56**; browser-checked the homepage CTAs + the
+surviving Upgrade/Build inquiry modal; sent a real sample prospect email via Resend
+(noticed the Resend plan shows a low daily quota — founder will upgrade when needed).
+Docs reconciled this session (CLAUDE.md §1/§2, memory.md, Decisions.md ADR, readme,
+product_spec, roadmap, tasks, start_here, UI_direction, page-template, BUILD_QUEUE,
+stack-kit-demand-test, DEPLOY-free-audit). NOTE: dated entries below predate this and
+describe the Snapshot as the live free offer — historical, not current. Open next:
+Resend plan upgrade before real volume; DMARC → p=quarantine ~2026-06-24.
+
+2026-06-15 — TWO-TRACK REPOSITION: AI SEARCH OPERATOR BUILT IN CODE (NOT
 yet committed/deployed). The founder declared `queryclearagent` (the autonomous
 SEO/AEO/GEO operator) the real pivot and the manual audit commoditized. Decision
 (founder, this session; ADR in Decisions.md): run TWO tracks — keep the local

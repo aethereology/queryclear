@@ -63,17 +63,19 @@ call, run the Python side with `vercel dev` in `services/agent-runtime` (serves
 `/api/audit`). The plain `uvicorn ...serve:build_app` server exposes `/audit` (no
 `/api` prefix) — fine for direct testing, but the web client calls `/api/audit`.
 
-## Deferred — retire the "AI Search Snapshot" (founder-reviewed pass)
+## Done — shipped 2026-06-17 (commits f4e7e36 + c300757)
 
-Per the positioning decision, the free Snapshot is being retired in favour of this
-tool. That's a **test-coupled** change (`tests/snapshot-overlay.test.mjs` asserts
-`primaryCta.href === "/#audit-cta"`, that exactly the $497 Audit navigates, and that
-Header/Footer/homepage render `SnapshotCta`). Done so far: `/free-audit` is live and
-linked in nav (Resources → "Free AI Search Audit"). Remaining, as a reviewed pass:
-- `lib/site.ts` — repoint `primaryCta` + the free `offers[0]` to `/free-audit`.
-- `components/Header.tsx` / `Footer.tsx` — change the prominent "Free Snapshot" CTA to
-  "Free audit" → `/free-audit`.
-- `components/LeadForm.tsx` + `SnapshotCta.tsx` — reframe the form/overlay copy to the
-  "edit / rebuild my website" inquiry; drop the "Free AI Search Snapshot" interest option.
-- Per-page prose that mentions the free Snapshot (~12 pages).
-- Update `tests/snapshot-overlay.test.mjs` to the new architecture.
+The manual "AI Search Snapshot" is retired; the free offer is now this instant
+`/free-audit` tool. What shipped:
+- Free CTAs sitewide are now plain links to `/free-audit` (Header, Footer, homepage
+  hero, all service/guide pages). `site.primaryCta` points to `/free-audit`;
+  `site.offers[0]` is "Free AI Search Audit". The `SnapshotCta` overlay (component
+  name unchanged) now serves only the homepage Website Upgrade/Build inquiry.
+- The lead form + its confirmation/notification emails were reframed to a "website
+  inquiry" (no longer a Snapshot request); the dishonest "we'll email you in a couple
+  business days" framing was dropped (the free audit is instant).
+- On unlock, the prospect is emailed their audit (headline summary + prioritized fix
+  list + the three clickable paid-offer CTAs) via `renderPublicAuditReportEmail`; the
+  team is still notified. The unlocked report ends with the three paid-offer CTAs.
+- `tests/snapshot-overlay.test.mjs` was rewritten to the new contract and
+  `tests/public-audit-email.test.mjs` was added; suite is now 56/56.

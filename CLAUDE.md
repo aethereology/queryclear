@@ -23,7 +23,7 @@ We sell *readiness*, not outcomes. **Never** promise rankings or AI citations.
   copy/schema (decided 2026-06-11; see Decisions.md).
 - Our own site IS our first case study, so it must be a flawless GEO example.
 - **Two tracks (since 2026-06-15; see Decisions.md):** (1) the **done-for-you
-  local/service track** (Snapshot → $497 audit → Upgrade → Build), and (2) the
+  local/service track** (free `/free-audit` → $497 audit → Upgrade → Build), and (2) the
   **AI Search Operator** — the recurring agentic offering for **B2B SaaS**, powered
   by the separate `queryclearagent` product, launched as a founder-led **early-access
   / design-partner program**. The operator is **Review-mode / human-approved /
@@ -31,11 +31,37 @@ We sell *readiness*, not outcomes. **Never** promise rankings or AI citations.
 
 ## 2. Ground-truth state (keep this section current)
 
-> Last verified: 2026-06-15. If you change the site, update this section and
+> Last verified: 2026-06-17. If you change the site, update this section and
 > `memory.md` at the end of your session.
 
 - **LIVE** at https://www.queryclear.com (apex 307 → www). Deployed on Vercel
   (team `sparkcreativesinc`, project `queryclear`; CLI needs `--scope sparkcreativesinc`).
+- **SNAPSHOT RETIRED → `/free-audit` IS THE FREE TOP-OF-FUNNEL — SHIPPED 2026-06-17
+  (commits f4e7e36 + c300757, pushed to main → prod READY, smoke-checked):** the
+  manual "AI Search Snapshot" is gone. The free offer is now the **automated, instant,
+  read-only audit at `/free-audit`** (a separate Vercel Python project — the
+  `agent-runtime` audit — called server-to-server; guarded by Upstash Redis per-IP
+  rate-limit + a daily spend cap; the unlock email gate captures the free-tier lead).
+  Sitewide free CTAs (Header "Free audit", Footer, hero, every service/guide page) are
+  now **plain links to `/free-audit`**. The `SnapshotCta` overlay (component name kept)
+  now serves ONLY the homepage **Website Upgrade / Build** offers — reframed as the
+  "edit / rebuild my website" inquiry. `site.primaryCta` → `/free-audit`;
+  `site.inquiryAnchor = "/#audit-cta"` is the overlay's no-JS fallback; `site.offers[0]`
+  is now "Free AI Search Audit" (href `/free-audit`, `need: null`);
+  `LeadForm.interestOptions` dropped "Free AI Search Snapshot"; the lead-form
+  confirmation/notification emails are reframed as a **website inquiry** (no more
+  "we'll email you in a couple days" — the free audit is instant). **Offer ladder is
+  now: Free AI Search Audit (`/free-audit`) → AI Search Audit $497 → Upgrade from
+  $2,500 → Build from $6,500.** **MONETIZED THE UNLOCK (commit c300757):** the unlocked
+  `/free-audit` report ends with the three paid-offer CTAs ($497 → `/ai-visibility-audit`;
+  Upgrade/Build open the inquiry overlay in place), and on unlock the prospect is now
+  emailed their audit (summary + prioritized fix list + the three offer CTAs) via
+  `renderPublicAuditReportEmail` — team still notified. Email builder gained a stacked
+  `ctas[]` option. Tests: `tests/snapshot-overlay.test.mjs` rewritten to the new
+  contract + new `tests/public-audit-email.test.mjs`; suite is **56/56**. The $497
+  `/ai-visibility-audit` page and the `/audit` static sample are unchanged real,
+  separate deliverables. **⚠️ The dated entries below predate this and describe the
+  Snapshot as the live free offer — they are historical, NOT current.**
 - **SHIPPED 2026-06-15 (commit a97f995, `vercel --prod`):** the **AI Search
   Operator** track (two-track reposition) and the **med-spa vertical** are now LIVE
   (`/ai-search-operator`, `/med-spa-ai-search-optimization`) — smoke-checked 200,
@@ -84,8 +110,10 @@ We sell *readiness*, not outcomes. **Never** promise rankings or AI citations.
   LeadForm ids are `useId`-prefixed (overlay + embedded form can coexist).
   Verified: lint clean, 52/52 tests (new `tests/snapshot-overlay.test.mjs`),
   build 29 routes, Playwright a11y pass (dialog/Escape/focus-return/Tab-trap/
-  scroll-lock/ctrl-click-new-tab). **When adding any future snapshot CTA, use
-  `SnapshotCta`, not `Cta`/`Link`.**
+  scroll-lock/ctrl-click-new-tab). ~~**When adding any future snapshot CTA, use
+  `SnapshotCta`, not `Cta`/`Link`.**~~ **SUPERSEDED 2026-06-17:** free CTAs are now
+  plain links to `/free-audit`; `SnapshotCta` is only for the homepage Upgrade/Build
+  inquiry (see the 2026-06-17 entry at the top of this section).
 - **REPOSITIONED 2026-06-11 — DEPLOYED TO PROD same day** (commit b312cb8,
   `vercel --prod`; prod smoke-checked: $497 + Snapshot live on /, zero stale
   Aethelo/$750 strings, /thank-you 200 + noindex + not in sitemap, /audit
@@ -207,8 +235,9 @@ We sell *readiness*, not outcomes. **Never** promise rankings or AI citations.
 - **Model = audit-first**; the $97 kit is only a demand test (T14), product deferred
   until validated. Do not build the kit contents yet.
 - **Pricing — SUPERSEDED 2026-06-11:** audit is now **$497 flat** with a public
-  four-tier offer ladder (Snapshot free / Audit $497 / Upgrade from $2,500 / Build
-  from $6,500). The old "starting at $750, other prices private" gate is closed.
+  four-tier offer ladder (free `/free-audit` / Audit $497 / Upgrade from $2,500 / Build
+  from $6,500; the free tier was the manual "Snapshot" until 2026-06-17 — now the
+  automated `/free-audit`). The old "starting at $750, other prices private" gate is closed.
 
 ## 3. Conventions — reuse these, don't reinvent
 

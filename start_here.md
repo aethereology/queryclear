@@ -26,9 +26,10 @@ conversion strategy (llms.txt only as an optional supplemental file). We do
 
 ## The money ladder (how this pays the bills)
 
-> **free AI Search Snapshot** (lead) → **AI Search Audit** ($497, fast yes for
-> local business owners) → **Website Upgrade** (from $2,500) / **Build** (from
-> $6,500) → **Aethelo automation systems** (internal upsell, the real margin)
+> **free AI Search Audit** (`/free-audit`, instant, lead) → **AI Search Audit**
+> ($497, fast yes for local business owners) → **Website Upgrade** (from $2,500) /
+> **Build** (from $6,500) → **Aethelo automation systems** (internal upsell, the
+> real margin)
 
 The $497 audit is the low-friction front door. First check comes from a **local
 business owner who's invisible in AI answers** — not from a custom automation buyer.
@@ -38,7 +39,10 @@ business owner who's invisible in AI answers** — not from a custom automation 
 Ground truth lives in **`CLAUDE.md` §2** (kept current every session) — don't
 duplicate it here. Headlines: site is **LIVE** at https://www.queryclear.com,
 repositioned 2026-06-11 ("Modern SEO for the AI search era"), first real client
-audit report delivered 2026-06-10 (Maple Bear St. Johns).
+audit report delivered 2026-06-10 (Maple Bear St. Johns). **2026-06-17 SHIPPED:**
+the manual "AI Search Snapshot" is retired — the free offer is now the automated,
+instant, read-only **free AI Search Audit at `/free-audit`** (email gate to unlock;
+unlocked report shows the three paid offers and is emailed to the prospect).
 
 ## Current priority
 

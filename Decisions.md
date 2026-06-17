@@ -5,6 +5,35 @@ Format: date · decision · rationale · status.
 
 ---
 
+## 2026-06-17 · Retire the manual "AI Search Snapshot"; `/free-audit` is the free top-of-funnel
+- **Decision:** The manual, human-delivered **"AI Search Snapshot"** free offer is
+  **retired**. The free top-of-funnel is now the automated, instant, read-only
+  **AI Search Audit at `/free-audit`** (the public lead magnet backed by the
+  `agent-runtime` Python audit; Upstash Redis rate-limit + daily spend cap; Resend
+  email gate that captures the free-tier lead). Sitewide free CTAs become plain links
+  to `/free-audit`; the `SnapshotCta` overlay (component name kept) is repurposed as
+  the higher-intent **"edit / rebuild my website" inquiry**, used only by the homepage
+  **Website Upgrade / Build** offers. The four-tier ladder is unchanged in shape, only
+  its free rung: **Free AI Search Audit (`/free-audit`) → Audit $497 → Upgrade from
+  $2,500 → Build from $6,500.** Additionally, the unlocked report and a new
+  prospect-facing email now carry the three paid-offer CTAs (monetizing the unlock).
+- **Rationale:** The automated `/free-audit` shipped and proved out, making the manual
+  Snapshot redundant and slower. Folding the free tier into the instant tool removes
+  the free-audit/Snapshot naming split, captures the lead automatically (email + domain),
+  reframes the lead form for genuinely higher-intent work, and turns the unlock — peak
+  intent — into a monetization moment. Founder directed the full retirement + the
+  unlock-monetization 2026-06-17.
+- **Honesty constraint (binding):** the `/free-audit` tool is an instant, read-only
+  read with engine-visibility results shown as modeled estimates (clearly marked); the
+  **$497** audit must always be framed as *adding* depth (full prompt testing, scoring,
+  prioritized roadmap), never as paying for what was just received free. No guaranteed
+  rankings/citations. Reframed emails drop any "we'll review and email you in a couple
+  days" language (the free read is immediate).
+- **Status:** Adopted and **SHIPPED** to prod 2026-06-17 (commits f4e7e36 + c300757).
+  Amends the 2026-06-11 pricing ADR (the "Free Snapshot" rung is now the automated
+  `/free-audit`) and supersedes the 2026-06-12 "use `SnapshotCta` for every free CTA"
+  guideline (free CTAs are now plain `/free-audit` links).
+
 ## 2026-06-15 · Two-track reposition: add the agentic "AI Search Operator"
 - **Decision:** queryclear now runs **two tracks**, not one. (1) The existing
   **done-for-you local/service track** (Snapshot → $497 audit → Upgrade → Build)

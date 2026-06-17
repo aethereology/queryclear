@@ -15,7 +15,7 @@ reality + operator execution**. The site's job is to (1) make that credible to a
 skeptical local business owner, and (2) feed the money ladder
 (public ladder repositioned 2026-06-11 — see `Decisions.md`):
 
-> **free AI Search Snapshot (lead)** → **paid AI Search Audit ($497)**
+> **free AI Search Audit (`/free-audit`, lead)** → **paid AI Search Audit ($497)**
 > → **Website Upgrade (from $2,500) / Build (from $6,500)**
 > → **Aethelo automation (internal upsell — not public-facing)**.
 
@@ -55,8 +55,8 @@ These forks change *what* gets built. If a gate is open, do not build past it.
 - **GATE-MODEL** — ✅ CLOSED → **audit-first; $97 kit deferred**. The kit is only a
   demand test (T14 landing page + waitlist); product build waits on validation.
 - **GATE-PRICING** — ✅ CLOSED, then **SUPERSEDED 2026-06-11** → audit is **$497
-  flat** with a public four-tier offer ladder (Snapshot free / Audit $497 /
-  Upgrade from $2,500 / Build from $6,500). The old "starting at $750,
+  flat** with a public four-tier offer ladder (free AI Search Audit `/free-audit` /
+  Audit $497 / Upgrade from $2,500 / Build from $6,500). The old "starting at $750,
   other prices private" rule is retired. See `Decisions.md` 2026-06-11.
 
 ---
@@ -77,7 +77,7 @@ audit + lead flow + SEO/AI-search infra). See `CLAUDE.md` §2 for current state.
       from public copy 2026-06-11)
 - T2  `/contact` (real contact path + form)
 - T3  `/privacy` and `/terms` (data use + no-guarantee language)
-- T4  Footer + nav links to all of the above; persistent free-Snapshot CTA
+- T4  Footer + nav links to all of the above; persistent free-audit CTA (`/free-audit`)
 **Exit:** footer-complete site; every page reachable; trust signals present.
 
 ### Phase 2 — Proof & methodology  *(highest sales leverage)*

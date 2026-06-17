@@ -32,7 +32,7 @@ vague hype. Concrete claims, plain words, real benefits.
 ## Landing page structure (from the brief)
 
 1. **Hero** — headline + subheadline (modern SEO for the AI search era) +
-   primary CTA "Get your free AI Search Snapshot" (= `site.primaryCta`) +
+   primary CTA "Get your free AI Search Audit" → `/free-audit` (= `site.primaryCta`) +
    secondary "See what we optimize"
 2. **Problem** — businesses going invisible in AI answers; sites unclear to AI;
    generic SEO isn't enough
@@ -42,15 +42,17 @@ vague hype. Concrete claims, plain words, real benefits.
    service-page rebuilds · local AI visibility
 5. **How It Works** — Audit → Plan → Build/Optimize → Submit/Index → Monitor
 6. **Deliverables** — the checklist (see product_spec.md)
-7. **Offer ladder** — the public four tiers from `site.offers` (Snapshot free /
-   Audit $497 / Upgrade from $2,500 / Build from $6,500) — live on / since 2026-06-11
-8. **CTA** — "Get your free AI Search Snapshot"
+7. **Offer ladder** — the public four tiers from `site.offers` (free AI Search Audit
+   `/free-audit` / Audit $497 / Upgrade from $2,500 / Build from $6,500) — live on /
+   since 2026-06-11
+8. **CTA** — "Get your free AI Search Audit" → `/free-audit`
 
 ## Conversion priorities
 
 - Primary CTA above the fold and repeated at the bottom.
-- The free Snapshot is the hook — make it the loudest action. ("Audit" = the
-  paid $497 product; never call the free offer an audit.)
+- The free AI Search Audit (`/free-audit`) is the hook — make it the loudest
+  action. The free CTA is a plain link to `/free-audit`; the `SnapshotCta` overlay
+  is reserved for the homepage Website Upgrade/Build inquiry.
 - Lead form short and accessible (fields in product_spec.md).
 
 ## Quality bar (non-negotiable — see test_plan.md)

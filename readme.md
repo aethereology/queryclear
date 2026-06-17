@@ -17,8 +17,9 @@ queryclear is a **SparkCreatives Inc.** brand.
 
 ## What we do
 
-- **Free AI Search Snapshot** — a quick plain-English review of your site's
-  search clarity, technical foundation, and biggest opportunities.
+- **Free AI Search Audit** (`/free-audit`) — an instant, read-only review of your
+  site's search clarity, technical foundation, and biggest opportunities; unlock
+  the full report by email.
 - **AI Search Audit ($497)** — a deeper scored report: prompt testing, page
   review, technical findings, local visibility review, and a prioritized fix
   roadmap.

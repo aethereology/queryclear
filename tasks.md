@@ -79,6 +79,18 @@ Short living board. Strategy lives in `roadmap.md`; the executable cards live in
   cross-links it. build ✅ 30 routes · lint ✅ · test ✅ 52/52. **Founder-gated:**
   commit/push + `vercel --prod --scope sparkcreativesinc` to ship.
 
+## ✅ Free AI Search Audit SHIPPED to production (2026-06-17, commits f4e7e36 + c300757)
+- Manual "AI Search Snapshot" RETIRED → replaced by the automated, instant, read-only
+  **free AI Search Audit at `/free-audit`** (agent-runtime Python audit on Vercel;
+  Upstash Redis per-IP rate-limit + daily spend cap; email gate unlocks the full report).
+- Free CTAs sitewide are now plain links to `/free-audit`; `site.primaryCta` →
+  `/free-audit`, `site.offers[0]` = "Free AI Search Audit". `SnapshotCta` overlay now
+  serves only the homepage Upgrade/Build inquiry; lead form reframed to a website inquiry.
+- On unlock the prospect is emailed their audit (summary + prioritized fixes + the three
+  paid-offer CTAs) via `renderPublicAuditReportEmail`; team still notified. Unlocked
+  report ends with the three paid offers. Tests now 56/56 (snapshot-overlay rewritten +
+  new `tests/public-audit-email.test.mjs`).
+
 ## 🔄 Now — founder + next
 - ✅ Stripe webhook REGISTERED in Dashboard (founder, 2026-06-11). Verified:
   prod env has all STRIPE_* vars; unsigned POST → 400 (sig check active).

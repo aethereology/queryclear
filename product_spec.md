@@ -19,10 +19,10 @@ Operator** track — see the dedicated section below.
 Names and prices below are canonical and must match `site.offers` in `lib/site.ts`.
 "From" prices are floors, not quotes; scopes confirmed in writing.
 
-### 1. Free AI Search Snapshot — *the lead magnet*
-A quick plain-English review of the site's search clarity, technical foundation,
-and biggest opportunities. The free offer is ALWAYS called the **Snapshot** —
-"audit" refers exclusively to the paid product.
+### 1. Free AI Search Audit — *the lead magnet*
+An instant, automated, read-only review at the route `/free-audit` (backed by the
+agent-runtime audit) of the site's search clarity, technical foundation, and
+biggest opportunities. The prospect unlocks the full report via an email gate.
 - **Price:** Free.
 
 ### 2. AI Search Audit — *the paid diagnostic / front door*

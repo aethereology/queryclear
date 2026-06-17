@@ -74,5 +74,6 @@ Whatever happens, honor the page's promise: ship ≤30 days or refund automatica
 
 - Never promise rankings or AI citations.
 - "Pre-order," not "buy now." Always restate refundable + ship window.
-- The kit is the funnel, not the headline — the free Snapshot → $497 audit motion
-  stays primary (GATE-MODEL). Don't let kit promotion crowd out the audit.
+- The kit is the funnel, not the headline — the free AI Search Audit (`/free-audit`)
+  → $497 audit motion stays primary (GATE-MODEL). Don't let kit promotion crowd out
+  the audit.

@@ -25,7 +25,7 @@ SparkCreatives Inc. relationship (plain language; Aethelo dropped from public
 copy 2026-06-11 — `site.parentOrgUrl` = sparkcreativesinc.org) · operating
 principles · no-guarantee philosophy · contact CTA.
 **Schema:** WebPage + BreadcrumbList. (AboutPage type optional.)
-**Links:** SparkCreatives Inc. (`site.parentOrgUrl`), `/contact`, free-Snapshot CTA.
+**Links:** SparkCreatives Inc. (`site.parentOrgUrl`), `/contact`, free-audit CTA (`/free-audit`).
 **Accept:** names the company relationship clearly; builds human trust; passes page checklist.
 
 ## T2 — /contact ✅ done 2026-06-03 (app/contact/page.tsx; ContactPage+ContactPoint+BreadcrumbList; LeadForm; in sitemap+llms+nav+footer). Note: re-add privacy link in T3.
@@ -46,7 +46,7 @@ service limitations · standard privacy terms. Plain English.
 ## T4 — Footer + nav wiring ✅ done 2026-06-03 (Company group = About/Contact/Privacy/Terms; nav has About+Contact; free-Snapshot CTA persistent). Services/Resources footer groups deferred until those pages exist (T5+).
 **Phase 1.** Update `components/Footer.tsx` (and `Header.tsx` nav) so every new page
 is reachable. Footer groups: Company (About, Contact, Privacy, Terms), Services,
-Resources (per `roadmap.md` nav plan). Keep the free-Snapshot CTA persistent.
+Resources (per `roadmap.md` nav plan). Keep the free-audit CTA (`/free-audit`) persistent.
 **Accept:** homepage links to ≥3 deeper pages; no orphan pages; nav consistent across site.
 
 ## T5 — /ai-visibility-stack ✅ done 2026-06-03 (7-layer method page; WebPage+BreadcrumbList; in sitemap+llms+nav+footer)
