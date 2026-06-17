@@ -9,7 +9,7 @@ import { Container, MonoLabel, Cta } from "@/components/ui";
 export const metadata: Metadata = {
   title: "Request received",
   description:
-    "Thanks — we received your request. We'll review your website and follow up with your free AI Search Snapshot.",
+    "Thanks — we received your request. We'll review your website and follow up about your project.",
   alternates: { canonical: "/thank-you" },
   robots: { index: false, follow: true },
 };
@@ -27,9 +27,8 @@ export default function ThankYouPage() {
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted">
               We&apos;ll review the website details you submitted and follow up
-              with your free AI Search Snapshot — a plain-English look at your
-              site&apos;s clarity, crawlability, service pages, local signals,
-              and AI-search readiness.
+              about your project — a plain-English look at what we&apos;d
+              upgrade or rebuild, and how we&apos;d approach it.
             </p>
             <p className="mt-4 max-w-xl leading-relaxed text-muted">
               In the meantime, you can see how we evaluate modern-search
