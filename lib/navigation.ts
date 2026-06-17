@@ -95,6 +95,11 @@ export const resourceColumns: NavColumn[] = [
     eyebrow: "Tools & proof",
     links: [
       {
+        href: "/free-audit",
+        label: "Free AI Search Audit",
+        desc: "Run an instant, read-only audit — see where AI answer engines can't find you.",
+      },
+      {
         href: "/scorecard",
         label: "Free scorecard",
         desc: "Self-grade your site against the same 100-point rubric.",

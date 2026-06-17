@@ -430,6 +430,45 @@ export function renderLeadNotificationEmail(lead: AuditLeadEmail, site?: EmailSi
   });
 }
 
+export type PublicAuditLeadEmail = {
+  email: string;
+  domainUrl: string;
+  source: "report-unlock" | "capacity-gate";
+};
+
+// Team-notify for a lead captured by the free /free-audit tool. Lighter than the
+// rich Snapshot template — the public tool only collects email + the domain they
+// audited. "capacity-gate" means the daily cap was hit and we owe them an audit.
+export function renderPublicAuditLeadEmail(lead: PublicAuditLeadEmail, site?: EmailSite) {
+  const gated = lead.source === "capacity-gate";
+  return renderQueryclearEmail({
+    site,
+    preheader: `New free-audit lead: ${lead.email} (${lead.domainUrl}).`,
+    eyebrow: "free audit lead",
+    title: gated ? "Audit lead (over daily cap)." : "New free-audit lead.",
+    intro: [
+      gated
+        ? `${lead.email} requested a free audit for ${lead.domainUrl} after the daily cap was hit — run it manually and send it over.`
+        : `${lead.email} ran a free audit for ${lead.domainUrl} and unlocked the full report. Good moment to follow up.`,
+    ],
+    cta: { label: "Reply to lead", href: `mailto:${lead.email}` },
+    summary: [
+      { label: "Email", value: lead.email, href: `mailto:${lead.email}` },
+      { label: "Website", value: lead.domainUrl, href: lead.domainUrl },
+      { label: "Source", value: gated ? "capacity gate (owe audit)" : "report unlock" },
+    ],
+    machinePanel: {
+      label: "// free_audit.lead",
+      lines: [
+        { key: "email", value: lead.email },
+        { key: "site", value: lead.domainUrl },
+        { key: "source", value: lead.source },
+      ],
+      status: gated ? "queued - run manually" : "report delivered",
+    },
+  });
+}
+
 export function renderStackKitOrderEmail(order: StackKitOrderEmail, site?: EmailSite) {
   const kitName = order.kitName || site?.stackKit?.name || "The Local AI Visibility Stack";
 
