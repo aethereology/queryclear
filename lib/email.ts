@@ -668,7 +668,9 @@ export function renderOutreachAuditEmail(
   site?: EmailSite,
 ) {
   const domain = report.domain_url;
-  const biz = (opts.businessName && opts.businessName.trim()) || domain;
+  // Cleaner for display: drop the scheme + trailing slash (the CSV may carry full URLs).
+  const prospectDomain = domain.replace(/^https?:\/\//, "").replace(/\/$/, "");
+  const biz = (opts.businessName && opts.businessName.trim()) || prospectDomain;
   const siteName = siteValue(site, "name");
   const plural = (n: number, one: string, many: string) => (n === 1 ? one : many);
   const p = (html: string) => `<p style="margin:0 0 16px">${html}</p>`;
@@ -689,7 +691,7 @@ export function renderOutreachAuditEmail(
   } else if (report.recommendations[0]) {
     hook = `The biggest thing I spotted: ${escapeHtml(report.recommendations[0].title)}.`;
   } else {
-    hook = `I took a quick look at how AI assistants read ${escapeHtml(domain)}.`;
+    hook = `I took a quick look at how AI assistants read ${escapeHtml(prospectDomain)}.`;
   }
 
   const remainingQueries = usedQuery ? Math.max(0, uncited.length - 1) : uncited.length;
@@ -714,13 +716,13 @@ export function renderOutreachAuditEmail(
     p(hook),
     p(moreLine),
     p(`I pulled the whole thing into a short report &mdash; every issue in priority order${voiceBit}. It&rsquo;s already unlocked for you, no sign-up:`),
-    `<p style="margin:0 0 20px"><a href="${link}" style="color:#12352a;font-weight:700;text-decoration:underline">View your AI search audit for ${escapeHtml(domain)} &rarr;</a></p>`,
+    `<p style="margin:0 0 20px"><a href="${link}" style="color:#12352a;font-weight:700;text-decoration:underline">View your AI search audit for ${escapeHtml(prospectDomain)} &rarr;</a></p>`,
     p(`If it&rsquo;s not useful or not the right time, just reply and I&rsquo;ll leave you be.`),
     `<p style="margin:0 0 2px">Kyle</p><p style="margin:0;color:#5b5a4d;font-size:14px">${escapeHtml(siteName)} &middot; ${domainLabel}</p>`,
     `<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;margin:28px 0 0"><tr><td style="border-top:1px solid #e5e2da;padding-top:14px;font-size:12px;line-height:1.5;color:#8a897d">${escapeHtml(footerText)}<br>${escapeHtml(opts.postalAddress)}</td></tr></table>`,
   ].join("");
 
-  return renderPlainEmail({ preheader: `A quick AI search audit I ran for ${domain}.`, bodyHtml: body });
+  return renderPlainEmail({ preheader: `A quick AI search audit I ran for ${prospectDomain}.`, bodyHtml: body });
 }
 
 // Team-notify the FIRST time a cold-outreach prospect opens their report link — the
@@ -761,7 +763,8 @@ export function renderOutreachFollowupEmail(
   kind: string,
   opts: { businessName?: string; domain: string; reportUrl: string; postalAddress: string; siteName?: string },
 ) {
-  const biz = (opts.businessName && opts.businessName.trim()) || opts.domain;
+  const prospectDomain = opts.domain.replace(/^https?:\/\//, "").replace(/\/$/, "");
+  const biz = (opts.businessName && opts.businessName.trim()) || prospectDomain;
   const siteName = opts.siteName || "queryclear";
   const B = escapeHtml(biz);
   const p = (html: string) => `<p style="margin:0 0 16px">${html}</p>`;
@@ -821,7 +824,7 @@ export function renderOutreachFollowupEmail(
     `<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;margin:28px 0 0"><tr><td style="border-top:1px solid #e5e2da;padding-top:14px;font-size:12px;line-height:1.5;color:#8a897d">${escapeHtml(footerText)}<br>${escapeHtml(opts.postalAddress)}</td></tr></table>`,
   ].join("");
 
-  return renderPlainEmail({ preheader: `Following up on the AI search audit for ${opts.domain}.`, bodyHtml: body });
+  return renderPlainEmail({ preheader: `Following up on the AI search audit for ${prospectDomain}.`, bodyHtml: body });
 }
 
 // Team-notify when someone buys the $497 AI Search Audit via Stripe Checkout.

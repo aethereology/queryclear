@@ -49,6 +49,7 @@ export default async function OutreachReportPage({
   const { token } = await params;
   const report = await publicAuditStore().getReport(token);
   if (!report) notFound();
+  const prospectDomain = report.domain_url.replace(/^https?:\/\//, "").replace(/\/$/, "");
 
   // First open only: notify the founder + graduate the contact cold → opened.
   // after() runs post-response so it never slows the page.
@@ -73,7 +74,7 @@ export default async function OutreachReportPage({
         <section className="site-section border-b border-line">
           <Container className="py-16 sm:py-20">
             <MonoLabel index="audit">AI Search Audit</MonoLabel>
-            <h1 className="mt-5 max-w-3xl">Your AI search audit for {report.domain_url}.</h1>
+            <h1 className="mt-5 max-w-3xl">Your AI search audit for {prospectDomain}.</h1>
             <p className="mt-5 max-w-2xl text-lg leading-relaxed text-muted">
               A read-only look at how AI answer engines find, read, and cite your site — with a
               prioritized list of what to fix first. Prepared by queryclear.
