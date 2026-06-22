@@ -32,6 +32,8 @@ export interface PublicAuditStore {
   releaseSpend(costUsd: number): Promise<void>;
   putReport(token: string, report: AuditReportData, ttlMs: number): Promise<void>;
   getReport(token: string): Promise<AuditReportData | null>;
+  /** First-view latch: returns true only the first time a token is viewed. */
+  markViewedOnce(token: string, ttlMs: number): Promise<boolean>;
 }
 
 interface Window {
@@ -48,6 +50,7 @@ export class InMemoryPublicAuditStore implements PublicAuditStore {
   private readonly ipWindows = new Map<string, Window>();
   private spend = { day: "", usd: 0 };
   private readonly reports = new Map<string, CachedReport>();
+  private readonly viewed = new Set<string>();
   constructor(private readonly now: () => number = Date.now) {}
 
   async rateLimit(ip: string, limit: number, windowMs: number): Promise<RateLimitResult> {
@@ -87,6 +90,12 @@ export class InMemoryPublicAuditStore implements PublicAuditStore {
       return null;
     }
     return hit.report;
+  }
+
+  async markViewedOnce(token: string): Promise<boolean> {
+    if (this.viewed.has(token)) return false;
+    this.viewed.add(token);
+    return true;
   }
 }
 

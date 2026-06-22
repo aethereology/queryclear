@@ -25,7 +25,7 @@ function loadTs(relPath) {
   return moduleObj.exports;
 }
 
-const { renderPublicAuditReportEmail } = loadTs("lib/email.ts");
+const { renderPublicAuditLeadEmail, renderPublicAuditReportEmail } = loadTs("lib/email.ts");
 
 const stubReport = {
   domain_url: "example.com",
@@ -65,4 +65,25 @@ test("invisible-query count reflects only uncited queries", () => {
   const html = renderPublicAuditReportEmail(stubReport, { siteUrl: site.url }, site);
   // (apostrophe in "didn't" is HTML-escaped in output, so match up to it)
   assert.ok(/1 query where AI answer engines/.test(html), "singular, count = 1");
+});
+
+test("team lead email includes free-audit attribution when present", () => {
+  const html = renderPublicAuditLeadEmail(
+    {
+      email: "owner@example.com",
+      domainUrl: "https://example.com",
+      source: "report-unlock",
+      attribution: {
+        utmSource: "linkedin",
+        utmCampaign: "5day_launch",
+        landingPath: "/free-audit?utm_source=linkedin&utm_campaign=5day_launch",
+      },
+    },
+    site,
+  );
+
+  assert.ok(html.includes("source=linkedin"), "attribution summary includes source");
+  assert.ok(html.includes("campaign=5day_launch"), "attribution summary includes campaign");
+  assert.ok(html.includes("utm_source"), "machine panel includes UTM details");
+  assert.ok(html.includes("landing"), "machine panel includes landing path");
 });

@@ -4,6 +4,7 @@ import { publicAuditStore } from "@/lib/public-audit";
 import {
   renderPublicAuditLeadEmail,
   renderPublicAuditReportEmail,
+  type MarketingAttribution,
   type PublicAuditLeadEmail,
 } from "@/lib/email";
 import type { AuditReportData } from "@/lib/agent-runtime";
@@ -13,6 +14,29 @@ export const dynamic = "force-dynamic";
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const EMAIL_TIMEOUT_MS = 8_000;
+const ATTR_MAX = 240;
+
+function cleanAttr(value: unknown): string | undefined {
+  if (typeof value !== "string") return undefined;
+  const trimmed = value.trim();
+  if (!trimmed) return undefined;
+  return trimmed.slice(0, ATTR_MAX);
+}
+
+function sanitizeAttribution(value: unknown): MarketingAttribution | undefined {
+  if (!value || typeof value !== "object") return undefined;
+  const raw = value as Record<string, unknown>;
+  const attribution: MarketingAttribution = {
+    utmSource: cleanAttr(raw.utmSource),
+    utmMedium: cleanAttr(raw.utmMedium),
+    utmCampaign: cleanAttr(raw.utmCampaign),
+    utmContent: cleanAttr(raw.utmContent),
+    utmTerm: cleanAttr(raw.utmTerm),
+    referrer: cleanAttr(raw.referrer),
+    landingPath: cleanAttr(raw.landingPath),
+  };
+  return Object.values(attribution).some(Boolean) ? attribution : undefined;
+}
 
 async function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
   let timer: ReturnType<typeof setTimeout> | undefined;
@@ -83,6 +107,7 @@ export async function POST(request: Request) {
     email?: string;
     token?: string;
     domainUrl?: string;
+    attribution?: unknown;
   };
   const email = (body.email ?? "").trim();
   if (!EMAIL.test(email)) {
@@ -95,11 +120,17 @@ export async function POST(request: Request) {
     email,
     domainUrl: body.domainUrl ?? report?.domain_url ?? "",
     source: report ? "report-unlock" : "capacity-gate",
+    attribution: sanitizeAttribution(body.attribution),
   };
 
   console.log(
     "[free-audit-lead]",
-    JSON.stringify({ at: new Date().toISOString(), source: lead.source })
+    JSON.stringify({
+      at: new Date().toISOString(),
+      source: lead.source,
+      utmSource: lead.attribution?.utmSource,
+      utmCampaign: lead.attribution?.utmCampaign,
+    })
   );
   // Team notify always; prospect report email only when there's a report to send.
   await Promise.all([

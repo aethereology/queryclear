@@ -39,6 +39,11 @@ Thumbs.db
 .firecrawl/
 /*.png
 
+# Cold-outreach generated artifacts (rendered prospect emails + send log)
+docs/marketing/outreach/previews/
+# Prospect lead lists carry contact PII — keep them out of git history
+docs/marketing/outreach/leads/
+
 # Reference docs we don't track in git (kept locally)
 queryclear.com_AI Search Optimized Website Service Business Plan.pdf
 .superpowers/

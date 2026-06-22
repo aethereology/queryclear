@@ -29,6 +29,16 @@ type EmailMachineLine = {
   value: string;
 };
 
+export type MarketingAttribution = {
+  utmSource?: string;
+  utmMedium?: string;
+  utmCampaign?: string;
+  utmContent?: string;
+  utmTerm?: string;
+  referrer?: string;
+  landingPath?: string;
+};
+
 type QueryclearEmailOptions = {
   site?: EmailSite;
   preheader: string;
@@ -51,6 +61,10 @@ type QueryclearEmailOptions = {
   };
   closing?: string;
   footerNote?: string;
+  // Cold-outreach only: CAN-SPAM compliance block (a physical postal address +
+  // an opt-out line) rendered in the footer below the standard disclaimer. Left
+  // undefined for every transactional/self-serve email, so those are unchanged.
+  complianceFooter?: { address: string; optOut: string };
 };
 
 export type AuditLeadEmail = {
@@ -374,6 +388,11 @@ function renderQueryclearEmail(options: QueryclearEmailOptions) {
                 <p style="margin:0 0 10px;font-family:${t.fonts.mono};font-size:10px;line-height:1.4;letter-spacing:.16em;text-transform:uppercase;color:rgba(247,244,238,.45)">${escapeHtml(siteName)} &middot; <a href="${escapeHtml(siteUrl)}" style="color:${t.colors.lime};text-decoration:none">${escapeHtml(siteUrl.replace(/^https?:\/\//, ""))}</a></p>
                 <p style="margin:0 0 8px;font-size:13px;line-height:1.6;color:rgba(247,244,238,.78)">${escapeHtml(options.site?.description || defaultDescription)}</p>
                 <p style="margin:0;font-size:12px;line-height:1.55;color:rgba(247,244,238,.58)">${escapeHtml(footerNote)} Contact: <a href="mailto:${escapeHtml(siteEmail)}" style="color:${t.colors.lime};text-decoration:none">${escapeHtml(siteEmail)}</a></p>
+                ${
+                  options.complianceFooter
+                    ? `<p style="margin:12px 0 0;font-size:11px;line-height:1.55;color:rgba(247,244,238,.5)">${escapeHtml(options.complianceFooter.optOut)}<br>${escapeHtml(options.complianceFooter.address)}</p>`
+                    : ""
+                }
               </td>
             </tr>
           </table>
@@ -479,13 +498,38 @@ export type PublicAuditLeadEmail = {
   email: string;
   domainUrl: string;
   source: "report-unlock" | "capacity-gate";
+  attribution?: MarketingAttribution;
 };
+
+function attributionSummary(attribution?: MarketingAttribution) {
+  if (!attribution) return undefined;
+  const parts = [
+    attribution.utmSource ? `source=${attribution.utmSource}` : "",
+    attribution.utmMedium ? `medium=${attribution.utmMedium}` : "",
+    attribution.utmCampaign ? `campaign=${attribution.utmCampaign}` : "",
+  ].filter(Boolean);
+  return parts.length ? parts.join(" | ") : undefined;
+}
+
+function attributionMachineLines(attribution?: MarketingAttribution): EmailMachineLine[] {
+  if (!attribution) return [];
+  return [
+    attribution.utmSource ? { key: "utm_source", value: attribution.utmSource } : null,
+    attribution.utmMedium ? { key: "utm_medium", value: attribution.utmMedium } : null,
+    attribution.utmCampaign ? { key: "utm_campaign", value: attribution.utmCampaign } : null,
+    attribution.utmContent ? { key: "utm_content", value: attribution.utmContent } : null,
+    attribution.utmTerm ? { key: "utm_term", value: attribution.utmTerm } : null,
+    attribution.referrer ? { key: "referrer", value: attribution.referrer } : null,
+    attribution.landingPath ? { key: "landing", value: attribution.landingPath } : null,
+  ].filter((line): line is EmailMachineLine => Boolean(line));
+}
 
 // Team-notify for a lead captured by the free /free-audit tool. Lighter than the
 // rich Snapshot template — the public tool only collects email + the domain they
 // audited. "capacity-gate" means the daily cap was hit and we owe them an audit.
 export function renderPublicAuditLeadEmail(lead: PublicAuditLeadEmail, site?: EmailSite) {
   const gated = lead.source === "capacity-gate";
+  const attribution = attributionSummary(lead.attribution);
   return renderQueryclearEmail({
     site,
     preheader: `New free-audit lead: ${lead.email} (${lead.domainUrl}).`,
@@ -501,6 +545,8 @@ export function renderPublicAuditLeadEmail(lead: PublicAuditLeadEmail, site?: Em
       { label: "Email", value: lead.email, href: `mailto:${lead.email}` },
       { label: "Website", value: lead.domainUrl, href: lead.domainUrl },
       { label: "Source", value: gated ? "capacity gate (owe audit)" : "report unlock" },
+      { label: "Attribution", value: attribution },
+      { label: "Landing page", value: lead.attribution?.landingPath },
     ],
     machinePanel: {
       label: "// free_audit.lead",
@@ -508,6 +554,7 @@ export function renderPublicAuditLeadEmail(lead: PublicAuditLeadEmail, site?: Em
         { key: "email", value: lead.email },
         { key: "site", value: lead.domainUrl },
         { key: "source", value: lead.source },
+        ...attributionMachineLines(lead.attribution),
       ],
       status: gated ? "queued - run manually" : "report delivered",
     },
@@ -567,6 +614,143 @@ export function renderPublicAuditReportEmail(
       },
     ],
     closing: "Questions? Just reply to this email — a real person will answer.",
+  });
+}
+
+// Plain, personal email shell — deliberately minimal (no branded chrome, logo, or
+// buttons). For COLD first-touch outreach the goal is that it reads like a human
+// typed it in Outlook: that earns more replies + better inboxing than a designed
+// marketing template (the branded design lives on the report page they click to).
+function renderPlainEmail(opts: { preheader: string; bodyHtml: string }) {
+  return `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light">
+  </head>
+  <body style="margin:0;padding:0;background:#ffffff;color:#1a1a1a;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;font-size:16px;line-height:1.6">
+    <div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent">${escapeHtml(opts.preheader)}${"&nbsp;&zwnj;".repeat(40)}</div>
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse">
+      <tr>
+        <td align="left" style="padding:24px">
+          <table role="presentation" width="560" cellspacing="0" cellpadding="0" style="width:560px;max-width:560px;border-collapse:collapse">
+            <tr><td style="font-size:16px;line-height:1.6;color:#1a1a1a">${opts.bodyHtml}</td></tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>`;
+}
+
+const ENGINE_LABELS: Record<string, string> = {
+  chatgpt: "ChatGPT",
+  claude: "Claude",
+  perplexity: "Perplexity",
+  gemini: "Gemini",
+  copilot: "Copilot",
+  "bing copilot": "Bing Copilot",
+  "google ai overviews": "Google's AI Overviews",
+};
+function prettyEngine(engine: string): string {
+  return ENGINE_LABELS[engine.trim().toLowerCase()] ?? engine;
+}
+
+// Cold-outreach email — conversation-first and plain (NOT the branded template).
+// Teases ONE honest finding, then links to the full pre-unlocked report (where the
+// offers live). Honesty guardrail: AI-visibility results are modeled ESTIMATES
+// unless `measured`, so an estimated finding never claims a live "I asked X and you
+// weren't there". Carries a CAN-SPAM footer (postal address + opt-out).
+export function renderOutreachAuditEmail(
+  report: AuditReportData,
+  opts: { siteUrl: string; postalAddress: string; reportUrl: string; businessName?: string },
+  site?: EmailSite,
+) {
+  const domain = report.domain_url;
+  const biz = (opts.businessName && opts.businessName.trim()) || domain;
+  const siteName = siteValue(site, "name");
+  const plural = (n: number, one: string, many: string) => (n === 1 ? one : many);
+  const p = (html: string) => `<p style="margin:0 0 16px">${html}</p>`;
+
+  const issues = report.findings.length;
+  const uncited = report.queries.filter((q) => q.cited_count === 0);
+  // Prefer a genuinely measured uncited query (we can state it as fact); else the
+  // first estimated one (phrased softly); else fall back to the top recommendation.
+  const usedQuery = uncited.find((q) => q.measured) ?? uncited[0] ?? null;
+
+  let hook: string;
+  if (usedQuery) {
+    const engine = escapeHtml(prettyEngine(usedQuery.engine));
+    const q = escapeHtml(usedQuery.query);
+    hook = usedQuery.measured
+      ? `When I checked ${engine} for <strong>&ldquo;${q}&rdquo;</strong>, ${escapeHtml(biz)} didn&rsquo;t come up.`
+      : `For a question like <strong>&ldquo;${q}&rdquo;</strong>, ${escapeHtml(biz)}&rsquo;s site isn&rsquo;t set up to be the answer assistants like ${engine} hand back yet.`;
+  } else if (report.recommendations[0]) {
+    hook = `The biggest thing I spotted: ${escapeHtml(report.recommendations[0].title)}.`;
+  } else {
+    hook = `I took a quick look at how AI assistants read ${escapeHtml(domain)}.`;
+  }
+
+  const remainingQueries = usedQuery ? Math.max(0, uncited.length - 1) : uncited.length;
+  const moreParts: string[] = [];
+  if (remainingQueries > 0)
+    moreParts.push(`${remainingQueries} other ${plural(remainingQueries, "question", "questions")} people ask turn up the same way`);
+  if (issues > 0)
+    moreParts.push(`${issues} technical ${plural(issues, "issue", "issues")} on the page making you harder for these tools to read`);
+  const moreLine = moreParts.length
+    ? `I also found ${moreParts.join(", and ")}. None of it is complicated to fix.`
+    : `The good news: it&rsquo;s all fixable.`;
+
+  const voiceBit = report.detected_voice
+    ? `, plus a sample fix written to match how ${escapeHtml(biz)} already sounds`
+    : "";
+  const link = escapeHtml(opts.reportUrl);
+  const domainLabel = escapeHtml(opts.siteUrl.replace(/^https?:\/\//, "").replace(/\/$/, ""));
+  const footerText = `You're getting this one-time note because ${biz} is publicly listed. Not interested? Reply "unsubscribe" and I'll remove you right away.`;
+
+  const body = [
+    p(`Hi &mdash; I&rsquo;m Kyle. I run ${escapeHtml(siteName)} (a SparkCreatives Inc. brand), and I spend my days on how AI assistants answer the questions people ask right before they buy.`),
+    p(hook),
+    p(moreLine),
+    p(`I pulled the whole thing into a short report &mdash; every issue in priority order${voiceBit}. It&rsquo;s already unlocked for you, no sign-up:`),
+    `<p style="margin:0 0 20px"><a href="${link}" style="color:#12352a;font-weight:700;text-decoration:underline">View your AI search audit for ${escapeHtml(domain)} &rarr;</a></p>`,
+    p(`If it&rsquo;s not useful or not the right time, just reply and I&rsquo;ll leave you be.`),
+    `<p style="margin:0 0 2px">Kyle</p><p style="margin:0;color:#5b5a4d;font-size:14px">${escapeHtml(siteName)} &middot; ${domainLabel}</p>`,
+    `<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;margin:28px 0 0"><tr><td style="border-top:1px solid #e5e2da;padding-top:14px;font-size:12px;line-height:1.5;color:#8a897d">${escapeHtml(footerText)}<br>${escapeHtml(opts.postalAddress)}</td></tr></table>`,
+  ].join("");
+
+  return renderPlainEmail({ preheader: `A quick AI search audit I ran for ${domain}.`, bodyHtml: body });
+}
+
+// Team-notify the FIRST time a cold-outreach prospect opens their report link — the
+// signal they've gone warm and the moment to follow up. Branded (team-facing) is fine.
+export function renderOutreachViewNotifyEmail(
+  opts: { domainUrl: string; reportUrl: string },
+  site?: EmailSite,
+) {
+  const href = opts.domainUrl.startsWith("http") ? opts.domainUrl : `https://${opts.domainUrl}`;
+  return renderQueryclearEmail({
+    site,
+    preheader: `${opts.domainUrl} opened their outreach audit.`,
+    eyebrow: "outreach signal",
+    title: "A prospect opened their audit.",
+    intro: [
+      `${opts.domainUrl} just opened the audit report you sent — a warm signal, and a good moment to follow up.`,
+    ],
+    cta: { label: "Open the report", href: opts.reportUrl },
+    summary: [
+      { label: "Website", value: opts.domainUrl, href },
+      { label: "Report", value: opts.reportUrl, href: opts.reportUrl },
+    ],
+    machinePanel: {
+      label: "// outreach.signal",
+      lines: [
+        { key: "event", value: "report_opened" },
+        { key: "site", value: opts.domainUrl },
+      ],
+      status: "warm - follow up",
+    },
   });
 }
 

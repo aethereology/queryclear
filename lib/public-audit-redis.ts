@@ -68,4 +68,13 @@ export class RedisPublicAuditStore implements PublicAuditStore {
     // Upstash may auto-deserialize JSON; handle both string and object.
     return typeof value === "string" ? (JSON.parse(value) as AuditReportData) : value;
   }
+
+  async markViewedOnce(token: string, ttlMs: number): Promise<boolean> {
+    // SET NX → "OK" only if the key didn't exist; null if it did (already viewed).
+    const res = await this.redis.set(`pa:viewed:${token}`, 1, {
+      nx: true,
+      ex: Math.ceil(ttlMs / 1000),
+    });
+    return res === "OK";
+  }
 }

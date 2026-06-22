@@ -15,6 +15,16 @@ interface AuditSummary {
   topFindings: { title: string; severity: string }[];
 }
 
+interface MarketingAttribution {
+  utmSource?: string;
+  utmMedium?: string;
+  utmCampaign?: string;
+  utmContent?: string;
+  utmTerm?: string;
+  referrer?: string;
+  landingPath?: string;
+}
+
 type Phase = "input" | "summary" | "gated" | "full";
 
 const BTN =
@@ -29,6 +39,21 @@ function Spinner() {
       className="h-4 w-4 animate-spin rounded-full border-2 border-pine-2/40 border-t-pine-2"
     />
   );
+}
+
+function readMarketingAttribution(): MarketingAttribution | undefined {
+  if (typeof window === "undefined") return undefined;
+  const params = new URLSearchParams(window.location.search);
+  const attribution: MarketingAttribution = {
+    utmSource: params.get("utm_source") || undefined,
+    utmMedium: params.get("utm_medium") || undefined,
+    utmCampaign: params.get("utm_campaign") || undefined,
+    utmContent: params.get("utm_content") || undefined,
+    utmTerm: params.get("utm_term") || undefined,
+    referrer: document.referrer || undefined,
+    landingPath: `${window.location.pathname}${window.location.search}`,
+  };
+  return Object.values(attribution).some(Boolean) ? attribution : undefined;
 }
 
 export function FreeAudit() {
@@ -189,7 +214,12 @@ function UnlockForm({
       const res = await fetch("/api/public/lead", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ email: email.trim(), token, domainUrl })
+        body: JSON.stringify({
+          email: email.trim(),
+          token,
+          domainUrl,
+          attribution: readMarketingAttribution()
+        })
       });
       const data = (await res.json().catch(() => ({}))) as {
         error?: string;
@@ -257,7 +287,11 @@ function CapacityGate({ domainUrl }: { domainUrl: string }) {
       const res = await fetch("/api/public/lead", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ email: email.trim(), domainUrl })
+        body: JSON.stringify({
+          email: email.trim(),
+          domainUrl,
+          attribution: readMarketingAttribution()
+        })
       });
       const data = (await res.json().catch(() => ({}))) as { error?: string };
       if (!res.ok) throw new Error(data.error ?? "Something went wrong.");
