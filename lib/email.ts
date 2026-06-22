@@ -754,6 +754,76 @@ export function renderOutreachViewNotifyEmail(
   });
 }
 
+// Plain follow-up emails for the nurture cadence (bump / tip / last-note / nurture-*).
+// Same plain-personal shell as the cold email; reuses the prospect's report link.
+// Subjects are built by the caller (lib/outreach.ts buildFollowupEmail).
+export function renderOutreachFollowupEmail(
+  kind: string,
+  opts: { businessName?: string; domain: string; reportUrl: string; postalAddress: string; siteName?: string },
+) {
+  const biz = (opts.businessName && opts.businessName.trim()) || opts.domain;
+  const siteName = opts.siteName || "queryclear";
+  const B = escapeHtml(biz);
+  const p = (html: string) => `<p style="margin:0 0 16px">${html}</p>`;
+  const linkLine = `<p style="margin:0 0 16px"><a href="${escapeHtml(opts.reportUrl)}" style="color:#12352a;font-weight:700;text-decoration:underline">Your AI search audit &rarr;</a></p>`;
+
+  let paras: string[];
+  switch (kind) {
+    case "bump":
+      paras = [
+        p(`Hi again &mdash; just making sure my note about ${B} landed. I ran a quick AI-search audit on your site and the full thing is still here, no sign-up:`),
+        linkLine,
+        p(`If it&rsquo;s useful I&rsquo;m happy to walk you through the top fix; if not, no worries.`),
+      ];
+      break;
+    case "tip":
+      paras = [
+        p(`One concrete thing while ${B} is on my mind: AI assistants lean on plain, well-structured answers to the exact questions people ask before they buy. A short FAQ that answers those in your own words &mdash; one question per heading &mdash; is one of the highest-leverage changes most sites are missing.`),
+        p(`Your audit lists the specific ones for ${B}, in priority order:`),
+        linkLine,
+      ];
+      break;
+    case "last-note":
+      paras = [
+        p(`Last note from me &mdash; I don&rsquo;t want to clutter your inbox. The audit for ${B} stays here if it&rsquo;s ever handy:`),
+        linkLine,
+        p(`If now isn&rsquo;t the time, no hard feelings at all.`),
+      ];
+      break;
+    case "nurture-case":
+      paras = [
+        p(`Quick one for ${B}: I keep seeing the same pattern &mdash; sites that answer buyer questions in clear, structured language get surfaced by AI assistants, while polished-but-vague pages get skipped. Your audit flags exactly where ${B} sits:`),
+        linkLine,
+        p(`Happy to talk it through whenever &mdash; just reply.`),
+      ];
+      break;
+    case "nurture-checkin":
+      paras = [
+        p(`Checking in on ${B}. Anything changed on the website front, or any questions about showing up in AI answers? The audit&rsquo;s still here:`),
+        linkLine,
+        p(`No agenda &mdash; happy to be a resource.`),
+      ];
+      break;
+    case "nurture-tip":
+    default:
+      paras = [
+        p(`A small AI-search tip for ${B}: give each core service its own page that says, in plain words, what it is, who it&rsquo;s for, and where you serve &mdash; that&rsquo;s the kind of clarity these assistants can actually quote.`),
+        p(`The full prioritized list for ${B} is here:`),
+        linkLine,
+      ];
+      break;
+  }
+
+  const footerText = `You're getting this because I ran an audit for ${biz}. Not interested? Reply "unsubscribe" and I'll stop.`;
+  const body = [
+    ...paras,
+    `<p style="margin:0 0 2px">Kyle</p><p style="margin:0;color:#5b5a4d;font-size:14px">${escapeHtml(siteName)} &middot; queryclear.com</p>`,
+    `<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;margin:28px 0 0"><tr><td style="border-top:1px solid #e5e2da;padding-top:14px;font-size:12px;line-height:1.5;color:#8a897d">${escapeHtml(footerText)}<br>${escapeHtml(opts.postalAddress)}</td></tr></table>`,
+  ].join("");
+
+  return renderPlainEmail({ preheader: `Following up on the AI search audit for ${opts.domain}.`, bodyHtml: body });
+}
+
 // Team-notify when someone buys the $497 AI Search Audit via Stripe Checkout.
 // The audit is human-delivered, so the buyer's website (captured as a Stripe
 // custom field) is the key field — it's what we need to start fulfillment.

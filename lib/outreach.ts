@@ -6,8 +6,10 @@
 
 import { randomUUID } from "node:crypto";
 import { runAudit, type AuditReportData } from "./agent-runtime";
-import { renderOutreachAuditEmail } from "./email";
+import { renderOutreachAuditEmail, renderOutreachFollowupEmail } from "./email";
 import { publicAuditStore } from "./public-audit";
+import type { Contact } from "./outreach-store";
+import type { CadenceStep } from "./outreach-cadence";
 import { site } from "./site";
 
 // Clearly-marked placeholder until the founder sets OUTREACH_POSTAL_ADDRESS, so
@@ -76,4 +78,33 @@ export async function buildOutreachEmail(input: {
 
   const subject = `is ChatGPT recommending ${input.businessName?.trim() || report.domain_url}?`;
   return { subject, html, report, token, reportUrl };
+}
+
+// Build a nurture follow-up for an existing contact (NO re-audit). Reuses the report
+// link from touch 1 (falls back to /free-audit if the token's gone). Subject by kind.
+export function buildFollowupEmail(
+  contact: Contact,
+  step: CadenceStep & { n: number },
+): { subject: string; html: string } {
+  const biz = (contact.business && contact.business.trim()) || contact.domain || "your business";
+  const token = contact.touches[0]?.reportToken;
+  const reportUrl = token ? `${site.url}/r/${token}` : `${site.url}/free-audit`;
+
+  const html = renderOutreachFollowupEmail(step.type, {
+    businessName: contact.business,
+    domain: contact.domain ?? "",
+    reportUrl,
+    postalAddress: process.env.OUTREACH_POSTAL_ADDRESS ?? POSTAL_FALLBACK,
+    siteName: site.name,
+  });
+
+  const subjectByKind: Record<string, string> = {
+    bump: `following up — ${biz} + AI search`,
+    tip: `a quick AI-search tip for ${biz}`,
+    "last-note": `last note about ${biz}`,
+    "nurture-case": `${biz} + AI search`,
+    "nurture-checkin": `checking in — ${biz}`,
+    "nurture-tip": `${biz} + AI search`,
+  };
+  return { subject: subjectByKind[step.type] ?? `${biz} + AI search`, html };
 }

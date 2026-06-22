@@ -21,6 +21,17 @@ function Spinner() {
 
 type Mode = "preview" | "send";
 
+interface DueItem {
+  email: string;
+  business?: string;
+  domain?: string;
+  status: string;
+  step: { n: number; type: string };
+  subject: string;
+  html: string;
+  flags: string[];
+}
+
 export function OutreachConsole() {
   const [secret, setSecret] = useState("");
   const [domainUrl, setDomainUrl] = useState("");
@@ -31,6 +42,56 @@ export function OutreachConsole() {
   const [previewHtml, setPreviewHtml] = useState<string | null>(null);
   const [subject, setSubject] = useState<string | null>(null);
   const [sentTo, setSentTo] = useState<string | null>(null);
+
+  // Due-queue (assisted nurture) state.
+  const [due, setDue] = useState<DueItem[] | null>(null);
+  const [dueBusy, setDueBusy] = useState(false);
+  const [dueError, setDueError] = useState<string | null>(null);
+  const [openPreview, setOpenPreview] = useState<string | null>(null);
+
+  async function api(payload: Record<string, unknown>) {
+    const res = await fetch("/api/outreach", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ secret: secret.trim(), ...payload }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error((data as { error?: string }).error ?? "Request failed.");
+    return data;
+  }
+
+  async function loadDue() {
+    setDueBusy(true);
+    setDueError(null);
+    try {
+      const data = (await api({ action: "due" })) as { due: DueItem[] };
+      setDue(data.due);
+    } catch (err) {
+      setDueError(err instanceof Error ? err.message : "Failed to load.");
+    } finally {
+      setDueBusy(false);
+    }
+  }
+
+  async function approve(item: DueItem) {
+    setDueError(null);
+    try {
+      await api({ action: "send-touch", email: item.email });
+      setDue((d) => (d ? d.filter((x) => x.email !== item.email) : d));
+    } catch (err) {
+      setDueError(err instanceof Error ? err.message : "Send failed.");
+    }
+  }
+
+  async function setStatus(item: DueItem, status: string) {
+    setDueError(null);
+    try {
+      await api({ action: "set-status", email: item.email, status });
+      setDue((d) => (d ? d.filter((x) => x.email !== item.email) : d));
+    } catch (err) {
+      setDueError(err instanceof Error ? err.message : "Update failed.");
+    }
+  }
 
   async function run(mode: Mode) {
     setBusy(mode);
@@ -196,6 +257,78 @@ export function OutreachConsole() {
           />
         </div>
       ) : null}
+
+      {/* ── Assisted nurture: the due queue ──────────────────────────────── */}
+      <div className="card p-6 sm:p-8">
+        <div className="flex items-center justify-between gap-3">
+          <MonoLabel index="due">Due today</MonoLabel>
+          <button type="button" onClick={() => void loadDue()} disabled={dueBusy} className={`${BTN_GHOST} !px-4 !py-2.5`}>
+            {dueBusy ? <Spinner /> : "Load due queue"}
+          </button>
+        </div>
+
+        {dueError ? (
+          <p role="alert" className="mt-4 text-sm text-ink">
+            <span className="font-medium text-lime-deep">Error: </span>
+            {dueError}
+          </p>
+        ) : null}
+
+        {due && due.length === 0 ? <p className="mt-4 text-sm text-muted">Nothing due right now.</p> : null}
+
+        {due && due.length > 0 ? (
+          <ul className="mt-5 space-y-4">
+            {due.map((item) => (
+              <li key={item.email} className="border border-line p-4">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <div>
+                    <p className="text-sm font-medium text-ink">{item.business || item.domain || item.email}</p>
+                    <p className="text-xs text-muted">
+                      {item.email} · touch {item.step.n} ({item.step.type}) · {item.status}
+                    </p>
+                  </div>
+                  {item.flags.length > 0 ? (
+                    <span className="border border-amber-200 bg-amber-100 px-2 py-0.5 font-mono text-[11px] uppercase tracking-wider text-amber-900">
+                      {item.flags.join(", ")}
+                    </span>
+                  ) : null}
+                </div>
+                <p className="mt-2 text-xs text-muted">
+                  Subject: <span className="text-ink">{item.subject}</span>
+                </p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <button type="button" onClick={() => void approve(item)} className={`${BTN} !px-4 !py-2.5`}>
+                    Approve &amp; send
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setOpenPreview(openPreview === item.email ? null : item.email)}
+                    className={`${BTN_GHOST} !px-4 !py-2.5`}
+                  >
+                    {openPreview === item.email ? "Hide" : "Preview"}
+                  </button>
+                  <button type="button" onClick={() => void setStatus(item, "replied")} className={`${BTN_GHOST} !px-4 !py-2.5`}>
+                    Mark replied
+                  </button>
+                  <button type="button" onClick={() => void setStatus(item, "unsubscribed")} className={`${BTN_GHOST} !px-4 !py-2.5`}>
+                    Unsubscribe
+                  </button>
+                  <button type="button" onClick={() => void setStatus(item, "customer")} className={`${BTN_GHOST} !px-4 !py-2.5`}>
+                    Mark customer
+                  </button>
+                </div>
+                {openPreview === item.email ? (
+                  <iframe
+                    title={`Preview ${item.email}`}
+                    srcDoc={item.html}
+                    className="mt-4 h-[600px] w-full border border-line bg-white"
+                  />
+                ) : null}
+              </li>
+            ))}
+          </ul>
+        ) : null}
+      </div>
     </div>
   );
 }

@@ -43,6 +43,7 @@ function parseArgs(argv) {
     else if (a === "--only") out.only = argv[++i];
     else if (a === "--delay") out.delay = Number(argv[++i]);
     else if (a === "--list") out.list = true;
+    else if (a === "due") out.dueCmd = true;
     else if (a === "--mark") {
       out.mark = { email: argv[++i], status: argv[++i] };
     } else throw new Error(`Unknown flag: ${a}`);
@@ -144,6 +145,63 @@ async function main() {
     const { email, status } = args.mark;
     const { contact } = await call({ action: "set-status", email, status });
     console.log(`✓ ${contact.email} → ${contact.status}`);
+    return;
+  }
+
+  // ── due: the assisted nurture queue (preview by default, --send to fire) ──────
+  if (args.dueCmd) {
+    const { due } = await call({ action: "due" });
+    if (!due.length) {
+      console.log("\nNothing due.\n");
+      return;
+    }
+    if (args.send) {
+      console.log(`\nSENDING ${due.length} due touch(es)\n`);
+      let ok = 0;
+      let failed = 0;
+      for (let i = 0; i < due.length; i++) {
+        const item = due[i];
+        process.stdout.write(`  • touch ${item.step.n} (${item.step.type}) → ${item.email} … `);
+        try {
+          const r = await call({ action: "send-touch", email: item.email });
+          console.log(r.sent ? "sent ✓" : `skipped (${r.skipped})`);
+          if (r.sent) ok++;
+        } catch (err) {
+          console.log(`FAILED — ${err instanceof Error ? err.message : err}`);
+          failed++;
+        }
+        if (i < due.length - 1 && args.delay > 0) await sleep(args.delay);
+      }
+      console.log(`\nDone. ${ok} sent · ${failed} failed.\n`);
+      if (failed > 0) process.exitCode = 1;
+      return;
+    }
+    // preview
+    const outDir = path.join(projectRoot, "docs/marketing/outreach/previews");
+    fs.mkdirSync(outDir, { recursive: true });
+    console.log(`\nDUE QUEUE — ${due.length} touch(es) (preview; re-run with --send to fire)\n`);
+    const manifest = [];
+    for (const item of due) {
+      const file = `due-${slug(item.domain || item.email)}-t${item.step.n}.html`;
+      fs.writeFileSync(path.join(outDir, file), item.html);
+      const flagStr = item.flags.length ? `  [${item.flags.join(", ")}]` : "";
+      console.log(`  • ${item.email}  touch ${item.step.n} (${item.step.type})${flagStr} → ${file}`);
+      manifest.push({ file, label: `${item.business || item.domain} <${item.email}>`, subject: item.subject, step: item.step });
+    }
+    const indexHtml =
+      `<!doctype html><meta charset="utf-8"><title>Due queue</title>` +
+      `<body style="font-family:system-ui;max-width:720px;margin:40px auto;padding:0 16px">` +
+      `<h1>Due queue (${manifest.length})</h1><ol>` +
+      manifest
+        .map(
+          (m) =>
+            `<li style="margin:10px 0"><a href="./${m.file}">${m.label}</a> — touch ${m.step.n} (${m.step.type})<br>` +
+            `<small style="color:#666">${m.subject}</small></li>`,
+        )
+        .join("") +
+      `</ol></body>`;
+    fs.writeFileSync(path.join(outDir, "due-index.html"), indexHtml);
+    console.log(`\n  manifest → docs/marketing/outreach/previews/due-index.html\n`);
     return;
   }
 

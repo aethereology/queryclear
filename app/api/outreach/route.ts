@@ -1,13 +1,16 @@
 import { NextResponse } from "next/server";
 import { createHash, timingSafeEqual } from "node:crypto";
 import { Resend } from "resend";
-import { buildOutreachEmail, outreachReportTtlMs } from "@/lib/outreach";
+import { buildOutreachEmail, buildFollowupEmail, outreachReportTtlMs } from "@/lib/outreach";
 import { AgentRuntimeError } from "@/lib/agent-runtime";
 import {
   outreachStore,
   normalizeEmail,
+  ACTIVE_STATUSES,
   type ContactStatus,
 } from "@/lib/outreach-store";
+import { nextStep, computeNextDueAt, COLD_FOLLOWUPS } from "@/lib/outreach-cadence";
+import { publicAuditStore } from "@/lib/public-audit";
 import { site } from "@/lib/site";
 
 export const dynamic = "force-dynamic";
@@ -48,7 +51,7 @@ async function sendEmail(to: string, subject: string, html: string): Promise<boo
 
 type Body = {
   secret?: string;
-  action?: "send-cold" | "check" | "set-status" | "list";
+  action?: "send-cold" | "check" | "set-status" | "list" | "due" | "send-touch";
   // send-cold
   domainUrl?: string;
   email?: string;
@@ -111,6 +114,66 @@ export async function POST(request: Request) {
   if (action === "list") {
     const contacts = await store.listContacts();
     return NextResponse.json({ contacts });
+  }
+
+  // ── due queue: active contacts whose next touch is due, rendered for review ───
+  if (action === "due") {
+    const now = new Date().toISOString();
+    const due = await store.dueForTouch(now);
+    const items = [];
+    for (const c of due) {
+      const step = nextStep(c);
+      if (!step) continue;
+      const { subject, html } = buildFollowupEmail(c, step);
+      const flags: string[] = [];
+      const token = c.touches[0]?.reportToken;
+      if (!token) flags.push("no-report-link");
+      else if (!(await publicAuditStore().getReport(token))) flags.push("report-expired");
+      items.push({
+        email: c.email,
+        business: c.business,
+        domain: c.domain,
+        status: c.status,
+        step: { n: step.n, type: step.type },
+        subject,
+        html,
+        flags,
+      });
+    }
+    return NextResponse.json({ due: items });
+  }
+
+  // ── send the next due touch to one contact (the founder-approved action) ──────
+  if (action === "send-touch") {
+    const email = (body.email ?? "").trim();
+    if (!EMAIL.test(email)) {
+      return NextResponse.json({ error: "A valid email is required." }, { status: 400 });
+    }
+    const c = await store.getContact(email);
+    if (!c) return NextResponse.json({ error: "Contact not found." }, { status: 404 });
+    if (!ACTIVE_STATUSES.includes(c.status)) {
+      return NextResponse.json({ skipped: `status:${c.status}` });
+    }
+    const step = nextStep(c);
+    if (!step) return NextResponse.json({ skipped: "no-step" });
+
+    const { subject, html } = buildFollowupEmail(c, step);
+    let delivered: boolean;
+    try {
+      delivered = await sendEmail(email, subject, html);
+    } catch {
+      return NextResponse.json({ error: "Email delivery failed." }, { status: 502 });
+    }
+    if (!delivered) {
+      return NextResponse.json({ error: "Email delivery is not configured." }, { status: 503 });
+    }
+
+    const now = new Date().toISOString();
+    const touch = { n: step.n, type: step.type, at: now };
+    const after = nextStep({ ...c, touches: [...c.touches, touch], lastTouchAt: now });
+    const nextDue = after ? computeNextDueAt(now, after) : null;
+    await store.recordTouch(email, touch, nextDue);
+    return NextResponse.json({ sent: true, n: step.n, type: step.type, subject });
   }
 
   // ── send-cold: run audit + preview or send the cold email ────────────────────
@@ -178,7 +241,11 @@ export async function POST(request: Request) {
     sourceCsv: body.sourceCsv,
     status: "cold",
   });
-  await store.recordTouch(email, { n: 1, type: "cold-audit", at: now, reportToken: built.token });
+  await store.recordTouch(
+    email,
+    { n: 1, type: "cold-audit", at: now, reportToken: built.token },
+    computeNextDueAt(now, COLD_FOLLOWUPS[0]), // schedule touch 2 (cold bump)
+  );
   await store.linkToken(built.token, email, outreachReportTtlMs());
 
   return NextResponse.json({ sent: true, subject: built.subject, reportUrl: built.reportUrl });
