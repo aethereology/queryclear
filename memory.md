@@ -57,8 +57,13 @@ is human-triggered (/swarm each morning). CORRECTION to the prior entry: this Ma
 NOW HAS `.env.local` incl. OUTREACH_SECRET (founder added it after that session),
 so outreach previews/sends run locally against prod via
 OUTREACH_BASE_URL=https://www.queryclear.com. Vercel/Stripe cred gaps still stand.
-New agent types load in NEW sessions (fallback documented in each skill). Nothing
-sent/deployed this session.
+New agent types load in NEW sessions (fallback documented in each skill).
+COMMITTED + PUSHED to main same session (8e31cc5 "feat: agent swarm" + follow-up)
+— docs/agents only, no site-code change; Vercel auto-deployed from the push; prod
+smoke-checked 200 on /, /free-audit, /ai-visibility-audit, med-spa, sitemap.
+No outreach sent. NOTE: this Mac's git identity was unset — 8e31cc5 is authored as
+"Kyle Lamban <LoxeMortgage@Makaylas-MacBook-Air.local>"; set git config
+user.name/user.email to fix future commits.
 
 2026-07-06 — SELL-MODE PIVOT + FIRST PROSPECT LIST BUILT (Mac session, no
 code changes). Founder adopted the "one motion for 90 days" plan: cold outreach →
