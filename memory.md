@@ -44,7 +44,42 @@ Update the "Current state" line whenever it changes.
 
 ## Current state (update this line)
 
-2026-06-17 (latest) — SNAPSHOT RETIRED + FREE-AUDIT UNLOCK MONETIZED — SHIPPED TO
+2026-07-06 session 2 (latest) — AGENT SWARM STOOD UP (Mac session, no site code
+changes). The recurring business work is now packaged as Claude Code agents +
+skills, versioned in-repo: `.claude/agents/` (outreach-drafter, prospector,
+prospect-curator, vertical-page-builder, ops-watchdog) and `.claude/skills/`
+(/swarm = daily morning briefing (ops + outreach in parallel), /outreach-daily,
+/prospect-city <city>, /build-vertical <vertical>, /ops-check). Manual:
+`docs/automation/SWARM.md`. Founder-gated by design: all --send, all deploys,
+--mark status changes, spend beyond stated caps (Apify ~$1/city). NOT scheduled/
+cron'd — cloud routines can't reach this Mac's .env.local/leads CSVs, so the swarm
+is human-triggered (/swarm each morning). CORRECTION to the prior entry: this Mac
+NOW HAS `.env.local` incl. OUTREACH_SECRET (founder added it after that session),
+so outreach previews/sends run locally against prod via
+OUTREACH_BASE_URL=https://www.queryclear.com. Vercel/Stripe cred gaps still stand.
+New agent types load in NEW sessions (fallback documented in each skill). Nothing
+sent/deployed this session.
+
+2026-07-06 — SELL-MODE PIVOT + FIRST PROSPECT LIST BUILT (Mac session, no
+code changes). Founder adopted the "one motion for 90 days" plan: cold outreach →
+/free-audit → $497 → Upgrade; everything else (Operator, verticals, $97 kit) to
+maintenance. Built the first real prospect list via Apify Google Maps scraper
+(compass/crawler-google-places, ~$0.45): **54 curated Jacksonville med spas** with
+site+email at `docs/marketing/outreach/leads/2026-07-06-medspa-jacksonville.csv`
+(gitignored PII — exists only on the Mac); batch notes + run commands in
+`docs/marketing/outreach/2026-07-06-medspa-jacksonville-batch.md`. Coverage
+exhausted (~all Maps-visible Jax med spas; ~45 more had no scrapeable email).
+Prod smoke-checked: med-spa page/free-audit/operator/stack-kit all 200, sitemap 17
+URLs, unsigned Stripe webhook POST → 400 (sig check live), /api/outreach GET → 405.
+FOUND STILL OPEN (now 2+ wks overdue): DMARC still p=none (tighten to p=quarantine —
+was due ~6/24); Maple Bear visibility rows still "Unknown"; Stripe Dashboard test
+event unchecked. THIS MAC IS CREDENTIAL-LIMITED: Vercel CLI = momomonster549 (no
+sparkcreativesinc team access), Stripe CLI keys expired 2026-03-12 (`stripe login`
+needed), no .env.local (no OUTREACH_SECRET) — sends must wait for the founder to
+supply the secret or run from Windows. Suggested pace: preview then send 10–15/day
+from the 54; next metros St. Augustine → Orlando → Tampa → Miami (same recipe).
+
+2026-06-17 — SNAPSHOT RETIRED + FREE-AUDIT UNLOCK MONETIZED — SHIPPED TO
 PROD (commits f4e7e36 "retire AI Search Snapshot" + c300757 "monetize free-audit
 unlock", pushed to origin/main → Vercel prod READY, smoke-checked queryclear.com:
 / + /free-audit 200, home links /free-audit, no "free snapshot" in home HTML).

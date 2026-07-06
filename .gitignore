@@ -47,3 +47,7 @@ docs/marketing/outreach/leads/
 # Reference docs we don't track in git (kept locally)
 queryclear.com_AI Search Optimized Website Service Business Plan.pdf
 .superpowers/
+.env*
+
+# Claude Code machine-local permissions (the agents/skills ARE tracked)
+.claude/settings.local.json
