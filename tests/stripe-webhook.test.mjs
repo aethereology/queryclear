@@ -116,6 +116,7 @@ function loadRoute() {
         site: {
           email: "hello@queryclear.com",
           stackKit: { name: "The Local AI Visibility Stack", currency: "usd", unitAmount: 9700, shipDays: 30 },
+          carePlan: { name: "AI Search Care Plan", currency: "usd", unitAmount: 99700, interval: "month" },
         },
       };
     }
@@ -202,6 +203,48 @@ test("on an ai-search-audit purchase sends the audit order email with amount + w
   assert.match(sent[0].subject, /AI Search Audit purchase/i);
   assert.match(sent[0].html, /497\.00/);
   assert.match(sent[0].html, /example\.com/);
+});
+
+const carePlanEvent = {
+  type: "checkout.session.completed",
+  data: {
+    object: {
+      id: "cs_test_care",
+      mode: "subscription",
+      amount_total: 99700,
+      currency: "usd",
+      metadata: { product: "care-plan" },
+      subscription: "sub_test_123",
+      customer_details: { email: "owner@example.com", name: "Pat Owner" },
+      custom_fields: [{ key: "website", text: { value: "https://owner.example" } }],
+    },
+  },
+};
+
+test("on a care-plan subscription sends the Care Plan email (amount + cancel-anytime)", async () => {
+  setEnv();
+  const { route, sent } = loadRoute();
+  const res = await route.POST(makeRequest(carePlanEvent, { signature: "good" }));
+
+  assert.equal(res.status, 200);
+  assert.equal(sent.length, 1);
+  assert.match(sent[0].subject, /Care Plan subscriber/i);
+  assert.match(sent[0].html, /997\.00/);
+  assert.match(sent[0].html, /owner\.example/);
+  assert.match(sent[0].html, /sub_test_123/);
+  assert.match(sent[0].html, /[Cc]ancel anytime/);
+});
+
+test("a care-plan with a $0 first invoice still reports the configured monthly price", async () => {
+  setEnv();
+  const { route, sent } = loadRoute();
+  const trialEvent = JSON.parse(JSON.stringify(carePlanEvent));
+  trialEvent.data.object.amount_total = 0;
+  const res = await route.POST(makeRequest(trialEvent, { signature: "good" }));
+  assert.equal(res.status, 200);
+  assert.equal(sent.length, 1);
+  // Falls back to site.carePlan.unitAmount / 100.
+  assert.match(sent[0].html, /997\.00/);
 });
 
 test("ignores non-checkout events without sending email", async () => {

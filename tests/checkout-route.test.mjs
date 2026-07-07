@@ -68,6 +68,7 @@ function loadRoute({ createImpl } = {}) {
           url: "https://www.queryclear.com",
           stackKit: { currency: "usd", unitAmount: 9700, shipDays: 30, name: "The Local AI Visibility Stack" },
           auditProduct: { currency: "usd", unitAmount: 49700, name: "AI Search Audit" },
+          carePlan: { currency: "usd", unitAmount: 99700, interval: "month", name: "AI Search Care Plan" },
         },
       };
     }
@@ -122,6 +123,30 @@ test("creates an AI Search Audit session ($497) when product=ai-search-audit", a
   assert.match(params.success_url, /\/ai-visibility-audit\/success/);
   assert.match(params.cancel_url, /\/ai-visibility-audit\?canceled=1$/);
   // Must capture the buyer's site for fulfillment.
+  assert.ok(params.custom_fields?.some((f) => f.key === "website"), "website custom field present");
+});
+
+test("creates a subscription session ($997/mo) when product=care-plan", async () => {
+  process.env.STRIPE_SECRET_KEY = "sk_test_x";
+  const { route, created } = loadRoute();
+  const res = await route.POST(
+    makeRequest({ origin: "https://www.queryclear.com", product: "care-plan" }),
+  );
+
+  assert.equal(res.status, 200);
+  assert.equal(created.length, 1);
+  const params = created[0];
+  // Recurring → subscription mode with a monthly recurring price.
+  assert.equal(params.mode, "subscription");
+  assert.equal(params.line_items[0].price_data.unit_amount, 99700);
+  assert.equal(params.line_items[0].price_data.recurring.interval, "month");
+  assert.equal(params.metadata.product, "care-plan");
+  // subscription mode uses subscription_data, never payment_intent_data.
+  assert.equal(params.subscription_data.metadata.product, "care-plan");
+  assert.equal(params.payment_intent_data, undefined);
+  assert.match(params.success_url, /\/care-plan\/success/);
+  assert.match(params.cancel_url, /\/care-plan\?canceled=1$/);
+  // Must capture the site we're maintaining.
   assert.ok(params.custom_fields?.some((f) => f.key === "website"), "website custom field present");
 });
 

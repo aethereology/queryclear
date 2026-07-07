@@ -97,6 +97,17 @@ export type AuditOrderEmail = {
   website: string;
 };
 
+export type CarePlanOrderEmail = {
+  planName: string;
+  amount: string;
+  currency: string;
+  name: string;
+  email: string;
+  sessionId: string;
+  subscriptionId: string;
+  website: string;
+};
+
 // Email-safe copy of the web brand tokens from app/globals.css. Inline styles
 // still reference these values directly because many inboxes strip CSS vars.
 export const emailBrandTokens = {
@@ -839,7 +850,7 @@ export function renderAuditOrderEmail(order: AuditOrderEmail, site?: EmailSite) 
     title: "AI Search Audit purchased.",
     intro: [
       `${who} bought the $497 AI Search Audit. Stripe has recorded the payment; this is your fulfillment cue.`,
-      "Run the audit and send the report to the email on file — aim for a couple of business days.",
+      "Run the audit, then reach out to the email on file to schedule the live walkthrough. Remember the $497 is credited toward an upgrade if they proceed.",
     ],
     summary: [
       { label: "Website", value: order.website || "(not provided — ask the buyer)", href: order.website || undefined },
@@ -858,6 +869,43 @@ export function renderAuditOrderEmail(order: AuditOrderEmail, site?: EmailSite) 
       status: "paid - fulfillment required",
     },
     footerNote: "Paid AI Search Audit. We deliver the scored report to the buyer; refunds handled case-by-case if we can't complete it.",
+  });
+}
+
+// Team-notify when someone starts the AI Search Care Plan (recurring) via Stripe
+// Checkout. This is a subscription, so the subscription id is the key field for
+// managing the relationship; the website (Stripe custom field) is what we maintain.
+export function renderCarePlanOrderEmail(order: CarePlanOrderEmail, site?: EmailSite) {
+  const who = order.name === "—" ? order.email : order.name;
+  return renderQueryclearEmail({
+    site,
+    preheader: `New AI Search Care Plan subscriber: ${who} (${order.website || "no site given"}).`,
+    eyebrow: "new subscriber",
+    title: "Care Plan started.",
+    intro: [
+      `${who} started the ${order.planName}. Stripe will bill this monthly; this is your onboarding cue.`,
+      "Kick off month one: run the re-audit, set the score + citation baseline, and reply to introduce yourself.",
+    ],
+    summary: [
+      { label: "Website", value: order.website || "(not provided — ask the subscriber)", href: order.website || undefined },
+      { label: "Plan", value: order.planName },
+      { label: "Amount", value: `$${order.amount} ${order.currency} / month` },
+      { label: "Name", value: order.name },
+      { label: "Email", value: order.email, href: order.email === "unknown" ? undefined : `mailto:${order.email}` },
+      { label: "Subscription", value: order.subscriptionId || "(pending)" },
+      { label: "Session", value: order.sessionId },
+    ],
+    machinePanel: {
+      label: "// care_plan.subscription",
+      lines: [
+        { key: "product", value: order.planName },
+        { key: "site", value: order.website || "unknown" },
+        { key: "amount", value: `$${order.amount} ${order.currency}/mo` },
+        { key: "billing", value: "recurring - monthly" },
+      ],
+      status: "active - onboarding required",
+    },
+    footerNote: "Recurring monthly subscription. Cancel anytime, no contract. We report what we measure; we never guarantee rankings or AI citations.",
   });
 }
 

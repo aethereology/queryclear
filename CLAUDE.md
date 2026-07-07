@@ -31,11 +31,38 @@ We sell *readiness*, not outcomes. **Never** promise rankings or AI citations.
 
 ## 2. Ground-truth state (keep this section current)
 
-> Last verified: 2026-06-17. If you change the site, update this section and
+> Last verified: 2026-06-23. If you change the site, update this section and
 > `memory.md` at the end of your session.
 
 - **LIVE** at https://www.queryclear.com (apex 307 → www). Deployed on Vercel
   (team `sparkcreativesinc`, project `queryclear`; CLI needs `--scope sparkcreativesinc`).
+- **LOCAL FUNNEL REDESIGN 2026-06-23 (code-complete, verified, NOT yet committed/deployed
+  — founder-gated):** the local ladder is reshaped for recurrence:
+  **Free audit → $497 Discovery Sprint (credited toward upgrade) → Upgrade (from $2,500,
+  now includes the Stack kit free) → AI Search Care Plan ($997/mo).** Three moves (see
+  Decisions.md 2026-06-23): (1) the **$497 `/ai-visibility-audit` is reframed as a Paid
+  Discovery Sprint** — delivered as a live walkthrough, **$497 credited toward a Website
+  Upgrade** if they proceed (copy-only: page + success page + `renderAuditOrderEmail`; same
+  one-time `payment` checkout). (2) **NEW: `/care-plan` — queryclear's first SUBSCRIPTION
+  product** ($997/mo, `subscription`-mode Stripe Checkout; `carePlan` block in `lib/site.ts`;
+  new `care-plan` branch in `app/api/checkout/route.ts` using `subscription_data` +
+  `recurring`; `renderCarePlanOrderEmail` + webhook dispatch in
+  `app/api/stripe/webhook/route.ts`; new `LeadForm` interest "AI Search Care Plan"; `/care-plan`
+  + `/care-plan/success` pages with WebPage+Service+FAQPage+BreadcrumbList JSON-LD; nav
+  "Maintain" column + sitemap + llms.txt + homepage follow-on line under the ladder). Human-
+  delivered, local, self-serve — **distinct from the agentic B2B `operator`**. (3) **$97 DIY
+  kit retired as a public SKU** (ends the T14 demand test): `/stack-kit` is **noindex**,
+  removed from nav/sitemap/llms.txt, reframed to "included free with every Upgrade"; the
+  `/api/checkout` `stack-kit` branch + tests left intact (unreachable, harmless). Honesty
+  held: no guarantees; Sprint credit is a real stated discount (no fake urgency); Care Plan
+  is "$997/mo, cancel anytime, no contract," reports only measured data. **This deliberately
+  breaks the 2026-06-18 sell-only freeze** — founder authorized the full build (incl. Stripe
+  plumbing) for the MRR. Verified on Windows 2026-06-23: build = **38 routes** (incl.
+  `/care-plan` + success, both prerender static with h1/canonical/4 JSON-LD types), lint
+  clean, **83/83** tests (new care-plan checkout + webhook + email cases). **Founder-gated:**
+  confirm the Stripe webhook endpoint in the Dashboard (reuses the same endpoint — no new env
+  vars), a Stripe test-mode subscription smoke, set final Care Plan price/name if different
+  from $997 / "AI Search Care Plan", then commit/push + `vercel --prod --scope sparkcreativesinc`.
 - **SNAPSHOT RETIRED → `/free-audit` IS THE FREE TOP-OF-FUNNEL — SHIPPED 2026-06-17
   (commits f4e7e36 + c300757, pushed to main → prod READY, smoke-checked):** the
   manual "AI Search Snapshot" is gone. The free offer is now the **automated, instant,

@@ -5,6 +5,54 @@ Format: date · decision · rationale · status.
 
 ---
 
+## 2026-06-23 · Local funnel redesign: Discovery Sprint + recurring Care Plan; retire the public $97 kit
+- **Decision:** Redesign the local/service funnel for velocity and recurrence, as one
+  coherent ladder: **Free audit (`/free-audit`) → Paid Discovery Sprint ($497, credited
+  toward the upgrade) → Website Upgrade (from $2,500, now includes the Stack kit free) →
+  AI Search Care Plan ($997/mo, recurring).** Three moves:
+  1. **Reposition the $497 audit as a "Paid Discovery Sprint."** Same self-serve Stripe
+     one-time checkout, reframed around two honest levers: it's delivered as a **live
+     walkthrough**, and the **$497 is credited in full toward a Website Upgrade** if the
+     client proceeds. Copy-only on `/ai-visibility-audit` + its success page + the order
+     email; no billing-path change.
+  2. **Launch the AI Search Care Plan — queryclear's first SUBSCRIPTION product** ($997/mo,
+     `subscription`-mode Stripe Checkout). Human-delivered monthly retainer for the local
+     track: a monthly re-audit, up to two content/schema updates, and a measured score +
+     AI-citation watch. New `/care-plan` + success page, `carePlan` config block, a
+     `care-plan` checkout branch, `renderCarePlanOrderEmail`, webhook dispatch, and a new
+     `LeadForm` interest option. Distinct from the agentic B2B `operator` (this is
+     human-delivered, local, self-serve).
+  3. **Retire the public $97 DIY kit** (ends the T14 demand test). Its contents are now a
+     **free bonus bundled with every Website Upgrade**. `/stack-kit` is noindexed, removed
+     from nav/sitemap/llms.txt, and reframed to "included with every Upgrade" (the
+     standalone pre-order CTA is gone). The `/api/checkout` `stack-kit` branch + tests are
+     left intact (no public path reaches them) to avoid touching green billing code.
+- **Rationale:** The local track had **zero recurring revenue** — the single biggest hole
+  in the model (a client paid once and vanished; the operator MRR was B2B-SaaS-only). The
+  Care Plan adds local MRR; the Sprint's credit mechanic raises audit→upgrade conversion
+  honestly; the kit-as-bonus stops a $97 SKU from anchoring value below the $2,500 offer.
+  Derived from a founder-reviewed triage of two pasted "monetization" docs — the honest
+  funnel mechanics were kept; the dishonest tactics (fabricated competitor data, outcome
+  guarantees, fake urgency, dark-pattern auto-billing, affiliate kickbacks, fear/hype copy)
+  were explicitly rejected.
+- **Honesty constraint (binding):** no outcome guarantees anywhere; the Sprint credit is a
+  real, plainly-stated discount (no fake "expires on the call" urgency); the Care Plan is
+  "$997/month, cancel anytime, no contract" and reports only **measured** data ("we report
+  what we measure" — never "your score will improve"); any "first month free" is a
+  sales-time Stripe coupon, disclosed, not a default dark-pattern trial.
+- **Breaks the 2026-06-18 sell-only code freeze — deliberately.** Founder judged the MRR
+  upside worth the build and authorized "full build including Stripe plumbing" on 2026-06-23.
+- **Status:** Code-complete and verified on Windows 2026-06-23 (build = 38 routes incl.
+  `/care-plan` + success, lint clean, **83/83** tests). **Founder-gated:** register/confirm
+  the Stripe webhook endpoint in the Dashboard (new product reuses the same endpoint — no
+  new env vars; price is inline via `price_data`), a Stripe test-mode subscription smoke,
+  set final Care Plan price/name in `lib/site.ts` if different from $997 / "AI Search Care
+  Plan", then commit/push + `vercel --prod --scope sparkcreativesinc`. Amends the
+  2026-06-11 pricing ADR (the $497 rung is now framed as a credited Sprint) and the T14
+  kit demand test (closed: kit is now an Upgrade bonus, not a public SKU).
+
+---
+
 ## 2026-06-17 · Retire the manual "AI Search Snapshot"; `/free-audit` is the free top-of-funnel
 - **Decision:** The manual, human-delivered **"AI Search Snapshot"** free offer is
   **retired**. The free top-of-funnel is now the automated, instant, read-only

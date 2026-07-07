@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>queryclear — LinkedIn banner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --paper:#f7f4ee;
+    --paper-soft:rgba(247,244,238,.66);
+    --ink:#17180f;
+    --pine:#12352a;
+    --pine-2:#0c2a21;
+    --lime:#b6f03c;
+    --lime-deep:#8fcf1f;
+    --line:rgba(247,244,238,.12);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{background:#0a221a}
+
+  /* Rendered at 2x of LinkedIn's 1128x191 cover -> 2256 x 382.
+     Company pages overlay the logo avatar at the BOTTOM-LEFT and the
+     company name just right of it, so the composition is CENTERED and
+     the bottom-left quadrant is kept clear of anything critical. */
+  #card{
+    position:relative;
+    width:2256px;
+    height:382px;
+    overflow:hidden;
+    background:
+      radial-gradient(120% 200% at 50% -40%, rgba(182,240,60,.15) 0%, rgba(182,240,60,0) 46%),
+      linear-gradient(135deg, #12352a 0%, #0c2a21 60%, #081e17 100%);
+    font-family:'IBM Plex Mono', ui-monospace, monospace;
+    color:var(--paper);
+  }
+
+  /* faint engineering grid, like the site's machine panels */
+  #card::before{
+    content:"";
+    position:absolute; inset:0;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size:64px 64px;
+    -webkit-mask-image:radial-gradient(140% 120% at 50% 50%, #000 30%, transparent 80%);
+            mask-image:radial-gradient(140% 120% at 50% 50%, #000 30%, transparent 80%);
+    opacity:.45;
+  }
+  /* hairline frame */
+  #card::after{
+    content:"";
+    position:absolute; inset:26px;
+    border:1px dashed rgba(247,244,238,.16);
+    pointer-events:none;
+  }
+
+  /* visualizes the LinkedIn avatar safe-zone while designing; hidden in export */
+  .avatar-guide{
+    position:absolute; left:96px; bottom:0;
+    width:240px; height:240px;
+    border:2px dashed rgba(182,240,60,.5);
+    border-radius:18px;
+    display:none;
+    z-index:5;
+  }
+
+  .inner{
+    position:relative;
+    z-index:2;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:22px;
+    text-align:center;
+    padding:42px 120px;
+  }
+
+  .brand{display:flex; align-items:center; gap:16px}
+  .brand svg{width:30px; height:30px; overflow:visible}
+  .wordmark{
+    font-family:'Bricolage Grotesque', system-ui, sans-serif;
+    font-weight:700;
+    font-size:36px;
+    letter-spacing:-.02em;
+    line-height:1;
+    color:var(--paper);
+  }
+  .wordmark .dot{color:var(--lime)}
+
+  .eyebrow{
+    font-size:17px;
+    font-weight:500;
+    letter-spacing:.34em;
+    text-transform:uppercase;
+    color:var(--paper-soft);
+  }
+  .eyebrow .b{color:var(--lime-deep)}
+
+  h1{
+    font-family:'Bricolage Grotesque', system-ui, sans-serif;
+    font-weight:700;
+    font-size:82px;
+    line-height:1.0;
+    letter-spacing:-.025em;
+    color:var(--paper);
+    white-space:nowrap;
+  }
+  h1 .hl{ color:var(--lime); }
+
+  .chips{display:flex; flex-wrap:nowrap; gap:12px; justify-content:center}
+  .chip{
+    font-size:16px;
+    letter-spacing:.05em;
+    color:var(--paper);
+    border:1px solid rgba(247,244,238,.22);
+    padding:8px 15px;
+    white-space:nowrap;
+  }
+  .chip.url{
+    border-color:rgba(182,240,60,.45);
+    color:var(--lime);
+    font-weight:600;
+    letter-spacing:.07em;
+  }
+</style>
+</head>
+<body>
+  <div id="card">
+    <div class="avatar-guide"></div>
+    <div class="inner">
+      <div class="brand">
+        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <circle cx="10" cy="10" r="6" stroke="#f7f4ee" stroke-width="1.5" />
+          <circle cx="16" cy="10" r="2" fill="#b6f03c" />
+        </svg>
+        <span class="wordmark">queryclear<span class="dot">.</span></span>
+      </div>
+
+      <div class="eyebrow"><span class="b">[</span>&nbsp;GEO &middot; Generative Engine Optimization&nbsp;<span class="b">]</span></div>
+
+      <h1>Modern SEO for the <span class="hl">AI search</span> era.</h1>
+
+      <div class="chips">
+        <span class="chip">ChatGPT</span>
+        <span class="chip">Claude</span>
+        <span class="chip">Perplexity</span>
+        <span class="chip">Gemini</span>
+        <span class="chip">AI Overviews</span>
+        <span class="chip">Copilot</span>
+        <span class="chip url">queryclear.com</span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

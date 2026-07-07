@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>queryclear — X / Twitter header</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --paper:#f7f4ee;
+    --paper-soft:rgba(247,244,238,.66);
+    --ink:#17180f;
+    --pine:#12352a;
+    --pine-2:#0c2a21;
+    --lime:#b6f03c;
+    --lime-deep:#8fcf1f;
+    --line:rgba(247,244,238,.12);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{background:#0a221a}
+
+  /* Rendered at 2x of X/Twitter's 1500x500 header -> 3000 x 1000.
+     The profile avatar overlaps the BOTTOM-LEFT, so the composition is
+     CENTERED and the bottom-left is kept clear of anything critical. */
+  #card{
+    position:relative;
+    width:3000px;
+    height:1000px;
+    overflow:hidden;
+    background:
+      radial-gradient(110% 150% at 50% -28%, rgba(182,240,60,.16) 0%, rgba(182,240,60,0) 48%),
+      linear-gradient(135deg, #12352a 0%, #0c2a21 58%, #081e17 100%);
+    font-family:'IBM Plex Mono', ui-monospace, monospace;
+    color:var(--paper);
+  }
+
+  /* faint engineering grid, like the site's machine panels */
+  #card::before{
+    content:"";
+    position:absolute; inset:0;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size:76px 76px;
+    -webkit-mask-image:radial-gradient(120% 120% at 50% 46%, #000 34%, transparent 84%);
+            mask-image:radial-gradient(120% 120% at 50% 46%, #000 34%, transparent 84%);
+    opacity:.45;
+  }
+  /* hairline frame */
+  #card::after{
+    content:"";
+    position:absolute; inset:40px;
+    border:1px dashed rgba(247,244,238,.16);
+    pointer-events:none;
+  }
+
+  .inner{
+    position:relative;
+    z-index:2;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:30px;
+    text-align:center;
+    padding:70px 180px;
+  }
+
+  .brand{display:flex; align-items:center; gap:18px}
+  .brand svg{width:40px; height:40px; overflow:visible}
+  .wordmark{
+    font-family:'Bricolage Grotesque', system-ui, sans-serif;
+    font-weight:700;
+    font-size:48px;
+    letter-spacing:-.02em;
+    line-height:1;
+    color:var(--paper);
+  }
+  .wordmark .dot{color:var(--lime)}
+
+  .eyebrow{
+    font-size:22px;
+    font-weight:500;
+    letter-spacing:.32em;
+    text-transform:uppercase;
+    color:var(--paper-soft);
+  }
+  .eyebrow .b{color:var(--lime-deep)}
+
+  h1{
+    font-family:'Bricolage Grotesque', system-ui, sans-serif;
+    font-weight:700;
+    font-size:108px;
+    line-height:1.0;
+    letter-spacing:-.025em;
+    color:var(--paper);
+    white-space:nowrap;
+  }
+  h1 .hl{ color:var(--lime); }
+
+  .sub{
+    font-size:28px;
+    line-height:1.5;
+    letter-spacing:.02em;
+    color:var(--paper-soft);
+    max-width:1880px;
+  }
+
+  .chips{display:flex; flex-wrap:nowrap; gap:14px; justify-content:center; margin-top:6px}
+  .chip{
+    font-size:20px;
+    letter-spacing:.05em;
+    color:var(--paper);
+    border:1px solid rgba(247,244,238,.22);
+    padding:10px 19px;
+    white-space:nowrap;
+  }
+  .chip.url{
+    border-color:rgba(182,240,60,.45);
+    color:var(--lime);
+    font-weight:600;
+    letter-spacing:.07em;
+  }
+</style>
+</head>
+<body>
+  <div id="card">
+    <div class="inner">
+      <div class="brand">
+        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <circle cx="10" cy="10" r="6" stroke="#f7f4ee" stroke-width="1.5" />
+          <circle cx="16" cy="10" r="2" fill="#b6f03c" />
+        </svg>
+        <span class="wordmark">queryclear<span class="dot">.</span></span>
+      </div>
+
+      <div class="eyebrow"><span class="b">[</span>&nbsp;GEO &middot; Generative Engine Optimization&nbsp;<span class="b">]</span></div>
+
+      <h1>Modern SEO for the <span class="hl">AI search</span> era.</h1>
+
+      <p class="sub">We make your website easier for search engines and AI answer engines to crawl, understand, trust, and cite.</p>
+
+      <div class="chips">
+        <span class="chip">ChatGPT</span>
+        <span class="chip">Claude</span>
+        <span class="chip">Perplexity</span>
+        <span class="chip">Gemini</span>
+        <span class="chip">AI Overviews</span>
+        <span class="chip">Copilot</span>
+        <span class="chip url">queryclear.com</span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

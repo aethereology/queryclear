@@ -21,8 +21,9 @@ readiness, clarity, useful content, and structure.
 - AI Search Operator (early access, for B2B SaaS) — a human-approved agent that continuously monitors AI search visibility, drafts answer-first content, and prepares on-page fixes. The agent proposes; a person approves every action. Not a guarantee of rankings or citations.
 - Free AI Search Audit — an instant, read-only audit at /free-audit of search clarity, technical foundation, and biggest opportunities.
 - AI Search Audit ($497) — a scored report with prompt testing, page review, technical findings, local visibility review, and a prioritized fix roadmap.
-- Website Upgrade (from $2,500) — done-for-you improvements: service pages, metadata, FAQs, schema, crawlability, internal links, conversion paths.
+- Website Upgrade (from $2,500) — done-for-you improvements: service pages, metadata, FAQs, schema, crawlability, internal links, conversion paths. Includes the Local AI Visibility Stack (playbook + templates) free.
 - Modern Search Website Build (from $6,500) — a full website build on a clearer, faster, more search-ready foundation.
+- AI Search Care Plan ($997/month, cancel anytime) — a human-delivered monthly retainer for local and service businesses: a monthly re-audit, up to two content/schema updates, and a measured readiness score and AI-citation watch. We report what we measure; not a guarantee of rankings or citations.
 
 ## Key pages
 - Home: ${site.url}/
@@ -37,7 +38,7 @@ readiness, clarity, useful content, and structure.
 - AI-Search-Ready Websites: ${site.url}/ai-search-ready-website
 - Schema for AI Search: ${site.url}/schema-for-ai-search
 - llms.txt for Businesses: ${site.url}/llms-txt-for-businesses
-- The Local AI Visibility Stack (DIY kit, $97 pre-order): ${site.url}/stack-kit
+- AI Search Care Plan (monthly retainer, $997/mo): ${site.url}/care-plan
 - About: ${site.url}/about
 - Contact / run a free audit: ${site.url}/free-audit
 - Privacy Policy: ${site.url}/privacy

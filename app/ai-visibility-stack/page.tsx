@@ -176,8 +176,8 @@ export default function StackPage() {
               <Cta href="/audit" variant="ghost" className="!text-paper !border-paper/30 hover:!bg-white/10">
                 See a sample audit
               </Cta>
-              <Cta href="/stack-kit" variant="ghost" className="!text-paper !border-paper/30 hover:!bg-white/10">
-                Do it yourself — $97 kit
+              <Cta href="/care-plan" variant="ghost" className="!text-paper !border-paper/30 hover:!bg-white/10">
+                Keep it current — Care Plan
               </Cta>
             </div>
           </Container>

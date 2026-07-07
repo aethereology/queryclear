@@ -89,8 +89,8 @@ export default function ScorecardPage() {
             </div>
             <div className="flex flex-wrap gap-3">
               <Cta href="/free-audit">Run a free audit</Cta>
-              <Cta href="/stack-kit" variant="ghost" className="!text-paper !border-paper/30 hover:!bg-white/10">
-                Do it yourself — $97 kit
+              <Cta href="/ai-visibility-audit" variant="ghost" className="!text-paper !border-paper/30 hover:!bg-white/10">
+                Get the $497 audit
               </Cta>
             </div>
           </Container>

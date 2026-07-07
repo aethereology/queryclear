@@ -2,9 +2,10 @@ import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { site } from "@/lib/site";
 
-// Creates a Stripe Checkout Session for one of our one-time products:
-//  - "stack-kit"        — Local AI Visibility Stack founding pre-order ($97, refundable)
-//  - "ai-search-audit"  — the $497 AI Search Audit (human-delivered; captures the buyer's site)
+// Creates a Stripe Checkout Session for one of our products:
+//  - "stack-kit"        — Local AI Visibility Stack founding pre-order ($97, refundable; one-time)
+//  - "ai-search-audit"  — the $497 AI Search Audit (human-delivered; captures the buyer's site; one-time)
+//  - "care-plan"        — the AI Search Care Plan ($997/mo; SUBSCRIPTION mode; cancel anytime)
 // Selected via the POST body `{ product }`; defaults to "stack-kit" for back-compat.
 // Env: STRIPE_SECRET_KEY. The page renders without it; only checkout needs it.
 
@@ -66,6 +67,41 @@ function checkoutParams(
       payment_intent_data: { metadata: { product: "ai-search-audit" } },
       success_url: `${origin}/ai-visibility-audit/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/ai-visibility-audit?canceled=1`,
+    };
+  }
+  if (product === "care-plan") {
+    return {
+      // Recurring product → subscription mode. Stripe collects the email and
+      // a payment method; the monthly price is defined inline via price_data.
+      mode: "subscription",
+      line_items: [
+        {
+          quantity: 1,
+          price_data: {
+            currency: site.carePlan.currency,
+            unit_amount: site.carePlan.unitAmount,
+            recurring: { interval: site.carePlan.interval },
+            product_data: {
+              name: site.carePlan.name,
+              description:
+                "Monthly modern-search care: a re-audit, up to two content/schema updates, a measured score + citation watch, and a real person on call. Cancel anytime.",
+            },
+          },
+        },
+      ],
+      // Capture the site we're maintaining so we can start (Stripe collects email).
+      custom_fields: [
+        {
+          key: "website",
+          label: { type: "custom", custom: "Your website URL" },
+          type: "text",
+        },
+      ],
+      metadata: { product: "care-plan" },
+      // subscription mode uses subscription_data (NOT payment_intent_data).
+      subscription_data: { metadata: { product: "care-plan" } },
+      success_url: `${origin}/care-plan/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${origin}/care-plan?canceled=1`,
     };
   }
   return null;

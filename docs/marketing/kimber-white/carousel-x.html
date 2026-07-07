@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>queryclear — X thread cards · Kimber White</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --paper:#f7f4ee; --paper-soft:rgba(247,244,238,.62); --paper-dim:rgba(247,244,238,.42);
+    --ink:#17180f; --pine:#12352a; --pine-2:#0c2a21; --pine-3:#081e17;
+    --lime:#b6f03c; --lime-deep:#8fcf1f;
+    --line:rgba(247,244,238,.13); --line-strong:rgba(247,244,238,.20);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{background:#06140f}
+
+  /* X in-feed square: 1080 x 1080. #s1..#s8 isolate one card for headless export. */
+  .slide{
+    position:relative; width:1080px; height:1080px; overflow:hidden;
+    background:
+      radial-gradient(120% 95% at 18% -12%, rgba(182,240,60,.16) 0%, rgba(182,240,60,0) 42%),
+      linear-gradient(150deg, #12352a 0%, #0c2a21 58%, #081e17 100%);
+    color:var(--paper); font-family:'IBM Plex Sans', system-ui, sans-serif;
+  }
+  .slide.light{
+    background:
+      radial-gradient(110% 85% at 100% 0%, rgba(18,53,42,.06) 0%, rgba(18,53,42,0) 40%),
+      linear-gradient(160deg, #f7f4ee 0%, #efeae0 100%);
+    color:var(--ink);
+  }
+  .slide::before{
+    content:""; position:absolute; inset:0;
+    background-image:linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size:60px 60px;
+    -webkit-mask-image:radial-gradient(140% 120% at 50% 40%, #000 28%, transparent 82%);
+            mask-image:radial-gradient(140% 120% at 50% 40%, #000 28%, transparent 82%);
+    opacity:.5;
+  }
+  .slide.light::before{ background-image:radial-gradient(rgba(23,24,15,.10) 1.4px, transparent 1.4px); background-size:24px 24px; opacity:.6; }
+  .frame{ position:absolute; inset:40px; border:1px dashed var(--line-strong); pointer-events:none; }
+  .light .frame{ border-color:rgba(23,24,15,.16); }
+  .inner{ position:absolute; inset:40px; z-index:2; padding:58px 64px; display:flex; flex-direction:column; }
+
+  .top{ display:flex; align-items:center; justify-content:space-between; margin-bottom:auto; }
+  .brand{display:flex; align-items:center; gap:13px}
+  .brand svg{width:27px; height:27px; overflow:visible}
+  .wordmark{ font-family:'Bricolage Grotesque', system-ui, sans-serif; font-weight:700; font-size:29px; letter-spacing:-.02em; line-height:1; color:var(--paper); }
+  .light .wordmark{ color:var(--ink); }
+  .wordmark .dot{color:var(--lime-deep)}
+  .counter{ font-family:'IBM Plex Mono', monospace; font-size:20px; letter-spacing:.12em; color:var(--paper-dim); }
+  .light .counter{ color:rgba(23,24,15,.5); }
+  .counter b{color:var(--lime-deep); font-weight:600}
+
+  .body{ margin-top:30px; }
+  .eyebrow{ font-family:'IBM Plex Mono', monospace; font-size:20px; font-weight:500; letter-spacing:.2em; text-transform:uppercase; color:var(--lime-deep); margin-bottom:26px; }
+  .eyebrow .br{color:var(--paper-dim)}
+  .light .eyebrow{color:#5c7a16}
+  .light .eyebrow .br{color:rgba(23,24,15,.4)}
+
+  h1{ font-family:'Bricolage Grotesque', system-ui, sans-serif; font-weight:700; letter-spacing:-.025em; line-height:1.02; color:var(--paper); text-wrap:balance; }
+  .light h1{ color:var(--ink); }
+  .hl{ color:var(--lime); }
+  .light .hl{ color:#3f6b12; background:rgba(182,240,60,.34); padding:0 .12em; }
+
+  .lede{ font-size:30px; line-height:1.38; color:var(--paper-soft); font-weight:400; max-width:720px; margin-top:28px; }
+  .light .lede{ color:#3c3b30; }
+  .lede strong{ color:var(--paper); font-weight:600; }
+  .light .lede strong{ color:var(--ink); }
+
+  .foot{ margin-top:auto; display:flex; align-items:center; justify-content:space-between; padding-top:30px; }
+  .foot .tag{ font-family:'IBM Plex Mono', monospace; font-size:18px; letter-spacing:.13em; text-transform:uppercase; color:var(--paper-dim); }
+  .light .foot .tag{ color:rgba(23,24,15,.5); }
+  .foot .url{ font-family:'IBM Plex Mono', monospace; font-size:21px; font-weight:600; letter-spacing:.03em; color:var(--lime); }
+  .light .foot .url{ color:#3f6b12; }
+  .swipe{ display:inline-flex; align-items:center; gap:12px; font-family:'IBM Plex Mono', monospace; font-size:20px; letter-spacing:.15em; text-transform:uppercase; color:var(--lime); font-weight:500; }
+  .swipe .arrow{font-size:26px; line-height:1}
+
+  .pcard{ border:1px dashed var(--line-strong); background:rgba(255,255,255,.03); padding:30px 34px; margin-top:6px; }
+  .pcard .name{ font-family:'Bricolage Grotesque', system-ui, sans-serif; font-weight:700; font-size:42px; letter-spacing:-.02em; color:var(--paper); }
+  .pcard .meta{ font-family:'IBM Plex Mono', monospace; font-size:21px; letter-spacing:.03em; color:var(--paper-soft); margin-top:11px; }
+  .chips{display:flex; flex-wrap:wrap; gap:12px; margin-top:24px}
+  .chip{ font-family:'IBM Plex Mono', monospace; font-size:19px; letter-spacing:.02em; color:var(--paper); border:1px solid rgba(182,240,60,.4); padding:9px 15px; }
+
+  .finding{ display:flex; gap:24px; padding:22px 0; border-top:1px dashed var(--line); }
+  .finding:first-of-type{ border-top:none; }
+  .finding .num{ font-family:'Bricolage Grotesque', system-ui, sans-serif; font-weight:700; font-size:38px; line-height:1; color:var(--lime); flex:0 0 auto; width:46px; }
+  .finding .ftitle{ font-family:'Bricolage Grotesque', system-ui, sans-serif; font-weight:600; font-size:29px; letter-spacing:-.01em; color:var(--paper); }
+  .finding .fbody{ font-size:23px; line-height:1.36; color:var(--paper-soft); margin-top:6px; }
+  .finding .fbody code{ font-family:'IBM Plex Mono', monospace; color:var(--lime); font-size:21px; }
+
+  .mpanel{ font-family:'IBM Plex Mono', monospace; border:1px dashed rgba(255,255,255,.22); background:var(--pine-3); padding:24px 28px; margin-top:20px; }
+  .mpanel .label{ font-size:17px; letter-spacing:.15em; text-transform:uppercase; color:var(--paper-dim); margin-bottom:13px; display:block; }
+  .mpanel .read{ font-size:24px; line-height:1.42; color:#cfe8c4; }
+  .mpanel.before .read{ color:rgba(207,232,196,.6); }
+  .mpanel.after{ border-color:rgba(182,240,60,.5); }
+  .mpanel.after .label{ color:var(--lime-deep); }
+  .mpanel.after .read{ color:var(--paper); }
+  .mpanel.after .read b{ color:var(--lime); font-weight:600; }
+
+  /* real-screenshot showcase */
+  .shot{ margin-top:18px; }
+  .shot-label{ display:flex; align-items:center; gap:11px; font-family:'IBM Plex Mono', monospace; font-size:17px; letter-spacing:.13em; text-transform:uppercase; color:var(--paper-soft); margin-bottom:11px; }
+  .shot-label .dot{ width:10px; height:10px; border-radius:50%; background:var(--lime); }
+  .shot-frame{ border:1px dashed rgba(255,255,255,.28); background:#fff; padding:11px; width:430px; }
+  .shot-frame img{ display:block; width:100%; height:auto; }
+  .callout{ font-size:22px; line-height:1.38; color:var(--paper-soft); margin-top:18px; max-width:760px; }
+  .callout b{ color:var(--lime); font-weight:600; }
+  .callout .names{ color:var(--paper); }
+
+  .cta-url{ font-family:'Bricolage Grotesque', system-ui, sans-serif; font-weight:700; font-size:56px; letter-spacing:-.025em; color:var(--lime); line-height:1.05; margin-top:26px; }
+  .cta-sub{ font-family:'IBM Plex Mono', monospace; font-size:24px; letter-spacing:.1em; text-transform:uppercase; color:var(--paper-soft); margin-top:22px; }
+  .honest-quote{ font-family:'Bricolage Grotesque', system-ui, sans-serif; font-weight:700; font-size:54px; line-height:1.08; letter-spacing:-.02em; color:var(--ink); }
+</style>
+</head>
+<body>
+
+<!-- S1 — HOOK -->
+<section class="slide">
+  <div class="frame"></div>
+  <div class="inner">
+    <div class="top">
+      <div class="brand"><svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="6" stroke="#f7f4ee" stroke-width="1.5"/><circle cx="16" cy="10" r="2" fill="#b6f03c"/></svg><span class="wordmark">queryclear<span class="dot">.</span></span></div>
+      <div class="counter"><b>01</b> / 08</div>
+    </div>
+    <div class="body">
+      <div class="eyebrow"><span class="br">[</span>&nbsp;AI Visibility Teardown&nbsp;<span class="br">]</span></div>
+      <h1 style="font-size:66px">I asked ChatGPT for the best mortgage broker in <span class="hl">Fort Lauderdale</span>.</h1>
+      <p class="lede">It named a few people. One of the most <strong>decorated loan officers in the country</strong> wasn't one of them.</p>
+    </div>
+    <div class="foot"><span class="swipe"><span class="arrow">↓</span> Thread</span><span class="foot url">queryclear.com</span></div>
+  </div>
+</section>
+
+<!-- S2 — STAKES -->
+<section class="slide">
+  <div class="frame"></div>
+  <div class="inner">
+    <div class="top">
+      <div class="brand"><svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="6" stroke="#f7f4ee" stroke-width="1.5"/><circle cx="16" cy="10" r="2" fill="#b6f03c"/></svg><span class="wordmark">queryclear<span class="dot">.</span></span></div>
+      <div class="counter"><b>02</b> / 08</div>
+    </div>
+    <div class="body">
+      <div class="eyebrow"><span class="br">[</span>&nbsp;02 &middot; The stakes&nbsp;<span class="br">]</span></div>
+      <h1 style="font-size:72px">That's the new <span class="hl">front page</span>.</h1>
+      <p class="lede">Buyers don't scroll ten blue links anymore. They ask ChatGPT, Perplexity, and Google's AI for a name — and act on it. If you're not in the answer, <strong>you were never in the running.</strong></p>
+    </div>
+    <div class="foot"><span class="tag">AI Visibility Teardown</span><span class="foot url">→ queryclear.com/free-audit</span></div>
+  </div>
+</section>
+
+<!-- S3 — THE GAP -->
+<section class="slide">
+  <div class="frame"></div>
+  <div class="inner">
+    <div class="top">
+      <div class="brand"><svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="6" stroke="#f7f4ee" stroke-width="1.5"/><circle cx="16" cy="10" r="2" fill="#b6f03c"/></svg><span class="wordmark">queryclear<span class="dot">.</span></span></div>
+      <div class="counter"><b>03</b> / 08</div>
+    </div>
+    <div class="body">
+      <div class="eyebrow"><span class="br">[</span>&nbsp;03 &middot; The gap&nbsp;<span class="br">]</span></div>
+      <h1 style="font-size:60px">On paper, he's <span class="hl">elite</span>.</h1>
+      <div class="pcard">
+        <div class="name">Kimber White</div>
+        <div class="meta">NMLS #352949 &middot; RE Financial &middot; Oakland Park / Fort Lauderdale, FL</div>
+        <div class="chips"><span class="chip">35+ years</span><span class="chip">Past President, NAMB</span><span class="chip">NAMB Mortgage Pro of the Year</span></div>
+      </div>
+      <p class="lede" style="margin-top:26px">So how does an AI engine skip him? <strong>Not skill. Legibility.</strong></p>
+    </div>
+    <div class="foot"><span class="tag">AI Visibility Teardown</span><span class="foot url">→ queryclear.com/free-audit</span></div>
+  </div>
+</section>
+
+<!-- S4 — WHAT THE MACHINE SEES (real screenshot) -->
+<section class="slide">
+  <div class="frame"></div>
+  <div class="inner">
+    <div class="top">
+      <div class="brand"><svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="6" stroke="#f7f4ee" stroke-width="1.5"/><circle cx="16" cy="10" r="2" fill="#b6f03c"/></svg><span class="wordmark">queryclear<span class="dot">.</span></span></div>
+      <div class="counter"><b>04</b> / 08</div>
+    </div>
+    <div class="body" style="margin-top:22px">
+      <div class="eyebrow"><span class="br">[</span>&nbsp;04 &middot; What the machine sees&nbsp;<span class="br">]</span></div>
+      <h1 style="font-size:46px">I asked. Five names came back. <span class="hl">His wasn't one.</span></h1>
+      <div class="shot">
+        <div class="shot-label"><span class="dot"></span> Real result &middot; ChatGPT &middot; Fort Lauderdale, FL</div>
+        <div class="shot-frame"><img src="chatgpt-fort-lauderdale.png" alt="ChatGPT names five Fort Lauderdale mortgage pros; Kimber White is not listed" /></div>
+      </div>
+      <p class="callout"><span class="names">Doce &middot; Ganz &middot; NFM Lending &middot; Florida State &middot; Shmilovich.</span> A Past President of the National Association of Mortgage Brokers — <b>nowhere in the answer.</b></p>
+    </div>
+    <div class="foot"><span class="tag">AI Visibility Teardown</span><span class="foot url">→ queryclear.com/free-audit</span></div>
+  </div>
+</section>
+
+<!-- S5 — DIAGNOSIS -->
+<section class="slide">
+  <div class="frame"></div>
+  <div class="inner">
+    <div class="top">
+      <div class="brand"><svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="6" stroke="#f7f4ee" stroke-width="1.5"/><circle cx="16" cy="10" r="2" fill="#b6f03c"/></svg><span class="wordmark">queryclear<span class="dot">.</span></span></div>
+      <div class="counter"><b>05</b> / 08</div>
+    </div>
+    <div class="body" style="margin-top:20px">
+      <div class="eyebrow"><span class="br">[</span>&nbsp;05 &middot; Diagnosis&nbsp;<span class="br">]</span></div>
+      <h1 style="font-size:44px; margin-bottom:10px">Three reasons a résumé like that stays <span class="hl">invisible</span>.</h1>
+      <div class="finding"><div class="num">01</div><div><div class="ftitle">No structured data</div><div class="fbody">The site has no schema — nothing tells a machine <code>this is Kimber White, a mortgage broker in Fort Lauderdale</code>. So it guesses.</div></div></div>
+      <div class="finding"><div class="num">02</div><div><div class="ftitle">It opens with a slogan</div><div class="fbody">The first thing a machine reads is <code>"Low Rates. No Hassle."</code> — not who he is, where he works, or who he helps.</div></div></div>
+      <div class="finding"><div class="num">03</div><div><div class="ftitle">His authority is invisible</div><div class="fbody">35 years, a NAMB presidency, a national award — none stated so a machine can parse it. Humans see a legend; machines see a generic page.</div></div></div>
+    </div>
+    <div class="foot"><span class="tag">AI Visibility Teardown</span><span class="foot url">→ queryclear.com/free-audit</span></div>
+  </div>
+</section>
+
+<!-- S6 — THE FIX -->
+<section class="slide">
+  <div class="frame"></div>
+  <div class="inner">
+    <div class="top">
+      <div class="brand"><svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="6" stroke="#f7f4ee" stroke-width="1.5"/><circle cx="16" cy="10" r="2" fill="#b6f03c"/></svg><span class="wordmark">queryclear<span class="dot">.</span></span></div>
+      <div class="counter"><b>06</b> / 08</div>
+    </div>
+    <div class="body" style="margin-top:24px">
+      <div class="eyebrow"><span class="br">[</span>&nbsp;06 &middot; The fix&nbsp;<span class="br">]</span></div>
+      <h1 style="font-size:52px">What I'd change <span class="hl">first</span>.</h1>
+      <div class="mpanel before"><span class="label">Before — what the machine reads</span><div class="read">"Low Rates. No Hassle."</div></div>
+      <div class="mpanel after"><span class="label">After — same page, now legible</span><div class="read"><b>Kimber White</b> — licensed mortgage broker (NMLS #352949) in Oakland Park, FL, serving Fort Lauderdale &amp; Broward County. 35+ years. Past President, NAMB.</div></div>
+      <p class="lede" style="font-size:25px; margin-top:20px">Same person. Add <strong>Person + LocalBusiness schema</strong>, and the machine can finally read him.</p>
+    </div>
+    <div class="foot"><span class="tag">AI Visibility Teardown</span><span class="foot url">→ queryclear.com/free-audit</span></div>
+  </div>
+</section>
+
+<!-- S7 — THE HONEST LINE -->
+<section class="slide light">
+  <div class="frame"></div>
+  <div class="inner">
+    <div class="top">
+      <div class="brand"><svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="6" stroke="#17180f" stroke-width="1.5"/><circle cx="16" cy="10" r="2" fill="#8fcf1f"/></svg><span class="wordmark">queryclear<span class="dot">.</span></span></div>
+      <div class="counter"><b>07</b> / 08</div>
+    </div>
+    <div class="body">
+      <div class="eyebrow"><span class="br">[</span>&nbsp;07 &middot; The honest part&nbsp;<span class="br">]</span></div>
+      <h1 class="honest-quote">This doesn't <span class="hl">guarantee</span> AI will recommend him. Nothing does.</h1>
+      <p class="lede" style="color:#3c3b30">Anyone promising you AI citations is selling smoke. What this does: make a site genuinely <strong style="color:var(--ink)">worth citing</strong> — clear, structured, true. That's the part you actually control.</p>
+    </div>
+    <div class="foot"><span class="tag">AI Visibility Teardown</span><span class="foot url">→ queryclear.com/free-audit</span></div>
+  </div>
+</section>
+
+<!-- S8 — CTA -->
+<section class="slide">
+  <div class="frame"></div>
+  <div class="inner">
+    <div class="top">
+      <div class="brand"><svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="6" stroke="#f7f4ee" stroke-width="1.5"/><circle cx="16" cy="10" r="2" fill="#b6f03c"/></svg><span class="wordmark">queryclear<span class="dot">.</span></span></div>
+      <div class="counter"><b>08</b> / 08</div>
+    </div>
+    <div class="body" style="margin-top:0; flex:1; display:flex; flex-direction:column; justify-content:center">
+      <div class="eyebrow"><span class="br">[</span>&nbsp;Your turn&nbsp;<span class="br">]</span></div>
+      <h1 style="font-size:64px">See how AI describes <span class="hl">your</span> business.</h1>
+      <div class="cta-url">queryclear.com/free-audit</div>
+      <div class="cta-sub">Free &middot; Instant &middot; Read-only</div>
+    </div>
+    <div class="foot"><span class="tag">Modern SEO for the AI search era</span><span class="tag">A SparkCreatives Inc. brand</span></div>
+  </div>
+</section>
+
+<script>
+  (function () {
+    var m = (location.hash || '').match(/^#s([1-8])$/);
+    if (!m) return;
+    var n = +m[1];
+    document.querySelectorAll('.slide').forEach(function (s, i) { s.style.display = i === n - 1 ? 'block' : 'none'; });
+    document.documentElement.style.background = '#06140f';
+  })();
+</script>
+</body>
+</html>

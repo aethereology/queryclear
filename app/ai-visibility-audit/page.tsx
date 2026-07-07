@@ -11,12 +11,12 @@ import { site } from "@/lib/site";
 export const metadata: Metadata = {
   title: "AI Search Audit",
   description:
-    "See how clearly modern search understands your business. The queryclear AI Search Audit scores your site across seven readiness categories with a prioritized, plain-English fix roadmap. Run a free instant audit first; the full scored audit is $497.",
+    "See how clearly modern search understands your business. The queryclear AI Search Audit ($497) scores your site across seven readiness categories and is walked through with you live — and the $497 is credited in full toward a Website Upgrade if you go ahead. Run a free instant audit first.",
   alternates: { canonical: "/ai-visibility-audit" },
   openGraph: {
     title: "AI Search Audit — queryclear",
     description:
-      "See how clearly modern search understands your business, and exactly what to fix first.",
+      "A scored review of your site, walked through with you live — and credited toward your upgrade if you go ahead.",
   },
 };
 
@@ -33,22 +33,24 @@ const categories = [
 const receive = [
   "Your current readiness scored across all seven categories",
   "Real AI-visibility test results for your category and city",
+  "A live walkthrough of the findings — ask questions in real time",
   "A prioritized fix list — biggest impact first, in plain English",
-  "Specific, concrete recommendations (not a generic checklist)",
+  "Your $497 credited in full toward an upgrade if you go ahead",
 ];
 
 const steps = [
-  { t: "Run a free audit", d: "Enter your site at /free-audit and get an instant, read-only read on your biggest opportunities — no form, no wait." },
-  { t: "Go deeper", d: "Want the full picture? The $497 audit runs AI-visibility tests and scores all seven layers with a prioritized roadmap." },
-  { t: "You get the roadmap", d: "The audit report explains what matters, what's missing, and what to fix first — in plain English." },
+  { t: "Buy the audit", d: "Pay $497 and tell us your site at checkout. We start as soon as it's purchased — no scheduling tag to get the work moving." },
+  { t: "We run it, then walk you through it live", d: "We score all seven layers and run AI-visibility tests, then sit down with you on a short live call to walk through exactly what we found and what to fix first." },
+  { t: "Decide — and the $497 is credited", d: "Keep the roadmap and run it yourself, or have us do it. If you go ahead with a Website Upgrade, your $497 is credited in full toward it." },
 ];
 
 const faqs = [
-  { q: "How much does it cost?", a: "The free AI Search Audit at /free-audit is free — an instant, read-only read on your biggest opportunities. The full AI Search Audit, with scoring, prompt testing, and a prioritized fix roadmap, is $497." },
-  { q: "How long does it take?", a: "Submitting the form takes about two minutes. We usually send your findings within a couple of business days." },
+  { q: "How much does it cost?", a: "The free AI Search Audit at /free-audit is free — an instant, read-only read on your biggest opportunities. The full AI Search Audit, with scoring, prompt testing, a live walkthrough, and a prioritized fix roadmap, is $497." },
+  { q: "Is the $497 credited toward the upgrade?", a: "Yes. If you decide to have us do the work, your $497 is credited in full toward a Website Upgrade (from $2,500) — so the audit effectively becomes free when you go ahead. There's no obligation: you can also just keep the roadmap." },
+  { q: "What's the live walkthrough?", a: "After we run the audit, we get on a short call and walk you through the findings in plain English — what's working, what's holding you back, and what to do first. You can ask questions in real time instead of decoding a PDF alone." },
   { q: "Do you guarantee I'll rank or get cited?", a: "No — and you should distrust anyone who does. We make your site genuinely clearer and more trustworthy to search and AI systems. That's the part we control, and we do it well." },
   { q: "What do you need from me?", a: "Your website URL and a few real details about your business. We only ever work from accurate, verified information." },
-  { q: "Can I do it myself instead?", a: "Yes. We offer a $97 DIY kit — The Local AI Visibility Stack — with the playbook and copy-paste templates to apply the same method on your own. It's a refundable founding pre-order; find it at queryclear.com/stack-kit." },
+  { q: "Can I do it myself instead?", a: "Yes — the audit gives you a prioritized roadmap you're free to run on your own. And every Website Upgrade now includes the Local AI Visibility Stack (our playbook and copy-paste templates) free, so the do-it-yourself toolkit comes with the done-for-you work." },
 ];
 
 const webPageSchema = {
@@ -116,8 +118,10 @@ export default function AuditLandingPage() {
               When someone asks Google, ChatGPT, Claude, Perplexity, or Gemini
               for a business like yours, do you show up — clearly and
               accurately? The AI Search Audit scores your site across seven
-              readiness categories and gives you a prioritized fix roadmap. Not
-              sure yet? Run a free instant audit first.
+              readiness categories, then we walk you through the findings live
+              and hand you a prioritized fix roadmap. And if you go ahead with an
+              upgrade, the $497 is credited in full. Not sure yet? Run a free
+              instant audit first.
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <CheckoutButton product="ai-search-audit" label="Buy the audit — $497" />
@@ -125,8 +129,9 @@ export default function AuditLandingPage() {
               <Cta href="/audit" variant="ghost">See a sample report</Cta>
             </div>
             <p className="mt-3 text-xs text-muted">
-              Secure checkout via Stripe. We start your audit as soon as it&apos;s
-              purchased and email the report — usually within a couple of business days.
+              Secure checkout via Stripe. We start as soon as it&apos;s purchased,
+              then schedule your live walkthrough. The $497 is credited toward a
+              Website Upgrade if you proceed.
             </p>
           </Container>
         </section>
@@ -225,8 +230,9 @@ export default function AuditLandingPage() {
             <div>
               <h2 className="text-3xl text-paper sm:text-4xl">Get your AI Search Audit.</h2>
               <p className="mt-4 max-w-md text-paper/70">
-                Ready to go? Buy the $497 audit now and we&apos;ll start as soon as
-                it&apos;s purchased. Want to talk first, or prefer a free read?
+                Ready to go? Buy the $497 audit now — we start as soon as it&apos;s
+                purchased, walk you through it live, and credit the $497 toward an
+                upgrade if you proceed. Want to talk first, or prefer a free read?
                 Tell us about your site below, or{" "}
                 <a href="/free-audit" className="underline hover:text-lime">
                   run a free audit

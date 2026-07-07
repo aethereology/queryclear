@@ -74,7 +74,7 @@ const faqs = [
   },
   {
     q: "Can I do this myself?",
-    a: "If you're hands-on, yes — we offer a $97 DIY kit (The Local AI Visibility Stack) with our playbook and copy-paste templates so you can apply the method on your own. It's a refundable founding pre-order at queryclear.com/stack-kit. Most owners still start with the free audit — it's the easiest way to see what to fix first.",
+    a: "Yes. Start with the free audit to see your biggest opportunities, then the $497 AI Search Audit gives you a prioritized, plain-English roadmap you can run on your own — and the $497 is credited toward an upgrade if you'd rather we do it. Every Website Upgrade also includes our Local AI Visibility Stack (playbook + copy-paste templates) free.",
   },
 ];
 
@@ -385,6 +385,13 @@ export default function Home() {
           <p className="mt-6 text-sm text-muted">
             &quot;From&quot; prices are starting points — every project is
             scoped and confirmed in writing before work begins.
+          </p>
+          <p className="mt-3 text-sm text-muted">
+            Already optimized? Keep it working with the monthly{" "}
+            <a href="/care-plan" className="font-medium text-ink underline hover:text-lime-deep">
+              AI Search Care Plan
+            </a>
+            {" "}— a re-audit, hands-on updates, and a measured citation watch. Cancel anytime.
           </p>
         </Section>
 

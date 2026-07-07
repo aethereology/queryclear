@@ -84,6 +84,26 @@ needed), no .env.local (no OUTREACH_SECRET) — sends must wait for the founder 
 supply the secret or run from Windows. Suggested pace: preview then send 10–15/day
 from the 54; next metros St. Augustine → Orlando → Tampa → Miami (same recipe).
 
+2026-06-23 (latest) — LOCAL FUNNEL REDESIGN, code-complete + verified, NOT yet
+deployed (founder-gated). Reshaped the local ladder for recurrence: Free audit →
+$497 **Discovery Sprint** (delivered live, $497 credited toward the upgrade) →
+Upgrade (from $2,500, now **includes the Stack kit free**) → **AI Search Care Plan
+$997/mo** — queryclear's first SUBSCRIPTION product (`/care-plan`, Stripe
+`subscription` mode, human-delivered, distinct from the agentic B2B operator). The
+**$97 DIY kit was retired as a public SKU** (noindex + unlinked, now an Upgrade
+bonus; closes the T14 demand test). This **deliberately broke the 2026-06-18
+sell-only code freeze** — founder authorized the full build (incl. Stripe plumbing)
+for the local MRR, which was the model's biggest hole. Honesty held: no guarantees;
+Sprint credit is a real stated discount (no fake urgency); Care Plan is "$997/mo,
+cancel anytime," reports only measured data. Verified Windows: build 38 routes, lint
+clean, 83/83 tests. Files: `lib/site.ts` (carePlan + offers), `app/care-plan/*`,
+`app/api/checkout/route.ts` (care-plan branch), `app/api/stripe/webhook/route.ts`,
+`lib/email.ts` (renderCarePlanOrderEmail), `app/ai-visibility-audit/*` (Sprint
+reframe), `app/stack-kit/page.tsx` (retired), nav/sitemap/llms/LeadForm + tests.
+Founder-gated to ship: confirm Stripe webhook covers the subscription product; test-
+mode subscription smoke; commit/push + `vercel --prod --scope sparkcreativesinc`.
+See Decisions.md 2026-06-23.
+
 2026-06-17 — SNAPSHOT RETIRED + FREE-AUDIT UNLOCK MONETIZED — SHIPPED TO
 PROD (commits f4e7e36 "retire AI Search Snapshot" + c300757 "monetize free-audit
 unlock", pushed to origin/main → Vercel prod READY, smoke-checked queryclear.com:

@@ -91,6 +91,24 @@ Short living board. Strategy lives in `roadmap.md`; the executable cards live in
   report ends with the three paid offers. Tests now 56/56 (snapshot-overlay rewritten +
   new `tests/public-audit-email.test.mjs`).
 
+## ✅ Local funnel redesign — code-complete + verified (2026-06-23, NOT yet deployed)
+- Reshaped the local ladder for recurrence: **Free audit → $497 Discovery Sprint
+  (credited toward upgrade) → Upgrade (from $2,500, now includes the Stack kit free) →
+  AI Search Care Plan ($997/mo).** See Decisions.md 2026-06-23.
+- (1) $497 `/ai-visibility-audit` reframed as a **Paid Discovery Sprint** — live
+  walkthrough + $497 credited toward the upgrade (copy + success page + order email;
+  same one-time checkout). (2) **NEW `/care-plan` — first subscription product** ($997/mo,
+  `subscription`-mode Stripe; `carePlan` config; `care-plan` checkout branch;
+  `renderCarePlanOrderEmail` + webhook dispatch; new pages + JSON-LD; nav/sitemap/llms/
+  LeadForm/homepage wiring). (3) **$97 kit retired as a public SKU** → noindex + unlinked,
+  reframed as a free Upgrade bonus (closes the T14 demand test).
+- **Deliberately breaks the 2026-06-18 sell-only freeze** — founder authorized the full
+  build for the MRR. Verified Windows 2026-06-23: build 38 routes, lint clean, **83/83** tests.
+- **Founder-gated to ship:** confirm Stripe webhook endpoint covers the new subscription
+  product (same endpoint, no new env vars); Stripe test-mode subscription smoke; set final
+  Care Plan price/name if ≠ $997 / "AI Search Care Plan"; commit/push + `vercel --prod
+  --scope sparkcreativesinc`; smoke-check `/care-plan` + sitemap + `/stack-kit` noindex.
+
 ## 🔄 Now — founder + next
 - ✅ Stripe webhook REGISTERED in Dashboard (founder, 2026-06-11). Verified:
   prod env has all STRIPE_* vars; unsigned POST → 400 (sig check active).

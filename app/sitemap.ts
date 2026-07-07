@@ -2,8 +2,10 @@ import type { MetadataRoute } from "next";
 import { site } from "@/lib/site";
 
 // Every public route belongs here AND in app/llms.txt/route.ts.
-// Deliberate exceptions: /thank-you (noindex post-conversion page) and
-// /reports/* (private client reports, noindex).
+// Deliberate exceptions: /thank-you (noindex post-conversion page),
+// /reports/* (private client reports, noindex), and /stack-kit (the $97 DIY kit
+// was retired as a public SKU 2026-06-23 — now an Upgrade bonus; page is
+// noindex and unlinked but kept reachable for old inbound links).
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
     {
@@ -67,9 +69,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.7,
     },
     {
-      url: `${site.url}/stack-kit`,
+      url: `${site.url}/care-plan`,
       changeFrequency: "monthly",
-      priority: 0.7,
+      priority: 0.8,
     },
     {
       url: `${site.url}/about`,

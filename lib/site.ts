@@ -52,7 +52,7 @@ export const site = {
     {
       name: "AI Search Audit",
       price: "$497",
-      desc: "A deeper scored report: prompt testing, page review, technical findings, local visibility review, and a prioritized fix roadmap.",
+      desc: "A scored report, walked through with you live: prompt testing, page review, technical findings, and a prioritized roadmap. The $497 is credited in full toward a Website Upgrade if you go ahead.",
       href: "/ai-visibility-audit",
       cta: "See what's in the audit",
       need: null,
@@ -64,7 +64,7 @@ export const site = {
     {
       name: "Website Upgrade",
       price: "from $2,500",
-      desc: "Done-for-you improvements to the site you have: service pages, metadata, FAQs, schema, crawlability, internal links, and conversion paths.",
+      desc: "Done-for-you improvements to the site you have: service pages, metadata, FAQs, schema, crawlability, internal links, and conversion paths. Includes the Local AI Visibility Stack (playbook + templates) free.",
       href: "#audit-cta",
       cta: "Upgrade my site",
       need: "Website Upgrade",
@@ -128,6 +128,44 @@ export const site = {
     ],
     terms:
       "Founding pre-order. The Local AI Visibility Stack ships within 30 days of purchase. Full refund anytime before delivery — just email us. If we miss 30 days, we refund you automatically.",
+  },
+  // Recurring offer for the local/service track (added 2026-06-23; see
+  // Decisions.md). queryclear's first SUBSCRIPTION product — a human-delivered
+  // monthly retainer that keeps a site's modern-search readiness from drifting
+  // after an upgrade. Distinct from the agentic B2B `operator`: this is
+  // human-delivered, local, and self-serve. Self-serve Stripe Checkout in
+  // `subscription` mode (see app/api/checkout/route.ts). Honest framing only:
+  // we report what we measure; we never guarantee rankings or AI citations.
+  carePlan: {
+    name: "AI Search Care Plan",
+    path: "/care-plan",
+    priceUsd: 997,
+    priceLabel: "$997/month",
+    currency: "usd",
+    unitAmount: 99700, // cents, for Stripe
+    interval: "month",
+    // What a month of the plan includes. Concrete and fulfillable — no outcome
+    // promises. Rendered on /care-plan.
+    includes: [
+      {
+        title: "A monthly re-audit",
+        desc: "We re-score your site across the seven readiness layers each month, so you can see exactly what moved and what's next.",
+      },
+      {
+        title: "Up to two updates a month",
+        desc: "Small content or schema changes applied to your live site as search and AI systems shift — handled for you, no queue.",
+      },
+      {
+        title: "A measured score + citation watch",
+        desc: "We track your readiness score and how AI answer engines describe your business, and report what we actually find — no guesswork.",
+      },
+      {
+        title: "A real person on call",
+        desc: "Reply to any report and a person answers — priority over one-off requests, with no extra ticket system.",
+      },
+    ],
+    terms:
+      "$997/month, billed monthly. Cancel anytime — no contract and no cancellation fee. We report what we measure; we do not guarantee rankings or AI citations.",
   },
   // Second track (added 2026-06-15; see Decisions.md). queryclear's recurring
   // "operator" offering for B2B SaaS teams: an agent that does the modern-search

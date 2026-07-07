@@ -25,7 +25,8 @@ export default function AuditSuccessPage() {
             <p className="mt-5 max-w-xl text-lg leading-relaxed text-muted">
               Your {site.auditProduct.name} ({site.auditProduct.priceLabel}) is
               confirmed and Stripe just emailed your receipt. We have the website
-              you entered at checkout and we&apos;re starting on it.
+              you entered at checkout and we&apos;re starting on it — then we&apos;ll
+              email you to set up your live walkthrough.
             </p>
           </Container>
         </section>
@@ -43,21 +44,23 @@ export default function AuditSuccessPage() {
                 </p>
               </li>
               <li className="card p-6">
-                <h2 className="text-lg">You get the report</h2>
+                <h2 className="text-lg">We walk you through it live</h2>
                 <p className="mt-1.5 text-sm leading-relaxed text-muted">
-                  We email your scored report to the address on your receipt —
-                  usually within a couple of business days. If we need anything,
-                  we&apos;ll reach out there first.
+                  We email the address on your receipt to set up a short live call —
+                  usually within a couple of business days — and walk you through the
+                  findings and what to fix first, so you can ask questions in real time.
                 </p>
               </li>
               <li className="card p-6">
-                <h2 className="text-lg">Questions or a problem?</h2>
+                <h2 className="text-lg">Your $497 is credited if you go ahead</h2>
                 <p className="mt-1.5 text-sm leading-relaxed text-muted">
-                  Email{" "}
+                  No obligation — keep the roadmap and run it yourself. Or, if you
+                  decide to have us do the work, your $497 is credited in full toward a
+                  Website Upgrade. Questions or a problem? Email{" "}
                   <a href={`mailto:${site.email}`} className="font-medium text-ink underline hover:text-lime-deep">
                     {site.email}
                   </a>
-                  {" "}— a real person replies. If we can&apos;t complete your audit,
+                  {" "}— a real person replies, and if we can&apos;t complete your audit
                   we&apos;ll make it right.
                 </p>
               </li>

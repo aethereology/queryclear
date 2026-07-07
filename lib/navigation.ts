@@ -64,12 +64,12 @@ export const serviceColumns: NavColumn[] = [
     ],
   },
   {
-    eyebrow: "DIY",
+    eyebrow: "Maintain",
     links: [
       {
-        href: site.stackKit.path,
-        label: `DIY kit (${site.stackKit.priceLabel})`,
-        desc: "A refundable founding pre-order for hands-on owners.",
+        href: site.carePlan.path,
+        label: `Care Plan (${site.carePlan.priceLabel})`,
+        desc: "A human-delivered monthly retainer that keeps your readiness current. Cancel anytime.",
       },
     ],
   },

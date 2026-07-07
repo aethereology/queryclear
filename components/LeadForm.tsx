@@ -28,6 +28,7 @@ export const interestOptions = [
   "AI Search Audit ($497)",
   "Website Upgrade",
   "Modern Search Website Build",
+  "AI Search Care Plan",
   "AI Search Operator (early access)",
 ] as const;
 
