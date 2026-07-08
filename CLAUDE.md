@@ -31,11 +31,34 @@ We sell *readiness*, not outcomes. **Never** promise rankings or AI citations.
 
 ## 2. Ground-truth state (keep this section current)
 
-> Last verified: 2026-06-23. If you change the site, update this section and
+> Last verified: 2026-07-08. If you change the site, update this section and
 > `memory.md` at the end of your session.
 
 - **LIVE** at https://www.queryclear.com (apex 307 → www). Deployed on Vercel
   (team `sparkcreativesinc`, project `queryclear`; CLI needs `--scope sparkcreativesinc`).
+- **CLOUDFLARE IS BLOCKING AI CRAWLERS — FOUNDER ACTION PENDING (found 2026-07-08):**
+  Cloudflare's default-on "AI Crawl Control" injects a managed robots.txt block
+  (GPTBot, ClaudeBot, Google-Extended, CCBot, Amazonbot, Applebot-Extended, Bytespider,
+  meta-externalagent all `Disallow: /`, plus `Content-Signal: ai-train=no`) on
+  www.queryclear.com — directly contradicting the GEO pitch. Founder decided
+  **allow all AI crawlers**. Fix is dashboard-only (MCP API token lacks bot-management
+  scope): Cloudflare → zone queryclear.com → Security → Bots / AI Crawl Control →
+  Allow + turn OFF "manage AI bot traffic with robots.txt"; also confirm no WAF-level
+  verified-bot block. Verify: `curl -s https://www.queryclear.com/robots.txt` shows no
+  "Cloudflare Managed content" block. Googlebot was never blocked (fetches 200); our own
+  `app/robots.ts` is correct. Related: site appears absent from Google's index (~5-week-old
+  domain, GSC+sitemap submitted 2026-06-04) — founder should check the GSC Pages report,
+  Request-index the money pages, and do the same in Bing Webmaster. Triage source: an
+  external Gemini review (2026-07-08) whose headline claims (noindex headers, blocked
+  crawlers, broken sitemap, FCP problems, form friction) were all verified FALSE.
+- **MACHINE-VIEW SSR FIX 2026-07-08 (commit 4590d20, NOT yet pushed/deployed):** the
+  homepage Human/Machine toggle previously mounted only the active panel, so the
+  "Machine view" demo was absent from prerendered HTML. `components/HumanMachineToggle.tsx`
+  now keeps both tabpanels mounted (inactive one aria-hidden + opacity-animated; no more
+  AnimatePresence unmount) and the machine panel in `app/page.tsx` is semantic
+  `<pre><code>`. Verified: build 38 routes, lint clean, 83/83 tests, pre/code present in
+  prerendered HTML, toggle exercised in-browser via Playwright. Deploys with the founder's
+  next `vercel --prod --scope sparkcreativesinc`.
 - **LOCAL FUNNEL REDESIGN 2026-06-23 (code-complete, verified, NOT yet committed/deployed
   — founder-gated):** the local ladder is reshaped for recurrence:
   **Free audit → $497 Discovery Sprint (credited toward upgrade) → Upgrade (from $2,500,

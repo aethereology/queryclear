@@ -44,7 +44,34 @@ Update the "Current state" line whenever it changes.
 
 ## Current state (update this line)
 
-2026-07-08 (latest) — SWARM RUN + 4 FOLLOW-UPS SHIPPED (Windows session).
+2026-07-08 (latest, session 2) — GEMINI FEEDBACK TRIAGE + MACHINE-VIEW SSR FIX.
+Founder pasted a Gemini review claiming queryclear.com is "completely invisible
+to search engines / blocks crawlers." Verified against prod: **mostly false** —
+homepage 200 + `index, follow`, no X-Robots-Tag, robots.txt + sitemap render
+fine, Googlebot-UA fetches 200, content prerendered. Form-friction and FCP
+complaints also rejected (`/free-audit` already IS the two-field flow; content
+is SSR'd). **Two real findings though:** (1) **Cloudflare's default-on "AI Crawl
+Control" managed robots.txt is blocking GPTBot, ClaudeBot, Google-Extended,
+CCBot, Amazonbot, Applebot-Extended, Bytespider, meta-externalagent + signals
+`ai-train=no`** — nobody chose this; it contradicts the entire GEO pitch.
+Founder decided 2026-07-08: **allow all AI crawlers.** FOUNDER ACTION PENDING:
+Cloudflare dashboard → zone queryclear.com (`16bc52f6...`) → Security/Bots/AI
+Crawl Control → set Allow + turn OFF "manage AI bot traffic with robots.txt"
+(MCP API token lacks bot-management scope — verified auth error). Verify after:
+robots.txt shows no "Cloudflare Managed content" block. (2) queryclear.com
+appears genuinely absent from Google's index (~5-week-old domain; GSC+sitemap
+were submitted 2026-06-04) — FOUNDER ACTION: check GSC Pages report + URL-inspect
+/, /free-audit, /ai-visibility-audit, /geo-audit → Request indexing; same pass
+in Bing Webmaster (feeds Copilot/ChatGPT search). CODE SHIPPED (commit 4590d20,
+NOT pushed/deployed): homepage Machine view was client-mount-only styled divs —
+invisible to actual machines; `HumanMachineToggle` now keeps both tabpanels
+mounted (inactive aria-hidden, opacity-animated, no AnimatePresence unmount)
+and the machine panel is semantic `<pre><code>`. Verified: build 38 routes,
+lint clean, 83/83 tests, pre/code in prerendered HTML, toggle exercised via
+Playwright against `next start` (tab swap + ARIA + text correct). Deploy rides
+the founder's next `vercel --prod` (font swap still uncommitted in tree).
+
+2026-07-08 — SWARM RUN + 4 FOLLOW-UPS SHIPPED (Windows session).
 `/swarm` ran ops-watchdog + outreach-drafter in parallel, then all 4 flagged
 actions were approved and executed: (1) committed + deployed to prod
 (`vercel --prod --scope sparkcreativesinc`) the 2026-07-07 Maple Bear report
