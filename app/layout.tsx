@@ -1,21 +1,30 @@
 import type { Metadata } from "next";
-import { Bricolage_Grotesque, IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
+import localFont from "next/font/local";
+import { IBM_Plex_Mono } from "next/font/google";
 import { SiteBackground } from "@/components/SiteBackground";
 import { site } from "@/lib/site";
 import "./globals.css";
 
-const bricolage = Bricolage_Grotesque({
+const bricolage = localFont({
+  src: [
+    { path: "./fonts/rz-regular.woff2", weight: "400 700", style: "normal" },
+  ],
   variable: "--font-bricolage",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
   display: "swap",
 });
 
-const plexSans = IBM_Plex_Sans({
+const plexSans = localFont({
+  src: [
+    { path: "./fonts/hagrid-trial-regular.ttf", weight: "400 700", style: "normal" },
+  ],
   variable: "--font-plex-sans",
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
   display: "swap",
+  // Hagrid's own digit glyphs render as broken/overlapping shapes at any size
+  // (trial-file glyph corruption, not a style choice) — exclude 0-9 from its
+  // coverage so the browser falls through to Plex Mono, which has real glyphs.
+  declarations: [
+    { prop: "unicode-range", value: "U+0000-002F, U+003A-10FFFF" },
+  ],
 });
 
 const plexMono = IBM_Plex_Mono({

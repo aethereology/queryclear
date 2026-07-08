@@ -18,7 +18,7 @@
   --color-line: #1718091a;
 
   --font-display: var(--font-bricolage), "Segoe UI", system-ui, sans-serif;
-  --font-sans: var(--font-plex-sans), system-ui, sans-serif;
+  --font-sans: var(--font-plex-sans), var(--font-plex-mono), serif;
   --font-mono: var(--font-plex-mono), ui-monospace, monospace;
 
   --radius-card: 0px;
@@ -266,6 +266,145 @@
     opacity: 1;
     transform: scaleX(1);
   }
+
+  .nav-scanline {
+    position: relative;
+    isolation: isolate;
+  }
+  .nav-scanline::before,
+  .nav-scanline::after {
+    content: "";
+    position: absolute;
+    left: 1rem;
+    right: 1rem;
+    pointer-events: none;
+  }
+  .nav-scanline::before {
+    top: 0;
+    border-top: 1px dashed color-mix(in srgb, var(--color-ink) 10%, transparent);
+  }
+  .nav-scanline::after {
+    bottom: 0;
+    border-bottom: 1px dashed color-mix(in srgb, var(--color-ink) 10%, transparent);
+  }
+
+  .brand-hub {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    min-height: 3rem;
+    color: var(--color-ink);
+  }
+  .brand-hub::before {
+    content: "";
+    position: absolute;
+    inset: 0.35rem -0.7rem;
+    z-index: -1;
+    border: 1px dashed var(--color-line);
+    background:
+      linear-gradient(90deg, transparent, color-mix(in srgb, var(--color-lime) 18%, transparent), transparent),
+      var(--color-paper);
+    opacity: 0;
+    transform: scaleX(0.92);
+    transition:
+      opacity 0.16s var(--ease),
+      transform 0.16s var(--ease);
+  }
+  .brand-hub:hover::before,
+  .brand-hub:focus-visible::before {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+  .brand-hub__rail {
+    width: clamp(1.2rem, 4vw, 3.8rem);
+    border-top: 1px dashed color-mix(in srgb, var(--color-ink) 26%, transparent);
+  }
+
+  .nav-command {
+    position: relative;
+    min-height: 2.25rem;
+    border: 1px dashed transparent;
+    padding: 0.45rem 0.7rem;
+    color: var(--color-muted);
+    transition:
+      border-color 0.12s linear,
+      background-color 0.12s linear,
+      color 0.12s linear,
+      transform 0.12s var(--ease);
+  }
+  .nav-command::before {
+    content: "";
+    position: absolute;
+    left: 0.65rem;
+    right: 0.65rem;
+    bottom: 0.28rem;
+    border-bottom: 2px solid var(--color-lime);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.16s steps(4, end);
+  }
+  .nav-command:hover,
+  .nav-command:focus-visible,
+  .nav-command[aria-expanded="true"] {
+    border-color: var(--color-line);
+    background: color-mix(in srgb, var(--color-lime) 15%, transparent);
+    color: var(--color-pine-2);
+  }
+  .nav-command:hover::before,
+  .nav-command:focus-visible::before,
+  .nav-command[aria-expanded="true"]::before {
+    transform: scaleX(1);
+  }
+  .nav-command:active {
+    transform: translateY(1px);
+  }
+
+  .mega-feature {
+    background:
+      linear-gradient(135deg, color-mix(in srgb, var(--color-lime) 18%, transparent), transparent 34%),
+      radial-gradient(circle at top right, color-mix(in srgb, var(--color-pine) 10%, transparent), transparent 32%),
+      var(--color-paper-2);
+  }
+
+  .mega-link {
+    position: relative;
+    border: 1px dashed transparent;
+    color: var(--color-ink);
+    transition:
+      border-color 0.12s linear,
+      background-color 0.12s linear,
+      transform 0.12s var(--ease);
+  }
+  .mega-link::before {
+    content: "";
+    position: absolute;
+    left: 0.7rem;
+    top: 0.9rem;
+    width: 5px;
+    height: 5px;
+    background: var(--color-lime);
+    transform: scale(0);
+    transition: transform 0.14s var(--ease);
+  }
+  .mega-link:hover,
+  .mega-link:focus-visible {
+    border-color: var(--color-line);
+    background: color-mix(in srgb, var(--color-lime) 16%, transparent);
+    transform: translateY(-1px);
+  }
+  .mega-link:hover::before,
+  .mega-link:focus-visible::before {
+    transform: scale(1);
+  }
+  .mega-link:hover span:first-child,
+  .mega-link:focus-visible span:first-child {
+    padding-left: 0.75rem;
+  }
+  .mega-link span:first-child {
+    transition: padding-left 0.14s var(--ease);
+  }
   /* hard focus edge for form inputs */
   .input-halo {
     border-radius: 0;
@@ -355,6 +494,12 @@
   .ulink::after,
   .nav-block,
   .nav-block::before,
+  .brand-hub::before,
+  .nav-command,
+  .nav-command::before,
+  .mega-link,
+  .mega-link::before,
+  .mega-link span:first-child,
   .mark-orbit .orbit-dot {
     transition: none;
   }
