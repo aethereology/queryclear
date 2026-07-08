@@ -1,12 +1,25 @@
 "use client";
 
 import { motion, useReducedMotion } from "motion/react";
-import type { ReactNode } from "react";
+import { useSyncExternalStore, type ReactNode } from "react";
 
 /**
  * The "what the AI reads" panel. Lines reveal one-by-one when scrolled into
  * view, like a readout being typed. Under reduced-motion, all lines show at once.
  */
+const emptySubscribe = () => () => {};
+
+function useHydratedReducedMotion() {
+  const reduced = useReducedMotion();
+  const hydrated = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false,
+  );
+
+  return hydrated && reduced;
+}
+
 export function TypingPanel({
   lines,
   className,
@@ -14,7 +27,7 @@ export function TypingPanel({
   lines: ReactNode[];
   className?: string;
 }) {
-  const reduce = useReducedMotion();
+  const reduce = useHydratedReducedMotion();
 
   if (reduce) {
     return (

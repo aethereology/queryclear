@@ -1,5 +1,6 @@
 "use client";
 
+import { useSyncExternalStore } from "react";
 import { motion, useReducedMotion } from "motion/react";
 
 const nodes = [
@@ -18,8 +19,21 @@ const traces = [
   "M308 84 H382",
 ] as const;
 
+const emptySubscribe = () => () => {};
+
+function useHydratedReducedMotion() {
+  const reduced = useReducedMotion();
+  const hydrated = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false,
+  );
+
+  return hydrated && reduced;
+}
+
 export function HeroCircuit() {
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = useHydratedReducedMotion();
 
   return (
     <div className="machine-panel relative mb-4 overflow-hidden p-0">

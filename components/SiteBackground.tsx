@@ -262,7 +262,13 @@ function PixelCanvas({
 export function SiteBackground() {
   return (
     <div aria-hidden="true" className="site-background">
-      <PixelCanvas className="site-background__canvas" />
+      <PixelCanvas
+        className="site-background__canvas"
+        variant="glow"
+        gap={11}
+        alpha={0.3}
+        baseIntensity={0.022}
+      />
     </div>
   );
 }

@@ -1,9 +1,22 @@
 "use client";
 
 import { motion, useReducedMotion, type Variants } from "motion/react";
-import type { ReactNode } from "react";
+import { useSyncExternalStore, type ReactNode } from "react";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
+
+const emptySubscribe = () => () => {};
+
+function useHydratedReducedMotion() {
+  const reduced = useReducedMotion();
+  const hydrated = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false,
+  );
+
+  return hydrated && reduced;
+}
 
 /** Single element that fades + rises into view once. */
 export function Reveal({
@@ -15,7 +28,7 @@ export function Reveal({
   className?: string;
   delay?: number;
 }) {
-  const reduce = useReducedMotion();
+  const reduce = useHydratedReducedMotion();
   if (reduce) return <div className={className}>{children}</div>;
   return (
     <motion.div
@@ -47,7 +60,7 @@ export function Stagger({
   children: ReactNode;
   className?: string;
 }) {
-  const reduce = useReducedMotion();
+  const reduce = useHydratedReducedMotion();
   if (reduce) return <div className={className}>{children}</div>;
   return (
     <motion.div
@@ -69,7 +82,7 @@ export function StaggerItem({
   children: ReactNode;
   className?: string;
 }) {
-  const reduce = useReducedMotion();
+  const reduce = useHydratedReducedMotion();
   if (reduce) return <div className={className}>{children}</div>;
   return (
     <motion.div className={className} variants={itemVariants}>
@@ -86,7 +99,7 @@ export function ClipReveal({
   lines: ReactNode[];
   className?: string;
 }) {
-  const reduce = useReducedMotion();
+  const reduce = useHydratedReducedMotion();
   if (reduce) {
     return (
       <span className={className}>
@@ -125,7 +138,7 @@ export function ClipReveal({
 
 /** A lime hairline that draws across (scaleX 0→1) when scrolled into view. */
 export function LineDraw({ className }: { className?: string }) {
-  const reduce = useReducedMotion();
+  const reduce = useHydratedReducedMotion();
   return (
     <span
       className={`relative block h-px w-full bg-line ${className ?? ""}`}

@@ -118,7 +118,7 @@ export function Header() {
           >
             <span aria-hidden="true" className="brand-hub__rail hidden sm:block" />
             <Mark className="h-5 w-5 text-ink" />
-            <span className="font-display text-xl tracking-tight sm:text-2xl">
+            <span className="font-display text-xl sm:text-2xl">
               queryclear
             </span>
             <span aria-hidden="true" className="brand-hub__rail hidden sm:block" />

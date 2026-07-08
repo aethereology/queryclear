@@ -96,11 +96,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${bricolage.variable} ${plexSans.variable} ${plexMono.variable} h-full antialiased`}
-    >
-      <body className="relative isolate flex min-h-full flex-col overflow-x-hidden">
+    <html lang="en" suppressHydrationWarning>
+      <body
+        className={`${bricolage.variable} ${plexSans.variable} ${plexMono.variable} h-full antialiased relative isolate flex min-h-full flex-col overflow-x-hidden`}
+      >
         <SiteBackground />
         <script
           type="application/ld+json"

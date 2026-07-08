@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useId, useState, useSyncExternalStore } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import type { ReactNode } from "react";
 
@@ -10,6 +10,19 @@ import type { ReactNode } from "react";
  * Both panels stay mounted so the machine-readable demo is present in the
  * server-rendered HTML — the "machine view" is visible to machines.
  */
+const emptySubscribe = () => () => {};
+
+function useHydratedReducedMotion() {
+  const reduced = useReducedMotion();
+  const hydrated = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false,
+  );
+
+  return hydrated && reduced;
+}
+
 export function HumanMachineToggle({
   human,
   machine,
@@ -18,7 +31,7 @@ export function HumanMachineToggle({
   machine: ReactNode;
 }) {
   const [view, setView] = useState<"human" | "machine">("human");
-  const reduce = useReducedMotion();
+  const reduce = useHydratedReducedMotion();
   const id = useId();
 
   const tab = (key: "human" | "machine", label: string) => {
