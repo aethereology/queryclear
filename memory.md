@@ -68,8 +68,17 @@ invisible to actual machines; `HumanMachineToggle` now keeps both tabpanels
 mounted (inactive aria-hidden, opacity-animated, no AnimatePresence unmount)
 and the machine panel is semantic `<pre><code>`. Verified: build 38 routes,
 lint clean, 83/83 tests, pre/code in prerendered HTML, toggle exercised via
-Playwright against `next start` (tab swap + ARIA + text correct). Deploy rides
-the founder's next `vercel --prod` (font swap still uncommitted in tree).
+Playwright against `next start` (tab swap + ARIA + text correct).
+**DEPLOYED same session (founder: "commit push deploy ALL"):** the font-swap +
+guide-page/Header/Scorecard redesign work was committed too (2fd712e — RZ
+Regular + Hagrid Trial as next/font/local, Hagrid digits excluded via
+unicode-range; full tree verified build/lint/83 tests first), all pushed to
+main, and shipped with `npx vercel deploy --prod --scope sparkcreativesinc`
+(plain `npx vercel --prod` builds but does NOT promote — use `vercel deploy`).
+Prod smoke-checked: pre/code machine view live on /, both font files 200 from
+/_next/static/media, 9 key routes 200 (incl. /care-plan). Still open from this
+session: the two FOUNDER ACTIONS above (Cloudflare AI Crawl Control → Allow;
+GSC/Bing index check + Request indexing).
 
 2026-07-08 — SWARM RUN + 4 FOLLOW-UPS SHIPPED (Windows session).
 `/swarm` ran ops-watchdog + outreach-drafter in parallel, then all 4 flagged

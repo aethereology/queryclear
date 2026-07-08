@@ -51,7 +51,14 @@ We sell *readiness*, not outcomes. **Never** promise rankings or AI citations.
   Request-index the money pages, and do the same in Bing Webmaster. Triage source: an
   external Gemini review (2026-07-08) whose headline claims (noindex headers, blocked
   crawlers, broken sitemap, FCP problems, form friction) were all verified FALSE.
-- **MACHINE-VIEW SSR FIX 2026-07-08 (commit 4590d20, NOT yet pushed/deployed):** the
+- **DEPLOYED TO PROD 2026-07-08 (founder-authorized "commit push deploy ALL"):** commits
+  4590d20 (machine-view SSR fix), 26936ff (docs), and 2fd712e (RZ Regular + Hagrid Trial
+  local font swap + guide-page/Header/Scorecard redesign) pushed to main and shipped via
+  `npx vercel deploy --prod --scope sparkcreativesinc`. Smoke-checked: pre/code machine
+  view live on /, both font files 200 from /_next/static/media, 9 key routes 200
+  (incl. /care-plan). Font licensing risk (RZ Regular + Hagrid Trial, unlicensed/trial
+  EULAs) remains founder-accepted and is now in production.
+- **MACHINE-VIEW SSR FIX 2026-07-08 (commit 4590d20, deployed same day — see above):** the
   homepage Human/Machine toggle previously mounted only the active panel, so the
   "Machine view" demo was absent from prerendered HTML. `components/HumanMachineToggle.tsx`
   now keeps both tabpanels mounted (inactive one aria-hidden + opacity-animated; no more
