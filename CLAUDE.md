@@ -238,9 +238,10 @@ We sell *readiness*, not outcomes. **Never** promise rankings or AI citations.
   queryclear.com is a verified InternalRelay accepted domain in the M365 tenant,
   hello@/audit@ are mailbox aliases, send-from-alias on, M365 DKIM enabled, outbound
   connector → Cloudflare MX. Founder sends as hello@ from Outlook's From dropdown.
-  STILL PENDING: tighten DMARC to p=quarantine ~2026-06-24; sparkcreativesinc.org has
-  its own issues (no M365 DKIM, stale Google MX) — DNS not in our Cloudflare account.
-  Deliberately deferred: `updates.` sending subdomain (premature at current volume).
+  **DMARC tightened `p=none` → `p=quarantine` on 2026-07-07** (via Cloudflare API,
+  zone `16bc52f6e7bbbc643a07c41158aa1b94`) — this item is closed. sparkcreativesinc.org
+  still has its own issues (no M365 DKIM, stale Google MX) — DNS not in our Cloudflare
+  account. Deliberately deferred: `updates.` sending subdomain (premature at current volume).
 - **Canonical now = www in code** (`site.url = https://www.queryclear.com`, T0 done).
 - **BUILD/LINT/TEST VERIFIED ON WINDOWS (2026-06-06):** `npm run build` → 27 routes
   compile + TS passes; `npm run lint` clean; `npm test` 45/45 (lead 9 + checkout 4 +

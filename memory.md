@@ -44,7 +44,37 @@ Update the "Current state" line whenever it changes.
 
 ## Current state (update this line)
 
-2026-07-07 (latest) — DAILY SWARM + 3 OVERDUE FOUNDER ITEMS CLOSED (Windows
+2026-07-08 (latest) — SWARM RUN + 4 FOLLOW-UPS SHIPPED (Windows session).
+`/swarm` ran ops-watchdog + outreach-drafter in parallel, then all 4 flagged
+actions were approved and executed: (1) committed + deployed to prod
+(`vercel --prod --scope sparkcreativesinc`) the 2026-07-07 Maple Bear report
+retirement that had been sitting uncommitted — confirmed live (report now
+404s). (2) Fixed a real gap the watchdog found: `/free-audit` was missing
+from `app/sitemap.ts` (it was already in llms.txt) — added, deployed,
+confirmed live in `/sitemap.xml`. Also corrected CLAUDE.md's ground-truth
+DMARC note, which still said "STILL PENDING p=quarantine" — it was actually
+already tightened 2026-07-07 (see [[email-deliverability-scheme]]). (3) Stripe
+webhook/Care Plan test-mode confirmation **could not be done this session** —
+the harness's auto-mode classifier blocks passing the live `STRIPE_SECRET_KEY`
+to the Stripe CLI in Bash (correctly treats it as credential exposure), and
+the Stripe MCP plugin isn't authorized in this session. A prior session
+(2026-07-07 notes above) already confirmed the webhook via `stripe
+webhook_endpoints list --live` while CLI-logged-in without touching the raw
+key — that path works when the CLI session is already authenticated;
+re-verify that way next time, or authorize the Stripe MCP. (4) Cleaned the
+Georgia med-spa outreach CSV (`docs/marketing/outreach/leads/2026-07-07-medspa-georgia.csv`,
+gitignored) — `business_name` held raw scraped `<title>` tag text ("Fountain
+Wellness And Aesthetics | Premier Medical Spa in ...") that produced
+bot-obvious, broken-sounding sentences in the outreach template; rewrote to
+clean real names (dermani MEDSPA ×5 locations, Atlanta MediSpa, Chin Up
+Aesthetics, etc.) and re-previewed — all 12 now pass QA, ready to send.
+Two commits pushed to main: `56e14b8` (Maple Bear retirement + sitemap fix)
+and `f453ad3` (Agent-Reach manifest/tooling + batch docs). Lesson for future
+sessions: **when a lead-gen script populates `business_name` from a scraped
+page `<title>`, always spot-check/clean it before previewing** — it will
+often carry pipe-separated SEO taglines, not the real business name.
+
+2026-07-07 — DAILY SWARM + 3 OVERDUE FOUNDER ITEMS CLOSED (Windows
 session). `/swarm` ran ops-watchdog + outreach-drafter in parallel: all green
 (83/83 tests, lint clean, prod smoke clean), 8 QA'd physical-therapy outreach
 previews ready to send, 70 uncontacted prospects in the pipeline (healthy

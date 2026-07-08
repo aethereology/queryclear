@@ -116,10 +116,18 @@ Short living board. Strategy lives in `roadmap.md`; the executable cards live in
   listening for `checkout.session.completed` + full event set). Closed.
 - ✅ DMARC tightened `p=none` → `p=quarantine` (2026-07-07, via Cloudflare API).
   Closed.
-- ✅ Maple Bear report **retired** (2026-07-07) — the business closed down.
-  Removed `lib/reports/maplebear-stjohns-4caf31.ts` and its registry entry in
-  `lib/reports/index.ts`; verified build (38 routes)/lint/test (83/83) all still
-  green. No more pending engine-run follow-up for this client.
+- ✅ Maple Bear report **retired and DEPLOYED** (2026-07-08, commit `56e14b8`) —
+  the business closed down. Removed `lib/reports/maplebear-stjohns-4caf31.ts` and
+  its registry entry in `lib/reports/index.ts`; live-checked: the report URL now
+  404s in prod. Closed.
+- ✅ `/free-audit` added to `app/sitemap.ts` (2026-07-08, commit `56e14b8`) — it was
+  already in llms.txt but never made it into the sitemap when the route shipped.
+  Confirmed live in `/sitemap.xml`. Closed.
+- **Care Plan Stripe test-mode subscription smoke test** — still open. Not
+  re-attempted 2026-07-08: the harness's auto-mode classifier blocks passing the
+  live `STRIPE_SECRET_KEY` to the Stripe CLI in Bash, and the Stripe MCP plugin
+  isn't authorized in this session. Needs the founder directly, or authorize the
+  Stripe MCP plugin (`/mcp`) so a session can query it without touching raw keys.
 - **Ship the med-spa vertical:** commit/push + `vercel --prod --scope
   sparkcreativesinc` (founder-gated), then smoke-check the live route + sitemap.
   Open recurring: formal Lighthouse/axe ≥90 pass.
