@@ -206,11 +206,14 @@ We sell *readiness*, not outcomes. **Never** promise rankings or AI citations.
     one fictional example in `lib/reports/index.ts`. Model in `lib/audit-report.ts`.
     SOP: `docs/playbooks/running-an-audit.md`. LIVE in prod since 2026-06-10.
     **First real client report delivered 2026-06-10:** Maple Bear St. Johns
-    (daycare/preschool, St. Johns FL) at `lib/reports/maplebear-stjohns-4caf31.ts`,
-    score 49/100. ChatGPT/Gemini/Copilot visibility rows = "Unknown" pending the
-    founder's manual runs — update the data file + redeploy when recorded.
-    `tests/audit-report.test.mjs` now auto-loads all `lib/reports/*.ts`, so new
-    client reports need no test edit.
+    (daycare/preschool, St. Johns FL), score 49/100.
+    **RETIRED 2026-07-07 (not yet committed):** the client's business closed
+    down, so `lib/reports/maplebear-stjohns-4caf31.ts` and its
+    `lib/reports/index.ts` registry entry were deleted — only the fictional
+    Rivermark demo remains in the private registry. Verified: build/lint/83
+    tests all still green.
+    `tests/audit-report.test.mjs` auto-loads all `lib/reports/*.ts`, so new
+    client reports (and removals) need no test edit.
   - `app/api/checkout/route.ts` — Stripe Checkout Session for the pre-order
   - `app/api/stripe/webhook/route.ts` — verify sig → Resend order notify (LEAD_TO)
   - `app/api/lead/route.ts` — lead capture → Resend email (LEAD_TO, default `site.email`)

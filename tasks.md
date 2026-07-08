@@ -110,17 +110,19 @@ Short living board. Strategy lives in `roadmap.md`; the executable cards live in
   --scope sparkcreativesinc`; smoke-check `/care-plan` + sitemap + `/stack-kit` noindex.
 
 ## 🔄 Now — founder + next
-- ✅ Stripe webhook REGISTERED in Dashboard (founder, 2026-06-11). Verified:
-  prod env has all STRIPE_* vars; unsigned POST → 400 (sig check active).
-  **Remaining check:** send a test `checkout.session.completed` from the
-  Dashboard — if 400, the endpoint's signing secret is newer than the
-  6-day-old `STRIPE_WEBHOOK_SECRET` in Vercel → update env + redeploy.
-  Also confirm keys are test vs live before driving traffic.
-- **Founder TODO:** manual ChatGPT/Gemini/Copilot visibility runs for the
-  Maple Bear report → update `lib/reports/maplebear-stjohns-4caf31.ts` + redeploy.
+- ✅ Stripe webhook REGISTERED and confirmed **enabled** in the Dashboard
+  (re-verified via Stripe CLI 2026-07-07: endpoint `we_1Tf1eXRd3fLxij3FiHKdF6yv`
+  → `https://www.queryclear.com/api/stripe/webhook`, live mode, status enabled,
+  listening for `checkout.session.completed` + full event set). Closed.
+- ✅ DMARC tightened `p=none` → `p=quarantine` (2026-07-07, via Cloudflare API).
+  Closed.
+- ✅ Maple Bear report **retired** (2026-07-07) — the business closed down.
+  Removed `lib/reports/maplebear-stjohns-4caf31.ts` and its registry entry in
+  `lib/reports/index.ts`; verified build (38 routes)/lint/test (83/83) all still
+  green. No more pending engine-run follow-up for this client.
 - **Ship the med-spa vertical:** commit/push + `vercel --prod --scope
   sparkcreativesinc` (founder-gated), then smoke-check the live route + sitemap.
-  Open recurring: formal Lighthouse/axe ≥90 pass · DMARC → p=quarantine ~2026-06-24.
+  Open recurring: formal Lighthouse/axe ≥90 pass.
 
 ## ⏭️ Next
 - Phase 6: template the other verticals (aesthetician, spa, salon, dentist, home

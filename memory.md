@@ -44,7 +44,30 @@ Update the "Current state" line whenever it changes.
 
 ## Current state (update this line)
 
-2026-07-06 session 2 (latest) — AGENT SWARM STOOD UP (Mac session, no site code
+2026-07-07 (latest) — DAILY SWARM + 3 OVERDUE FOUNDER ITEMS CLOSED (Windows
+session). `/swarm` ran ops-watchdog + outreach-drafter in parallel: all green
+(83/83 tests, lint clean, prod smoke clean), 8 QA'd physical-therapy outreach
+previews ready to send, 70 uncontacted prospects in the pipeline (healthy
+runway, no `/prospect-city` needed yet). Founder then closed all 3 standing
+overdue items from the briefing: (1) **DMARC tightened** `p=none` →
+`p=quarantine` on `_dmarc.queryclear.com`, done directly via the **Cloudflare
+API MCP tool** (zone `16bc52f6e7bbbc643a07c41158aa1b94`, record
+`aafb38ea3cdbbbe33f821de537b5d0c4`) — NOT M365 CLI, which only manages
+Exchange mail flow, not the public DNS zone. (2) **Stripe webhook confirmed
+already registered + enabled** via `stripe webhook_endpoints list --live`
+(Stripe CLI is logged into the SparkCreatives Inc account by default): endpoint
+`we_1Tf1eXRd3fLxij3FiHKdF6yv` → `https://www.queryclear.com/api/stripe/webhook`,
+live mode, status enabled, full event set incl. `checkout.session.completed` —
+this item was actually already done, just unverifiable without CLI/API access.
+(3) **Maple Bear report retired** — the client's business closed down, so
+`lib/reports/maplebear-stjohns-4caf31.ts` and its `lib/reports/index.ts`
+registry entry were deleted (only the fictional Rivermark demo remains in the
+private registry). Verified on Windows: build 38→ still green (Maple Bear's
+static path just drops out), lint clean, **83/83** tests still pass (no test
+edit needed — `tests/audit-report.test.mjs` auto-loads `lib/reports/*.ts`).
+**Not yet committed** — these are working-tree changes only.
+
+2026-07-06 session 2 — AGENT SWARM STOOD UP (Mac session, no site code
 changes). The recurring business work is now packaged as Claude Code agents +
 skills, versioned in-repo: `.claude/agents/` (outreach-drafter, prospector,
 prospect-curator, vertical-page-builder, ops-watchdog) and `.claude/skills/`

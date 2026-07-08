@@ -12,7 +12,6 @@
 // the PUBLIC sample at /audit — it is intentionally NOT in this private registry.
 
 import type { AuditReport } from "@/lib/audit-report";
-import { report as maplebearStJohns } from "@/lib/reports/maplebear-stjohns-4caf31";
 
 // ── Fictional example so /reports/[slug] has something to render. NOT a client. ──
 const rivermarkExample: AuditReport = {
@@ -68,7 +67,6 @@ const rivermarkExample: AuditReport = {
 /** Slug → report. Add real clients here (see this file's header). */
 export const reports: Record<string, AuditReport> = {
   [rivermarkExample.slug]: rivermarkExample,
-  [maplebearStJohns.slug]: maplebearStJohns,
 };
 
 export function getReport(slug: string): AuditReport | undefined {

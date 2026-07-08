@@ -14,6 +14,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     {
+      url: `${site.url}/free-audit`,
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
+    {
       url: `${site.url}/ai-visibility-audit`,
       changeFrequency: "monthly",
       priority: 0.9,
