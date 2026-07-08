@@ -1,0 +1,24 @@
+name: professional-services
+vertical: Professional Services
+targets:
+  - law-firms
+  - cpa-firms
+  - wealth-management
+regions:
+  - Florida
+  - USA
+search_sources:
+  - google_maps
+  - avvo
+  - linkedin
+scrape_settings:
+  max_results: 500
+  rate_limit_per_minute: 50
+verification:
+  email_verify: true
+audit_checks:
+  - check_jsonld
+  - check_authority_signals
+  - service_page_structure
+outreach_flow:
+  sequence: professional_sequence

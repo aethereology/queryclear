@@ -1,0 +1,27 @@
+name: medspa-local-services
+vertical: Local Services
+targets:
+  - med-spa
+  - medical-aesthetics
+  - dental
+  - luxury-home-service
+regions:
+  - Jacksonville, FL
+  - Miami, FL
+  - Tampa, FL
+search_sources:
+  - google_maps
+  - local_directories
+  - linkedin
+scrape_settings:
+  max_results: 500
+  rate_limit_per_minute: 60
+verification:
+  email_verify: true
+  linkedin_profile_check: true
+audit_checks:
+  - check_jsonld
+  - check_llms_txt
+  - service_page_structure
+outreach_flow:
+  sequence: medspa_sequence

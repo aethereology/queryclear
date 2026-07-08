@@ -1,0 +1,21 @@
+name: cre-agencies
+vertical: Commercial Real Estate & Agencies
+targets:
+  - commercial-broker
+  - property-management
+  - management-consultant
+regions:
+  - Commercial hubs
+search_sources:
+  - linkedin
+  - company-directories
+scrape_settings:
+  max_results: 400
+  rate_limit_per_minute: 40
+verification:
+  email_verify: true
+audit_checks:
+  - check_complex_structure
+  - check_llms_txt
+outreach_flow:
+  sequence: cre_sequence

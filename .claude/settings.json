@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx --yes firecrawl-cli scrape \"https://www.zisserfamilylaw.com/contact-us/\" -o .firecrawl/scrape-test.json --json)",
+      "Bash(echo \"EXIT:$?\")",
+      "Bash(npx --yes firecrawl-cli scrape \"https://www.rootrealtyjax.com/contact\" -o .firecrawl/test-scrape.json --json)",
+      "WebFetch(domain:www.luxemedspaaesthetics.com)",
+      "WebFetch(domain:www.burgesscenter.com)",
+      "WebFetch(domain:thepalmmedspa.com)",
+      "WebFetch(domain:celinemedspa.com)",
+      "WebFetch(domain:admedicalspa.com)",
+      "WebFetch(domain:www.hodgescosmeticdental.com)",
+      "WebFetch(domain:www.couturemedspa.com)",
+      "WebFetch(domain:www.cavendental.com)",
+      "WebFetch(domain:www.thenurmedspa.com)",
+      "WebFetch(domain:www.admiradentistry.com)",
+      "WebFetch(domain:www.thevanityroomorlando.com)",
+      "WebFetch(domain:enlightenmedspa.com)",
+      "WebFetch(domain:www.primeramedspa.com)",
+      "PowerShell($env:OUTREACH_SECRET=\"dummy\"; $env:OUTREACH_BASE_URL=\"http://127.0.0.1:9\"; node tools/outreach-audit.mjs --limit 2 --delay 0 2>&1 | Select-Object -First 20)",
+      "Bash(claude mcp *)"
+    ]
+  }
+}

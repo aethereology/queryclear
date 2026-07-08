@@ -1,0 +1,25 @@
+name: saas-technical-startups
+vertical: B2B SaaS
+targets:
+  - seed
+  - series-a
+  - series-b
+regions:
+  - Remote
+  - USA
+search_sources:
+  - linkedin
+  - crunchbase
+  - producthunt
+scrape_settings:
+  max_results: 1000
+  rate_limit_per_minute: 80
+verification:
+  email_verify: true
+  linkedin_profile_check: true
+audit_checks:
+  - check_llms_txt
+  - check_jsonld
+  - feature_page_structure
+outreach_flow:
+  sequence: saas_sequence
