@@ -128,6 +128,16 @@ Short living board. Strategy lives in `roadmap.md`; the executable cards live in
   live `STRIPE_SECRET_KEY` to the Stripe CLI in Bash, and the Stripe MCP plugin
   isn't authorized in this session. Needs the founder directly, or authorize the
   Stripe MCP plugin (`/mcp`) so a session can query it without touching raw keys.
+- ✅ Fort Lauderdale (9) + Georgia (12) med-spa outreach batches **sent**
+  2026-07-08 via `tools/outreach-audit.mjs --send`. Masterlist now 82 total
+  contacts (was 63). Don't re-send these rows.
+- **Mid-deploy incident (fixed, 2026-07-08):** a stray uncommitted change to
+  `app/globals.css`/`app/layout.tsx` (font swapped to bogus `"rz-regular"`,
+  likely a browser-extension/DevTools-overrides artifact) rode along with a
+  `vercel --prod` deploy and briefly went live. Reverted + redeployed;
+  confirmed correct IBM Plex Sans is back in prod. **Always `git status`/
+  `git diff` right before running `vercel --prod`**, not just before
+  committing — the CLI deploys whatever's on disk, not the git-committed state.
 - **Ship the med-spa vertical:** commit/push + `vercel --prod --scope
   sparkcreativesinc` (founder-gated), then smoke-check the live route + sitemap.
   Open recurring: formal Lighthouse/axe ≥90 pass.

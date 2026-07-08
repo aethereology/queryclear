@@ -74,6 +74,27 @@ sessions: **when a lead-gen script populates `business_name` from a scraped
 page `<title>`, always spot-check/clean it before previewing** — it will
 often carry pipe-separated SEO taglines, not the real business name.
 
+**Mid-session incident, found and fixed:** while staging the doc-correction
+commit, `app/globals.css` and `app/layout.tsx` turned up modified on disk
+(timestamped right at the `vercel --prod` deploy window) — body font swapped
+from IBM Plex Sans to a bogus `"rz-regular"`, which is not referenced anywhere
+else in the repo. Confirmed via the live CSS bundle that this **shipped to
+production** (because `vercel --prod` uploads the working directory, not the
+committed git state — an uncommitted stray change can ride along). Likely
+cause: a browser extension / DevTools local-overrides-workspace font swap
+persisted to source on disk during a `next dev` session (also found cached in
+`.next/dev/`). Founder approved revert + redeploy; both files reverted to
+match HEAD, redeployed, verified the live CSS now shows the correct
+`var(--font-plex-sans)`. **Lesson: `vercel --prod` deploys whatever is on
+disk, not what's committed — always `git status`/`git diff` immediately
+before a prod deploy, not just before committing**, since stray uncommitted
+changes (from any source, not just Claude) can ship silently.
+
+**Founder sent both outreach batches same session:** 9 Fort Lauderdale + 12
+Georgia (all dermani MEDSPA/Atlanta MediSpa/etc. — the cleaned names) went out
+via `tools/outreach-audit.mjs --send`. Masterlist confirmed at **82 total
+contacts** (up from 63) — do not re-send these same rows.
+
 2026-07-07 — DAILY SWARM + 3 OVERDUE FOUNDER ITEMS CLOSED (Windows
 session). `/swarm` ran ops-watchdog + outreach-drafter in parallel: all green
 (83/83 tests, lint clean, prod smoke clean), 8 QA'd physical-therapy outreach
