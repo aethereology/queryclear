@@ -279,13 +279,13 @@ export default function Home() {
                   </div>
                 }
                 machine={
-                  <div className="machine-panel">
-                    <div><span className="k">name</span>: <span className="s">Goldleaf Aesthetics</span></div>
-                    <div><span className="k">service</span>: <span className="s">med spa</span></div>
-                    <div><span className="k">area</span>: <span className="s">Westhaven</span></div>
-                    <div><span className="k">providers</span>: <span className="s">licensed RN injectors</span></div>
-                    <div className="mt-2 text-lime">↳ citable</div>
-                  </div>
+                  <pre className="machine-panel"><code>
+                    <span className="k">name</span>: <span className="s">Goldleaf Aesthetics</span>{"\n"}
+                    <span className="k">service</span>: <span className="s">med spa</span>{"\n"}
+                    <span className="k">area</span>: <span className="s">Westhaven</span>{"\n"}
+                    <span className="k">providers</span>: <span className="s">licensed RN injectors</span>{"\n\n"}
+                    <span className="text-lime">↳ citable</span>
+                  </code></pre>
                 }
               />
             </div>
