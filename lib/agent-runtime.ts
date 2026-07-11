@@ -2,7 +2,7 @@
 // project). Only the read-only audit is used here; the browser never calls the
 // runtime directly — the /api/public/audit route proxies server-to-server.
 
-const BASE_URL = process.env.AGENT_RUNTIME_URL ?? "http://127.0.0.1:8080";
+const BASE_URL = (process.env.AGENT_RUNTIME_URL ?? "http://127.0.0.1:8080").replace(/\/+$/, "");
 
 export interface AuditFinding {
   code: string;
