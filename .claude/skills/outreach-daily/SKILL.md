@@ -1,29 +1,32 @@
 ---
 name: outreach-daily
-description: Prep today's cold-outreach batch — spawn the outreach-drafter agent to preview due follow-ups + the next 10–15 new prospects, QA every rendered email, and hand the founder the exact send commands. Use every outreach day ("prep outreach", "what's due today"). Preview-only; sending stays founder-gated.
+description: Audit queryclear's autonomous cold-outreach engine — spawn the outreach-drafter agent to review what the Vercel cron sent/skipped in the last 24h, what's due next, and what's held in QA quarantine. Use every outreach day ("prep outreach", "what's due today", "check outreach"). Read-only audit; sending is autonomous.
 ---
 
-Run queryclear's daily outreach prep. Everything here is preview-only: the founder
-personally fires every `--send`.
+Audit queryclear's outreach engine. **Sending is autonomous** (Vercel cron —
+`app/api/cron/outreach-send`, within a daily send cap and the automated QA gate in
+`lib/outreach-qa.ts`); this skill's job is to review what it did, not to prepare a
+batch for the founder to fire.
 
-1. Identify the active lead CSV: the most recent file in
-   `docs/marketing/outreach/leads/*.csv` unless the user named one.
-2. Spawn the `outreach-drafter` agent (Agent tool, subagent_type
+1. Spawn the `outreach-drafter` agent (Agent tool, subagent_type
    `outreach-drafter`; if that type isn't loaded in this session, use
    `general-purpose` and prepend the contents of
-   `.claude/agents/outreach-drafter.md` to the prompt). Tell it which CSV and what
-   limit (default 12; founder pace is 10–15/day).
-3. Relay its report to the user:
-   - due follow-ups queued (count + who),
-   - new prospects previewed vs. skipped as duplicates,
-   - per-email QA verdicts and anything excluded,
-   - masterlist totals by status,
-   - the exact send commands, clearly labeled as the founder's step, plus a
-     pointer to the preview files
-     (`docs/marketing/outreach/previews/due-index.html` and the batch previews).
-4. If the CSV is nearly exhausted (fewer uncontacted rows than ~2 days of sends),
-   say so and suggest running `/prospect-city` for the next metro
-   (St. Augustine → Orlando → Tampa → Miami per the batch doc).
+   `.claude/agents/outreach-drafter.md` to the prompt). Ask it to review the last
+   24h of autonomous sends and the current queue/quarantine state.
+2. Relay its report to the user:
+   - follow-ups + new cold sends the cron fired (count + who), and any it skipped
+     as duplicates or because the daily cap was hit,
+   - **QA quarantine**: anything the automated gate held instead of sending, with
+     the failure reason (fix the underlying data and re-ingest, or discard),
+   - **warm leads**: anyone who replied — cadence already stopped automatically;
+     this is the one thing that needs the founder's reply,
+   - masterlist totals by status, and prospect-queue depth.
+3. If the queue is nearly exhausted (fewer queued prospects than ~2 days of sends
+   at the current cap), say so and suggest running `/prospect-city` for the next
+   metro (St. Augustine → Orlando → Tampa → Miami per the batch doc), then
+   `node --env-file=.env.local tools/ingest-prospects.mjs --file <csv>` to push
+   the curated rows into the cloud queue.
 
-Never pass `--send` yourself, and never mark contact statuses without an explicit
-user instruction.
+This skill never sends and never marks contact statuses — those either happen
+autonomously (the cron, the Graph warm-scan reply detector) or on the founder's
+explicit instruction.

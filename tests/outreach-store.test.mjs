@@ -89,6 +89,11 @@ test("isDue: opened graduates into the due queue; unsubscribed never does", () =
   assert.equal(isDue({ ...base, status: "cold", nextDueAt: undefined }, "2026-06-22T00:00:00.000Z"), false);
 });
 
+test("isDue: warm is terminal for sending — a replied contact never re-enters the due queue", () => {
+  const base = { email: "x@y.com", touches: [], createdAt: "", nextDueAt: "2026-06-01T00:00:00.000Z" };
+  assert.equal(isDue({ ...base, status: "warm" }, "2026-06-22T00:00:00.000Z"), false);
+});
+
 test("linkToken / emailForToken round-trips and expires", async () => {
   const s = newStore();
   await s.linkToken("tok-123", "Lead@Biz.com", 60_000);
@@ -97,4 +102,35 @@ test("linkToken / emailForToken round-trips and expires", async () => {
   const s2 = new InMemoryOutreachStore(() => FIXED);
   await s2.linkToken("old", "a@b.com", 0);
   assert.equal(await s2.emailForToken("old"), null);
+});
+
+test("reserveSend enforces the daily cap — the send that would exceed it is rejected", async () => {
+  const s = newStore();
+  for (let i = 0; i < 3; i++) {
+    const r = await s.reserveSend(1, 3);
+    assert.equal(r.allowed, true, `send ${i + 1} of 3 should fit under the cap`);
+  }
+  const over = await s.reserveSend(1, 3);
+  assert.equal(over.allowed, false);
+  assert.equal(over.sentToday, 3, "the rejected reservation must not itself count toward the total");
+});
+
+test("reserveSend(0, cap) peeks the current count without reserving anything", async () => {
+  const s = newStore();
+  await s.reserveSend(1, 10);
+  await s.reserveSend(1, 10);
+  const peek = await s.reserveSend(0, 10);
+  assert.equal(peek.allowed, true);
+  assert.equal(peek.sentToday, 2);
+  const after = await s.reserveSend(0, 10);
+  assert.equal(after.sentToday, 2, "peeking must not change the count");
+});
+
+test("reserveSend resets on a UTC day rollover", async () => {
+  let now = Date.UTC(2026, 6, 20, 23, 59);
+  const s = new InMemoryOutreachStore(() => now);
+  assert.equal((await s.reserveSend(1, 1)).allowed, true);
+  assert.equal((await s.reserveSend(1, 1)).allowed, false);
+  now = Date.UTC(2026, 6, 21, 0, 1);
+  assert.equal((await s.reserveSend(1, 1)).allowed, true);
 });

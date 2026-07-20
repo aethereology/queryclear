@@ -110,6 +110,25 @@ Short living board. Strategy lives in `roadmap.md`; the executable cards live in
   --scope sparkcreativesinc`; smoke-check `/care-plan` + sitemap + `/stack-kit` noindex.
 
 ## 🔄 Now — founder + next
+- **Autonomous outreach cutover (2026-07-20, code-complete, NOT deployed) —
+  founder-gated prereqs before turning it on:**
+  1. Set up a dedicated sending subdomain (`outreach.queryclear.com`) in Resend +
+     Cloudflare (SPF/DKIM/DMARC), point `LEAD_FROM` at it.
+  2. Azure AD app registration (Graph `Mail.Read`, application permission, admin
+     consent) on the mailbox replies land in → `MS_GRAPH_TENANT_ID`/`CLIENT_ID`/
+     `CLIENT_SECRET`/`MS_GRAPH_MAILBOX`.
+  3. Register the Resend webhook (bounce/complaint) → `RESEND_WEBHOOK_SECRET`.
+  4. Set all new Vercel prod env vars (`CRON_SECRET`, `FOUNDER_ALERT_TO`,
+     `OUTREACH_DAILY_SEND_CAP` etc. — full list in CLAUDE.md §2) and a **real**
+     `OUTREACH_POSTAL_ADDRESS`.
+  5. `node --env-file=.env.local tools/ingest-prospects.mjs --file <csv>` to seed
+     the cloud prospect queue from the existing curated CSVs.
+  6. Commit/push + `vercel --prod --scope sparkcreativesinc`; confirm the
+     `vercel.json` crons are active in the Vercel dashboard.
+  7. Start `OUTREACH_DAILY_SEND_CAP` low (10–15) and ramp over weeks — do not
+     open it wide on day one.
+  See CLAUDE.md §2 (autonomous outreach entry) and
+  `C:\Users\kylel\.claude\plans\we-need-to-get-fancy-tower.md` for the full design.
 - ✅ Stripe webhook REGISTERED and confirmed **enabled** in the Dashboard
   (re-verified via Stripe CLI 2026-07-07: endpoint `we_1Tf1eXRd3fLxij3FiHKdF6yv`
   → `https://www.queryclear.com/api/stripe/webhook`, live mode, status enabled,

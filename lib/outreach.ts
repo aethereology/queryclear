@@ -14,7 +14,9 @@ import { site } from "./site";
 
 // Clearly-marked placeholder until the founder sets OUTREACH_POSTAL_ADDRESS, so
 // nothing ever ships with an invented address (a guardrail, see CLAUDE.md §4).
-const POSTAL_FALLBACK = "SparkCreatives Inc., [ADD POSTAL ADDRESS — set OUTREACH_POSTAL_ADDRESS]";
+// Exported so lib/outreach-qa.ts can hard-fail any autonomous send that still
+// carries it.
+export const POSTAL_FALLBACK = "SparkCreatives Inc., [ADD POSTAL ADDRESS — set OUTREACH_POSTAL_ADDRESS]";
 const DAY_MS = 24 * 60 * 60 * 1000;
 
 export interface OutreachEmail {

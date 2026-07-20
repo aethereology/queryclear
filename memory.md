@@ -44,7 +44,50 @@ Update the "Current state" line whenever it changes.
 
 ## Current state (update this line)
 
-2026-07-08 (latest, session 2) — GEMINI FEEDBACK TRIAGE + MACHINE-VIEW SSR FIX.
+2026-07-20 (latest) — AUTONOMOUS OUTREACH ENGINE (code-complete, NOT deployed).
+Founder asked for a "team of agents" to source/qualify/close clients without
+daily manual effort. Explored existing infra first: the outreach engine
+(prospector → prospect-curator → outreach-drafter → send, Redis-backed nurture
+cadence) and the `.aethera` portfolio-daemon were already ~85% of this — the gap
+was (1) no scheduler, (2) markdown guardrails deliberately enforcing "founder
+fires every send," (3) no daily send cap / automated QA / reply detection. Ran a
+plan-mode design pass (two Plan subagents in parallel: cron/safety architecture,
+and warm-lead detection + guardrail rewrite), founder locked 4 decisions via
+AskUserQuestion: fully autonomous sending (behind safety gates), Vercel cron
+(cloud) runtime, full Microsoft Graph reply detection for warm-lead alerts, and
+multi-vertical sourcing expansion — plus a dedicated sending subdomain to protect
+deliverability. **Built this session** (Phase 0 + Phase 1 + Phase 1b of the plan
+at `C:\Users\kylel\.claude\plans\we-need-to-get-fancy-tower.md`): three new cron
+routes (`outreach-send`, `warm-scan`, `digest`, `CRON_SECRET`-gated,
+`vercel.json`), an automated pre-send QA gate (`lib/outreach-qa.ts` — honesty
+lint, postal-address check, MX check, report-link check) that quarantines
+failures instead of sending, a hard atomic daily send cap
+(`OutreachStore.reserveSend`), a new terminal `warm` contact status set by Graph
+reply detection (auto-stops the cadence + fires a rich founder alert with a
+one-paste draft reply), a Resend bounce webhook + one-click List-Unsubscribe
+(the deliverability circuit-breakers unattended sending didn't have), and a
+cloud prospect queue (`lib/prospect-queue.ts`, Redis) replacing local CSVs as
+cron input (seeded via a new `ingest-prospects` action / `tools/
+ingest-prospects.mjs`). Rewrote every guardrail doc that said "preview-only,
+founder fires every send" (`.claude/skills/swarm`, `.claude/skills/
+outreach-daily`, `.claude/agents/outreach-drafter.md`, `.claude/agents/
+ops-watchdog.md`, `docs/playbooks/outreach-review.md`, `docs/automation/
+SWARM.md`) to "autonomous within coded safety gates; agents now audit the
+engine and surface warm leads" — the honesty/CAN-SPAM guardrails themselves are
+preserved verbatim, just moved from human review into `lib/outreach-qa.ts`.
+Verified on Windows: build 39 routes, lint clean, 125/125 tests (11 new).
+**Deliberately deferred** (documented in the plan, not built): Apify-driven
+cloud prospect *sourcing* and vertical rotation (Phase 2/3) — today's queue is
+still filled from founder/agent-curated CSVs via the ingest tool, same sourcing
+as before, just cloud-delivered. **Founder-gated before this goes live:**
+dedicated sending subdomain (Resend+Cloudflare), an Azure AD app registration
+for Graph `Mail.Read`, the Resend webhook secret, all new Vercel prod env vars
+(incl. a real `OUTREACH_POSTAL_ADDRESS`), commit/push + `vercel --prod`, and a
+conservative send-cap ramp given the domain's still-recent deliverability
+repair (DMARC only reached `p=quarantine` 2026-07-07). See CLAUDE.md §2 for the
+full bullet and the exact env-var list.
+
+2026-07-08 (session 2) — GEMINI FEEDBACK TRIAGE + MACHINE-VIEW SSR FIX.
 Founder pasted a Gemini review claiming queryclear.com is "completely invisible
 to search engines / blocks crawlers." Verified against prod: **mostly false** —
 homepage 200 + `index, follow`, no X-Robots-Tag, robots.txt + sitemap render

@@ -1,6 +1,4 @@
 import { NextResponse } from "next/server";
-import { createHash, timingSafeEqual } from "node:crypto";
-import { Resend } from "resend";
 import { buildOutreachEmail, buildFollowupEmail, outreachReportTtlMs } from "@/lib/outreach";
 import { AgentRuntimeError } from "@/lib/agent-runtime";
 import {
@@ -11,47 +9,40 @@ import {
 } from "@/lib/outreach-store";
 import { nextStep, computeNextDueAt, COLD_FOLLOWUPS } from "@/lib/outreach-cadence";
 import { publicAuditStore } from "@/lib/public-audit";
+import { prospectQueue, type ProspectInput } from "@/lib/prospect-queue";
+import { sendEmail } from "@/lib/outreach-send";
+import { secretOk } from "@/lib/secret";
+import { makeUnsubscribeToken } from "@/lib/unsubscribe-token";
 import { site } from "@/lib/site";
 
 export const dynamic = "force-dynamic";
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const EMAIL_TIMEOUT_MS = 8_000;
-const STATUSES: ContactStatus[] = ["cold", "opened", "replied", "unsubscribed", "bounced", "customer"];
+const STATUSES: ContactStatus[] = [
+  "cold",
+  "opened",
+  "warm",
+  "replied",
+  "unsubscribed",
+  "bounced",
+  "customer",
+];
 
-async function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
-  let timer: ReturnType<typeof setTimeout> | undefined;
-  const timedOut = new Promise<never>((_, reject) => {
-    timer = setTimeout(() => reject(new Error("Email delivery timed out.")), ms);
-  });
-  try {
-    return await Promise.race([promise, timedOut]);
-  } finally {
-    if (timer) clearTimeout(timer);
-  }
-}
-
-// Constant-time secret check (sha256 → fixed length, so timingSafeEqual never
-// throws on length mismatch and we don't leak the secret's length).
-function secretOk(provided: string, expected: string): boolean {
-  const a = createHash("sha256").update(provided).digest();
-  const b = createHash("sha256").update(expected).digest();
-  return timingSafeEqual(a, b);
-}
-
-async function sendEmail(to: string, subject: string, html: string): Promise<boolean> {
-  const key = process.env.RESEND_API_KEY;
-  if (!key) return false;
-  const resend = new Resend(key);
-  const from = process.env.LEAD_FROM ?? "queryclear <onboarding@resend.dev>";
-  const replyTo = process.env.LEAD_TO ?? site.email;
-  await withTimeout(resend.emails.send({ from, to, replyTo, subject, html }), EMAIL_TIMEOUT_MS);
-  return true;
+function unsubscribeUrl(email: string): string {
+  return `${site.url}/api/outreach/unsubscribe?token=${makeUnsubscribeToken(email)}`;
 }
 
 type Body = {
   secret?: string;
-  action?: "send-cold" | "check" | "set-status" | "list" | "due" | "send-touch";
+  action?:
+    | "send-cold"
+    | "check"
+    | "set-status"
+    | "list"
+    | "due"
+    | "send-touch"
+    | "ingest-prospects"
+    | "queue-status";
   // send-cold
   domainUrl?: string;
   email?: string;
@@ -64,6 +55,8 @@ type Body = {
   emails?: string[];
   // set-status
   status?: string;
+  // ingest-prospects
+  prospects?: ProspectInput[];
 };
 
 // Founder-only outreach operations, gated by OUTREACH_SECRET (the only endpoint that
@@ -116,6 +109,43 @@ export async function POST(request: Request) {
     return NextResponse.json({ contacts });
   }
 
+  // ── one-time/periodic migration: push curated CSV rows into the cloud
+  // prospect queue (tools/ingest-prospects.mjs is the CLI driver) ───────────────
+  if (action === "ingest-prospects") {
+    const rows = Array.isArray(body.prospects) ? body.prospects : [];
+    const queue = prospectQueue();
+    let ingested = 0;
+    let skippedDuplicate = 0;
+    let skippedInvalid = 0;
+    for (const row of rows) {
+      const rowEmail = (row?.email ?? "").trim();
+      const rowDomain = (row?.domainUrl ?? "").trim();
+      if (!EMAIL.test(rowEmail) || !rowDomain) {
+        skippedInvalid += 1;
+        continue;
+      }
+      const existing = await store.getContact(rowEmail);
+      if (existing) {
+        skippedDuplicate += 1;
+        continue;
+      }
+      const added = await queue.enqueue({ ...row, email: rowEmail, domainUrl: rowDomain });
+      if (added) ingested += 1;
+      else skippedDuplicate += 1;
+    }
+    return NextResponse.json({ ingested, skippedDuplicate, skippedInvalid });
+  }
+
+  // ── prospect queue + QA-quarantine health, for the founder to check by hand ───
+  if (action === "queue-status") {
+    const queue = prospectQueue();
+    return NextResponse.json({
+      queueDepth: await queue.depth(),
+      quarantineCount: await queue.quarantineCount(),
+      quarantineSample: await queue.listQuarantine(20),
+    });
+  }
+
   // ── due queue: active contacts whose next touch is due, rendered for review ───
   if (action === "due") {
     const now = new Date().toISOString();
@@ -160,7 +190,7 @@ export async function POST(request: Request) {
     const { subject, html } = buildFollowupEmail(c, step);
     let delivered: boolean;
     try {
-      delivered = await sendEmail(email, subject, html);
+      delivered = await sendEmail(email, subject, html, { unsubscribeUrl: unsubscribeUrl(email) });
     } catch {
       return NextResponse.json({ error: "Email delivery failed." }, { status: 502 });
     }
@@ -221,7 +251,7 @@ export async function POST(request: Request) {
   // mode === "send"
   let delivered: boolean;
   try {
-    delivered = await sendEmail(email, built.subject, built.html);
+    delivered = await sendEmail(email, built.subject, built.html, { unsubscribeUrl: unsubscribeUrl(email) });
   } catch {
     return NextResponse.json({ error: "Email delivery failed." }, { status: 502 });
   }

@@ -12,13 +12,18 @@ import { RedisOutreachStore } from "./outreach-store-redis";
 export type ContactStatus =
   | "cold"
   | "opened"
+  | "warm"
   | "replied"
   | "unsubscribed"
   | "bounced"
   | "customer";
 
-// Statuses still eligible to receive a (next) touch. replied/unsubscribed/bounced/
-// customer are terminal for sending — they drop out of the due queue.
+// Statuses still eligible to receive a (next) touch. warm/replied/unsubscribed/
+// bounced/customer are terminal for sending — they drop out of the due queue.
+// `warm` is set the instant autonomous detection sees strong engagement (a
+// reply, via the Graph warm-scan cron) — it is deliberately excluded here so
+// nextStep()/isDue() stop the cadence on the very next tick: an interested
+// prospect must never receive another cold-looking autonomous follow-up.
 export const ACTIVE_STATUSES: ContactStatus[] = ["cold", "opened"];
 
 export interface Touch {
@@ -50,6 +55,12 @@ export function normalizeEmail(email: string): string {
   return email.trim().toLowerCase();
 }
 
+export interface SendCapResult {
+  allowed: boolean;
+  sentToday: number;
+  cap: number;
+}
+
 export interface OutreachStore {
   getContact(email: string): Promise<Contact | null>;
   /** Create or shallow-merge a contact. Never resets status/touches/createdAt. */
@@ -62,6 +73,14 @@ export interface OutreachStore {
   /** Map an unguessable report token back to the contact it was sent to. */
   linkToken(token: string, email: string, ttlMs: number): Promise<void>;
   emailForToken(token: string): Promise<string | null>;
+  /**
+   * Atomically reserve `n` sends against a shared daily cap (resets at UTC
+   * midnight). The autonomous cron calls this immediately before every send —
+   * cold and follow-up alike — so nothing sends once the cap is hit. Passing
+   * n=0 peeks the current count without reserving anything (safe for a
+   * read-only digest).
+   */
+  reserveSend(n: number, cap: number): Promise<SendCapResult>;
 }
 
 // Merge helper shared by both implementations: apply input fields onto an existing
@@ -97,6 +116,7 @@ export function isDue(contact: Contact, nowIso: string): boolean {
 export class InMemoryOutreachStore implements OutreachStore {
   private readonly contacts = new Map<string, Contact>();
   private readonly tokens = new Map<string, { email: string; expiresAt: number }>();
+  private sendCap = { day: "", count: 0 };
   constructor(private readonly now: () => number = Date.now) {}
 
   private iso() {
@@ -154,6 +174,16 @@ export class InMemoryOutreachStore implements OutreachStore {
       return null;
     }
     return hit.email;
+  }
+
+  async reserveSend(n: number, cap: number): Promise<SendCapResult> {
+    const day = this.iso().slice(0, 10);
+    if (this.sendCap.day !== day) this.sendCap = { day, count: 0 };
+    if (this.sendCap.count + n > cap) {
+      return { allowed: false, sentToday: this.sendCap.count, cap };
+    }
+    this.sendCap.count += n;
+    return { allowed: true, sentToday: this.sendCap.count, cap };
   }
 }
 

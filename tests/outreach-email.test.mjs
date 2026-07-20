@@ -24,7 +24,12 @@ function loadTs(relPath) {
   return moduleObj.exports;
 }
 
-const { renderOutreachAuditEmail, renderOutreachViewNotifyEmail } = loadTs("lib/email.ts");
+const {
+  renderOutreachAuditEmail,
+  renderOutreachViewNotifyEmail,
+  renderWarmLeadAlertEmail,
+  renderOutreachDigestEmail,
+} = loadTs("lib/email.ts");
 
 const site = { name: "queryclear", url: "https://www.queryclear.com", email: "hello@queryclear.com" };
 const POSTAL = "SparkCreatives Inc., 6120 Caladesi Court, Jacksonville, FL 32258";
@@ -85,4 +90,45 @@ test("view-notify email names the domain and links the report", () => {
   assert.ok(html.includes("hellosmooth.com"), "names the prospect domain");
   assert.ok(html.includes(REPORT_URL), "links the report");
   assert.ok(/opened/i.test(html), "frames it as an open signal");
+});
+
+test("warm-lead alert carries the reply snippet, a one-paste mailto reply, and confirms the cadence stopped", () => {
+  const html = renderWarmLeadAlertEmail(
+    {
+      business: "Hello Smooth Med Spa",
+      email: "owner@hellosmooth.com",
+      domain: "hellosmooth.com",
+      city: "Jacksonville",
+      vertical: "med-spa",
+      signal: "replied",
+      snippet: "Sure, let's talk!",
+      reportUrl: REPORT_URL,
+      touchCount: 2,
+    },
+    site,
+  );
+  assert.ok(html.includes("Hello Smooth Med Spa"));
+  assert.ok(html.includes("Sure, let&#39;s talk!") || html.includes("Sure, let's talk!"), "carries the reply snippet");
+  assert.ok(/mailto:owner@hellosmooth\.com/.test(html), "one-paste reply mailto link");
+  assert.ok(/cadence/i.test(html) && /stop/i.test(html), "confirms the autonomous cadence stopped");
+});
+
+test("outreach digest surfaces sent/cap/queue/quarantine counts", () => {
+  const html = renderOutreachDigestEmail(
+    {
+      sentToday: 12,
+      warmToday: [{ email: "owner@hellosmooth.com", business: "Hello Smooth Med Spa" }],
+      dueTomorrow: 5,
+      queueDepth: 40,
+      quarantineCount: 2,
+      quarantineSample: [{ email: "bad@nope.example", business: undefined, reasons: ["deliverability: no MX record for nope.example"] }],
+      sentTodayCount: 12,
+      cap: 25,
+    },
+    site,
+  );
+  assert.ok(html.includes("12"), "sent count present");
+  assert.ok(html.includes("12 / 25"), "cap fraction present");
+  assert.ok(html.includes("Hello Smooth Med Spa"), "warm contact named");
+  assert.ok(/no MX record/.test(html), "quarantine reason surfaced");
 });

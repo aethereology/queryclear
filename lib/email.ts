@@ -767,6 +767,114 @@ export function renderOutreachViewNotifyEmail(
   });
 }
 
+export interface WarmLeadAlertData {
+  business?: string;
+  email: string;
+  domain?: string;
+  city?: string;
+  vertical?: string;
+  signal: "replied";
+  snippet?: string;
+  reportUrl?: string;
+  touchCount: number;
+}
+
+// The instant "hand me the client" alert — fired by the Graph warm-scan cron
+// the moment a contact replies. Carries enough to reply from a phone in one
+// read: who they are, what they wrote, and a one-paste draft reply. Distinct
+// from renderOutreachViewNotifyEmail (a plain first-open, which keeps
+// nurturing) — a reply stops the autonomous cadence entirely.
+export function renderWarmLeadAlertEmail(data: WarmLeadAlertData, site?: EmailSite) {
+  const who = data.business || data.domain || data.email;
+  const domainHref = data.domain ? (data.domain.startsWith("http") ? data.domain : `https://${data.domain}`) : undefined;
+  const draftReply = `Hi${data.business ? ` — thanks for the reply about ${data.business}` : ""}. Happy to walk through what I found whenever works for you — does a quick call this week work?`;
+  const mailtoHref = `mailto:${data.email}?subject=${encodeURIComponent(`Re: ${who}`)}&body=${encodeURIComponent(draftReply)}`;
+
+  return renderQueryclearEmail({
+    site,
+    preheader: `${who} replied — go close it.`,
+    eyebrow: "warm lead",
+    title: "They replied.",
+    intro: [
+      `${who} replied to the outreach. This contact is now out of the autonomous cadence — no more automated follow-ups will go out.`,
+      ...(data.snippet ? [`What they wrote: "${data.snippet}"`] : []),
+    ],
+    cta: { label: "Open one-paste reply", href: mailtoHref },
+    summary: [
+      { label: "Business", value: data.business },
+      { label: "Email", value: data.email, href: `mailto:${data.email}` },
+      { label: "Website", value: data.domain, href: domainHref },
+      { label: "City", value: data.city },
+      { label: "Vertical", value: data.vertical },
+      { label: "Touch", value: `#${data.touchCount}` },
+      { label: "Report", value: data.reportUrl, href: data.reportUrl },
+    ],
+    machinePanel: {
+      label: "// warm_lead.signal",
+      lines: [
+        { key: "signal", value: data.signal },
+        { key: "contact", value: data.email },
+        { key: "cadence", value: "stopped" },
+      ],
+      status: "action needed - reply",
+    },
+  });
+}
+
+export interface OutreachDigestData {
+  sentToday: number;
+  warmToday: { email: string; business?: string }[];
+  dueTomorrow: number;
+  queueDepth: number;
+  quarantineCount: number;
+  quarantineSample: { email: string; business?: string; reasons: string[] }[];
+  sentTodayCount: number;
+  cap: number;
+}
+
+// Nightly summary of the autonomous outreach run — what sent, what's due next,
+// what's stuck in the automated QA quarantine (never sent, needs a human
+// look), and queue health. This is the founder's one daily touchpoint with the
+// engine short of a warm reply.
+export function renderOutreachDigestEmail(data: OutreachDigestData, site?: EmailSite) {
+  const warmLine = data.warmToday.length
+    ? data.warmToday.map((w) => `${w.business || w.email} (${w.email})`).join(", ")
+    : "none";
+
+  return renderQueryclearEmail({
+    site,
+    preheader: `${data.sentToday} sent today, ${data.quarantineCount} held for review.`,
+    eyebrow: "autonomous outreach",
+    title: "Last 24 hours.",
+    intro: [
+      `${data.sentToday} emails sent today (${data.sentTodayCount}/${data.cap} of the daily cap). ${data.dueTomorrow} more due in the next 24 hours. ${data.queueDepth} prospects still queued.`,
+      data.warmToday.length ? `Warm today: ${warmLine}.` : "No new warm signals today.",
+    ],
+    summary: [
+      { label: "Sent today", value: String(data.sentToday) },
+      { label: "Daily cap", value: `${data.sentTodayCount} / ${data.cap}` },
+      { label: "Due next 24h", value: String(data.dueTomorrow) },
+      { label: "Queue depth", value: String(data.queueDepth) },
+      { label: "Held for review", value: String(data.quarantineCount) },
+    ],
+    machinePanel: data.quarantineSample.length
+      ? {
+          label: "// qa.quarantine (sample)",
+          lines: data.quarantineSample.map((q) => ({
+            key: q.business || q.email,
+            value: q.reasons.join("; "),
+          })),
+          status:
+            data.quarantineCount > data.quarantineSample.length
+              ? `+${data.quarantineCount - data.quarantineSample.length} more - review + fix or discard`
+              : "review + fix or discard",
+        }
+      : undefined,
+    footerNote:
+      "Autonomous outreach runs within a daily send cap and an automated honesty/compliance QA gate. Anything failing QA is held here, never sent.",
+  });
+}
+
 // Plain follow-up emails for the nurture cadence (bump / tip / last-note / nurture-*).
 // Same plain-personal shell as the cold email; reuses the prospect's report link.
 // Subjects are built by the caller (lib/outreach.ts buildFollowupEmail).

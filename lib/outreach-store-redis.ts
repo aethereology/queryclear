@@ -11,12 +11,19 @@ import {
   type ContactInput,
   type ContactStatus,
   type OutreachStore,
+  type SendCapResult,
   type Touch,
 } from "./outreach-store";
 
 const CONTACT_KEY = (email: string) => `oc:contact:${email}`;
 const TOKEN_KEY = (token: string) => `oc:token:${token}`;
 const INDEX_KEY = "oc:contacts";
+const SENDCAP_KEY = (day: string) => `oc:sendcap:${day}`;
+const SENDCAP_TTL_SECONDS = 2 * 24 * 60 * 60; // keep the counter ~2 days
+
+function utcDate(): string {
+  return new Date().toISOString().slice(0, 10);
+}
 
 export class RedisOutreachStore implements OutreachStore {
   private readonly redis: Redis;
@@ -98,5 +105,19 @@ export class RedisOutreachStore implements OutreachStore {
 
   async emailForToken(token: string): Promise<string | null> {
     return this.redis.get<string>(TOKEN_KEY(token));
+  }
+
+  // Same atomic incr-then-rollback shape as reserveSpend in public-audit-redis.ts,
+  // for an integer send count instead of a float dollar amount. INCRBY is atomic
+  // in Redis, so concurrent cron ticks can never both slip past the cap.
+  async reserveSend(n: number, cap: number): Promise<SendCapResult> {
+    const key = SENDCAP_KEY(utcDate());
+    const total = await this.redis.incrby(key, n);
+    await this.redis.expire(key, SENDCAP_TTL_SECONDS);
+    if (total > cap) {
+      if (n !== 0) await this.redis.incrby(key, -n); // release; over cap
+      return { allowed: false, sentToday: total - n, cap };
+    }
+    return { allowed: true, sentToday: total, cap };
   }
 }

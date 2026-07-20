@@ -5,6 +5,54 @@ Format: date · decision · rationale · status.
 
 ---
 
+## 2026-07-20 · Cold-outreach sending goes autonomous (Vercel cron, coded safety gates)
+- **Decision:** Flip the cold-outreach engine from "assisted — the founder personally
+  fires every send" to **fully autonomous within hard coded safety gates**, run as
+  plain Vercel cron routes (not a scheduled Claude agent — a scheduled cloud agent
+  would lack this Mac's secrets/CSVs; moving the send logic into the deployed app
+  itself avoids that problem entirely). Founder locked four sub-decisions via
+  AskUserQuestion: (1) fully autonomous sending, gated by a daily send cap and an
+  automated QA gate rather than a human reviewing every email; (2) Vercel cron
+  (cloud) runtime so it runs with the founder's PC off; (3) full Microsoft Graph
+  reply detection for the warm-lead alert (not just report-opens); (4) a dedicated
+  sending subdomain to protect the domain's transactional/`hello@` reputation, and
+  expand sourcing to more verticals over time (Apify-driven auto-sourcing deferred
+  to a later phase; today's queue is still fed from curated CSVs).
+- **What shipped (code-complete, NOT deployed):** three new `CRON_SECRET`-gated
+  cron routes (`app/api/cron/outreach-send`, `warm-scan`, `digest`; schedule in
+  `vercel.json`); an automated pre-send QA gate (`lib/outreach-qa.ts`) that
+  quarantines (never sends) anything failing honesty/compliance/deliverability
+  checks; a hard atomic daily send cap (`OutreachStore.reserveSend`); a new
+  terminal `warm` contact status set by Graph-based reply detection, which stops
+  the autonomous cadence immediately and fires a rich founder alert with a
+  one-paste draft reply; a Resend bounce/complaint webhook + one-click
+  List-Unsubscribe (deliverability circuit-breakers that didn't exist before); and
+  a cloud prospect queue (`lib/prospect-queue.ts`, Redis) replacing local CSVs as
+  the cron's input, seeded via a new `ingest-prospects` action /
+  `tools/ingest-prospects.mjs`. Every markdown guardrail that said "preview-only,
+  founder fires every send" (`.claude/skills/swarm`, `.claude/skills/outreach-daily`,
+  `.claude/agents/outreach-drafter.md`, `.claude/agents/ops-watchdog.md`,
+  `docs/playbooks/outreach-review.md`, `docs/automation/SWARM.md`) was rewritten to
+  reflect that agents now **audit** the autonomous engine and surface warm leads,
+  rather than preparing batches for a human to fire.
+- **Rationale:** the founder needs client acquisition to run without daily manual
+  effort ("I don't want to have to run this every day"). The existing engine
+  (prospector → curator → drafter → send, Redis-backed cadence) was already ~85%
+  of this — the missing pieces were a scheduler, a daily cap, an automated QA
+  gate to replace the human reviewer, and reply detection. The honesty/CAN-SPAM
+  guardrails themselves are **preserved verbatim**, just enforced in code
+  (`lib/outreach-qa.ts`) instead of a human/in-session-agent reading every email.
+- **Guardrails preserved, non-negotiable:** no fake testimonials/guarantees/hype
+  (CLAUDE.md §4); the estimate-vs-measured honesty rule in email rendering; the
+  CAN-SPAM postal-address + opt-out requirement; per-recipient dedup.
+- **Status:** code-complete, verified (build 39 routes, lint clean, 125/125 tests).
+  **Founder-gated before going live:** a dedicated sending subdomain (Resend +
+  Cloudflare SPF/DKIM/DMARC), an Azure AD app registration for Graph `Mail.Read`,
+  the Resend webhook secret, new Vercel prod env vars (incl. a real
+  `OUTREACH_POSTAL_ADDRESS`), commit/push + `vercel --prod`, and a conservative
+  send-cap ramp (the domain's DMARC only reached `p=quarantine` on 2026-07-07).
+  Full design: `C:\Users\kylel\.claude\plans\we-need-to-get-fancy-tower.md`.
+
 ## 2026-06-23 · Local funnel redesign: Discovery Sprint + recurring Care Plan; retire the public $97 kit
 - **Decision:** Redesign the local/service funnel for velocity and recurrence, as one
   coherent ladder: **Free audit (`/free-audit`) → Paid Discovery Sprint ($497, credited

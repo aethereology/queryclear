@@ -31,9 +31,87 @@ We sell *readiness*, not outcomes. **Never** promise rankings or AI citations.
 
 ## 2. Ground-truth state (keep this section current)
 
-> Last verified: 2026-07-08. If you change the site, update this section and
+> Last verified: 2026-07-20. If you change the site, update this section and
 > `memory.md` at the end of your session.
 
+- **AUTONOMOUS OUTREACH ENGINE 2026-07-20 (code-complete, verified, NOT yet
+  committed/deployed — founder-gated):** the cold-outreach system is no longer
+  "assisted, founder fires every send" — it now sends autonomously on a Vercel
+  cron, within hard safety gates, per founder decision (fully autonomous sending,
+  dedicated sending subdomain, full Microsoft Graph reply detection, multi-
+  vertical sourcing). This is the single biggest guardrail change in the repo's
+  history — see `docs/playbooks/outreach-review.md`, `docs/automation/SWARM.md`,
+  and the rewritten `.claude/agents/outreach-drafter.md` / `.claude/skills/
+  swarm|outreach-daily` for the new framing (agents now **audit** the autonomous
+  engine; they no longer prepare batches for the founder to fire).
+  **New cron routes** (`vercel.json`, `CRON_SECRET`-gated): `app/api/cron/
+  outreach-send` (sends due follow-ups then new cold prospects, within
+  `OUTREACH_DAILY_SEND_CAP`, on a `*/20` weekday drip), `app/api/cron/warm-scan`
+  (polls the reply mailbox via Microsoft Graph every 15 min; a reply flips the
+  contact to the new terminal `warm` status — stopping the cadence on the very
+  next tick — and fires an instant `[WARM]` founder alert with a one-paste draft
+  reply; opt-out-worded replies auto-unsubscribe instead), `app/api/cron/digest`
+  (nightly summary: sent/due/queue/quarantine). **Automated QA gate**
+  (`lib/outreach-qa.ts`) runs on every rendered email before it can send —
+  honesty/no-guarantee lint, postal-address-not-a-placeholder, unsubscribe
+  present, MX record resolves, report link healthy — anything that fails is
+  **quarantined** (`lib/prospect-queue.ts`, Redis `pq:*`), never sent. **Daily
+  send cap** (`OutreachStore.reserveSend`, mirrors the existing `reserveSpend`
+  cap pattern) is a hard, atomic, cross-instance-safe ceiling. **Deliverability**:
+  every autonomous send now carries a one-click `List-Unsubscribe` header
+  (`app/api/outreach/unsubscribe`, a stateless HMAC-signed token — no new
+  secret), and a Resend bounce/complaint webhook (`app/api/hooks/resend`) auto-
+  sets `bounced` on any delivery failure — both are the circuit-breakers
+  unattended sending didn't have before. **Cloud prospect queue**
+  (`lib/prospect-queue.ts`, Redis `pq:queue`/`pq:seen`/`pq:quarantine`) replaces
+  the local gitignored leads CSVs as the send cron's input — CSVs are pushed in
+  once via the new `ingest-prospects` action on `/api/outreach` (CLI:
+  `tools/ingest-prospects.mjs --file <csv>` / `--status`). Refactor: `sendEmail`/
+  `secretOk` extracted from `app/api/outreach/route.ts` into `lib/outreach-send.ts`
+  / `lib/secret.ts` so the founder-facing route and the autonomous crons send
+  through one path (no self-HTTP, no double-charging an audit). Verified on
+  Windows: build = 39 routes (5 new: 3 crons + the Resend webhook + the
+  unsubscribe endpoint), lint clean, **125/125** tests (11 new: QA gate, prospect
+  queue, send cap, secret/token helpers, digest + warm-alert email templates).
+  **Deliberately deferred this session** (documented, not built): Apify-driven
+  cloud prospect *sourcing* (Phase 2/3 of the plan) and multi-vertical rotation —
+  today's queue is filled by `ingest-prospects` from founder/agent-curated CSVs,
+  same as before; auto-sourcing is the next increment. **Founder-gated before this
+  goes live:** ~~(1) a dedicated sending subdomain~~ — **RESOLVED 2026-07-20:
+  Resend's current plan on this account only includes 1 domain
+  (`queryclear.com` already uses it; `outreach.queryclear.com` create attempt
+  returned `403 create_error`, "Your plan includes 1 domain"). Founder decided
+  to **ship on the existing domain** rather than upgrade the plan —
+  `LEAD_FROM` stays `Kyle at queryclear <audit@queryclear.com>`. Accepted risk:
+  a bad bounce/complaint run from autonomous cold sends could degrade
+  `hello@`/transactional deliverability too, since they now share reputation.
+  Mitigated by starting the daily cap conservative (see below) and the new
+  bounce-webhook circuit-breaker. Revisit the subdomain if/when a Resend plan
+  upgrade is worth it — see [[email-deliverability-scheme]].
+  (2) Azure AD app registration — **DONE 2026-07-20** via `m365 entra app add`
+  (Graph `Mail.Read`, application permission, `--grantAdminConsent` succeeded):
+  app registered, tenant confirmed `d5006e92-c329-4a7b-9349-79ec1de1f8a0`, and
+  `MS_GRAPH_MAILBOX=kyle@sparkcreativesinc.org` confirmed as the right target —
+  `hello@`/`audit@queryclear.com`/`aethelo@sparkcreativesinc.org` are all proxy
+  addresses on that one mailbox (verified via `m365 entra user get`), so replies
+  to any of them land there. (3) `RESEND_WEBHOOK_SECRET` — **DONE 2026-07-20**:
+  webhook `13b26026-1773-4690-803d-b6a77191f363` registered via `resend
+  webhooks create` (`--profile default`, the queryclear Resend account — NOT
+  the `maureenella` profile the CLI defaults to; always pass `--profile
+  default` for queryclear Resend work) against `/api/hooks/resend`, events
+  `email.bounced`/`email.complained`. (4) new Vercel prod env vars — **DONE
+  2026-07-20** via `vercel env add ... --value ... --yes --scope
+  sparkcreativesinc`: `CRON_SECRET` (freshly generated), `RESEND_WEBHOOK_SECRET`,
+  `MS_GRAPH_TENANT_ID`/`CLIENT_ID`/`CLIENT_SECRET`/`MS_GRAPH_MAILBOX`,
+  `OUTREACH_DAILY_SEND_CAP=10` (the ramp-low value from item 6). Confirmed
+  already present from before this session: `OUTREACH_SECRET`,
+  `OUTREACH_POSTAL_ADDRESS` (real address, set), `LEAD_FROM`, `LEAD_TO`,
+  `RESEND_API_KEY`, `KV_REST_API_*`, `AGENT_RUNTIME_URL`, `PUBLIC_AUDIT_*` (via
+  `vercel env ls production`). `FOUNDER_ALERT_TO` was skipped — it falls back to
+  `LEAD_TO`, which already resolves to the same mailbox. (5)/(6) commit/push +
+  deploy, and the cap ramp: see the deploy log right below this entry for
+  what actually shipped.
+  Full design + phased plan: `C:\Users\kylel\.claude\plans\we-need-to-get-fancy-tower.md`.
 - **LIVE** at https://www.queryclear.com (apex 307 → www). Deployed on Vercel
   (team `sparkcreativesinc`, project `queryclear`; CLI needs `--scope sparkcreativesinc`).
 - **CLOUDFLARE IS BLOCKING AI CRAWLERS — FOUNDER ACTION PENDING (found 2026-07-08):**
