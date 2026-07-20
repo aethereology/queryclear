@@ -34,6 +34,35 @@ We sell *readiness*, not outcomes. **Never** promise rankings or AI citations.
 > Last verified: 2026-07-20. If you change the site, update this section and
 > `memory.md` at the end of your session.
 
+- **AUTOMATIC LEAD SOURCING 2026-07-20 (code shipped, NOT yet fully live —
+  founder-gated on `APIFY_TOKEN`):** built same day as the autonomous outreach
+  cutover below, after the founder asked "how will you find leads?" and the new
+  cloud queue turned out to be empty. Two parts: (1) **immediate seed —
+  DONE**: pushed the two pre-curated CSVs into the live queue via
+  `tools/ingest-prospects.mjs` — **58 real prospects now queued** (52 Fort
+  Lauderdale + 6 Georgia, rest deduped against the masterlist). The other 5
+  local CSVs (150 raw + dental 30 + custom-home-builder 32 + physical-therapy
+  31 + non-FL med-spa 101) still need a curation pass — not done, fast-follow.
+  (2) **Automatic ongoing sourcing** — new `lib/apify.ts` (Apify REST client;
+  actor `compass/crawler-google-places`; input schema verified against Apify's
+  public docs — `searchStringsArray` not `searches`), `lib/prospect-curate.ts`
+  (deterministic port of the `prospect-curator` agent's rules — drop no-email/
+  junk-platform-emails/national-chains-and-institutions/careers-mailboxes,
+  dedupe by domain; tested against synthetic fixtures matching the real
+  Jacksonville 120→54 batch's named drop examples), `lib/prospect-targets.ts`
+  (explicit round-robin rotation: med-spa → dental → chiropractic → law,
+  excluding already-covered metros), `lib/apify-spend.ts` (daily cost cap,
+  same atomic pattern as `reserveSend`/`reserveSpend`), `lib/apify-runs.ts`
+  (rotation index + pending-run tracking in Redis). Two new once-daily crons
+  (`app/api/cron/prospect-topup` at 6am ET checks queue depth and starts one
+  Apify run if low; `prospect-ingest` at 7am ET curates finished runs and
+  enqueues survivors) — wired into `vercel.json` ahead of `warm-scan`/
+  `outreach-send` so same-day sourcing feeds same-day sending. Verified:
+  build 41 routes, lint clean, **141/141** tests. **Founder-gated:** `APIFY_TOKEN`
+  (founder fetching from Apify dashboard → Settings → Integrations), plus
+  deploy. Until the token is set, the two crons just no-op (log + skip),
+  same fail-open pattern as an unset `RESEND_API_KEY`. Full design + what's
+  still open: `C:\Users\kylel\.claude\plans\we-need-to-get-fancy-tower.md`.
 - **AUTONOMOUS OUTREACH ENGINE 2026-07-20 (code-complete, verified, NOT yet
   committed/deployed — founder-gated):** the cold-outreach system is no longer
   "assisted, founder fires every send" — it now sends autonomously on a Vercel

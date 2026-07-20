@@ -110,6 +110,16 @@ Short living board. Strategy lives in `roadmap.md`; the executable cards live in
   --scope sparkcreativesinc`; smoke-check `/care-plan` + sitemap + `/stack-kit` noindex.
 
 ## 🔄 Now — founder + next
+- **Automatic lead sourcing (2026-07-20, code shipped) — founder-gated:**
+  get an `APIFY_TOKEN` (Apify dashboard → Settings → Integrations → API
+  tokens) and give it to Claude to set in Vercel prod (or set it yourself),
+  then commit/push/deploy. Until then `prospect-topup`/`prospect-ingest`
+  no-op harmlessly. The queue already has 58 real prospects seeded from
+  existing CSVs, so sending isn't blocked on this — it just means the queue
+  won't auto-refill yet. Also still open: curate the other 5 local CSVs
+  (dental/custom-home-builder/physical-therapy/non-FL-medspa/150-row master
+  list) — run the `prospect-curator` agent on them or wait for
+  `lib/prospect-curate.ts` to be pointed at them as a backfill.
 - **Autonomous outreach cutover (2026-07-20, code-complete, NOT deployed) —
   founder-gated prereqs before turning it on:**
   1. Set up a dedicated sending subdomain (`outreach.queryclear.com`) in Resend +

@@ -5,6 +5,35 @@ Format: date · decision · rationale · status.
 
 ---
 
+## 2026-07-20 · Automatic lead sourcing (Apify REST, replacing the empty-queue gap)
+- **Decision:** After shipping autonomous sending (below), the founder asked "how
+  will you find leads?" — the new cloud prospect queue was empty. Rather than
+  just seeding it once and calling it done, the founder chose to also build
+  automatic ongoing sourcing now: two new once-daily crons
+  (`prospect-topup`/`prospect-ingest`) that run an Apify Google-Maps scrape
+  when the queue runs low, curate the results with the same rules the
+  `prospect-curator` agent uses (now deterministic code), and refill the queue
+  — closing the loop without a human running `/prospect-city` by hand.
+- **Immediate seed, separate from automation:** pushed the two already-curated,
+  ready CSVs (Fort Lauderdale 71, Georgia 17) into the live queue via the
+  existing `tools/ingest-prospects.mjs` — 58 real prospects now queued. The
+  other 5 local CSVs (raw/uncurated or different verticals) were explicitly
+  left for a separate curation pass, not folded into this build.
+- **Rationale:** the interactive `prospector` agent's Apify MCP connection
+  cannot run inside a headless Vercel cron, so a real REST integration
+  (`APIFY_TOKEN`, not MCP) was a genuinely new build, not a wrapper around
+  something that already ran unattended. Verified the actor's real input field
+  names against Apify's public docs first (`searchStringsArray`, not the
+  originally-guessed `searches`) rather than assuming.
+- **Guardrails preserved:** same daily-cap pattern as outreach sending (fails
+  closed, no crash, no silent overspend); curation drops rather than guesses on
+  anything ambiguous (no email, junk platform address, national chain, careers
+  mailbox); dedupes by domain so franchise locations aren't conflated.
+- **Status:** code shipped, verified (build 41 routes, lint clean, 141/141
+  tests). **Founder-gated:** an `APIFY_TOKEN` from the Apify dashboard, then
+  deploy. The two new crons no-op harmlessly without a token — sending isn't
+  blocked on this, only auto-refill is.
+
 ## 2026-07-20 · Cold-outreach sending goes autonomous (Vercel cron, coded safety gates)
 - **Decision:** Flip the cold-outreach engine from "assisted — the founder personally
   fires every send" to **fully autonomous within hard coded safety gates**, run as

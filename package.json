@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "node --test tests/lead-route.test.mjs tests/checkout-route.test.mjs tests/stripe-webhook.test.mjs tests/scorecard.test.mjs tests/audit-report.test.mjs tests/snapshot-overlay.test.mjs tests/public-audit-email.test.mjs tests/public-audit-guards.test.mjs tests/care-plan-email.test.mjs tests/outreach-email.test.mjs tests/outreach-store.test.mjs tests/outreach-cadence.test.mjs tests/outreach-qa.test.mjs tests/prospect-queue.test.mjs tests/secret.test.mjs tests/unsubscribe-token.test.mjs",
+    "test": "node --test tests/lead-route.test.mjs tests/checkout-route.test.mjs tests/stripe-webhook.test.mjs tests/scorecard.test.mjs tests/audit-report.test.mjs tests/snapshot-overlay.test.mjs tests/public-audit-email.test.mjs tests/public-audit-guards.test.mjs tests/care-plan-email.test.mjs tests/outreach-email.test.mjs tests/outreach-store.test.mjs tests/outreach-cadence.test.mjs tests/outreach-qa.test.mjs tests/prospect-queue.test.mjs tests/secret.test.mjs tests/unsubscribe-token.test.mjs tests/prospect-curate.test.mjs tests/apify-sourcing.test.mjs",
     "test:lead": "node --test tests/lead-route.test.mjs"
   },
   "dependencies": {
