@@ -58,11 +58,16 @@ We sell *readiness*, not outcomes. **Never** promise rankings or AI citations.
   Apify run if low; `prospect-ingest` at 7am ET curates finished runs and
   enqueues survivors) — wired into `vercel.json` ahead of `warm-scan`/
   `outreach-send` so same-day sourcing feeds same-day sending. Verified:
-  build 41 routes, lint clean, **141/141** tests. **Founder-gated:** `APIFY_TOKEN`
-  (founder fetching from Apify dashboard → Settings → Integrations), plus
-  deploy. Until the token is set, the two crons just no-op (log + skip),
-  same fail-open pattern as an unset `RESEND_API_KEY`. Full design + what's
-  still open: `C:\Users\kylel\.claude\plans\we-need-to-get-fancy-tower.md`.
+  build 41 routes, lint clean, **141/141** tests. **`APIFY_TOKEN` set by the
+  founder same day → CONFIRMED WORKING LIVE END-TO-END**: manually triggered
+  `prospect-topup` (with the watermark temporarily raised to force it, then
+  reverted) started a real Apify run (St. Augustine FL med-spas,
+  `p1MW4DKOfsNqMUxCZ`); `prospect-ingest` then curated its 23 results to 7
+  kept / 16 dropped and enqueued all 7 (queue depth 58→65, 0 quarantined) —
+  proves the actor call, the curation rules, AND the previously-uncertain
+  email-field extraction all work against real data, no code changes needed.
+  The automatic loop is fully live; nothing further is founder-gated here.
+  Full design: `C:\Users\kylel\.claude\plans\we-need-to-get-fancy-tower.md`.
 - **AUTONOMOUS OUTREACH ENGINE 2026-07-20 (code-complete, verified, NOT yet
   committed/deployed — founder-gated):** the cold-outreach system is no longer
   "assisted, founder fires every send" — it now sends autonomously on a Vercel
