@@ -11,9 +11,15 @@ import { site } from "@/lib/site";
 // outreach replies land (read-only Microsoft Graph Mail.Read; no MX change, no
 // send-as) for messages from anyone in the masterlist. A reply flips the
 // contact to the terminal "warm" status (removing it from the autonomous
-// cadence on the next send-cron tick) and fires an instant founder alert with
-// a one-paste draft reply. An opt-out-worded reply is treated as unsubscribe
+// cadence on the next send-cron run) and fires a founder alert with a
+// one-paste draft reply. An opt-out-worded reply is treated as unsubscribe
 // instead, mechanically honoring every outreach email's opt-out promise.
+//
+// Runs ONCE PER DAY (see vercel.json — Vercel Hobby only allows daily crons;
+// the original design polled every 15 min for a near-instant alert, collapsed
+// to once/day 2026-07-20 when the Hobby plan rejected the multi-tick deploy).
+// A reply can sit up to ~24h before the founder is notified under this plan —
+// upgrading to Vercel Pro is what restores the original near-instant latency.
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
 
@@ -25,8 +31,8 @@ export async function GET(request: Request) {
   }
 
   const store = outreachStore();
-  // 24h lookback covers any missed tick; alreadyProcessed() keeps re-scanned
-  // messages from firing a second alert.
+  // 24h lookback matches the once-daily cadence; alreadyProcessed() keeps
+  // re-scanned messages from firing a second alert.
   const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
   const messages = await fetchRecentMessages(since);
 

@@ -1,7 +1,7 @@
 {
   "crons": [
-    { "path": "/api/cron/outreach-send", "schedule": "*/20 13-21 * * 1-5" },
-    { "path": "/api/cron/warm-scan", "schedule": "*/15 * * * *" },
+    { "path": "/api/cron/warm-scan", "schedule": "0 12 * * *" },
+    { "path": "/api/cron/outreach-send", "schedule": "0 13 * * 1-5" },
     { "path": "/api/cron/digest", "schedule": "0 22 * * *" }
   ]
 }

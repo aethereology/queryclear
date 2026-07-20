@@ -52,6 +52,17 @@ Format: date · decision · rationale · status.
   `OUTREACH_POSTAL_ADDRESS`), commit/push + `vercel --prod`, and a conservative
   send-cap ramp (the domain's DMARC only reached `p=quarantine` on 2026-07-07).
   Full design: `C:\Users\kylel\.claude\plans\we-need-to-get-fancy-tower.md`.
+- **Update, same day — shipped, with two real plan limits surfaced and resolved
+  by founder choice rather than silently worked around:** (1) Resend's plan on
+  this account allows only 1 domain (`queryclear.com` already uses it) — the
+  dedicated-subdomain idea is deferred; shipped sending from the existing
+  `audit@queryclear.com` instead, accepting the shared-reputation risk. (2)
+  This Vercel team is on the Hobby plan, which only allows once-daily cron
+  jobs — the original multi-tick-per-day `outreach-send`/`warm-scan` design was
+  rejected outright on the first deploy attempt. Collapsed both to once/day;
+  **the real consequence is reply-to-alert latency up to ~24h instead of the
+  designed ~15 min.** Deployed: commit `ba679e0`, live in prod. Upgrading
+  Resend and/or Vercel Pro later restores the original design.
 
 ## 2026-06-23 · Local funnel redesign: Discovery Sprint + recurring Care Plan; retire the public $97 kit
 - **Decision:** Redesign the local/service funnel for velocity and recurrence, as one

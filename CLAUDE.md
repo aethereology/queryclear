@@ -46,12 +46,29 @@ We sell *readiness*, not outcomes. **Never** promise rankings or AI citations.
   engine; they no longer prepare batches for the founder to fire).
   **New cron routes** (`vercel.json`, `CRON_SECRET`-gated): `app/api/cron/
   outreach-send` (sends due follow-ups then new cold prospects, within
-  `OUTREACH_DAILY_SEND_CAP`, on a `*/20` weekday drip), `app/api/cron/warm-scan`
-  (polls the reply mailbox via Microsoft Graph every 15 min; a reply flips the
-  contact to the new terminal `warm` status — stopping the cadence on the very
-  next tick — and fires an instant `[WARM]` founder alert with a one-paste draft
-  reply; opt-out-worded replies auto-unsubscribe instead), `app/api/cron/digest`
-  (nightly summary: sent/due/queue/quarantine). **Automated QA gate**
+  `OUTREACH_DAILY_SEND_CAP`), `app/api/cron/warm-scan` (polls the reply mailbox
+  via Microsoft Graph; a reply flips the contact to the new terminal `warm`
+  status — stopping the cadence on its next run — and fires a `[WARM]` founder
+  alert with a one-paste draft reply; opt-out-worded replies auto-unsubscribe
+  instead), `app/api/cron/digest` (nightly summary: sent/due/queue/quarantine).
+  **VERCEL PLAN LIMIT hit + resolved 2026-07-20:** the original design was a
+  `*/20`-weekday send drip + a 15-min warm-scan poll (near-instant reply
+  alerts). The first deploy attempt was **rejected outright** — "Hobby accounts
+  are limited to daily cron jobs" — because this Vercel team is on Hobby, not
+  Pro. Founder chose to **collapse both to once/day** rather than upgrade to
+  Pro: `warm-scan` runs once/day (`0 12 * * *`), `outreach-send` once/day
+  weekdays right after it (`0 13 * * 1-5`, so that day's just-detected replies
+  are excluded before sending), `digest` stays once/day (`0 22 * * *`).
+  **Real, accepted tradeoff: a reply can now sit up to ~24h before the founder
+  is alerted** (was designed to be ~15 min) — "instant" in the earlier session
+  entry below refers to the original design, not what's live. Upgrading to
+  Vercel Pro is what restores near-instant reply detection; nothing else about
+  the design needs to change if that happens later — just tighten the two
+  schedules in `vercel.json`. Because a single run must now cover the whole
+  day's cap, `OUTREACH_TICK_TOUCH_MAX`/`OUTREACH_TICK_COLD_MAX` were raised to
+  10 (matching `OUTREACH_DAILY_SEND_CAP`) so one daily invocation can actually
+  reach the cap — `reserveSend`'s atomic cap is still the real ceiling either way.
+  **Automated QA gate**
   (`lib/outreach-qa.ts`) runs on every rendered email before it can send —
   honesty/no-guarantee lint, postal-address-not-a-placeholder, unsubscribe
   present, MX record resolves, report link healthy — anything that fails is
@@ -108,9 +125,12 @@ We sell *readiness*, not outcomes. **Never** promise rankings or AI citations.
   `OUTREACH_POSTAL_ADDRESS` (real address, set), `LEAD_FROM`, `LEAD_TO`,
   `RESEND_API_KEY`, `KV_REST_API_*`, `AGENT_RUNTIME_URL`, `PUBLIC_AUDIT_*` (via
   `vercel env ls production`). `FOUNDER_ALERT_TO` was skipped — it falls back to
-  `LEAD_TO`, which already resolves to the same mailbox. (5)/(6) commit/push +
-  deploy, and the cap ramp: see the deploy log right below this entry for
-  what actually shipped.
+  `LEAD_TO`, which already resolves to the same mailbox. **(5) DEPLOYED
+  2026-07-20** — commit `ba679e0` pushed to main, `vercel deploy --prod --scope
+  sparkcreativesinc` shipped after the cron-schedule fix above. **(6)
+  `OUTREACH_DAILY_SEND_CAP=10`** — the conservative starting value; ramp up over
+  the following weeks by watching the nightly digest's sent-count and the
+  Resend webhook's bounce/complaint rate, and raising the Vercel env var.
   Full design + phased plan: `C:\Users\kylel\.claude\plans\we-need-to-get-fancy-tower.md`.
 - **LIVE** at https://www.queryclear.com (apex 307 → www). Deployed on Vercel
   (team `sparkcreativesinc`, project `queryclear`; CLI needs `--scope sparkcreativesinc`).

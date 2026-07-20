@@ -10,12 +10,17 @@ import { prospectQueue } from "@/lib/prospect-queue";
 import { qaSend } from "@/lib/outreach-qa";
 import { site } from "@/lib/site";
 
-// The autonomous send drip. Runs on a Vercel cron tick (see vercel.json) and
-// sends a small bounded slice each time — follow-ups first (cheap, no audit),
-// then new cold sends if the daily cap still has room. Every send passes the
-// automated QA gate (lib/outreach-qa.ts); anything that fails is quarantined,
-// never sent. Imports the same libs the founder-facing /api/outreach route
-// uses — no self-HTTP, so this never double-runs or double-charges an audit.
+// The autonomous sender. Runs ONCE PER DAY on a Vercel cron (see vercel.json —
+// Vercel Hobby only allows daily crons; the original design was a multi-tick
+// intraday drip, collapsed to one run/day 2026-07-20 when the Hobby plan
+// rejected the deploy). Each run processes follow-ups first (cheap, no audit),
+// then new cold sends, until OUTREACH_DAILY_SEND_CAP is reached — set
+// OUTREACH_TICK_TOUCH_MAX/OUTREACH_TICK_COLD_MAX high enough that a single
+// daily run can actually reach the cap (the cap itself, not the tick limits,
+// is what bounds total sends). Every send passes the automated QA gate
+// (lib/outreach-qa.ts); anything that fails is quarantined, never sent.
+// Imports the same libs the founder-facing /api/outreach route uses — no
+// self-HTTP, so this never double-runs or double-charges an audit.
 export const dynamic = "force-dynamic";
 export const maxDuration = 300;
 

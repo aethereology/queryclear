@@ -127,6 +127,21 @@ Short living board. Strategy lives in `roadmap.md`; the executable cards live in
      `vercel.json` crons are active in the Vercel dashboard.
   7. Start `OUTREACH_DAILY_SEND_CAP` low (10–15) and ramp over weeks — do not
      open it wide on day one.
+  **✅ ALL DONE 2026-07-20 — shipped (commit `ba679e0`, live in prod):**
+  Azure AD app registered via `m365 entra app add` (admin consent granted),
+  Resend webhook registered (`--profile default` — NOT the CLI's default
+  `maureenella` profile), all env vars set via `vercel env add`, deployed via
+  `vercel deploy --prod --scope sparkcreativesinc`. Two real plan limits hit +
+  resolved by founder choice during execution (not silently worked around):
+  (a) Resend's plan caps at 1 domain → shipping on the existing
+  `audit@queryclear.com` instead of a dedicated subdomain (accepted
+  reputation-sharing risk); (b) Vercel Hobby only allows once-daily crons →
+  `outreach-send` and `warm-scan` collapsed from a multi-tick-per-day design to
+  once/day each, meaning **reply-to-alert latency is now up to ~24h, not
+  ~15 min**. Upgrading Resend and/or Vercel Pro later restores the original
+  design with no other changes needed. `OUTREACH_DAILY_SEND_CAP=10` is live —
+  **next action: watch the nightly digest + bounce rate for a week or two,
+  then raise the cap.**
   See CLAUDE.md §2 (autonomous outreach entry) and
   `C:\Users\kylel\.claude\plans\we-need-to-get-fancy-tower.md` for the full design.
 - ✅ Stripe webhook REGISTERED and confirmed **enabled** in the Dashboard
