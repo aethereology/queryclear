@@ -728,7 +728,7 @@ export function renderOutreachAuditEmail(
     p(moreLine),
     p(`I pulled the whole thing into a short report &mdash; every issue in priority order${voiceBit}. It&rsquo;s already unlocked for you, no sign-up:`),
     `<p style="margin:0 0 20px"><a href="${link}" style="color:#12352a;font-weight:700;text-decoration:underline">View your AI search audit for ${escapeHtml(prospectDomain)} &rarr;</a></p>`,
-    p(`If it&rsquo;s not useful or not the right time, just reply and I&rsquo;ll leave you be.`),
+    p(`One question, and a yes/no is a fine answer: is being found in AI answers something ${escapeHtml(biz)} is already thinking about, or not on the radar yet?`),
     `<p style="margin:0 0 2px">Kyle</p><p style="margin:0;color:#5b5a4d;font-size:14px">${escapeHtml(siteName)} &middot; ${domainLabel}</p>`,
     `<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;margin:28px 0 0"><tr><td style="border-top:1px solid #e5e2da;padding-top:14px;font-size:12px;line-height:1.5;color:#8a897d">${escapeHtml(footerText)}<br>${escapeHtml(opts.postalAddress)}</td></tr></table>`,
   ].join("");
@@ -895,7 +895,7 @@ export function renderOutreachFollowupEmail(
       paras = [
         p(`Hi again &mdash; just making sure my note about ${B} landed. I ran a quick AI-search audit on your site and the full thing is still here, no sign-up:`),
         linkLine,
-        p(`If it&rsquo;s useful I&rsquo;m happy to walk you through the top fix; if not, no worries.`),
+        p(`Want me to walk you through just the top fix &mdash; the one I&rsquo;d do first if ${B} were my site? It&rsquo;s a ten-minute call, or I can write it up in a reply, whichever is easier.`),
       ];
       break;
     case "tip":
@@ -903,6 +903,7 @@ export function renderOutreachFollowupEmail(
         p(`One concrete thing while ${B} is on my mind: AI assistants lean on plain, well-structured answers to the exact questions people ask before they buy. A short FAQ that answers those in your own words &mdash; one question per heading &mdash; is one of the highest-leverage changes most sites are missing.`),
         p(`Your audit lists the specific ones for ${B}, in priority order:`),
         linkLine,
+        p(`Which of your services brings in the best customers? Tell me that one and I&rsquo;ll send back the exact questions people ask before booking it.`),
       ];
       break;
     case "last-note":
@@ -916,14 +917,14 @@ export function renderOutreachFollowupEmail(
       paras = [
         p(`Quick one for ${B}: I keep seeing the same pattern &mdash; sites that answer buyer questions in clear, structured language get surfaced by AI assistants, while polished-but-vague pages get skipped. Your audit flags exactly where ${B} sits:`),
         linkLine,
-        p(`Happy to talk it through whenever &mdash; just reply.`),
+        p(`Is ${B}&rsquo;s website something you own in-house, or do you have someone who handles it? That changes what I&rsquo;d suggest doing first.`),
       ];
       break;
     case "nurture-checkin":
       paras = [
         p(`Checking in on ${B}. Anything changed on the website front, or any questions about showing up in AI answers? The audit&rsquo;s still here:`),
         linkLine,
-        p(`No agenda &mdash; happy to be a resource.`),
+        p(`If the answer is &ldquo;nothing&rsquo;s changed and we haven&rsquo;t looked at it,&rdquo; that&rsquo;s a perfectly good reply &mdash; it tells me whether to check back later or leave it.`),
       ];
       break;
     case "nurture-tip":
@@ -932,6 +933,7 @@ export function renderOutreachFollowupEmail(
         p(`A small AI-search tip for ${B}: give each core service its own page that says, in plain words, what it is, who it&rsquo;s for, and where you serve &mdash; that&rsquo;s the kind of clarity these assistants can actually quote.`),
         p(`The full prioritized list for ${B} is here:`),
         linkLine,
+        p(`Worth doing, or not a priority right now? Either answer is useful to me.`),
       ];
       break;
   }

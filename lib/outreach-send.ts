@@ -8,6 +8,16 @@ import { site } from "./site";
 
 const EMAIL_TIMEOUT_MS = 8_000;
 
+// ONE definition of the daily send ceiling, shared by the autonomous cron and the
+// founder-facing route, so a hand-fired send and a cron send draw down the same
+// budget. Conservative default: an unset env var must not mean "unlimited".
+export const DEFAULT_DAILY_SEND_CAP = 10;
+
+export function dailySendCap(): number {
+  const n = Number(process.env.OUTREACH_DAILY_SEND_CAP);
+  return Number.isFinite(n) && n > 0 ? n : DEFAULT_DAILY_SEND_CAP;
+}
+
 async function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
   let timer: ReturnType<typeof setTimeout> | undefined;
   const timedOut = new Promise<never>((_, reject) => {

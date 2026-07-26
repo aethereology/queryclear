@@ -1,5 +1,11 @@
 import { NextResponse } from "next/server";
-import { buildOutreachEmail, buildFollowupEmail, outreachReportTtlMs } from "@/lib/outreach";
+import {
+  buildOutreachEmail,
+  buildFollowupEmail,
+  ensureReportLink,
+  outreachReportTtlMs,
+} from "@/lib/outreach";
+import { qaSend } from "@/lib/outreach-qa";
 import { AgentRuntimeError } from "@/lib/agent-runtime";
 import {
   outreachStore,
@@ -10,7 +16,7 @@ import {
 import { nextStep, computeNextDueAt, COLD_FOLLOWUPS } from "@/lib/outreach-cadence";
 import { publicAuditStore } from "@/lib/public-audit";
 import { prospectQueue, type ProspectInput } from "@/lib/prospect-queue";
-import { sendEmail } from "@/lib/outreach-send";
+import { sendEmail, dailySendCap } from "@/lib/outreach-send";
 import { secretOk } from "@/lib/secret";
 import { makeUnsubscribeToken } from "@/lib/unsubscribe-token";
 import { site } from "@/lib/site";
@@ -187,14 +193,44 @@ export async function POST(request: Request) {
     const step = nextStep(c);
     if (!step) return NextResponse.json({ skipped: "no-step" });
 
-    const { subject, html } = buildFollowupEmail(c, step);
+    // The founder-facing path is held to the SAME gates as the autonomous cron:
+    // the shared daily cap and the QA gate. A hand-fired send still costs the
+    // sending domain's reputation, so it cannot be allowed to bypass either.
+    const reserved = await store.reserveSend(1, dailySendCap());
+    if (!reserved.allowed) {
+      return NextResponse.json(
+        { skipped: "daily-cap", sentToday: reserved.sentToday, cap: reserved.cap },
+        { status: 429 },
+      );
+    }
+
+    const link = await ensureReportLink(c);
+    if (link.token && link.token !== c.touches[0]?.reportToken) {
+      await store.setReportToken(email, link.token);
+      await store.linkToken(link.token, email, outreachReportTtlMs());
+    }
+
+    const { subject, html } = buildFollowupEmail(c, step, link.reportUrl);
+    const qa = await qaSend({ subject, html, toEmail: email, reportLinkOk: link.ok });
+    if (!qa.pass) {
+      await store.releaseSend(1);
+      await prospectQueue().quarantine({
+        prospect: { email, businessName: c.business, domainUrl: c.domain },
+        reasons: qa.reasons,
+        subject,
+      });
+      return NextResponse.json({ skipped: "qa", reasons: qa.reasons }, { status: 422 });
+    }
+
     let delivered: boolean;
     try {
       delivered = await sendEmail(email, subject, html, { unsubscribeUrl: unsubscribeUrl(email) });
     } catch {
+      await store.releaseSend(1);
       return NextResponse.json({ error: "Email delivery failed." }, { status: 502 });
     }
     if (!delivered) {
+      await store.releaseSend(1);
       return NextResponse.json({ error: "Email delivery is not configured." }, { status: 503 });
     }
 
@@ -248,14 +284,42 @@ export async function POST(request: Request) {
     });
   }
 
-  // mode === "send"
+  // mode === "send" — same two gates as the cron (see the send-touch branch).
+  const reserved = await store.reserveSend(1, dailySendCap());
+  if (!reserved.allowed) {
+    return NextResponse.json(
+      { skipped: "daily-cap", sentToday: reserved.sentToday, cap: reserved.cap },
+      { status: 429 },
+    );
+  }
+
+  // A cold send always mints its report token in this same call, so the link is
+  // fresh by construction — reportLinkOk is true here, unlike a follow-up.
+  const qa = await qaSend({
+    subject: built.subject,
+    html: built.html,
+    toEmail: email,
+    reportLinkOk: true,
+  });
+  if (!qa.pass) {
+    await store.releaseSend(1);
+    await prospectQueue().quarantine({
+      prospect: { email, businessName: body.businessName, domainUrl },
+      reasons: qa.reasons,
+      subject: built.subject,
+    });
+    return NextResponse.json({ skipped: "qa", reasons: qa.reasons }, { status: 422 });
+  }
+
   let delivered: boolean;
   try {
     delivered = await sendEmail(email, built.subject, built.html, { unsubscribeUrl: unsubscribeUrl(email) });
   } catch {
+    await store.releaseSend(1);
     return NextResponse.json({ error: "Email delivery failed." }, { status: 502 });
   }
   if (!delivered) {
+    await store.releaseSend(1);
     return NextResponse.json({ error: "Email delivery is not configured." }, { status: 503 });
   }
 

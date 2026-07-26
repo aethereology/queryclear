@@ -1,11 +1,15 @@
 import { NextResponse } from "next/server";
 import { cronAuthOk } from "@/lib/secret";
-import { sendEmail } from "@/lib/outreach-send";
+import { sendEmail, dailySendCap } from "@/lib/outreach-send";
 import { makeUnsubscribeToken } from "@/lib/unsubscribe-token";
 import { outreachStore } from "@/lib/outreach-store";
 import { nextStep, computeNextDueAt, COLD_FOLLOWUPS } from "@/lib/outreach-cadence";
-import { buildOutreachEmail, buildFollowupEmail, outreachReportTtlMs } from "@/lib/outreach";
-import { publicAuditStore } from "@/lib/public-audit";
+import {
+  buildOutreachEmail,
+  buildFollowupEmail,
+  ensureReportLink,
+  outreachReportTtlMs,
+} from "@/lib/outreach";
 import { prospectQueue } from "@/lib/prospect-queue";
 import { qaSend } from "@/lib/outreach-qa";
 import { site } from "@/lib/site";
@@ -38,7 +42,7 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
   }
 
-  const cap = num(process.env.OUTREACH_DAILY_SEND_CAP, 25);
+  const cap = dailySendCap();
   const touchMax = num(process.env.OUTREACH_TICK_TOUCH_MAX, 3);
   const coldMax = num(process.env.OUTREACH_TICK_COLD_MAX, 2);
 
@@ -47,10 +51,13 @@ export async function GET(request: Request) {
   const result = {
     touchesSent: 0,
     touchesSkippedQa: 0,
+    touchesFailedDelivery: 0,
+    touchesRemintedReport: 0,
     coldSent: 0,
     coldSkippedQa: 0,
     coldSkippedDuplicate: 0,
     coldSkippedAuditFailed: 0,
+    coldFailedDelivery: 0,
     capped: false,
   };
 
@@ -67,11 +74,20 @@ export async function GET(request: Request) {
       break;
     }
 
-    const { subject, html } = buildFollowupEmail(contact, step);
-    const token = contact.touches[0]?.reportToken;
-    const reportLinkOk = token ? !!(await publicAuditStore().getReport(token)) : false;
-    const qa = await qaSend({ subject, html, toEmail: contact.email, reportLinkOk });
+    // Keep the touch-1 report link alive for the whole cadence: refresh its TTL,
+    // or re-mint it (fresh audit) if it already lapsed. Without this every
+    // nurture touch past the report TTL quarantines as "report link expired".
+    const link = await ensureReportLink(contact);
+    if (link.token && link.token !== contact.touches[0]?.reportToken) {
+      await store.setReportToken(contact.email, link.token);
+      await store.linkToken(link.token, contact.email, outreachReportTtlMs());
+      result.touchesRemintedReport += 1;
+    }
+
+    const { subject, html } = buildFollowupEmail(contact, step, link.reportUrl);
+    const qa = await qaSend({ subject, html, toEmail: contact.email, reportLinkOk: link.ok });
     if (!qa.pass) {
+      await store.releaseSend(1);
       await queue.quarantine({
         prospect: { email: contact.email, businessName: contact.business, domainUrl: contact.domain },
         reasons: qa.reasons,
@@ -87,7 +103,11 @@ export async function GET(request: Request) {
     } catch {
       delivered = false;
     }
-    if (!delivered) continue;
+    if (!delivered) {
+      await store.releaseSend(1);
+      result.touchesFailedDelivery += 1;
+      continue;
+    }
 
     const touchAt = new Date().toISOString();
     const touch = { n: step.n, type: step.type, at: touchAt };
@@ -118,6 +138,7 @@ export async function GET(request: Request) {
       try {
         built = await buildOutreachEmail({ domainUrl: prospect.domainUrl, businessName: prospect.businessName });
       } catch {
+        await store.releaseSend(1);
         await queue.quarantine({ prospect, reasons: ["content: audit failed"] });
         result.coldSkippedAuditFailed += 1;
         continue;
@@ -130,6 +151,7 @@ export async function GET(request: Request) {
         reportLinkOk: true,
       });
       if (!qa.pass) {
+        await store.releaseSend(1);
         await queue.quarantine({ prospect, reasons: qa.reasons, subject: built.subject });
         result.coldSkippedQa += 1;
         continue;
@@ -143,7 +165,11 @@ export async function GET(request: Request) {
       } catch {
         delivered = false;
       }
-      if (!delivered) continue;
+      if (!delivered) {
+        await store.releaseSend(1);
+        result.coldFailedDelivery += 1;
+        continue;
+      }
 
       const sentAt = new Date().toISOString();
       await store.upsertContact({

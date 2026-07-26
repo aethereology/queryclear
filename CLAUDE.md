@@ -31,9 +31,57 @@ We sell *readiness*, not outcomes. **Never** promise rankings or AI citations.
 
 ## 2. Ground-truth state (keep this section current)
 
-> Last verified: 2026-07-20. If you change the site, update this section and
+> Last verified: 2026-07-26. If you change the site, update this section and
 > `memory.md` at the end of your session.
 
+- **OUTREACH SAFETY-GATE REPAIR 2026-07-26 (code-complete, verified; deploy
+  founder-gated):** the first audit of the autonomous engine since it went live
+  found four defects. Evidence: 115 cold emails over 6 days produced **0 replies
+  and 5 bounces (4.3%)**, while 15/140 contacts (11%) DID open their report link
+  — engagement was real, replies were not.
+  1. **The founder-facing route bypassed both safety gates.** `send-touch` and
+     `send-cold` in `app/api/outreach/route.ts` called `sendEmail` directly with
+     no `qaSend` and no `reserveSend`, so console/CLI sends were uncapped and
+     un-QA'd. On 2026-07-26 (a **Sunday** — `outreach-send` is `0 13 * * 1-5`, so
+     not the cron) 54 touches went out in two bursts, 15 of them to addresses the
+     QA gate had already quarantined; two are now `bounced`. Most likely the
+     `/outreach` console being worked by hand — the gaps are irregular
+     (1s, 2s, then 18/15/24s pauses), there is no scheduled task and no bulk-send
+     loop in `OutreachConsole.tsx`. **Fixed:** both branches now reserve against
+     the shared cap, run the full QA gate, quarantine on failure, and release the
+     reservation on every bail-out path.
+  2. **The daily cap leaked.** `reserveSend(1, cap)` runs BEFORE the audit + QA
+     (deliberately — the cap must bound audit spend too), but nothing released it
+     when an item was quarantined, failed its audit, or failed delivery. On
+     07-24, 35 slots were reserved for 15 actual sends. **Fixed:** new
+     `releaseSend(n)` on `OutreachStore` (both impls, clamped at zero) called on
+     every non-send path.
+  3. **Report links expired mid-cadence.** `outreachReportTtlMs()` defaulted to
+     **30 days** while the nurture arm runs 9 more touches — and since
+     `afterDays` is measured *from the previous touch*, the cumulative cadence is
+     ~**465 days** (longest single gap: 120d). Every nurture follow-up past day
+     30 quarantined as "report link missing or expired" — 28 of the 50 held
+     items, all real prospects. **Fixed:** default TTL → **180 days** (must
+     exceed the longest single gap) plus new `ensureReportLink()` in
+     `lib/outreach.ts`, which slides the TTL forward on every send and re-mints
+     via a fresh audit if the token already lapsed; `store.setReportToken()`
+     persists the new token so later touches reuse it. A test asserts the TTL
+     stays greater than the longest cadence gap, so changing the cadence can't
+     silently reintroduce this.
+  4. **No email ever asked for a reply.** Every step ended in a soft exit ramp
+     ("no worries", "no agenda", "I'll leave you be") and the only reply
+     invitations were invitations to decline. **Fixed:** each of the 7 kinds now
+     closes with one specific, low-friction question; all 7 re-verified against
+     the QA honesty gate.
+  Also set: prod `OUTREACH_DAILY_SEND_CAP` **re-set to 10** — the live value was
+  encrypted and unreadable (`vercel env pull` redacts it) and no single value
+  explained the observed 39/38/23/15 daily volumes, so it is now explicitly the
+  documented ramp-low number. `dailySendCap()` in `lib/outreach-send.ts` is now
+  the ONE definition, shared by the cron and the founder route (default 10; 0 or
+  junk is never read as unlimited). **Unexplained, still open:** Friday 07-25
+  sent zero despite a weekday schedule and 73 queued prospects — Vercel log
+  retention had already rolled over. Verified on Windows: build 41 routes, lint
+  clean, **154/154** tests (13 new).
 - **AUTOMATIC LEAD SOURCING 2026-07-20 (code shipped, NOT yet fully live —
   founder-gated on `APIFY_TOKEN`):** built same day as the autonomous outreach
   cutover below, after the founder asked "how will you find leads?" and the new

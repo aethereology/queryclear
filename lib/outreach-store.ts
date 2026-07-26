@@ -72,6 +72,12 @@ export interface OutreachStore {
   dueForTouch(nowIso: string): Promise<Contact[]>;
   /** Map an unguessable report token back to the contact it was sent to. */
   linkToken(token: string, email: string, ttlMs: number): Promise<void>;
+  /**
+   * Re-point a contact's report link at a freshly minted token. Used when the
+   * original touch-1 report lapsed and ensureReportLink() re-audited, so later
+   * follow-ups reuse the new token instead of re-minting every time.
+   */
+  setReportToken(email: string, token: string): Promise<Contact | null>;
   emailForToken(token: string): Promise<string | null>;
   /**
    * Atomically reserve `n` sends against a shared daily cap (resets at UTC
@@ -81,6 +87,13 @@ export interface OutreachStore {
    * read-only digest).
    */
   reserveSend(n: number, cap: number): Promise<SendCapResult>;
+  /**
+   * Give back a reservation that never became a send. `reserveSend` is called
+   * BEFORE the audit + QA gate (so the cap is enforced before we spend money on
+   * an audit), which means a quarantined, audit-failed, or undelivered item
+   * would otherwise burn a slot forever. Every non-send path must release.
+   */
+  releaseSend(n: number): Promise<void>;
 }
 
 // Merge helper shared by both implementations: apply input fields onto an existing
@@ -147,6 +160,16 @@ export class InMemoryOutreachStore implements OutreachStore {
     return updated;
   }
 
+  async setReportToken(email: string, token: string): Promise<Contact | null> {
+    const c = await this.getContact(email);
+    if (!c || c.touches.length === 0) return null;
+    const touches = [...c.touches];
+    touches[0] = { ...touches[0], reportToken: token };
+    const updated = { ...c, touches };
+    this.contacts.set(updated.email, updated);
+    return updated;
+  }
+
   async setStatus(email: string, status: ContactStatus): Promise<Contact | null> {
     const c = await this.getContact(email);
     if (!c) return null;
@@ -184,6 +207,12 @@ export class InMemoryOutreachStore implements OutreachStore {
     }
     this.sendCap.count += n;
     return { allowed: true, sentToday: this.sendCap.count, cap };
+  }
+
+  async releaseSend(n: number): Promise<void> {
+    const day = this.iso().slice(0, 10);
+    if (this.sendCap.day !== day) return; // reservation belonged to a past day
+    this.sendCap.count = Math.max(0, this.sendCap.count - n);
   }
 }
 

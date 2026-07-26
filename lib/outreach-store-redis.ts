@@ -85,6 +85,16 @@ export class RedisOutreachStore implements OutreachStore {
     return updated;
   }
 
+  async setReportToken(email: string, token: string): Promise<Contact | null> {
+    const c = await this.readContact(normalizeEmail(email));
+    if (!c || c.touches.length === 0) return null;
+    const touches = [...c.touches];
+    touches[0] = { ...touches[0], reportToken: token };
+    const updated = { ...c, touches };
+    await this.writeContact(updated);
+    return updated;
+  }
+
   async listContacts(): Promise<Contact[]> {
     const emails = await this.redis.smembers(INDEX_KEY);
     if (!emails.length) return [];
@@ -119,5 +129,15 @@ export class RedisOutreachStore implements OutreachStore {
       return { allowed: false, sentToday: total - n, cap };
     }
     return { allowed: true, sentToday: total, cap };
+  }
+
+  // Counterpart to reserveSend, for the paths that reserve then bail (quarantine,
+  // audit failure, delivery failure). Clamped at zero so a double-release can
+  // never drive the day's count negative and hand out free sends.
+  async releaseSend(n: number): Promise<void> {
+    if (n <= 0) return;
+    const key = SENDCAP_KEY(utcDate());
+    const total = await this.redis.incrby(key, -n);
+    if (total < 0) await this.redis.set(key, 0, { ex: SENDCAP_TTL_SECONDS });
   }
 }
