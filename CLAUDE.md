@@ -73,15 +73,33 @@ We sell *readiness*, not outcomes. **Never** promise rankings or AI citations.
      invitations were invitations to decline. **Fixed:** each of the 7 kinds now
      closes with one specific, low-friction question; all 7 re-verified against
      the QA honesty gate.
-  Also set: prod `OUTREACH_DAILY_SEND_CAP` **re-set to 10** — the live value was
-  encrypted and unreadable (`vercel env pull` redacts it) and no single value
-  explained the observed 39/38/23/15 daily volumes, so it is now explicitly the
-  documented ramp-low number. `dailySendCap()` in `lib/outreach-send.ts` is now
-  the ONE definition, shared by the cron and the founder route (default 10; 0 or
-  junk is never read as unlimited). **Unexplained, still open:** Friday 07-25
-  sent zero despite a weekday schedule and 73 queued prospects — Vercel log
-  retention had already rolled over. Verified on Windows: build 41 routes, lint
-  clean, **154/154** tests (13 new).
+  5. **Cold prospects were silently deleted by transient audit failures.**
+     `popBatch` removes a prospect from `pq:queue` and `enqueue()` refuses
+     anything already in `pq:seen`, so quarantining on the first audit failure
+     dropped the lead permanently — **17 real prospects lost in six days**, the
+     largest single source of pipeline leakage. **Fixed:** `requeue()` on
+     `ProspectQueue` (bypasses the seen-guard, increments `attempts`, pushes to
+     the back of the line) bounded by `MAX_SEND_ATTEMPTS = 3`; quarantine only
+     after that.
+  **Reading the quarantine list:** it is a **write-only bounded log, NOT a
+  review queue** — nothing is ever retried *from* it. Entries are also not
+  distinct businesses: follow-up contacts stay active and retry on every run, so
+  the same contact re-logs daily (50 entries = **34** businesses on 2026-07-26 —
+  14 expired-link, 17 audit-failed, 3 bad MX). Expired-link entries self-heal
+  now that `ensureReportLink()` re-mints.
+  **Send cap is `OUTREACH_DAILY_SEND_CAP = 45`, set deliberately by the founder
+  for revenue speed** (2026-07-26). `dailySendCap()` in `lib/outreach-send.ts`
+  is the ONE definition, shared by the cron and the founder route; its code
+  default is 10, used only when the env var is unset (0 or junk never reads as
+  unlimited). `OUTREACH_TICK_TOUCH_MAX`/`OUTREACH_TICK_COLD_MAX` were **raised
+  to 45 to match** — cold sends had been flat at 14/14/15/15/day, i.e. a hidden
+  per-tick ceiling was throttling new prospects well below the cap. The cap, not
+  the tick limits, must be the only binding control.
+  **NOT a bug — do not re-investigate:** `outreach-send` is `0 13 * * 1-5`, so
+  **Saturday and Sunday legitimately send 0**. 2026-07-25 was a Saturday. (An
+  earlier audit in this session mislabelled it "Friday" and flagged a phantom
+  stall; the digest still runs daily and will report 0/45 on weekends.)
+  Verified on Windows: build 41 routes, lint clean, **157/157** tests (16 new).
 - **AUTOMATIC LEAD SOURCING 2026-07-20 (code shipped, NOT yet fully live —
   founder-gated on `APIFY_TOKEN`):** built same day as the autonomous outreach
   cutover below, after the founder asked "how will you find leads?" and the new
