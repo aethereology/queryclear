@@ -95,11 +95,35 @@ We sell *readiness*, not outcomes. **Never** promise rankings or AI citations.
   to 45 to match** — cold sends had been flat at 14/14/15/15/day, i.e. a hidden
   per-tick ceiling was throttling new prospects well below the cap. The cap, not
   the tick limits, must be the only binding control.
+  **SOURCING NOW KEEPS PACE (same day, commit `4b40665`):** at 45 sends/day the
+  queue drained faster than it refilled. Four causes: (a) `prospect-topup` fired
+  only under a **hardcoded** watermark of 30 — sized for the old 10/day cap;
+  watermark and target now **derive from `dailySendCap()`** (2 and 3 days of
+  sends) so moving the cap moves sourcing with it — **never put a bare number
+  back here**; (b) it started exactly ONE scrape however deep the hole — now
+  deficit-driven, `ceil(gap / est. yield)` bounded by `MAX_RUNS_PER_TOPUP = 4`
+  and the spend cap, with the sizing extracted as pure `planTopupRuns()` in
+  `lib/prospect-targets.ts`; (c) the rotation had only **14** targets — under 5
+  days at 4 runs/day, after which it wrapped and paid ~$1/run to re-scrape
+  cities already in `pq:seen`; rebuilt as a cross product of 4 verticals × 36
+  FL/GA metros minus already-swept pairs = **139 sweeps, ~35 days of runway**,
+  biggest metros first (yield tracks metro size: Jacksonville dental 120 places
+  → 54 kept vs. St. Augustine med-spa 23 → 7); (d) sourcing lags sending by up
+  to ~25h, absorbed by the 3-day buffer rather than retiming crons (Hobby allows
+  daily only). **Prod config:** removed the stale `OUTREACH_QUEUE_LOW_WATERMARK=30`
+  (it would have overridden the derived default and half-defeated the fix — the
+  same stale-value trap as the send cap) and set **`APIFY_DAILY_CAP_USD=4`**;
+  at ~$1/city the old $1 cap permitted exactly one scrape/day, so no planning
+  logic could have refilled 45/day. Expect ~$2–4/day while sourcing actively,
+  less once the buffer holds. **Not verified live:** `CRON_SECRET` exists only
+  in Vercel, so the cron couldn't be invoked by hand — logic is covered by 11
+  new tests and the route returns 401 unauthenticated (deployed). First real
+  run: 2026-07-27 10:00 UTC, which at depth 73 should start 4 scrapes.
   **NOT a bug — do not re-investigate:** `outreach-send` is `0 13 * * 1-5`, so
   **Saturday and Sunday legitimately send 0**. 2026-07-25 was a Saturday. (An
   earlier audit in this session mislabelled it "Friday" and flagged a phantom
   stall; the digest still runs daily and will report 0/45 on weekends.)
-  Verified on Windows: build 41 routes, lint clean, **157/157** tests (16 new).
+  Verified on Windows: build 41 routes, lint clean, **168/168** tests (27 new).
 - **AUTOMATIC LEAD SOURCING 2026-07-20 (code shipped, NOT yet fully live —
   founder-gated on `APIFY_TOKEN`):** built same day as the autonomous outreach
   cutover below, after the founder asked "how will you find leads?" and the new
