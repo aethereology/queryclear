@@ -28,7 +28,7 @@ function loadTs(relPath, mocks = {}) {
   return moduleObj.exports;
 }
 
-const { InMemoryProspectQueue } = loadTs("lib/prospect-queue.ts", {
+const { InMemoryProspectQueue, MAX_SEND_ATTEMPTS } = loadTs("lib/prospect-queue.ts", {
   "@upstash/redis": { Redis: class {} },
   "./outreach-store": { normalizeEmail: (e) => e.trim().toLowerCase() },
 });
@@ -94,4 +94,47 @@ test("listQuarantine returns most-recent-first and respects the limit", async ()
   const items = await q.listQuarantine(1);
   assert.equal(items.length, 1);
   assert.equal(items[0].prospect.email, "two@x.com", "most recent first");
+});
+
+// ── bounded retry (added 2026-07-26) ────────────────────────────────────────
+// 17 real prospects were silently deleted by audit failures before this existed:
+// popBatch removes them and enqueue() refuses anything in pq:seen, so a single
+// transient audit blip lost the lead for good.
+
+test("requeue puts a failed prospect back for another try", async () => {
+  const q = newQueue();
+  await q.enqueue({ email: "a@biz.com", domainUrl: "biz.com" });
+  const [p] = await q.popBatch(1);
+  assert.equal(await q.depth(), 0, "popped off the queue");
+
+  assert.equal(await q.requeue(p), true, "first retry granted");
+  assert.equal(await q.depth(), 1, "back in the queue");
+
+  const [again] = await q.popBatch(1);
+  assert.equal(again.attempts, 1, "attempt counted");
+  assert.equal(again.email, "a@biz.com");
+});
+
+test("requeue gives up after MAX_SEND_ATTEMPTS instead of looping forever", async () => {
+  const q = newQueue();
+  await q.enqueue({ email: "b@biz.com", domainUrl: "biz.com" });
+  let [p] = await q.popBatch(1);
+
+  let granted = 0;
+  for (let i = 0; i < 10; i++) {
+    if (!(await q.requeue(p))) break;
+    granted++;
+    [p] = await q.popBatch(1);
+  }
+
+  assert.equal(granted, MAX_SEND_ATTEMPTS - 1, `retries are bounded at ${MAX_SEND_ATTEMPTS - 1}`);
+  assert.equal(await q.depth(), 0, "exhausted prospect is not left in the queue");
+});
+
+test("enqueue still refuses a duplicate after a requeue cycle", async () => {
+  const q = newQueue();
+  await q.enqueue({ email: "c@biz.com", domainUrl: "biz.com" });
+  const [p] = await q.popBatch(1);
+  await q.requeue(p);
+  assert.equal(await q.enqueue({ email: "c@biz.com", domainUrl: "biz.com" }), false, "seen-guard intact");
 });

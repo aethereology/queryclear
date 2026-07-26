@@ -24,7 +24,18 @@ export interface ProspectInput {
 export interface Prospect extends ProspectInput {
   email: string;
   addedAt: string;
+  /** Failed send attempts so far. Absent/0 on a freshly ingested prospect. */
+  attempts?: number;
 }
+
+/**
+ * How many times a prospect may fail its audit before we give up on it. The
+ * agent-runtime audit fails for transient reasons (timeout, a slow origin) as
+ * often as permanent ones (parked domain, hard 403), and a popped prospect can
+ * never re-enter through enqueue() — `pq:seen` blocks it — so without a bounded
+ * retry every transient blip silently deletes a real, paid-for lead.
+ */
+export const MAX_SEND_ATTEMPTS = 3;
 
 export interface QuarantinedItem {
   prospect: Partial<ProspectInput> & { email: string };
@@ -38,6 +49,14 @@ export interface ProspectQueue {
   enqueue(input: ProspectInput): Promise<boolean>;
   /** Atomically pop up to `n` prospects for sending (FIFO). */
   popBatch(n: number): Promise<Prospect[]>;
+  /**
+   * Put a popped prospect back for another try, incrementing its attempt count.
+   * Deliberately bypasses the `pq:seen` guard that enqueue() enforces — this
+   * prospect is already "seen", but it was never actually contacted. Returns
+   * false once MAX_SEND_ATTEMPTS is exhausted, at which point the caller should
+   * quarantine it instead.
+   */
+  requeue(prospect: Prospect): Promise<boolean>;
   depth(): Promise<number>;
   /** A send that failed the automated QA gate — never sent, held for review. */
   quarantine(item: Omit<QuarantinedItem, "at">): Promise<void>;
@@ -67,6 +86,15 @@ export class InMemoryProspectQueue implements ProspectQueue {
   async popBatch(n: number): Promise<Prospect[]> {
     const emails = this.queue.splice(0, n);
     return emails.map((e) => this.prospects.get(e)).filter((p): p is Prospect => !!p);
+  }
+
+  async requeue(prospect: Prospect): Promise<boolean> {
+    const attempts = (prospect.attempts ?? 0) + 1;
+    if (attempts >= MAX_SEND_ATTEMPTS) return false;
+    const updated: Prospect = { ...prospect, attempts };
+    this.prospects.set(updated.email, updated);
+    this.queue.push(updated.email); // back of the line — don't block fresh leads
+    return true;
   }
 
   async depth(): Promise<number> {
@@ -123,6 +151,17 @@ export class RedisProspectQueue implements ProspectQueue {
       out.push(typeof raw === "string" ? (JSON.parse(raw) as Prospect) : raw);
     }
     return out;
+  }
+
+  async requeue(prospect: Prospect): Promise<boolean> {
+    const attempts = (prospect.attempts ?? 0) + 1;
+    if (attempts >= MAX_SEND_ATTEMPTS) return false;
+    const updated: Prospect = { ...prospect, attempts };
+    await this.redis.set(PROSPECT_KEY(updated.email), JSON.stringify(updated));
+    // LPUSH = back of the line (popBatch RPOPs), so a flaky prospect never
+    // starves the fresh ones behind it.
+    await this.redis.lpush(QUEUE_KEY, updated.email);
+    return true;
   }
 
   async depth(): Promise<number> {

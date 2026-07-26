@@ -10,7 +10,7 @@ import {
   ensureReportLink,
   outreachReportTtlMs,
 } from "@/lib/outreach";
-import { prospectQueue } from "@/lib/prospect-queue";
+import { prospectQueue, MAX_SEND_ATTEMPTS } from "@/lib/prospect-queue";
 import { qaSend } from "@/lib/outreach-qa";
 import { site } from "@/lib/site";
 
@@ -57,6 +57,7 @@ export async function GET(request: Request) {
     coldSkippedQa: 0,
     coldSkippedDuplicate: 0,
     coldSkippedAuditFailed: 0,
+    coldRequeued: 0,
     coldFailedDelivery: 0,
     capped: false,
   };
@@ -139,8 +140,19 @@ export async function GET(request: Request) {
         built = await buildOutreachEmail({ domainUrl: prospect.domainUrl, businessName: prospect.businessName });
       } catch {
         await store.releaseSend(1);
-        await queue.quarantine({ prospect, reasons: ["content: audit failed"] });
-        result.coldSkippedAuditFailed += 1;
+        // Audit failures are often transient (timeout, slow origin). Give the
+        // prospect another go before writing it off — a popped prospect can
+        // never re-enter via enqueue(), so quarantining on the first failure
+        // silently deletes a real lead.
+        if (await queue.requeue(prospect)) {
+          result.coldRequeued += 1;
+        } else {
+          await queue.quarantine({
+            prospect,
+            reasons: [`content: audit failed after ${MAX_SEND_ATTEMPTS} attempts`],
+          });
+          result.coldSkippedAuditFailed += 1;
+        }
         continue;
       }
 
