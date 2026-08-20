@@ -31,9 +31,74 @@ We sell *readiness*, not outcomes. **Never** promise rankings or AI citations.
 
 ## 2. Ground-truth state (keep this section current)
 
-> Last verified: 2026-07-26. If you change the site, update this section and
+> Last verified: 2026-08-20. If you change the site, update this section and
 > `memory.md` at the end of your session.
 
+- **COLD EMAIL DECLARED A FAILURE; PHONE-FIRST PIVOT 2026-08-20 (commit
+  `a76f719`, DEPLOYED to prod, smoke-checked):** the autonomous engine works
+  mechanically and does not convert. Live ledger: **747 emails to 255
+  businesses → 31 (12.2%) READ their personalised audit, 0 replies, ever.**
+  9 bounced (3.5%), 2 unsubscribed. The read rate held at ~12% as N grew
+  160 → 255 while replies stayed at exactly 0, so this is structural, not
+  variance. **The ask is what fails, not targeting/subjects/deliverability** —
+  12.2% click-to-report is HIGH for cold email. The old CTA asked a stranger to
+  open a sales conversation ("is this on your radar?") for zero payoff. Do NOT
+  respond to this by tweaking copy and re-measuring opens; opens were never the
+  problem. See [[outreach-conversion-baseline]].
+  **Founder decisions (2026-08-20):** (1) **phone-first** on the report-readers,
+  (2) the new ask is **"I'll fix your top issue free, no strings"**, (3) email
+  sending **paused** until that ask ships, (4) sourcing left alone.
+  **`OUTREACH_PAUSED=true` is SET in prod and the code that reads it is
+  DEPLOYED — autonomous sending is stopped.** Clearing the var resumes the
+  cadence exactly where it left off (pausing reserves no cap, pops no queue,
+  records no touch). It also gates the open-ack path, so "paused" means paused.
+  **TRAP — do not repeat:** `OUTREACH_DAILY_SEND_CAP=0` does NOT pause; every
+  knob in the send route falls back on `n > 0`, so a zeroed cap silently sends
+  the default 10/day. `sendingPaused()` is a deliberate STRING test for that
+  reason, pinned by two tests. See [[outreach-pause-switch]].
+  **The call pack:** `docs/marketing/outreach/telephone/free-fix-pack.{md,csv}`,
+  regenerate with `node --env-file=.env.local tools/build-free-fix-pack.mjs`.
+  **28 dialable** report-readers, each with ONE concrete free deliverable
+  (schema 10 / llms.txt 8 / title 5 / meta description 3; 5 have no defect —
+  use their uncited query) plus evidence they can verify mid-call. All 31 report
+  links verified 200. Phone numbers for the 11 newest opens came from Google
+  Places, accepted only on a name-token match (all 11 exact). Note: the offer
+  uses each audit's top technical **finding**, NOT its top recommendation —
+  those were mostly "Win AI visibility for: <query>", i.e. the whole paid
+  service, which is not a free giveaway. `call-log.csv` is still EMPTY; filling
+  it is the only source of new information this pipeline has.
+  **Two curation leaks closed** (`lib/prospect-curate.ts`): three businesses got
+  emailed and queued for a call — Massage Envy (national franchise; the brand is
+  only in the title/domain, which the matcher didn't read) plus Dental Directory
+  Services and Patriot Health (both **sell TO our verticals**, so they rank for
+  the same queries and can never buy). Added franchise names to
+  `CHAIN_DENYLIST`, widened that matcher to the domain, and added
+  `VENDOR_DENYLIST` + a new `sells-to-our-market` reason. 3 tests, incl. a
+  control that a real local practice survives.
+  **Also shipped in the same commit** (≈3 weeks of uncommitted work, 164 files):
+  the **social control room** (`lib/social/*`, `app/api/social/*`,
+  `app/admin/social`) — review-gated LinkedIn/X/Meta/Reddit publishing. Verified
+  **fail-closed** before shipping: `verifyAdminSession` returns false with no
+  `SOCIAL_ADMIN_SECRET`, HMAC'd + timing-safe + expiring sessions, CSRF on admin
+  actions, signature-verified webhooks; `/admin` is noindex + robots-disallowed +
+  absent from sitemap/llms.txt. **None of the social env vars exist in prod, so
+  the subsystem is DORMANT** — it cannot post until they are added deliberately.
+  Plus **outreach open-tracking** (`/api/outreach/report-view`,
+  `lib/outreach-open.ts`) which is how we know about the 31, and a real fix to
+  `sendEmail` (`return !result.error`, so a Resend failure is no longer recorded
+  as a successful send). Verified: build 54 routes, lint clean, **234/234** tests.
+- **⚠️ CLOUDFLARE IS STILL BLOCKING AI CRAWLERS (re-confirmed live 2026-08-20 —
+  6 weeks after it was first flagged on 07-08 and NOT fixed).**
+  `curl https://www.queryclear.com/robots.txt` still shows Cloudflare's managed
+  block: GPTBot, ClaudeBot, Google-Extended, CCBot, Amazonbot,
+  Applebot-Extended, Bytespider, meta-externalagent all `Disallow: /`, plus
+  `Content-Signal: ai-train=no`. **We sell AI-search visibility while blocking
+  the exact crawlers from our own site, and our site is meant to be the first
+  case study.** Our own `app/robots.ts` is correct (its rules appear at the
+  bottom of the served file). Fix is **dashboard-only** — Cloudflare → zone
+  queryclear.com → Security → Bots / AI Crawl Control → Allow + turn OFF
+  "manage AI bot traffic with robots.txt". Not fixable from code or the MCP
+  token. This is the single oldest open founder action.
 - **OUTREACH SAFETY-GATE REPAIR 2026-07-26 (code-complete, verified; deploy
   founder-gated):** the first audit of the autonomous engine since it went live
   found four defects. Evidence: 115 cold emails over 6 days produced **0 replies
