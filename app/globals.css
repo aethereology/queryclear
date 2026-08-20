@@ -673,15 +673,6 @@
     box-shadow: 0 0 0 1px var(--color-lime-deep);
   }
 
-  /* brand mark: lime dot orbits the ring on hover (CSS-only, motion-safe) */
-  .mark-orbit .orbit-dot {
-    transform-box: fill-box;
-    transform-origin: -6px center;
-    transition: transform 0.6s var(--ease);
-  }
-  .mark-orbit:hover .orbit-dot {
-    transform: rotate(360deg);
-  }
 }
 
 /* staggered page-load reveal (CSS-only, perf-safe) */
@@ -760,14 +751,10 @@
   .mega-link span:first-child,
   .home-issue-card::before,
   .home-offer-card,
-  .home-resource-link,
-  .mark-orbit .orbit-dot {
+  .home-resource-link {
     transition: none;
   }
   .btn-hex:active {
-    transform: none;
-  }
-  .mark-orbit:hover .orbit-dot {
     transform: none;
   }
   .site-background__canvas {

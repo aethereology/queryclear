@@ -9,6 +9,7 @@ import {
 } from "@/lib/email";
 import type { AuditReportData } from "@/lib/agent-runtime";
 import { site } from "@/lib/site";
+import { randomUUID } from "node:crypto";
 
 export const dynamic = "force-dynamic";
 
@@ -123,6 +124,29 @@ export async function POST(request: Request) {
     attribution: sanitizeAttribution(body.attribution),
   };
 
+  // Social attribution is isolated and best-effort. It neither reads nor writes
+  // outreach state, and a telemetry failure can never block the audit lead.
+  let socialAttributionPromise: Promise<unknown> = Promise.resolve();
+  if (
+    lead.attribution?.utmMedium === "organic_social" &&
+    lead.attribution.utmSource &&
+    ["linkedin", "x", "instagram", "facebook", "reddit"].includes(lead.attribution.utmSource)
+  ) {
+    socialAttributionPromise = import("@/lib/social/store")
+      .then(({ socialStore }) =>
+        socialStore().recordConversion({
+          id: randomUUID(),
+          postId: lead.attribution?.utmContent,
+          platform: lead.attribution?.utmSource as "linkedin" | "x" | "instagram" | "facebook" | "reddit",
+          campaign: lead.attribution?.utmCampaign,
+          kind: "free-audit-lead",
+          source: lead.source,
+          occurredAt: new Date().toISOString(),
+        }),
+      )
+      .catch(() => undefined);
+  }
+
   console.log(
     "[free-audit-lead]",
     JSON.stringify({
@@ -136,6 +160,7 @@ export async function POST(request: Request) {
   await Promise.all([
     notifyLead(lead),
     report ? emailProspectReport(report, email) : Promise.resolve(),
+    socialAttributionPromise,
   ]);
 
   if (report) return NextResponse.json({ report });

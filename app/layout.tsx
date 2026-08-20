@@ -42,6 +42,9 @@ export const metadata: Metadata = {
   },
   description: site.description,
   applicationName: site.name,
+  icons: {
+    icon: "/icon.svg",
+  },
   keywords: [
     "modern SEO",
     "AI search optimization",
@@ -74,6 +77,7 @@ const orgSchema = {
   name: site.name,
   url: site.url,
   description: site.description,
+  logo: `${site.url}/brand/queryclear-logo.svg`,
   brand: { "@type": "Brand", name: site.name },
   parentOrganization: {
     "@type": "Organization",

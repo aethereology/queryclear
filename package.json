@@ -7,13 +7,17 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "node --test tests/lead-route.test.mjs tests/checkout-route.test.mjs tests/stripe-webhook.test.mjs tests/scorecard.test.mjs tests/audit-report.test.mjs tests/snapshot-overlay.test.mjs tests/public-audit-email.test.mjs tests/public-audit-guards.test.mjs tests/care-plan-email.test.mjs tests/outreach-email.test.mjs tests/outreach-store.test.mjs tests/outreach-cadence.test.mjs tests/outreach-qa.test.mjs tests/prospect-queue.test.mjs tests/secret.test.mjs tests/unsubscribe-token.test.mjs tests/prospect-curate.test.mjs tests/apify-sourcing.test.mjs tests/outreach-sendcap.test.mjs tests/outreach-report-link.test.mjs tests/prospect-topup.test.mjs",
-    "test:lead": "node --test tests/lead-route.test.mjs"
+    "test": "node --test tests/lead-route.test.mjs tests/checkout-route.test.mjs tests/stripe-webhook.test.mjs tests/scorecard.test.mjs tests/audit-report.test.mjs tests/snapshot-overlay.test.mjs tests/public-audit-email.test.mjs tests/public-audit-guards.test.mjs tests/care-plan-email.test.mjs tests/outreach-email.test.mjs tests/outreach-open.test.mjs tests/outreach-store.test.mjs tests/outreach-cadence.test.mjs tests/outreach-qa.test.mjs tests/prospect-queue.test.mjs tests/secret.test.mjs tests/unsubscribe-token.test.mjs tests/prospect-curate.test.mjs tests/apify-sourcing.test.mjs tests/outreach-sendcap.test.mjs tests/outreach-report-link.test.mjs tests/prospect-topup.test.mjs tests/social-policy.test.mjs tests/social-security.test.mjs tests/social-adapters.test.mjs tests/social-state.test.mjs tests/social-store.test.mjs tests/social-safety.test.mjs",
+    "test:lead": "node --test tests/lead-route.test.mjs",
+    "social:schedules": "node tools/setup-social-schedules.mjs"
   },
   "dependencies": {
+    "@upstash/qstash": "^2.11.3",
     "@upstash/redis": "^1.38.0",
+    "@vercel/blob": "^2.6.1",
     "motion": "^12.40.0",
-    "next": "16.2.6",
+    "next": "^16.2.12",
+    "openai": "^6.49.0",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "resend": "^6.12.4",
@@ -25,7 +29,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "16.2.6",
+    "eslint-config-next": "^16.2.12",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

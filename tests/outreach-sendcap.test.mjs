@@ -142,3 +142,59 @@ test("dailySendCap defaults conservatively and never reads as unlimited", () => 
     else process.env.OUTREACH_DAILY_SEND_CAP = prev;
   }
 });
+
+// ── pause kill switch ───────────────────────────────────────────────────────
+// Added 2026-08-20. There was no way to stop the autonomous sender short of a
+// deploy, and the obvious guess (OUTREACH_DAILY_SEND_CAP=0) silently sends 10/day
+// because every numeric knob falls back on `n > 0`. These cases pin the switch
+// to string parsing so that trap can't come back.
+
+test("sendingPaused only pauses on an explicit truthy string", () => {
+  const { sendingPaused } = loadTs("lib/outreach-send.ts", {
+    resend: { Resend: class {} },
+    "./site": { site: { email: "hello@queryclear.com" } },
+  });
+
+  const prev = process.env.OUTREACH_PAUSED;
+  try {
+    delete process.env.OUTREACH_PAUSED;
+    assert.equal(sendingPaused(), false, "unset → sending allowed (fail-open)");
+
+    for (const v of ["true", "TRUE", " True ", "1", "yes"]) {
+      process.env.OUTREACH_PAUSED = v;
+      assert.equal(sendingPaused(), true, `${JSON.stringify(v)} pauses`);
+    }
+    for (const v of ["false", "0", "no", "", "off", "junk"]) {
+      process.env.OUTREACH_PAUSED = v;
+      assert.equal(sendingPaused(), false, `${JSON.stringify(v)} does not pause`);
+    }
+  } finally {
+    if (prev === undefined) delete process.env.OUTREACH_PAUSED;
+    else process.env.OUTREACH_PAUSED = prev;
+  }
+});
+
+// The trap this switch exists to avoid: a zeroed cap is NOT a pause.
+test("a zeroed send cap is not a pause — only OUTREACH_PAUSED is", () => {
+  const { dailySendCap, sendingPaused, DEFAULT_DAILY_SEND_CAP } = loadTs("lib/outreach-send.ts", {
+    resend: { Resend: class {} },
+    "./site": { site: { email: "hello@queryclear.com" } },
+  });
+
+  const prevCap = process.env.OUTREACH_DAILY_SEND_CAP;
+  const prevPause = process.env.OUTREACH_PAUSED;
+  try {
+    process.env.OUTREACH_DAILY_SEND_CAP = "0";
+    delete process.env.OUTREACH_PAUSED;
+    assert.equal(dailySendCap(), DEFAULT_DAILY_SEND_CAP, "cap=0 still sends the default");
+    assert.equal(sendingPaused(), false, "cap=0 alone does not pause");
+
+    process.env.OUTREACH_PAUSED = "true";
+    assert.equal(sendingPaused(), true, "the switch is the only real stop");
+  } finally {
+    if (prevCap === undefined) delete process.env.OUTREACH_DAILY_SEND_CAP;
+    else process.env.OUTREACH_DAILY_SEND_CAP = prevCap;
+    if (prevPause === undefined) delete process.env.OUTREACH_PAUSED;
+    else process.env.OUTREACH_PAUSED = prevPause;
+  }
+});

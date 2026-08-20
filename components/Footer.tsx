@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Container, Mark } from "@/components/ui";
+import { Container, Logo } from "@/components/ui";
 import { companyLinks, resourceColumns, serviceColumns, type NavLink } from "@/lib/navigation";
 import { site } from "@/lib/site";
 
@@ -14,10 +14,7 @@ export function Footer() {
       <Container className="py-14">
         <div className="flex flex-col gap-10 md:flex-row md:items-start md:justify-between">
           <div className="max-w-sm">
-            <div className="flex items-center gap-2">
-              <Mark className="h-5 w-5 text-paper" />
-              <span className="font-display text-2xl">queryclear</span>
-            </div>
+            <Logo className="h-9 w-auto text-paper" />
             <p className="mt-3 text-sm leading-relaxed text-paper/70">
               {site.description}
             </p>

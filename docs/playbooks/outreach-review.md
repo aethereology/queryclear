@@ -88,6 +88,13 @@ the send instead of just annotating a preview:
 
 - **Cold arm** (status `cold`): touch 1 = audit, then `bump` (+4d), `tip` (+5d),
   `last-note` (+7d) → **stop**.
+- **Meaningful report view**: a raw report GET is ignored because email-security
+  scanners prefetch links. A visible 10-second view graduates `cold` → `opened`.
+  If no other follow-up has gone out, Resend schedules one plain acknowledgement
+  20 minutes later (`OUTREACH_OPEN_ACK_DELAY_MINUTES`, minimum 5). It names the
+  report's top fix, asks for one low-friction reply, counts against the shared
+  daily cap, passes the normal QA gate, and includes one-click unsubscribe.
+  Set `OUTREACH_OPEN_ACK_ENABLED=false` for an immediate kill switch.
 - **Nurture arm** (status `opened`/`replied`): value sequence, wider spacing, capped
   at 10 touches total.
 - **`warm`** (new): set automatically by the Graph warm-scan cron the instant a

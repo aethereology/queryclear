@@ -169,12 +169,11 @@ export function escapeHtml(value: string) {
   });
 }
 
-// Logotype instead of a geometric mark: absolute positioning is stripped by
-// Gmail/Outlook, so the wordmark + lime period is the only version that renders
-// everywhere.
-function renderLogotype(siteName: string) {
-  const t = emailBrandTokens;
-  return `<span style="font-family:${t.fonts.display};font-size:24px;line-height:1;font-weight:700;letter-spacing:-0.01em;color:${t.colors.paper}">${escapeHtml(siteName)}<span style="color:${t.colors.lime}">.</span></span>`;
+// Table layout and a hosted PNG keep the full lockup reliable in Gmail/Outlook;
+// the wordmark remains visible as text if remote images are blocked.
+function renderLogotype(siteName: string, siteUrl: string) {
+  const logoUrl = `${siteUrl.replace(/\/$/, "")}/brand/queryclear-logo-light.png`;
+  return `<img src="${escapeHtml(logoUrl)}" width="170" height="33" alt="${escapeHtml(siteName)}" style="display:block;width:170px;height:33px;border:0" />`;
 }
 
 function renderSummary(items: EmailSummaryItem[] = []) {
@@ -368,7 +367,7 @@ function renderQueryclearEmail(options: QueryclearEmailOptions) {
                 <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse">
                   <tr>
                     <td style="vertical-align:middle">
-                      ${renderLogotype(siteName)}
+                      ${renderLogotype(siteName, siteUrl)}
                     </td>
                     <td align="right" style="vertical-align:middle;font-family:${t.fonts.mono};font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:rgba(247,244,238,.55)">
                       AI search optimization
@@ -764,6 +763,42 @@ export function renderOutreachViewNotifyEmail(
       ],
       status: "warm - follow up",
     },
+  });
+}
+
+// Recipient-facing follow-up after a meaningful report view. This deliberately
+// says "thanks for taking a look" instead of "we saw you open it": the latter is
+// accurate but feels like surveillance and tends to suppress replies. Keep this
+// plain, useful, and limited to one question.
+export function renderOutreachOpenAcknowledgementEmail(
+  opts: {
+    businessName?: string;
+    domain: string;
+    reportUrl: string;
+    topFix: string;
+    postalAddress: string;
+    siteName?: string;
+  },
+) {
+  const prospectDomain = opts.domain.replace(/^https?:\/\//, "").replace(/\/$/, "");
+  const biz = (opts.businessName && opts.businessName.trim()) || prospectDomain;
+  const siteName = opts.siteName || "queryclear";
+  const p = (html: string) => `<p style="margin:0 0 16px">${html}</p>`;
+  const footerText = `You're getting this follow-up because I sent you an audit for ${biz}. Not interested? Reply "unsubscribe" and I'll stop.`;
+
+  const body = [
+    p(`Hi again &mdash; thanks for taking a look at the AI-search audit I put together for ${escapeHtml(biz)}.`),
+    p(`If you only tackle one item, I&rsquo;d start here: <strong>${escapeHtml(opts.topFix)}</strong>`),
+    p(`That&rsquo;s the first change I&rsquo;d make because it gives search engines and AI assistants a clearer, more reliable picture of the business.`),
+    `<p style="margin:0 0 20px"><a href="${escapeHtml(opts.reportUrl)}" style="color:#12352a;font-weight:700;text-decoration:underline">Reopen your audit &rarr;</a></p>`,
+    p(`If you reply with &ldquo;top fix,&rdquo; I&rsquo;ll send back the practical first step. No call or pitch required.`),
+    `<p style="margin:0 0 2px">Kyle</p><p style="margin:0;color:#5b5a4d;font-size:14px">${escapeHtml(siteName)} &middot; queryclear.com</p>`,
+    `<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;margin:28px 0 0"><tr><td style="border-top:1px solid #e5e2da;padding-top:14px;font-size:12px;line-height:1.5;color:#8a897d">${escapeHtml(footerText)}<br>${escapeHtml(opts.postalAddress)}</td></tr></table>`,
+  ].join("");
+
+  return renderPlainEmail({
+    preheader: `The first fix I would make for ${prospectDomain}.`,
+    bodyHtml: body,
   });
 }
 

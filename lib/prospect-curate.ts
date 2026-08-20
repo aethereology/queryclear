@@ -36,6 +36,21 @@ const ROLE_LOCALPARTS = ["careers", "jobs", "hr", "recruiting", "recruitment"];
 const CHAIN_DENYLIST = [
   "ulta",
   "gnc",
+  // National franchises — the local unit has no control over the website, so
+  // there is nothing we could sell them. All observed in real sweeps.
+  "massage envy",
+  "european wax",
+  "hand & stone",
+  "hand and stone",
+  "drybar",
+  "amazing lash",
+  "supercuts",
+  "great clips",
+  "aspen dental",
+  "western dental",
+  "heartland dental",
+  "pacific dental",
+  "the joint chiropractic",
   // health systems / hospitals
   "health system",
   "baptist health",
@@ -67,8 +82,43 @@ function pickEmail(item: PlaceItem): string | null {
   return candidate.trim().toLowerCase();
 }
 
+// Businesses that sell TO the verticals we target — marketing agencies, SEO
+// shops, directories, practice-management and insurance/savings-plan sellers.
+// They rank for the same queries our prospects do, so a keyword sweep pulls
+// them in, but they are competitors or vendors and never buyers. Added
+// 2026-08-20 after "Dental Directory Services" (sells dental marketing) and
+// "Patriot Health" (national dental savings plans) reached the live ledger and
+// were queued for a sales call.
+const VENDOR_DENYLIST = [
+  "marketing",
+  "seo",
+  "advertis",
+  "web design",
+  "web development",
+  "directory service",
+  "lead generation",
+  "practice management",
+  "medical billing",
+  "dental billing",
+  "savings plan",
+  "dental plan",
+  "insurance agency",
+  "media group",
+  "digital agency",
+];
+
+function isVendorToOurMarket(item: PlaceItem): boolean {
+  // Include the domain: the trading name often hides it ("Patriot Health" →
+  // dentalplans-style site), while the domain or Google category rarely do.
+  const text = [item.title, item.categoryName, ...(item.categories ?? []), item.website]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+  return VENDOR_DENYLIST.some((needle) => text.includes(needle));
+}
+
 function isChainOrInstitution(item: PlaceItem): boolean {
-  const text = `${item.title ?? ""} ${item.categoryName ?? ""}`.toLowerCase();
+  const text = `${item.title ?? ""} ${item.categoryName ?? ""} ${item.website ?? ""}`.toLowerCase();
   return CHAIN_DENYLIST.some((needle) => text.includes(needle));
 }
 
@@ -97,6 +147,9 @@ function filterOne(
   }
   if (isChainOrInstitution(item)) {
     return { keep: false, reason: "poor-fit-chain-or-institution" };
+  }
+  if (isVendorToOurMarket(item)) {
+    return { keep: false, reason: "sells-to-our-market" };
   }
 
   return {

@@ -1,0 +1,36 @@
+name: Render social video
+
+on:
+  repository_dispatch:
+    types: [render-social-video]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: social-video-${{ github.event.client_payload.mediaId }}
+  cancel-in-progress: false
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Render and upload
+        run: node tools/render-social-video.mjs
+        env:
+          SOCIAL_RENDER_PAYLOAD: ${{ toJson(github.event.client_payload) }}
+          BLOB_READ_WRITE_TOKEN: ${{ secrets.BLOB_READ_WRITE_TOKEN }}
+          SOCIAL_RENDER_CALLBACK_SECRET: ${{ secrets.SOCIAL_RENDER_CALLBACK_SECRET }}
+      - name: Report render failure
+        if: failure()
+        run: node tools/report-social-video-failure.mjs
+        env:
+          SOCIAL_RENDER_PAYLOAD: ${{ toJson(github.event.client_payload) }}
+          SOCIAL_RENDER_CALLBACK_SECRET: ${{ secrets.SOCIAL_RENDER_CALLBACK_SECRET }}

@@ -115,3 +115,41 @@ test("tags every kept prospect with the vertical and apify source", () => {
     assert.equal(p.source, "apify");
   }
 });
+
+// ── leaks found in the live ledger 2026-08-20 ──────────────────────────────
+// These three reached the outreach ledger, got emailed, and were queued for a
+// sales call before being caught by hand. Each one is a distinct hole:
+// a franchise the denylist didn't name, and two vendors that sell TO our
+// verticals (so they rank for the same queries but can never buy).
+const LEAKED_ITEMS = [
+  // National franchise — the local unit can't change the site. Note the brand
+  // appears only in the title and the domain, never the category.
+  { title: "Massage Envy", website: "https://locations.massageenvy.com/florida/west-palm-beach/851-village-blvd.html",
+    email: "info@massageenvy.com", categoryName: "Massage spa", city: "West Palm Beach" },
+  // Sells dental marketing — a competitor, not a prospect.
+  { title: "Dental Directory Services", website: "https://www.dentaldirectoryservices.com/contact-us",
+    email: "info@dentaldirectoryservices.com", categoryName: "Marketing agency", city: "West Palm Beach" },
+  // National dental savings plans — the giveaway is the category, not the name.
+  { title: "Patriot Health, Inc.", website: "http://www.patriothealth.com/",
+    email: "info@patriothealth.com", categoryName: "Insurance agency", city: "West Palm Beach" },
+  // Control: a real local practice must still survive these new rules.
+  { title: "Riverside Family Dentistry", website: "https://riversidefamilydental.com",
+    email: "hello@riversidefamilydental.com", categoryName: "Dentist", city: "Jacksonville" },
+];
+
+test("drops national franchises even when the brand is only in the title/domain", () => {
+  const { dropped } = curateBatch(LEAKED_ITEMS, "med-spa");
+  assert.equal(dropped.find((d) => d.title === "Massage Envy").reason, "poor-fit-chain-or-institution");
+});
+
+test("drops businesses that sell TO our verticals (competitors, not prospects)", () => {
+  const { dropped } = curateBatch(LEAKED_ITEMS, "dental");
+  assert.equal(dropped.find((d) => d.title === "Dental Directory Services").reason, "sells-to-our-market");
+  assert.equal(dropped.find((d) => d.title === "Patriot Health, Inc.").reason, "sells-to-our-market");
+});
+
+test("the new denylists do not drop a real local practice", () => {
+  const { kept } = curateBatch(LEAKED_ITEMS, "dental");
+  assert.equal(kept.length, 1, "only the control survives");
+  assert.equal(kept[0].businessName, "Riverside Family Dentistry");
+});

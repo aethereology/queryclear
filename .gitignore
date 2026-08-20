@@ -43,6 +43,10 @@ Thumbs.db
 docs/marketing/outreach/previews/
 # Prospect lead lists carry contact PII — keep them out of git history
 docs/marketing/outreach/leads/
+# Same for the telephone call lists (phone numbers + emails) and the rendered
+# call-pack email. The README and call-script.md in that folder ARE tracked.
+docs/marketing/outreach/telephone/*.csv
+docs/marketing/outreach/telephone/*.html
 
 # Reference docs we don't track in git (kept locally)
 queryclear.com_AI Search Optimized Website Service Business Plan.pdf

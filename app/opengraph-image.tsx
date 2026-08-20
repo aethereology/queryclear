@@ -1,5 +1,9 @@
 import { ImageResponse } from "next/og";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { site } from "@/lib/site";
+
+export const runtime = "nodejs";
 
 // Site-wide social share card. Next.js auto-applies this to openGraph.images
 // and twitter.images for any route that doesn't define its own.
@@ -12,6 +16,9 @@ const PINE = "#0c2a21";
 const PAPER = "#f7f4ee";
 const LIME = "#b6f03c";
 const MUTED = "rgba(247,244,238,0.62)";
+const LOGO_DATA_URI = `data:image/png;base64,${readFileSync(
+  join(process.cwd(), "public", "brand", "queryclear-logo-light.png"),
+).toString("base64")}`;
 
 export default function OpengraphImage() {
   return new ImageResponse(
@@ -29,34 +36,9 @@ export default function OpengraphImage() {
           fontFamily: "sans-serif",
         }}
       >
-        {/* Brand lockup: ring with a lime dot at its edge + wordmark */}
-        <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
-          <div
-            style={{
-              position: "relative",
-              display: "flex",
-              width: 56,
-              height: 56,
-              borderRadius: 9999,
-              border: `5px solid ${PAPER}`,
-            }}
-          >
-            <div
-              style={{
-                position: "absolute",
-                top: 16,
-                right: -16,
-                width: 22,
-                height: 22,
-                borderRadius: 9999,
-                backgroundColor: LIME,
-              }}
-            />
-          </div>
-          <div style={{ fontSize: 44, fontWeight: 700, letterSpacing: "-0.02em" }}>
-            {site.name}
-          </div>
-        </div>
+        {/* Brand lockup: open Q / query field + wordmark */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={LOGO_DATA_URI} width={340} height={66} alt="" />
 
         {/* Headline + supporting line */}
         <div style={{ display: "flex", flexDirection: "column", maxWidth: 940 }}>

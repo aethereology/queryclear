@@ -13,6 +13,20 @@ const EMAIL_TIMEOUT_MS = 8_000;
 // budget. Conservative default: an unset env var must not mean "unlimited".
 export const DEFAULT_DAILY_SEND_CAP = 10;
 
+// Kill switch for the autonomous sender. Deliberately a STRING test, not a
+// numeric one: every other knob here goes through a `n > 0` fallback, so
+// OUTREACH_DAILY_SEND_CAP=0 does NOT pause — it silently reverts to the
+// default 10/day. There was no way to stop the cron without a deploy; this is
+// it. Set OUTREACH_PAUSED=true to hold all autonomous sending while keeping
+// reply detection (warm-scan), the digest, and sourcing running.
+//
+// Scope: the cron only. The founder-facing /api/outreach route stays live so a
+// deliberate one-off send is still possible while the campaign is paused.
+export function sendingPaused(): boolean {
+  const v = (process.env.OUTREACH_PAUSED ?? "").trim().toLowerCase();
+  return v === "true" || v === "1" || v === "yes";
+}
+
 export function dailySendCap(): number {
   const n = Number(process.env.OUTREACH_DAILY_SEND_CAP);
   return Number.isFinite(n) && n > 0 ? n : DEFAULT_DAILY_SEND_CAP;
@@ -35,6 +49,10 @@ export interface SendOutreachEmailOptions {
   // prospect's mail client can offer a one-click opt-out without relying on
   // them reading and replying "unsubscribe".
   unsubscribeUrl?: string;
+  // Resend accepts a future ISO timestamp and queues the message provider-side.
+  // Used for engagement-triggered notes so they do not arrive an uncanny few
+  // seconds after someone views a report.
+  scheduledAt?: string;
 }
 
 export async function sendEmail(
@@ -55,16 +73,17 @@ export async function sendEmail(
     headers["List-Unsubscribe-Post"] = "List-Unsubscribe=One-Click";
   }
 
-  await withTimeout(
+  const result = await withTimeout(
     resend.emails.send({
       from,
       to,
       replyTo,
       subject,
       html,
+      ...(opts.scheduledAt ? { scheduledAt: opts.scheduledAt } : {}),
       ...(Object.keys(headers).length ? { headers } : {}),
     }),
     EMAIL_TIMEOUT_MS,
   );
-  return true;
+  return !result.error;
 }

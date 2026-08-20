@@ -26,6 +26,7 @@ function loadTs(relPath) {
 
 const {
   renderOutreachAuditEmail,
+  renderOutreachOpenAcknowledgementEmail,
   renderOutreachViewNotifyEmail,
   renderWarmLeadAlertEmail,
   renderOutreachDigestEmail,
@@ -90,6 +91,24 @@ test("view-notify email names the domain and links the report", () => {
   assert.ok(html.includes("hellosmooth.com"), "names the prospect domain");
   assert.ok(html.includes(REPORT_URL), "links the report");
   assert.ok(/opened/i.test(html), "frames it as an open signal");
+});
+
+test("open acknowledgement gives one useful next step without creepy tracking language", () => {
+  const html = renderOutreachOpenAcknowledgementEmail({
+    businessName: "Hello Smooth Med Spa",
+    domain: "hellosmooth.com",
+    reportUrl: REPORT_URL,
+    topFix: "Add Organization schema",
+    postalAddress: POSTAL,
+    siteName: site.name,
+  });
+  assert.ok(html.includes("Hello Smooth Med Spa"), "personalized with the business");
+  assert.ok(html.includes("Add Organization schema"), "names the report's top fix");
+  assert.ok(html.includes(REPORT_URL), "links back to the report");
+  assert.ok(html.includes(POSTAL), "carries the required postal address");
+  assert.match(html, /unsubscribe/i, "carries an opt-out");
+  assert.doesNotMatch(html, /we (saw|tracked|noticed) (you|that you)/i, "does not announce surveillance");
+  assert.match(html, /reply with/i, "uses one low-friction reply CTA");
 });
 
 test("warm-lead alert carries the reply snippet, a one-paste mailto reply, and confirms the cadence stopped", () => {

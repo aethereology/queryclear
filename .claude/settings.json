@@ -18,7 +18,17 @@
       "WebFetch(domain:enlightenmedspa.com)",
       "WebFetch(domain:www.primeramedspa.com)",
       "PowerShell($env:OUTREACH_SECRET=\"dummy\"; $env:OUTREACH_BASE_URL=\"http://127.0.0.1:9\"; node tools/outreach-audit.mjs --limit 2 --delay 0 2>&1 | Select-Object -First 20)",
-      "Bash(claude mcp *)"
+      "Bash(claude mcp *)",
+      "Bash(curl -s https://www.queryclear.com/ -o /tmp/qc_home.html -w \"%{http_code}\\\\n\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" \"https://www.queryclear.com/_next/static/media/rz_regular-s.p.10ldne6gbw2zk.woff2\")",
+      "Bash(curl -s https://www.queryclear.com/ -o /tmp/qc_home2.html)",
+      "Bash(curl -s \"https://www.queryclear.com/_next/static/chunks/0xtqfmx..3hjh.css\" -o /tmp/qc.css)",
+      "Bash(grep -o ':root[^}]\\\\{0,400\\\\}' /tmp/qc.css)",
+      "Bash(node -e ' *)",
+      "Bash(cp /tmp/qc.css \"C:/Users/kylel/AppData/Local/Temp/claude/c--Users-kylel-Documents-Claude-Projects-queryclear/218cc719-a92b-43a7-bb2e-a5c1e8e27626/scratchpad/qc.css\")"
+    ],
+    "additionalDirectories": [
+      "\\tmp"
     ]
   }
 }

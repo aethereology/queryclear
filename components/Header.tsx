@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Cta, Mark } from "@/components/ui";
+import { Cta, Logo } from "@/components/ui";
 import { directLinks, megaMenus, type NavMenu } from "@/lib/navigation";
 
 const navText = "font-mono text-xs font-medium uppercase tracking-wider";
@@ -117,10 +117,7 @@ export function Header() {
             aria-label="queryclear home"
           >
             <span aria-hidden="true" className="brand-hub__rail hidden sm:block" />
-            <Mark className="h-5 w-5 text-ink" />
-            <span className="font-display text-xl sm:text-2xl">
-              queryclear
-            </span>
+            <Logo className="h-7 w-auto sm:h-8" />
             <span aria-hidden="true" className="brand-hub__rail hidden sm:block" />
           </Link>
 

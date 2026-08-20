@@ -120,7 +120,7 @@ export function ClipReveal({
       variants={{ hidden: {}, show: { transition: { staggerChildren: 0.08 } } }}
     >
       {lines.map((l, i) => (
-        <span key={i} className="block overflow-hidden">
+        <span key={i} className="block overflow-hidden pb-[0.2em] -mb-[0.2em]">
           <motion.span
             className="block"
             variants={{

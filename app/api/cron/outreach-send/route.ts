@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { cronAuthOk } from "@/lib/secret";
-import { sendEmail, dailySendCap } from "@/lib/outreach-send";
+import { sendEmail, dailySendCap, sendingPaused } from "@/lib/outreach-send";
 import { makeUnsubscribeToken } from "@/lib/unsubscribe-token";
 import { outreachStore } from "@/lib/outreach-store";
 import { nextStep, computeNextDueAt, COLD_FOLLOWUPS } from "@/lib/outreach-cadence";
@@ -40,6 +40,14 @@ function unsubUrl(email: string): string {
 export async function GET(request: Request) {
   if (!cronAuthOk(request)) {
     return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
+  }
+
+  // Paused (OUTREACH_PAUSED) → send nothing, and touch no state: no cap
+  // reservation, no queue pop, no recorded touch. The cadence simply resumes
+  // where it left off when the flag is cleared. warm-scan/digest/sourcing are
+  // separate crons and keep running.
+  if (sendingPaused()) {
+    return NextResponse.json({ skipped: "paused", reason: "OUTREACH_PAUSED is set" });
   }
 
   const cap = dailySendCap();

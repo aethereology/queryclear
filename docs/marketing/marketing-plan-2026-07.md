@@ -3,12 +3,17 @@
 > fCMO-style 12-month plan, structured by AARRR (Acquisition, Activation,
 > Retention, Referral, Revenue). Drafted by Aethera from repo materials
 > (CLAUDE.md ground truth, roadmap.md, product_spec.md, tasks.md,
-> social-media-gameplan.md, outreach batch docs) without founder interview —
+> outreach batch docs) without founder interview —
 > every section is open to revision. Assumptions and unknowns are flagged in
 > §13 Open decisions rather than glossed over.
 >
 > Voice rules apply to everything here: readiness not outcomes, no guaranteed
 > rankings/citations, no fake anything, no hype buzzwords.
+>
+> **Social reset (2026-07-26):** The prior social strategy, calendars, tracker,
+> and creative assets were removed so the channel plan can be rebuilt from
+> scratch. Social recommendations below are historical, not active. Email
+> outreach remains unchanged.
 
 ---
 
@@ -96,7 +101,7 @@ Condensed rubric scores (0–5, from materials — push back where you have bett
 | Website & conversion surface | 4.5 | 38 routes, schema/metadata/sitemap/llms.txt, instant free audit, Stripe checkout live |
 | SEO/GEO technical readiness | 3.5 | Own infra excellent, BUT: **Cloudflare is blocking AI crawlers in prod robots.txt** (founder fix pending) and the site appears absent from Google's index (~5-week-old domain) — both undercut the pitch |
 | Outbound engine | 4 | Daily preview→QA→send pipeline works; 82 contacts; follow-up (due) queue exists. Lead sourcing is the bottleneck (~5 uncontacted rows left) |
-| Content & social | 1.5 | Excellent playbooks exist (social gameplan, 14-day post bank, 5-day kickstart) but nothing indicates consistent publishing has started |
+| Content & social | 0 | Reset 2026-07-26; no active social plan, calendar, tracker, or creative library |
 | Proof & case studies | 2 | Goldleaf fictional sample audit is strong; first real client (Maple Bear) closed its business — we currently have **zero live real-client proof** |
 | Email/deliverability | 4 | DMARC at p=quarantine, DKIM/SPF pass, hello@ live, branded templates |
 | Retention/recurrence | 2.5 | Care Plan built + verified but **not deployed**; no subscriber yet |
@@ -121,8 +126,7 @@ request-indexing pass).
 |---|---|---|
 | Cold email (med spa, metro-by-metro) | Active, working | **Primary. Scale carefully to 12–15/day, every weekday.** |
 | Organic search/GEO (own site) | Live but young | Keep shipping vertical pages; fix indexing + Cloudflare block; patience |
-| Founder-led LinkedIn/X | Playbook written, not shipping | **Start now at minimum viable cadence (2 posts/wk)** — it's pre-written in `14-day-social-posts.md` |
-| Instagram (vertical) | Planned | Defer until LinkedIn/X rhythm is automatic (per social gameplan) |
+| Social media | Reset | Rebuild channel roles, cadence, content, and measurement from a blank slate |
 | Paid ads | Not running | **Skip until ≥2 organic-channel conversions prove the message.** Bootstrapped budget can't buy learning cheaper than outreach already does |
 | Directories/local | Not started | Cheap wins: Bing Places, relevant agency/service directories, `stripe`/partner listings — one batch afternoon, then done |
 | PR/HARO-style | Not started | Opportunistic only; founder quotes on AI-search topics |
@@ -291,7 +295,7 @@ small marketing team. Already built and working:
 | Acquisition | Daily outreach prep + QA | `/outreach-daily` → outreach-drafter agent → `tools/outreach-audit.mjs` (preview) → **founder fires --send** |
 | Acquisition | Lead sourcing | `/prospect-city` → prospector (Apify Google Maps, ~$0.50/run) + prospect-curator → clean CSV + batch doc |
 | Acquisition | Vertical landing pages | `/build-vertical <niche>` → code-complete page, deploy founder-gated |
-| Acquisition | Social content | Pre-written banks (`14-day-social-posts.md`, 5-day kickstart) + marketing-skills (`social`, `copywriting`) for refills |
+| Acquisition | Social content | Reset 2026-07-26; no active plan or asset bank |
 | Activation | Instant free audit | `/free-audit` (agent-runtime, rate-limited) + unlock email with paid CTAs |
 | Activation/Retention | Follow-up nurture | `due` queue in outreach CLI; Resend for delivery |
 | All | Health monitoring | `/ops-check`, `/swarm` morning briefing; Aethera daemon portfolio-wide |
@@ -313,8 +317,6 @@ this is the shortlist that matters. Legend: **Now** / **Q4** / **2027** / **Skip
 |---|---|---|---|
 | Niche cold outbound, metro-by-metro | Acq | **Now** | The engine; running |
 | Free tool as lead magnet | Acq/Act | **Now** | `/free-audit` + `/scorecard` — built; promote them |
-| Founder-led LinkedIn/X | Acq | **Now** | Playbook + post bank exist; start |
-| Teardown content (audit → post) | Acq | **Now** | Flagship format per social gameplan |
 | Vertical landing pages | Acq | **Now** | med spa live-in-code; dental next |
 | Directory submissions | Acq | **Now** (one batch) | Cheap, one-time |
 | Booking-link friction cut | Act | **Now** | Small build |
@@ -351,14 +353,12 @@ metrics, plan upkeep. No third parties.
    flagship pitch is contradicted by our own robots.txt.
 3. **Care Plan final price/name confirmation** + Stripe smoke → deploy.
 4. **Operator pricing floor** before design partner #2.
-5. **Social: does the founder commit to 2 posts/wk?** If genuinely no, say so
-   and we drop it from the plan rather than let it rot as a guilt item.
+5. **Social strategy reset:** channel roles, cadence, account ownership, and
+   measurement will be decided in the replacement plan.
 6. **Font licensing risk** (RZ Regular/Hagrid Trial in prod) — accepted by
    founder 2026-07-08; noted here because "trustworthy" is a brand pillar.
 7. **Next-metro sequence confirmation:** Orlando → Tampa → St. Augustine →
    Miami assumed; reorder freely.
 
-**Appendix — related repo docs:** `social-media-gameplan.md`,
-`14-day-social-posts.md`, `5-day-zero-follower-kickstart/`,
-`outreach/README.md` + batch docs, `docs/playbooks/running-an-audit.md`,
-`product_spec.md`, `roadmap.md`.
+**Appendix — related repo docs:** `outreach/README.md` + batch docs,
+`docs/playbooks/running-an-audit.md`, `product_spec.md`, `roadmap.md`.
