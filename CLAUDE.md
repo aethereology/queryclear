@@ -32,7 +32,7 @@ We sell *readiness*, not outcomes. **Never** promise rankings or AI citations.
 > Last verified: 2026-08-25. If you change the site, update this section and
 > `memory.md` at the end of your session.
 
-- **COMPREHENSIVE LAUNCH HARDENING 2026-08-25 (LOCAL; NOT DEPLOYED/COMMITTED):**
+- **COMPREHENSIVE LAUNCH HARDENING 2026-08-25 (COMMITTED, PUSHED, DEPLOYED):**
   trust/legal/offer/SEO/CRO, production controls, fulfillment, privacy/security,
   analytics consent, and the public audit runtime were audited and repaired.
   Canonical launch register: `docs/launch-readiness-audit-2026-08-25.md`.
@@ -48,9 +48,16 @@ We sell *readiness*, not outcomes. **Never** promise rankings or AI citations.
   GA4 stays absent until a valid ID is configured and the visitor consents;
   tracked events exclude submitted PII/site URLs. Main verification: build,
   lint, TypeScript, production launch-config fixture, dependency audit, and
-  **299/299 tests** pass; real-Chrome QA covered 12 representative routes with
-  zero axe WCAG 2.1 A/AA violations or console errors. Runtime CI: **184 tests,
-  7 skipped**, lint/typecheck pass. No deployment or live payment/form was made.
+  **299/299 tests** pass; real-Chrome QA covered 12 representative local routes
+  and 10 production routes with zero axe WCAG 2.1 A/AA violations. Runtime CI:
+  **184 tests, 7 skipped**, lint/typecheck pass. Website commit `516a0af` and
+  runtime commit `7885d4a` were pushed to `main` and deployed READY on Vercel;
+  `www.queryclear.com` and `agent-runtime-eta.vercel.app` retain their canonical
+  aliases. Production smoke verified the core pages, security headers, valid
+  schema/canonicals, robots/sitemap/llms.txt, unauthenticated runtime rejection,
+  and a real free-audit response. A production-only Cloudflare Insights CSP
+  violation found during that smoke pass was added to the explicit script/connect
+  allowlist and reverified. No payment, lead email, or outreach send was triggered.
   **P0 remains:** public repo history still contains contact data/dead report
   links in `a76f719`; make the repo private and perform an owner-authorized
   history remediation. Exactly 28 exposed report tokens were revoked and 73

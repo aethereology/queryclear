@@ -44,8 +44,8 @@ Update the "Current state" line whenever it changes.
 
 ## Current state (update this line)
 
-2026-08-25 (latest) — COMPREHENSIVE MARKET-READINESS AUDIT + LOCAL HARDENING
-COMPLETE; DO NOT SCALE YET. Created the prioritized evidence register at
+2026-08-25 (latest) — COMPREHENSIVE MARKET-READINESS AUDIT + CONTROLLED
+PRODUCTION RELEASE COMPLETE; DO NOT SCALE YET. Created the prioritized evidence register at
 `docs/launch-readiness-audit-2026-08-25.md`, four signature documents for
 counsel/CPA/board/management, legal MSA/SOW/DPA/release drafts, and operating
 manuals/runbooks/evidence/insurance checklists. Reworked public seller identity,
@@ -64,7 +64,17 @@ with no submitted PII/site URL event fields. Chrome QA: 88 functional/semantic
 checks, then 12 representative routes with zero axe WCAG 2.1 A/AA violations and
 zero console errors; desktop/mobile screenshots in `artifacts/qa/`. Final main
 verification: build/lint/TypeScript/audit/launch-config pass, 299/299 tests.
-Runtime CI: 184 tests pass, 7 skipped, lint/typecheck pass.
+Runtime CI: 184 total tests, 7 skipped, lint/typecheck pass. Website commit
+`516a0af` and runtime commit `7885d4a` were pushed to `main` and deployed READY
+to the existing Vercel projects. Production smoke covered 10 representative
+pages (200, one H1, canonical, valid JSON-LD, zero axe WCAG 2.1 A/AA findings),
+robots/sitemap/llms.txt, security headers, runtime 401 without authentication,
+and a successful real free-audit response without sending email. The smoke pass
+exposed Cloudflare Insights being blocked by CSP; the beacon's script/connect
+origins were explicitly allowlisted and the website was redeployed. The same
+rotated 48-byte shared secret is set as a sensitive Production variable in both
+projects; runtime org/domain IDs are pinned, paid checkout is explicitly paused,
+and outreach remains paused. No payment, lead email, or outreach send occurred.
 
 SECURITY INCIDENT: public repo history commit `a76f719` contains telephone contact
 data and 28 report links. Removed the two generated data files from current Git
@@ -76,11 +86,11 @@ do not mistake a normal deletion commit for history erasure. Outreach remains
 globally paused; local telephone generators/assets must be regenerated and
 reviewed before unpause.
 
-NOT DEPLOYED OR COMMITTED. Remaining P0 external gates: counsel/CPA signatures and
+Remaining P0 external gates: counsel/CPA signatures and
 final legal/tax approval (including earned-income/UBIT/private-benefit, sales tax,
 and QueryClear DBA treatment), completed board consent and management certificate,
 insurance, founder-approved full identity/profile, real released QueryClear proof,
-production Vercel/Stripe/Redis/Blob/Resend/runtime/GA4 smoke tests, current
+production Stripe/Redis/Blob/Resend/GA4 smoke evidence, current
 GSC/Bing/Cloudflare evidence, and documented delivery capacity. Use the launch
 register as source of truth; older outreach/phone sections below are historical.
 
