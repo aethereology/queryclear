@@ -9,7 +9,7 @@ import { site } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Schema for AI Search",
   description:
-    "A plain-English guide to schema and JSON-LD for AI search: which structured data types matter, what to mark up, what to avoid, and how queryclear implements schema for service businesses.",
+    "Learn how to use accurate JSON-LD for organizations, local businesses, services, pages, and visible FAQs—without treating schema as a shortcut.",
   alternates: { canonical: "/schema-for-ai-search" },
   openGraph: {
     title: "Schema for AI Search - queryclear",
@@ -194,7 +194,7 @@ const webPageSchema = {
   url: `${site.url}/schema-for-ai-search`,
   description:
     "A plain-English guide to structured data and JSON-LD for AI search.",
-  isPartOf: { "@type": "WebSite", name: site.name, url: site.url },
+  isPartOf: { "@id": site.schemaIds.website },
 };
 
 const serviceSchema = {
@@ -202,7 +202,8 @@ const serviceSchema = {
   "@type": "Service",
   name: "Schema implementation for AI search",
   serviceType: "Structured data / JSON-LD implementation",
-  provider: { "@type": "Organization", name: site.name, url: site.url },
+  provider: { "@id": site.schemaIds.organization },
+  brand: { "@id": site.schemaIds.brand },
   description:
     "Planning, writing, validating, and maintaining structured data for service-business websites so search and AI systems can interpret business facts more clearly.",
   areaServed: "United States",
@@ -252,7 +253,7 @@ export default function SchemaPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
       <Header />
-      <main>
+      <main id="main-content">
         <section className="border-b border-line">
           <Container className="grid gap-10 py-16 md:grid-cols-[1fr_0.82fr] md:items-center md:py-20">
             <div>
@@ -274,7 +275,7 @@ export default function SchemaPage() {
               </div>
             </div>
             <div className="machine-panel">
-              <p className="text-paper/40">{"// what clean schema clarifies"}</p>
+              <p className="text-paper/70">{"// what clean schema clarifies"}</p>
               <div className="mt-4 grid gap-2">
                 {pillars.map((p) => (
                   <div key={p.k}>
@@ -387,7 +388,7 @@ export default function SchemaPage() {
               <ul className="mt-8 grid gap-3">
                 {mistakes.map((m) => (
                   <li key={m} className="flex gap-3 text-ink">
-                    <span aria-hidden="true" className="text-red-600">
+                    <span aria-hidden="true" className="text-red-700">
                       x
                     </span>
                     <span>{m}</span>

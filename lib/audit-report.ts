@@ -17,12 +17,22 @@ import { layers, type LayerId } from "@/lib/scorecard";
 export type Severity = "Critical" | "High" | "Medium";
 export type Effort = "Low" | "Medium" | "High";
 
-/** A recorded AI-visibility test: the prompt asked, whether the business surfaced. */
+export type ObservationType = "live" | "modeled" | "manual";
+
+/** A recorded answer sample with enough provenance to reproduce or qualify it. */
 export type VisibilityTest = {
   prompt: string;
   /** Short verdict, e.g. "Not surfaced", "Vague / wrong", "Unknown". */
   result: string;
   note: string;
+  /** Named product or clearly labeled fictional/demo source. */
+  engine: string;
+  /** ISO-8601 date or timestamp for the observation. */
+  observedAt: string;
+  /** Browser, API, research panel, or other concrete access path. */
+  accessMethod: string;
+  /** Never represent a modeled or manually transcribed sample as live. */
+  observationType: ObservationType;
 };
 
 /** One scored layer of the AI Visibility Stack (0–10). n/name derive from scorecard.ts. */

@@ -2,43 +2,64 @@
 
 import { useId, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { trackAnalyticsEvent } from "@/lib/analytics";
 
 type Status = "idle" | "submitting" | "error";
 
-const fields = [
+const serviceBusinessFields = [
   { name: "name", label: "Your name", type: "text", required: true, autoComplete: "name" },
-  { name: "email", label: "Email", type: "email", required: true, autoComplete: "email" },
+  { name: "email", label: "Work email", type: "email", required: true, autoComplete: "email" },
   {
     name: "website",
     label: "Website URL",
-    type: "url",
+    type: "text",
     required: true,
-    placeholder: "https://",
-    defaultValue: "https://",
+    placeholder: "yourbusiness.com",
     autoComplete: "url",
+    inputMode: "url",
   },
   { name: "business", label: "Business name", type: "text", required: true, autoComplete: "organization" },
   { name: "service", label: "Main service", type: "text", required: false, placeholder: "e.g. emergency plumbing" },
   { name: "city", label: "City / market", type: "text", required: false, autoComplete: "address-level2" },
 ] as const;
 
-// Mirrors site.offers (+ the AI Search Operator early-access track); captured so
-// the intake records which offer pulled them.
+const saasFields = [
+  { name: "name", label: "Your name", type: "text", required: true, autoComplete: "name" },
+  { name: "email", label: "Work email", type: "email", required: true, autoComplete: "email" },
+  {
+    name: "website",
+    label: "Company website",
+    type: "text",
+    required: true,
+    placeholder: "company.com",
+    autoComplete: "url",
+    inputMode: "url",
+  },
+  { name: "business", label: "Company name", type: "text", required: true, autoComplete: "organization" },
+  { name: "service", label: "Product category / use case", type: "text", required: false, placeholder: "e.g. field-service SaaS" },
+  { name: "city", label: "Primary markets", type: "text", required: false, placeholder: "e.g. United States and Canada" },
+] as const;
+
+// Mirrors the public service-business offers; captured so the intake records
+// which offer pulled the inquiry.
 export const interestOptions = [
   "AI Search Audit ($497)",
   "Website Upgrade",
   "Modern Search Website Build",
   "AI Search Care Plan",
-  "AI Search Operator (early access)",
 ] as const;
 
+const saasInterestOptions = ["AI Search Operator (early access)"] as const;
+
 export type InterestOption = (typeof interestOptions)[number];
+type LeadFormInterest = InterestOption | (typeof saasInterestOptions)[number];
 
 const DEFAULT_NOTE = (
   <>
     No obligation. A real person reads every inquiry and replies — not a sales
-    bot. By submitting, you agree to be contacted about your request. We do not
-    sell your information.
+    bot. We do not sell your information. Do not send passwords, patient data,
+    payment details, or other sensitive information.
   </>
 );
 
@@ -46,10 +67,12 @@ export function LeadForm({
   defaultNeed = "",
   submitLabel = "Send my project details",
   note = DEFAULT_NOTE,
+  audience = "service-business",
 }: {
-  defaultNeed?: InterestOption | "";
+  defaultNeed?: LeadFormInterest | "";
   submitLabel?: string;
   note?: React.ReactNode;
+  audience?: "service-business" | "saas";
 }) {
   const router = useRouter();
   // The form can render twice on one page (embedded section + SnapshotCta
@@ -57,12 +80,38 @@ export function LeadForm({
   const uid = useId();
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState<string>("");
+  const [websiteError, setWebsiteError] = useState(false);
+  const fields = audience === "saas" ? saasFields : serviceBusinessFields;
+  const displayedInterestOptions = audience === "saas" ? saasInterestOptions : interestOptions;
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setStatus("submitting");
     setError("");
+    setWebsiteError(false);
     const data = Object.fromEntries(new FormData(e.currentTarget).entries());
+    const websiteInput = String(data.website ?? "").trim();
+    const normalizedWebsite = /^[a-z][a-z\d+.-]*:\/\//i.test(websiteInput)
+      ? websiteInput
+      : `https://${websiteInput}`;
+    try {
+      const parsedWebsite = new URL(normalizedWebsite);
+      if (
+        !["http:", "https:"].includes(parsedWebsite.protocol) ||
+        !parsedWebsite.hostname ||
+        parsedWebsite.username ||
+        parsedWebsite.password ||
+        parsedWebsite.port
+      ) {
+        throw new Error("Website must use HTTP or HTTPS.");
+      }
+      data.website = parsedWebsite.toString();
+    } catch {
+      setStatus("error");
+      setWebsiteError(true);
+      setError("Enter a valid website, such as yourbusiness.com.");
+      return;
+    }
     try {
       const res = await fetch("/api/lead", {
         method: "POST",
@@ -70,6 +119,10 @@ export function LeadForm({
         body: JSON.stringify(data),
       });
       if (!res.ok) throw new Error((await res.json()).error ?? "Something went wrong.");
+      trackAnalyticsEvent("generate_lead", {
+        lead_type: audience,
+        interest: String(data.interest ?? "unspecified").slice(0, 80),
+      });
       // Single success surface: /thank-you (stable URL for conversion tracking).
       router.push("/thank-you");
     } catch (err) {
@@ -79,7 +132,7 @@ export function LeadForm({
   }
 
   return (
-    <form onSubmit={onSubmit} noValidate className="card p-6 text-ink sm:p-8">
+    <form onSubmit={onSubmit} className="card p-6 text-ink sm:p-8">
       <div aria-hidden="true" className="absolute left-[-9999px] top-auto h-px w-px overflow-hidden">
         <label htmlFor={`${uid}-company`}>Company</label>
         <input
@@ -107,8 +160,10 @@ export function LeadForm({
               type={f.type}
               required={f.required}
               autoComplete={"autoComplete" in f ? f.autoComplete : undefined}
+              inputMode={"inputMode" in f ? f.inputMode : undefined}
               placeholder={"placeholder" in f ? f.placeholder : undefined}
-              defaultValue={"defaultValue" in f ? f.defaultValue : undefined}
+              aria-invalid={websiteError && f.name === "website" ? true : undefined}
+              aria-describedby={websiteError && f.name === "website" ? `${uid}-form-status` : undefined}
               className="input-halo w-full border border-line bg-paper px-3.5 py-2.5 text-sm text-ink placeholder:text-muted outline-none transition-colors"
             />
           </div>
@@ -124,7 +179,7 @@ export function LeadForm({
             className="input-halo w-full border border-line bg-paper px-3.5 py-2.5 text-sm text-ink outline-none transition-colors"
           >
             <option value="">Not sure yet — tell us about your site</option>
-            {interestOptions.map((o) => (
+            {displayedInterestOptions.map((o) => (
               <option key={o} value={o}>
                 {o}
               </option>
@@ -145,7 +200,7 @@ export function LeadForm({
       </div>
 
       {status === "error" && (
-        <p role="alert" className="mt-4 text-sm text-red-700">
+        <p id={`${uid}-form-status`} role="alert" className="mt-4 text-sm text-red-700">
           {error}
         </p>
       )}
@@ -168,6 +223,17 @@ export function LeadForm({
         )}
       </button>
       <p className="mt-3 text-xs text-muted">{note}</p>
+      <p className="mt-2 text-xs leading-relaxed text-muted">
+        By submitting, you agree that we may contact you about this request. See our{" "}
+        <Link href="/privacy" className="font-medium text-ink underline hover:text-lime-deep">
+          Privacy Policy
+        </Link>{" "}
+        and{" "}
+        <Link href="/terms" className="font-medium text-ink underline hover:text-lime-deep">
+          Terms of Service
+        </Link>
+        .
+      </p>
     </form>
   );
 }

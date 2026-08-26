@@ -9,6 +9,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(__dirname, "..");
 const routePath = path.join(projectRoot, "app", "api", "lead", "route.ts");
 const emailModulePath = path.join(projectRoot, "lib", "email.ts");
+const jsonRequestModulePath = path.join(projectRoot, "lib", "json-request.ts");
 
 let ipCounter = 0;
 
@@ -27,16 +28,24 @@ function baseLead(overrides = {}) {
 }
 
 function makeRequest(body, init = {}) {
-  const headers = new Headers({
-    "content-type": "application/json",
-    "x-forwarded-for": init.ip ?? `203.0.113.${++ipCounter}`,
-  });
+  const headers = new Headers({ "x-forwarded-for": init.ip ?? `203.0.113.${++ipCounter}` });
+  if (init.contentType !== null) headers.set("content-type", init.contentType ?? "application/json");
 
   return new Request("https://queryclear.com/api/lead", {
     method: "POST",
     headers,
     body: typeof body === "string" ? body : JSON.stringify(body),
   });
+}
+
+function loadJsonRequestModule() {
+  const output = ts.transpileModule(fs.readFileSync(jsonRequestModulePath, "utf8"), {
+    compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 },
+    fileName: jsonRequestModulePath,
+  }).outputText;
+  const moduleObj = { exports: {} };
+  new Function("module", "exports", "require", output)(moduleObj, moduleObj.exports, () => {});
+  return moduleObj.exports;
 }
 
 function clearLeadEnv() {
@@ -73,7 +82,7 @@ function loadEmailModule() {
   return emailModule.exports;
 }
 
-function loadRoute({ sendImpl } = {}) {
+function loadRoute({ sendImpl, storeImpl } = {}) {
   const source = fs.readFileSync(routePath, "utf8");
   const output = ts.transpileModule(source, {
     compilerOptions: {
@@ -85,7 +94,21 @@ function loadRoute({ sendImpl } = {}) {
   }).outputText;
 
   const sent = [];
+  const stored = [];
+  const deliveryUpdates = [];
   const logs = [];
+  const rateLimits = new Map();
+  const store = {
+    rateLimit: async (scope, identity, limit, windowMs) => {
+      const key = `${scope}:${identity}`;
+      const count = (rateLimits.get(key) ?? 0) + 1;
+      rateLimits.set(key, count);
+      return { allowed: count <= limit, retryAfterMs: windowMs };
+    },
+    saveLead: async (lead) => stored.push(structuredClone(lead)),
+    updateLeadDelivery: async (id, delivery) => deliveryUpdates.push({ id, delivery }),
+    ...storeImpl,
+  };
   class MockResend {
     constructor(apiKey) {
       this.apiKey = apiKey;
@@ -127,13 +150,21 @@ function loadRoute({ sendImpl } = {}) {
       };
     }
 
+    if (id === "@/lib/operations-store") {
+      return { operationsStore: () => store };
+    }
+
+    if (id === "@/lib/json-request") return loadJsonRequestModule();
+
     if (id === "dns") {
       return {
         promises: {
-          resolve4: async (hostname) => {
+          lookup: async (hostname) => {
             const validDomains = ["example.com", "queryclear.com"];
             if (validDomains.includes(hostname)) {
-              return ["1.2.3.4"];
+              return hostname === "queryclear.com"
+                ? [{ address: "2606:4700:20::681a:1", family: 6 }]
+                : [{ address: "1.2.3.4", family: 4 }];
             }
             throw new Error("ENOTFOUND");
           },
@@ -161,7 +192,7 @@ function loadRoute({ sendImpl } = {}) {
   );
   run(routeModule.exports, mockRequire, routeModule, routePath, path.dirname(routePath), testConsole);
 
-  return { logs, route: routeModule.exports, sent };
+  return { deliveryUpdates, logs, route: routeModule.exports, sent, stored };
 }
 
 test("invalid JSON returns 400", async () => {
@@ -184,19 +215,38 @@ test("missing required fields return 422", async () => {
   assert.match((await res.json()).error, /business/i);
 });
 
-test("invalid email and website values are rejected", async () => {
+test("invalid, credentialed, nonstandard-port, and private website values are rejected", async () => {
   clearLeadEnv();
   const { route } = loadRoute();
 
   const badEmail = await route.POST(makeRequest(baseLead({ email: "not-an-email" })));
   const badWebsite = await route.POST(makeRequest(baseLead({ website: "javascript:alert(1)" })));
-  const insecureWebsite = await route.POST(makeRequest(baseLead({ website: "http://example.com" })));
+  const credentialed = await route.POST(makeRequest(baseLead({ website: "https://user:pass@example.com" })));
+  const nonstandardPort = await route.POST(makeRequest(baseLead({ website: "https://example.com:8443" })));
+  const local = await route.POST(makeRequest(baseLead({ website: "http://localhost" })));
 
   assert.equal(badEmail.status, 422);
   assert.equal(badWebsite.status, 422);
-  assert.equal(insecureWebsite.status, 422);
-  assert.match((await badWebsite.json()).error, /start with https:\/\//i);
-  assert.match((await insecureWebsite.json()).error, /start with https:\/\//i);
+  assert.equal(credentialed.status, 422);
+  assert.equal(nonstandardPort.status, 422);
+  assert.equal(local.status, 422);
+  assert.match((await badWebsite.json()).error, /public website URL/i);
+});
+
+test("accepts public HTTP sites and IPv6-only public domains", async () => {
+  clearLeadEnv();
+  const { route } = loadRoute();
+  assert.equal((await route.POST(makeRequest(baseLead({ website: "http://example.com" })))).status, 200);
+  assert.equal((await route.POST(makeRequest(baseLead({ website: "https://queryclear.com" })))).status, 200);
+});
+
+test("rejects wrong content types and payloads above the local request cap", async () => {
+  clearLeadEnv();
+  const { route } = loadRoute();
+  const wrongType = await route.POST(makeRequest(baseLead(), { contentType: "text/plain" }));
+  const oversized = await route.POST(makeRequest({ padding: "x".repeat(20_000) }));
+  assert.equal(wrongType.status, 415);
+  assert.equal(oversized.status, 413);
 });
 
 test("non-existent domains are rejected", async () => {
@@ -295,7 +345,7 @@ test("interest field is optional, capped, and shown in both emails when present"
 test("email delivery failure still returns success after accepted validation", async () => {
   clearLeadEnv();
   process.env.RESEND_API_KEY = "test_key";
-  const { logs, route, sent } = loadRoute({
+  const { deliveryUpdates, logs, route, sent, stored } = loadRoute({
     sendImpl: async (_message, index) => {
       if (index === 1) {
         return {
@@ -312,7 +362,23 @@ test("email delivery failure still returns success after accepted validation", a
   assert.equal(res.status, 200);
   assert.deepEqual(await res.json(), { ok: true });
   assert.equal(sent.length, 2);
+  assert.equal(stored.length, 1, "lead is durably stored before notification");
+  assert.equal(deliveryUpdates[0].delivery.team, "failed");
+  assert.equal(deliveryUpdates[0].delivery.prospect, "sent");
   assert.match(JSON.stringify(logs), /validation_error/);
+});
+
+test("durable storage failure returns 503 and never sends email or claims success", async () => {
+  clearLeadEnv();
+  process.env.RESEND_API_KEY = "test_key";
+  const { route, sent } = loadRoute({
+    storeImpl: { saveLead: async () => { throw new Error("redis unavailable"); } },
+  });
+
+  const res = await route.POST(makeRequest(baseLead()));
+  assert.equal(res.status, 503);
+  assert.equal(sent.length, 0);
+  assert.match((await res.json()).error, /safely save/i);
 });
 
 test("rate limiting rejects repeated submissions from the same IP", async () => {

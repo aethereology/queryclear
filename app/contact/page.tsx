@@ -8,7 +8,7 @@ import { site } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Contact",
   description:
-    "Get in touch with queryclear about upgrading or rebuilding your website. Email us or send your site details and we'll review how modern search sees your business.",
+    "Contact queryclear about a website audit, fixed-scope upgrade, new website build, or Care Plan eligibility.",
   alternates: { canonical: "/contact" },
   openGraph: {
     title: "Contact queryclear",
@@ -24,16 +24,26 @@ const contactPageSchema = {
   url: `${site.url}/contact`,
   description:
     "Contact queryclear about a website upgrade, a new build, or an audit.",
-  isPartOf: { "@type": "WebSite", name: site.name, url: site.url },
+  isPartOf: { "@id": site.schemaIds.website },
 };
 
 const orgContactSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
-  name: site.name,
-  url: site.url,
+  "@id": site.schemaIds.organization,
+  name: site.legal.operator,
+  legalName: site.legal.operator,
+  url: site.parentOrgUrl,
+  brand: { "@id": site.schemaIds.brand },
   email: site.email,
-  parentOrganization: { "@type": "Organization", name: site.parentOrg, url: site.parentOrgUrl },
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: site.legal.address.street,
+    addressLocality: site.legal.address.city,
+    addressRegion: site.legal.address.region,
+    postalCode: site.legal.address.postalCode,
+    addressCountry: site.legal.address.country,
+  },
   contactPoint: {
     "@type": "ContactPoint",
     contactType: "customer support",
@@ -53,9 +63,11 @@ const breadcrumbSchema = {
 
 const details = [
   { label: "Email", value: site.email, href: `mailto:${site.email}` },
-  { label: "Company", value: "A SparkCreatives Inc. brand.", href: site.parentOrgUrl },
-  { label: "Where we work", value: "Remote — we work with businesses online, wherever you are." },
-  { label: "Response time", value: "We reply within a couple of business days, usually sooner." },
+  { label: "Lead operator", value: `${site.founder.name}, ${site.founder.role}` },
+  { label: "Legal operator", value: site.legal.operator, href: site.parentOrgUrl },
+  { label: "Business address", value: `${site.legal.address.street}, ${site.legal.address.city}, ${site.legal.address.region} ${site.legal.address.postalCode}` },
+  { label: "Where we work", value: "Remote delivery for United States businesses." },
+  { label: "Response time", value: "We reply within one business day." },
 ];
 
 export default function ContactPage() {
@@ -74,7 +86,7 @@ export default function ContactPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
       <Header />
-      <main>
+      <main id="main-content">
         <section className="border-b border-line">
           <Container className="py-16 md:py-20">
             <MonoLabel index="contact">Get in touch</MonoLabel>
@@ -118,9 +130,11 @@ export default function ContactPage() {
                 ))}
               </dl>
               <p className="mt-6 text-xs leading-relaxed text-muted">
-                We use the details you send only to respond to your inquiry or
-                audit and to reply to you. We don&apos;t sell or
-                share them. See our{" "}
+                We use the details you send to evaluate and respond to your request,
+                operate the service, and maintain required records. We use the
+                service providers disclosed in our policy and do not sell your
+                information for third-party marketing. Do not send passwords,
+                patient data, payment details, or other sensitive information. See our{" "}
                 <a href="/privacy" className="underline hover:text-ink">privacy policy</a>.
                 We don&apos;t guarantee rankings or AI citations.
               </p>

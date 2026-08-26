@@ -584,10 +584,11 @@ test("the login screen separates a missing server secret from a wrong one", () =
   const route = code("app/api/social/admin/session/route.ts");
   // An unset SOCIAL_ADMIN_SECRET rejects every attempt. Reporting that as "wrong
   // secret" is unfalsifiable from the login screen.
-  assert.match(route, /if \(!expected\) \{/);
-  assert.match(route, /login_error=unconfigured/);
+  assert.match(route, /if \(!expected \|\| expected\.length < 32\) \{/);
+  assert.match(route, /loginRedirect\(request, "unconfigured"\)/);
   assert.ok(
-    route.indexOf("login_error=unconfigured") < route.indexOf("login_error=1"),
+    route.indexOf('loginRedirect(request, "unconfigured")') <
+      route.indexOf('loginRedirect(request, "1")'),
     "the unconfigured branch must precede the wrong-secret branch",
   );
   const page = code("app/admin/social/page.tsx");

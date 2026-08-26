@@ -14,7 +14,8 @@
   --color-pine: #12352a;
   --color-pine-2: #0c2a21;
   --color-lime: #b6f03c;
-  --color-lime-deep: #8fcf1f;
+  /* Accessible text green: >=5.5:1 on both paper surfaces. */
+  --color-lime-deep: #3b6800;
   --color-line: #1718091a;
 
   --font-display: var(--font-bricolage), "Segoe UI", system-ui, sans-serif;
@@ -214,6 +215,24 @@
     inset: 0;
     opacity: 1;
     mix-blend-mode: multiply;
+  }
+
+  .skip-link {
+    position: fixed;
+    left: 1rem;
+    top: 1rem;
+    z-index: 100;
+    transform: translateY(-200%);
+    border: 2px solid var(--color-pine-2);
+    background: var(--color-lime);
+    padding: 0.75rem 1rem;
+    color: var(--color-pine-2);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+  .skip-link:focus {
+    transform: translateY(0);
   }
 
   /* animated nav/inline link underline */
@@ -678,16 +697,13 @@
 /* staggered page-load reveal (CSS-only, perf-safe) */
 @keyframes fade-up {
   from {
-    opacity: 0;
     transform: translateY(14px);
   }
   to {
-    opacity: 1;
     transform: translateY(0);
   }
 }
 .fade-up {
-  opacity: 0;
   animation: fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 

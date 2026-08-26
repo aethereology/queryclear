@@ -3,6 +3,7 @@
 // live in shared state. Reads the provisioned KV_REST_API_* env vars.
 
 import { Redis } from "@upstash/redis";
+import { createHash } from "node:crypto";
 import type {
   PublicAuditStore,
   RateLimitResult,
@@ -29,13 +30,22 @@ export class RedisPublicAuditStore implements PublicAuditStore {
   }
 
   async rateLimit(ip: string, limit: number, windowMs: number): Promise<RateLimitResult> {
-    const key = `pa:rl:${ip}`;
-    const count = await this.redis.incr(key);
-    if (count === 1) {
-      await this.redis.expire(key, Math.ceil(windowMs / 1000));
-    }
+    const identity = createHash("sha256").update(ip).digest("hex").slice(0, 32);
+    const key = `pa:rl:v2:${identity}`;
+    const [rawCount, rawTtl] = await this.redis.eval<[number], [number, number]>(
+      `local count = redis.call("INCR", KEYS[1])
+local ttl = redis.call("PTTL", KEYS[1])
+if count == 1 or ttl < 0 then
+  redis.call("PEXPIRE", KEYS[1], ARGV[1])
+  ttl = tonumber(ARGV[1])
+end
+return {count, ttl}`,
+      [key],
+      [windowMs],
+    );
+    const count = Number(rawCount);
     if (count > limit) {
-      const ttl = await this.redis.pttl(key);
+      const ttl = Number(rawTtl);
       return { allowed: false, retryAfterMs: ttl > 0 ? ttl : windowMs };
     }
     return { allowed: true, retryAfterMs: 0 };
@@ -43,17 +53,38 @@ export class RedisPublicAuditStore implements PublicAuditStore {
 
   async reserveSpend(costUsd: number, capUsd: number): Promise<SpendResult> {
     const key = `pa:spend:${utcDate()}`;
-    const total = Number(await this.redis.incrbyfloat(key, costUsd));
-    await this.redis.expire(key, SPEND_TTL_SECONDS);
-    if (total > capUsd) {
-      await this.redis.incrbyfloat(key, -costUsd); // release; over cap
-      return { allowed: false, spentUsd: total - costUsd, capUsd };
-    }
-    return { allowed: true, spentUsd: total, capUsd };
+    const [rawAllowed, rawTotal] = await this.redis.eval<
+      [number, number, number],
+      [number, string | number]
+    >(
+      `local total = tonumber(redis.call("INCRBYFLOAT", KEYS[1], ARGV[1]))
+local ttl = redis.call("TTL", KEYS[1])
+if ttl < 0 then redis.call("EXPIRE", KEYS[1], ARGV[3]) end
+if total > tonumber(ARGV[2]) then
+  total = tonumber(redis.call("INCRBYFLOAT", KEYS[1], -tonumber(ARGV[1])))
+  if total < 0 then redis.call("SET", KEYS[1], 0, "EX", ARGV[3]); total = 0 end
+  return {0, tostring(total)}
+end
+return {1, tostring(total)}`,
+      [key],
+      [costUsd, capUsd, SPEND_TTL_SECONDS],
+    );
+    const allowed = Number(rawAllowed) === 1;
+    const spentUsd = Number(rawTotal);
+    return { allowed, spentUsd, capUsd };
   }
 
   async releaseSpend(costUsd: number): Promise<void> {
-    await this.redis.incrbyfloat(`pa:spend:${utcDate()}`, -costUsd);
+    await this.redis.eval<[number, number], number>(
+      `local current = tonumber(redis.call("GET", KEYS[1]) or "0")
+local next = math.max(0, current - tonumber(ARGV[1]))
+local ttl = redis.call("TTL", KEYS[1])
+if ttl > 0 then redis.call("SET", KEYS[1], tostring(next), "EX", ttl)
+else redis.call("SET", KEYS[1], tostring(next), "EX", ARGV[2]) end
+return next`,
+      [`pa:spend:${utcDate()}`],
+      [costUsd, SPEND_TTL_SECONDS],
+    );
   }
 
   async putReport(token: string, report: AuditReportData, ttlMs: number): Promise<void> {

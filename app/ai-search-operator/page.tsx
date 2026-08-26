@@ -10,8 +10,9 @@ import { site } from "@/lib/site";
 export const metadata: Metadata = {
   title: "AI Search Operator",
   description:
-    "Most AI-search tools tell you you're invisible. The queryclear AI Search Operator does the work: it monitors how AI answer engines describe your brand, drafts answer-first content, and prepares on-page fixes — and you approve every move. In early access for B2B SaaS teams.",
+    "A separate, human-approved early-access workflow for B2B SaaS teams: documented answer monitoring, draft content, and reviewable on-page fixes.",
   alternates: { canonical: "/ai-search-operator" },
+  robots: { index: false, follow: false },
   openGraph: {
     title: "AI Search Operator — queryclear",
     description:
@@ -22,7 +23,7 @@ export const metadata: Metadata = {
 const capabilities = [
   {
     t: "Monitor",
-    d: "Tracks how AI answer engines describe and cite your brand for the questions your buyers actually ask — so you can see where you're missing or mis-described.",
+    d: "Runs configured, timestamped answer samples for agreed buyer questions and records the engine, method, prompt, and observed brand mentions or source links.",
   },
   {
     t: "Create",
@@ -88,14 +89,15 @@ const webPageSchema = {
   url: `${site.url}/ai-search-operator`,
   description:
     "An agent that monitors AI search visibility, drafts answer-first content, and prepares on-page fixes for human approval. Early access for B2B SaaS teams.",
-  isPartOf: { "@type": "WebSite", name: site.name, url: site.url },
+  isPartOf: { "@id": site.schemaIds.website },
 };
 const serviceSchema = {
   "@context": "https://schema.org",
   "@type": "Service",
   name: "AI Search Operator",
   serviceType: "Managed AI search / AEO operator (early access)",
-  provider: { "@type": "Organization", name: site.name, url: site.url },
+  provider: { "@id": site.schemaIds.organization },
+  brand: { "@id": site.schemaIds.brand },
   description:
     "A human-approved operator that continuously monitors AI search visibility, drafts answer-first content, and prepares on-page technical fixes for B2B SaaS websites.",
   areaServed: "United States",
@@ -131,7 +133,7 @@ export default function OperatorPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <Header />
-      <main>
+      <main id="main-content">
         <section className="border-b border-line">
           <Container className="py-16 md:py-20">
             <MonoLabel index="operator">{site.operator.status} · {site.operator.forWho}</MonoLabel>
@@ -141,9 +143,10 @@ export default function OperatorPage() {
             <p className="mt-5 max-w-2xl leading-relaxed text-muted">
               Most AI-search tools measure: they tell you you&apos;re invisible and
               hand you a task list. The {site.operator.name} does the work instead —
-              it monitors how answer engines describe your brand, drafts answer-first
-              content, and prepares on-page fixes, with a human approving each step.
-              In early access for B2B SaaS teams.
+              it runs documented answer samples, drafts answer-first content, and
+              prepares on-page fixes, with a human approving each step. This is a
+              separate early-access track for B2B SaaS teams, not the local-service
+              Website Upgrade or Care Plan.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Cta href="#early-access">{site.operator.cta.label}</Cta>
@@ -199,7 +202,8 @@ export default function OperatorPage() {
               An audit is the first run, not the whole product.
             </h2>
             <p className="mt-4 max-w-2xl leading-relaxed text-muted">
-              We begin with a full audit of how AI search sees your site — the same
+              We begin with a paid audit of the public source material and labeled
+              answer samples — the same
               scored review behind our{" "}
               <a href="/ai-visibility-audit" className="font-medium text-ink underline hover:text-lime-deep">
                 AI Search Audit
@@ -232,7 +236,8 @@ export default function OperatorPage() {
               </h2>
               <p className="mt-5 max-w-md leading-relaxed text-paper/70">
                 We&apos;re taking just five founding partners — so each one gets
-                hands-on, founder-led setup and a direct line to me while the
+                hands-on setup and a direct line to {site.founder.name}, queryclear&apos;s
+                founder and lead operator, while the
                 operator proves out. In exchange we ask for honest feedback and,
                 only if you&apos;re happy with the results, an optional case study.
                 Founding-partner pricing is locked for your first year.
@@ -240,8 +245,9 @@ export default function OperatorPage() {
             </div>
             <LeadForm
               defaultNeed={site.operator.interest}
+              audience="saas"
               submitLabel="Request early access"
-              note="No obligation. We'll reply personally to talk through fit and scope — not a sales bot. We don't sell your information."
+              note="No obligation. Kyle reviews fit and scope personally. Do not send passwords, source code, customer data, or other confidential information through this form."
             />
           </Container>
         </section>

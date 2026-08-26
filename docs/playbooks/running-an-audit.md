@@ -11,18 +11,25 @@
 ---
 
 ## 0. What the client receives
-A private report at `https://www.queryclear.com/reports/<slug>` — noindexed,
-excluded from sitemap/llms.txt, and disallowed in robots. They (or we) can open it
-and **Save as PDF** (Ctrl/Cmd-P → Save as PDF) to email; print styles drop the
-site nav/footer and CTA automatically.
+A private, expiring link at
+`https://www.queryclear.com/reports/<slug>?access=<signed-token>`. Real reports
+are stored in private Vercel Blob storage, require a valid HMAC token, send
+`Cache-Control: private, no-store`, and are noindexed/excluded from discovery.
+The client can **Save as PDF** (Ctrl/Cmd-P → Save as PDF); print styles drop the
+site nav/footer and CTA automatically. Never send the bare slug as access.
 
 ## 1. Run the audit (the analysis)
 Work the client's **real** live site. Produce, in order:
 
-1. **AI-visibility tests.** Ask the questions a real customer would, across the
-   major answer engines, using the patterns in [`prompts.md`](../../prompts.md).
-   For each: record the prompt, whether the business **surfaced**, and a one-line
-   note on what happened (`Not surfaced` / `Vague / wrong` / `Unknown`, etc.).
+1. **Prompt-engine observations.** Freeze up to 12 total observations distributed
+   across no more than three named answer engines selected at kickoff, using buyer
+   questions based on the patterns in [`prompts.md`](../../prompts.md). One exact
+   prompt checked in one engine is one observation; checking the same prompt in
+   three engines consumes three observations, and a repeat consumes another.
+   Record the complete allocation before testing. For each observation, record the
+   prompt, whether the business **surfaced**, and a one-line note on what happened
+   (`Not surfaced` / `Vague / wrong` / `Unknown`, etc.). A failed or blocked check
+   remains a documented observation and is not silently replaced.
 2. **Score the seven layers (0–10 each).** Grade the actual site against each layer
    of the AI Visibility Stack. The rubric/questions live in
    [`lib/scorecard.ts`](../../lib/scorecard.ts) (layers + what each requires). Write
@@ -41,71 +48,88 @@ Work the client's **real** live site. Produce, in order:
    illustrative but must be built from **real** details.
 
 ## 2. Produce the report (the deliverable)
-1. **Pick an unguessable slug** — e.g. `acme-dental-7f3a2c` (business + short random
-   suffix). This is the privacy boundary, so don't use a guessable name alone.
-2. **Create the data file** `lib/reports/<slug>.ts` exporting an `AuditReport`. Copy
-   the structure from the fictional example in
-   [`lib/reports/index.ts`](../../lib/reports/index.ts) or the public sample
-   [`lib/reports/goldleaf-demo.ts`](../../lib/reports/goldleaf-demo.ts). Set:
+1. **Pick a non-identifying slug** — e.g. `client-7f3a2c9d`. The signed token is
+   the access boundary, but the slug should still avoid exposing the client name.
+2. **Create a JSON file outside the repository** using the skeleton below. Never
+   put a real client's data in `lib/reports`, Git, a pull request, or a build
+   artifact. Set:
    - `slug` = the slug above · `variant: "client"` · **`demo: false`**
    - `business`, `market`, optional `sector`, optional `preparedOn` (a date string)
    - `scoreAfter`, `visibilityTests`, `scorecard` (all 7 layers), `fixes`, `machineView`
-3. **Register it.** In `lib/reports/index.ts`, import the report and add it to the
-   `reports` map. (Leave the fictional example in place.)
-4. **Verify locally:** `npm run build && npm run lint && npm test`, then open
-   `/reports/<slug>` in `npm run dev`. Confirm the page renders, view-source shows
-   `<meta name="robots" content="noindex">`, and Ctrl/Cmd-P preview is clean.
+   - For every answer sample, record `engine`, ISO `observedAt`, concrete
+     `accessMethod`, and `observationType` (`live`, `modeled`, or `manual`). A
+     modeled or transcribed result must never be labeled live.
+3. **Configure private delivery.** Set the same strong (32+ character)
+   `REPORT_ACCESS_SECRET` in `.env.local` and Vercel production. Configure
+   `BLOB_READ_WRITE_TOKEN` (or Vercel OIDC with `BLOB_STORE_ID`) in both places.
+4. **Upload and create the expiring link:**
+
+   ```sh
+   npm run report:publish -- "C:/secure-client-files/report.json" --days 7
+   ```
+
+   The command uploads with private access and prints the signed link. The link
+   exchanges the expiring signature for a report-scoped, HttpOnly cookie and
+   redirects to a clean `/reports/<slug>` URL; the Blob itself remains private.
+   It refuses to overwrite an existing report unless `--overwrite` is explicitly
+   supplied.
+5. **Verify:** run `npm run build && npm run lint && npm test`, open the printed
+   signed link, confirm the address bar is cleaned after the redirect, confirm a
+   missing/tampered/expired token returns 404, inspect `Cache-Control`,
+   `Referrer-Policy: no-referrer`, and `X-Robots-Tag`, and confirm print preview
+   is clean.
 
 ## 3. Deliver
-1. `git add` the new data file + the registry change, commit, push.
-2. `vercel --prod --scope sparkcreativesinc` to deploy.
-3. Send the client the private link. To attach a PDF, open the link → Save as PDF.
+1. Send the client only the signed link through an approved channel.
+2. To attach a PDF, open the signed link → Save as PDF; store/send it as a
+   confidential client deliverable.
+3. Reissue a shorter-lived link when needed. Do not reuse expired links or paste
+   access tokens into tickets, analytics fields, or public chat.
+4. Treat the original signed URL as a bearer credential even though the report
+   page removes it from the address bar. To revoke access early, remove the
+   private Blob; rotating `REPORT_ACCESS_SECRET` revokes every outstanding link
+   and cookie and therefore requires an intentional client reissue plan.
 
 ## Data-file skeleton
 
-```ts
-// lib/reports/<slug>.ts
-import type { AuditReport } from "@/lib/audit-report";
-
-export const report: AuditReport = {
-  slug: "<unguessable-slug>",
-  business: "<verified business name>",
-  market: "<city / service area>",
-  sector: "<optional sector line>",
-  scoreAfter: 0,            // honest estimate after fixes (0–100)
-  variant: "client",
-  demo: false,
-  preparedOn: "<e.g. June 2026>",
-  visibilityTests: [
-    { prompt: "…", result: "Not surfaced", note: "…" },
+```json
+{
+  "slug": "<non-identifying-slug>",
+  "business": "<verified business name>",
+  "market": "<city / service area>",
+  "sector": "<optional sector line>",
+  "scoreAfter": 0,
+  "variant": "client",
+  "demo": false,
+  "preparedOn": "<e.g. August 2026>",
+  "visibilityTests": [
+    {
+      "prompt": "…",
+      "result": "Not surfaced",
+      "note": "…",
+      "engine": "<named product>",
+      "observedAt": "2026-08-25T14:30:00-04:00",
+      "accessMethod": "Logged-out browser session",
+      "observationType": "live"
+    }
   ],
-  scorecard: [
-    { layer: "entity-clarity",       score: 0, finding: "…" },
-    { layer: "service-specificity",  score: 0, finding: "…" },
-    { layer: "proof-density",        score: 0, finding: "…" },
-    { layer: "local-relevance",      score: 0, finding: "…" },
-    { layer: "answer-coverage",      score: 0, finding: "…" },
-    { layer: "machine-readability",  score: 0, finding: "…" },
-    { layer: "conversion-path",      score: 0, finding: "…" },
+  "scorecard": [
+    { "layer": "entity-clarity", "score": 0, "finding": "…" },
+    { "layer": "service-specificity", "score": 0, "finding": "…" },
+    { "layer": "proof-density", "score": 0, "finding": "…" },
+    { "layer": "local-relevance", "score": 0, "finding": "…" },
+    { "layer": "answer-coverage", "score": 0, "finding": "…" },
+    { "layer": "machine-readability", "score": 0, "finding": "…" },
+    { "layer": "conversion-path", "score": 0, "finding": "…" }
   ],
-  fixes: [
-    { sev: "Critical", title: "…", layer: "Machine Readability", why: "…", fix: "…", effort: "Low" },
+  "fixes": [
+    { "sev": "Critical", "title": "…", "layer": "Machine Readability", "why": "…", "fix": "…", "effort": "Low" }
   ],
-  machineView: {
-    before: ["# llms.txt → 404", "# schema → none"],
-    beforeNote: "AI can't confidently describe you",
-    after: [{ k: "Business", v: "…" }, { k: "@type", v: "…" }],
-    afterNote: "clear · structured · citable",
-  },
-};
-```
-
-Then in `lib/reports/index.ts`:
-
-```ts
-import { report as acmeDental } from "@/lib/reports/<slug>";
-export const reports: Record<string, AuditReport> = {
-  [rivermarkExample.slug]: rivermarkExample,
-  [acmeDental.slug]: acmeDental,
-};
+  "machineView": {
+    "before": ["# llms.txt → 404", "# schema → none"],
+    "beforeNote": "AI can't confidently describe you",
+    "after": [{ "k": "Business", "v": "…" }, { "k": "@type", "v": "…" }],
+    "afterNote": "clear · structured · citable"
+  }
+}
 ```

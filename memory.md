@@ -44,6 +44,46 @@ Update the "Current state" line whenever it changes.
 
 ## Current state (update this line)
 
+2026-08-25 (latest) — COMPREHENSIVE MARKET-READINESS AUDIT + LOCAL HARDENING
+COMPLETE; DO NOT SCALE YET. Created the prioritized evidence register at
+`docs/launch-readiness-audit-2026-08-25.md`, four signature documents for
+counsel/CPA/board/management, legal MSA/SOW/DPA/release drafts, and operating
+manuals/runbooks/evidence/insurance checklists. Reworked public seller identity,
+Terms/Privacy/About, offer scopes, navigation, canonicals/schema/sitemap/llms,
+accessibility, CTAs, lead/checkout flows, verified success pages, private reports,
+analytics consent, security headers/CSP, distributed rate limits, bounded bodies,
+and durable lead/Stripe operations. $497 audit is now capped at 12 TOTAL
+prompt-engine observations across <=3 engines; checkout defaults paused and only
+explicit `AUDIT_CHECKOUT_PAUSED=false` opens a capacity-approved window. Stripe
+now validates the exact current paid order and maintains idempotent per-channel
+delivery plus an authoritative session/payment-intent order aggregate that
+reconciles refund/dispute events even out of order. Sibling public-audit runtime
+has a 15s crawl budget + 4s hops + 5s/zero-retry provider clients (35s worst-case)
+and public demo fallback is impossible. GA4 loads only after a valid ID + consent,
+with no submitted PII/site URL event fields. Chrome QA: 88 functional/semantic
+checks, then 12 representative routes with zero axe WCAG 2.1 A/AA violations and
+zero console errors; desktop/mobile screenshots in `artifacts/qa/`. Final main
+verification: build/lint/TypeScript/audit/launch-config pass, 299/299 tests.
+Runtime CI: 184 tests pass, 7 skipped, lint/typecheck pass.
+
+SECURITY INCIDENT: public repo history commit `a76f719` contains telephone contact
+data and 28 report links. Removed the two generated data files from current Git
+tracking and ignored telephone CSV/HTML/JSON/free-fix artifacts. Revoked exactly
+those 28 tokens in Upstash: 73 matching keys deleted; verified zero remain.
+History still contains the contact data and dead links. Owner must immediately
+make the repo private and authorize/coordinate a history rewrite + force-push;
+do not mistake a normal deletion commit for history erasure. Outreach remains
+globally paused; local telephone generators/assets must be regenerated and
+reviewed before unpause.
+
+NOT DEPLOYED OR COMMITTED. Remaining P0 external gates: counsel/CPA signatures and
+final legal/tax approval (including earned-income/UBIT/private-benefit, sales tax,
+and QueryClear DBA treatment), completed board consent and management certificate,
+insurance, founder-approved full identity/profile, real released QueryClear proof,
+production Vercel/Stripe/Redis/Blob/Resend/runtime/GA4 smoke tests, current
+GSC/Bing/Cloudflare evidence, and documented delivery capacity. Use the launch
+register as source of truth; older outreach/phone sections below are historical.
+
 2026-07-20 (latest) — AUTONOMOUS OUTREACH ENGINE (code-complete, NOT deployed).
 Founder asked for a "team of agents" to source/qualify/close clients without
 daily manual effort. Explored existing infra first: the outreach engine

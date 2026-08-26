@@ -16,7 +16,7 @@ export default function OutreachPage() {
   return (
     <>
       <Header />
-      <main>
+      <main id="main-content">
         <section className="site-section border-b border-line">
           <Container className="py-16 sm:py-20">
             <MonoLabel index="internal">Internal · cold outreach</MonoLabel>

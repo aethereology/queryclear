@@ -207,7 +207,7 @@ export function SnapshotCta({
                         Whether you want us to upgrade the site you have or build
                         a new one, tell us a little about your business and what
                         you&apos;re after. A real person reads every inquiry and
-                        replies — usually within a couple of business days.
+                        replies within one business day.
                       </p>
                       <p className="mt-4 max-w-md text-sm leading-relaxed text-paper/55">
                         Want a free read on your current site first?{" "}

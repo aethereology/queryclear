@@ -18,7 +18,7 @@ export default function ThankYouPage() {
   return (
     <>
       <Header />
-      <main>
+      <main id="main-content">
         <section className="border-b border-line">
           <Container className="py-20 md:py-28">
             <MonoLabel index="ok">[ received ]</MonoLabel>

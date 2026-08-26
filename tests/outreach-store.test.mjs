@@ -26,7 +26,12 @@ function loadTs(relPath, stubs = {}) {
   return moduleObj.exports;
 }
 
-const { InMemoryOutreachStore, normalizeEmail, isDue } = loadTs("lib/outreach-store.ts", {
+const {
+  InMemoryOutreachStore,
+  OUTREACH_ACTIVITY_RETENTION_MS,
+  normalizeEmail,
+  isDue,
+} = loadTs("lib/outreach-store.ts", {
   "./outreach-store-redis": { RedisOutreachStore: class {} },
 });
 
@@ -102,6 +107,40 @@ test("linkToken / emailForToken round-trips and expires", async () => {
   const s2 = new InMemoryOutreachStore(() => FIXED);
   await s2.linkToken("old", "a@b.com", 0);
   assert.equal(await s2.emailForToken("old"), null);
+});
+
+test("full outreach activity expires after 18 months", async () => {
+  let now = FIXED;
+  const s = new InMemoryOutreachStore(() => now);
+  await s.upsertContact({ email: "old@biz.com", business: "Old Business", status: "cold" });
+  await s.recordTouch("old@biz.com", { n: 1, type: "cold-audit", at: new Date(now).toISOString() });
+  now += OUTREACH_ACTIVITY_RETENTION_MS + 1;
+  assert.equal(await s.getContact("old@biz.com"), null);
+});
+
+test("expired full records retain only minimal suppression and cannot be reactivated by import", async () => {
+  let now = FIXED;
+  const s = new InMemoryOutreachStore(() => now);
+  await s.upsertContact({ email: "stop@biz.com", business: "Private detail", status: "cold" });
+  await s.setStatus("stop@biz.com", "unsubscribed");
+  now += OUTREACH_ACTIVITY_RETENTION_MS + 1;
+
+  const suppressed = await s.getContact("stop@biz.com");
+  assert.equal(suppressed.status, "unsubscribed");
+  assert.equal(suppressed.business, undefined);
+  assert.deepEqual(suppressed.touches, []);
+
+  const reimported = await s.upsertContact({ email: "stop@biz.com", status: "cold" });
+  assert.equal(reimported.status, "unsubscribed");
+});
+
+test("ordinary status updates cannot reactivate a suppressed contact", async () => {
+  const s = newStore();
+  await s.upsertContact({ email: "stop-status@biz.com" });
+  await s.setStatus("stop-status@biz.com", "unsubscribed");
+  const attempted = await s.setStatus("stop-status@biz.com", "opened");
+  assert.equal(attempted.status, "unsubscribed");
+  assert.equal((await s.getContact("stop-status@biz.com")).status, "unsubscribed");
 });
 
 test("reserveSend enforces the daily cap — the send that would exceed it is rejected", async () => {

@@ -117,7 +117,9 @@ export function publicAuditConfig(): PublicAuditConfig {
     costPerAuditUsd: num(process.env.PUBLIC_AUDIT_COST_USD, 0.01),
     ipLimit: num(process.env.PUBLIC_AUDIT_IP_LIMIT, 5),
     ipWindowMs: num(process.env.PUBLIC_AUDIT_IP_WINDOW_MS, 60 * 60 * 1000),
-    reportTtlMs: num(process.env.PUBLIC_AUDIT_REPORT_TTL_MS, DAY_MS)
+    // Public reports contain a prospect's crawled content and email-gated analysis.
+    // They are transient delivery artifacts, never a long-term record.
+    reportTtlMs: Math.min(num(process.env.PUBLIC_AUDIT_REPORT_TTL_MS, DAY_MS), DAY_MS)
   };
 }
 
@@ -127,7 +129,8 @@ export interface AuditSummary {
   domainUrl: string;
   pageTitle: string;
   technicalIssues: number;
-  invisibleQueries: number;
+  measuredChecksWithoutCitation: number;
+  modeledSamplesWithoutBrand: number;
   recommendations: number;
   topFindings: { title: string; severity: string }[];
 }
@@ -138,7 +141,12 @@ export function summarize(token: string, report: AuditReportData): AuditSummary 
     domainUrl: report.domain_url,
     pageTitle: report.page_title,
     technicalIssues: report.findings.length,
-    invisibleQueries: report.queries.filter((q) => q.cited_count === 0).length,
+    measuredChecksWithoutCitation: report.queries.filter(
+      (q) => q.measured && q.cited_count === 0
+    ).length,
+    modeledSamplesWithoutBrand: report.queries.filter(
+      (q) => !q.measured && q.cited_count === 0
+    ).length,
     recommendations: report.recommendations.length,
     topFindings: report.findings.slice(0, 3).map((f) => ({ title: f.title, severity: f.severity }))
   };
@@ -152,10 +160,18 @@ const globals = globalThis as typeof globalThis & {
 
 export function publicAuditStore(): PublicAuditStore {
   if (!globals.__qcPublicAuditStore) {
-    globals.__qcPublicAuditStore =
-      process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN
-        ? new RedisPublicAuditStore()
-        : new InMemoryPublicAuditStore();
+    const hasRedisUrl = Boolean(process.env.KV_REST_API_URL);
+    const hasRedisToken = Boolean(process.env.KV_REST_API_TOKEN);
+    if (hasRedisUrl !== hasRedisToken) {
+      throw new Error("Public audit shared storage is only partially configured.");
+    }
+    if (hasRedisUrl && hasRedisToken) {
+      globals.__qcPublicAuditStore = new RedisPublicAuditStore();
+    } else if (process.env.NODE_ENV === "production") {
+      throw new Error("Public audit shared storage is required in production.");
+    } else {
+      globals.__qcPublicAuditStore = new InMemoryPublicAuditStore();
+    }
   }
   return globals.__qcPublicAuditStore;
 }

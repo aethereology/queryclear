@@ -9,12 +9,12 @@ import { site } from "@/lib/site";
 export const metadata: Metadata = {
   title: "The AI Visibility Stack",
   description:
-    "The queryclear AI Visibility Stack is a seven-layer framework for modern search readiness: entity clarity, service specificity, proof density, local relevance, answer coverage, machine readability, and conversion path.",
+    "Explore queryclear's seven-layer rubric for website clarity, proof, local relevance, machine readability, and conversion readiness.",
   alternates: { canonical: "/ai-visibility-stack" },
   openGraph: {
     title: "The AI Visibility Stack - queryclear",
     description:
-      "Seven layers that decide whether search engines and AI answer engines can find, understand, trust, and recommend your business.",
+      "Seven layers for evaluating whether a website is findable, understandable, credible, useful, machine-readable, and easy to act on.",
   },
 };
 
@@ -38,9 +38,9 @@ const layers = [
   {
     n: "03",
     name: "Proof Density",
-    short: "The site gives systems a reason to trust it.",
+    short: "The site supports important claims with inspectable evidence.",
     what: "Credentials, reviews, examples, team details, policies, real photos, and experience signals are visible and specific.",
-    weak: "The site makes broad claims but hides the evidence, leaving answer engines with little reason to prefer it over competitors.",
+    weak: "The site makes broad claims but hides the evidence, leaving people and systems little public support for those claims.",
     fix: "Surface honest proof near claims: credentials, reviews, case details, before/after context where appropriate, and real team information.",
   },
   {
@@ -103,7 +103,7 @@ const scoreBands = [
 const workflows = [
   {
     t: "Audit",
-    d: "We score each layer against your actual site, then run prompt tests to see how answer engines describe the business today.",
+    d: "We score each layer against observable evidence, then record any answer samples with the engine, prompt, method, and date used.",
   },
   {
     t: "Prioritize",
@@ -149,7 +149,7 @@ const related = [
 const faqs = [
   {
     q: "What is the AI Visibility Stack?",
-    a: "It is queryclear's seven-layer framework for judging whether a website can be found, understood, trusted, and acted on by modern search and AI answer engines. The layers are entity clarity, service specificity, proof density, local relevance, answer coverage, machine readability, and conversion path.",
+    a: "It is queryclear's seven-layer framework for reviewing a website's crawlability, business clarity, evidence, local relevance, buyer answers, machine readability, and conversion path. The layers are entity clarity, service specificity, proof density, local relevance, answer coverage, machine readability, and conversion path.",
   },
   {
     q: "Why do lower layers come first?",
@@ -157,11 +157,11 @@ const faqs = [
   },
   {
     q: "Is this an SEO framework or an AI framework?",
-    a: "Both. The stack is modern SEO applied to AI-powered search behavior. It keeps traditional foundations like crawlability and content quality, then adds the clarity, proof, and answer coverage that answer engines need to summarize a business accurately.",
+    a: "Both. The stack is modern SEO applied to AI-powered search interfaces. It keeps traditional foundations like crawlability and content quality, then reviews the clarity, proof, and answer coverage available in the public source material.",
   },
   {
     q: "How is the stack scored?",
-    a: "In the paid audit, each layer is scored against the actual site, with notes on what is missing, what is weak, and what should be fixed first. The score is not the goal; it is a way to prioritize work.",
+    a: "In a paid audit, each layer receives 0–10 based on documented site evidence. We add the seven layer scores, divide by 70, multiply by 100, and round to the nearest whole number. The free self-scorecard uses disclosed question weights totaling 100 and is labeled as self-assessed.",
   },
   {
     q: "Can I use the stack myself?",
@@ -180,7 +180,7 @@ const webPageSchema = {
   url: `${site.url}/ai-visibility-stack`,
   description:
     "The seven-layer queryclear framework for modern-search and AI-search website readiness.",
-  isPartOf: { "@type": "WebSite", name: site.name, url: site.url },
+  isPartOf: { "@id": site.schemaIds.website },
 };
 
 const itemListSchema = {
@@ -239,13 +239,13 @@ export default function StackPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
       <Header />
-      <main>
+      <main id="main-content">
         <section className="border-b border-line">
           <Container className="grid gap-10 py-16 md:grid-cols-[1fr_0.82fr] md:items-center md:py-20">
             <div>
               <MonoLabel index="method">Our method</MonoLabel>
               <h1 className="mt-5 max-w-3xl text-4xl sm:text-5xl">
-                The seven layers between invisible and recommendable.
+                Seven layers from unclear source to usable website.
               </h1>
               <p className="mt-5 max-w-2xl leading-relaxed text-muted">
                 Modern search does not reward a single trick. It rewards a
@@ -261,7 +261,7 @@ export default function StackPage() {
               </div>
             </div>
             <div className="machine-panel">
-              <p className="text-paper/40">{"// AI Visibility Stack"}</p>
+              <p className="text-paper/70">{"// AI Visibility Stack"}</p>
               <div className="mt-4 grid gap-2">
                 {layers.map((layer) => (
                   <div key={layer.n}>
@@ -281,7 +281,7 @@ export default function StackPage() {
           <Container>
             <MonoLabel index="01">The principle</MonoLabel>
             <h2 className="mt-3 max-w-3xl text-3xl sm:text-4xl">
-              A system cannot recommend what it cannot identify, parse, or trust.
+              A system cannot use facts it cannot identify, parse, or verify.
             </h2>
             <div className="mt-8 grid gap-4 md:grid-cols-3">
               {[
@@ -344,7 +344,7 @@ export default function StackPage() {
                         </p>
                       </div>
                       <div>
-                        <p className="mono-label !text-red-600">Weak signal</p>
+                        <p className="mono-label !text-red-700">Weak signal</p>
                         <p className="mt-2 text-sm leading-relaxed text-muted">
                           {layer.weak}
                         </p>
@@ -382,6 +382,26 @@ export default function StackPage() {
                 </div>
               ))}
             </div>
+            <div className="mt-8 grid gap-5 border border-dashed border-line bg-paper-2 p-6 md:grid-cols-2">
+              <div>
+                <p className="mono-label !text-lime-deep">Paid audit formula</p>
+                <p className="mt-3 text-sm leading-relaxed text-muted">
+                  Each of the seven layers is scored from 0–10 against documented
+                  evidence. Overall readiness = layer points earned ÷ 70 × 100,
+                  rounded to the nearest whole number. For example, 49/70 becomes
+                  70/100. The layers are equally weighted in a paid report.
+                </p>
+              </div>
+              <div>
+                <p className="mono-label !text-lime-deep">Free self-scorecard</p>
+                <p className="mt-3 text-sm leading-relaxed text-muted">
+                  The self-scorecard uses question-level weights that total 100 and
+                  awards half credit for “Not sure.” It is a planning aid, not a
+                  verified audit or a prediction of rankings, traffic, or citations.
+                  Rubric version: 2026-08-25.
+                </p>
+              </div>
+            </div>
           </Container>
         </section>
 
@@ -418,7 +438,7 @@ export default function StackPage() {
             <ul className="grid max-w-2xl gap-3">
               {failurePatterns.map((f) => (
                 <li key={f} className="flex gap-3 text-ink">
-                  <span aria-hidden="true" className="text-red-600">
+                  <span aria-hidden="true" className="text-red-700">
                     x
                   </span>
                   <span>{f}</span>
@@ -472,7 +492,7 @@ export default function StackPage() {
               </h2>
               <p className="mt-3 max-w-xl text-paper/70">
                 Start with the free audit, or get the full $497 AI Search Audit
-                for seven-layer scoring, prompt tests, a prioritized roadmap, and
+                for seven-layer scoring, labeled answer samples, a prioritized roadmap, and
                 a live walkthrough.
               </p>
             </div>

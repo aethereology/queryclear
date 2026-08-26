@@ -9,19 +9,19 @@ import { site } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Local AI Search Optimization",
   description:
-    "Local discovery is moving from a map of links to a single AI answer. queryclear helps local and service businesses become clear, structured, and trustworthy to ChatGPT, Gemini, Google AI Overviews, and other answer engines — so 'near me' questions can surface you.",
+    "Modern SEO for local service businesses: clear services and markets, verified proof, useful answers, structured data, and conversion paths.",
   alternates: { canonical: "/local-ai-search-optimization" },
   openGraph: {
     title: "Local AI Search Optimization — queryclear",
     description:
-      "Help AI answer engines connect your local business to your city, services, and customers.",
+      "Clarify local services, markets, proof, business profiles, structured data, and conversion paths for modern search.",
   },
 };
 
 const why = [
-  { t: "Customers ask AI for recommendations now", d: "“Best dentist near me,” “who does microneedling in [city]” — increasingly that question goes to an AI, and the answer names a few businesses. If you're not legible to the model, you're not in the running." },
-  { t: "A Google Business Profile isn't enough", d: "A profile helps maps, but answer engines also read your website. If your site doesn't clearly state what you do, where, and for whom, the AI has little to go on beyond a pin." },
-  { t: "Most local sites were built for old Google", d: "Thin homepages, vague service lists, no structured data. They were built to rank a link, not to be understood and summarized by a machine." },
+  { t: "Buyers ask full questions", d: "Queries increasingly include a service, location, fit, cost, safety, availability, or comparison. Thin pages leave search systems and buyers without enough specific information." },
+  { t: "A business profile is one source", d: "A complete profile helps local discovery, while the website supplies deeper service, proof, policy, team, and booking information. The two should agree." },
+  { t: "Many local sites stay vague", d: "Thin homepages, combined service lists, weak internal links, and missing proof make the business harder to evaluate regardless of which search interface a buyer uses." },
 ];
 
 const fixes = [
@@ -36,9 +36,9 @@ const fixes = [
 const industries = ["Med spas", "Aestheticians", "Spas & salons", "Dentists & clinics", "Home services", "Wellness studios"];
 
 const faqs = [
-  { q: "Is this just local SEO with a new name?", a: "No. Local SEO still matters and we build on it. This adds the layer that decides whether an AI answer engine can understand your business well enough to describe and recommend it — which is a different, newer problem." },
-  { q: "Will this guarantee I show up when someone asks AI?", a: "No one can honestly guarantee that. We remove the reasons an AI would skip or misdescribe you: unclear services, missing structure, weak local signals. That's the part we control." },
-  { q: "I already have a Google Business Profile. Isn't that enough?", a: "It's necessary but not sufficient. Answer engines also read your website. We make sure your site and profile tell the same clear story." },
+  { q: "Is this just local SEO with a new name?", a: "It is modern local SEO, not a replacement for it. The work combines crawlability, useful service pages, business-profile alignment, proof, structured data, buyer answers, and conversion paths, then samples how configured answer tools handle that public material." },
+  { q: "Will this guarantee I show up when someone asks AI?", a: "No. We can improve and validate the website, document business-profile alignment, and record bounded answer samples. We cannot control a third party's index, ranking, recommendation, citation, or changing output." },
+  { q: "I already have a Google Business Profile. Isn't that enough?", a: "It is an important local-search asset, but public website pages can supply additional service, proof, and conversion details. We align the site and profile around the same verified business facts." },
 ];
 
 const webPageSchema = {
@@ -47,15 +47,16 @@ const webPageSchema = {
   name: "Local AI Search Optimization",
   url: `${site.url}/local-ai-search-optimization`,
   description: "Helping local and service businesses become legible to AI answer engines.",
-  isPartOf: { "@type": "WebSite", name: site.name, url: site.url },
+  isPartOf: { "@id": site.schemaIds.website },
 };
 const serviceSchema = {
   "@context": "https://schema.org",
   "@type": "Service",
   name: "Local AI Search Optimization",
   serviceType: "Local SEO / AI search optimization",
-  provider: { "@type": "Organization", name: site.name, url: site.url },
-  description: "Optimizing local and service-business websites so search and AI answer engines can understand, trust, and recommend them.",
+  provider: { "@id": site.schemaIds.organization },
+  brand: { "@id": site.schemaIds.brand },
+  description: "Improving local service pages, markets, verified proof, structured data, business-profile alignment, and conversion paths for modern search.",
   areaServed: "United States",
 };
 const faqSchema = {
@@ -80,18 +81,17 @@ export default function LocalPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <Header />
-      <main>
+      <main id="main-content">
         <section className="border-b border-line">
           <Container className="py-16 md:py-20">
             <MonoLabel index="local">Local AI search</MonoLabel>
             <h1 className="mt-5 max-w-3xl text-4xl sm:text-5xl">
-              When someone asks AI for a business near them, be the answer.
+              Make your local business easier to identify and evaluate.
             </h1>
             <p className="mt-5 max-w-2xl leading-relaxed text-muted">
-              Local discovery is shifting from a map of links to a single AI-generated
-              recommendation. queryclear makes local and service businesses clear,
-              structured, and trustworthy to the answer engines — so you can be
-              understood and considered when it counts.
+              queryclear improves the public facts modern search depends on: specific
+              service pages, genuine market coverage, verified proof, consistent
+              business profiles, structured data, and a reliable path to contact.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Cta href="/free-audit">Run a free audit</Cta>
@@ -117,7 +117,7 @@ export default function LocalPage() {
         <section className="border-b border-line bg-paper-2 py-16">
           <Container>
             <MonoLabel index="02">What queryclear fixes</MonoLabel>
-            <h2 className="mt-3 text-3xl sm:text-4xl">The local signals machines need.</h2>
+            <h2 className="mt-3 text-3xl sm:text-4xl">The local signals people and systems need.</h2>
             <Stagger className="mt-8 grid gap-4 sm:grid-cols-2">
               {fixes.map((f) => (
                 <StaggerItem key={f.t} className="card p-6">
@@ -157,10 +157,10 @@ export default function LocalPage() {
         <section className="bg-pine py-20 text-paper">
           <Container className="flex flex-col items-start gap-6 md:flex-row md:items-center md:justify-between">
             <div>
-              <h2 className="text-3xl text-paper sm:text-4xl">See how modern search sees your local business.</h2>
+              <h2 className="text-3xl text-paper sm:text-4xl">Check your local-search source material.</h2>
               <p className="mt-3 max-w-xl text-paper/70">
-                A free audit shows what to fix first, in plain English. The
-                full scored audit is $497.
+                The free automated preview checks public pages and labels its limits.
+                The full human-reviewed audit is $497.
               </p>
             </div>
             <Cta href="/free-audit">Run a free audit</Cta>

@@ -545,7 +545,7 @@ export function Scorecard() {
                   <p className="mono-label">{hasPriorityGaps ? "Fix these first" : "Verify these first"}</p>
                   <p className="mt-2 text-sm leading-relaxed text-muted">
                     {hasPriorityGaps
-                      ? "Lower layers come first. These are the places most likely to keep an answer engine from understanding or trusting the site."
+                      ? "Lower layers come first. These gaps can weaken business identification, service clarity, and public support for key claims."
                       : "Your self-score is strong. In a live audit, verify the lower layers first because they anchor everything above them."}
                   </p>
                   <div className="mt-5 grid gap-5">
@@ -617,7 +617,7 @@ export function Scorecard() {
                 <p className="mt-1.5 text-sm leading-relaxed text-muted">
                   Send the scorecard to queryclear and run the{" "}
                   <a href="/free-audit" className="font-medium text-ink underline hover:text-lime-deep">
-                    instant free audit
+                    automated free preview
                   </a>{" "}
                   to check these answers against your live site.
                 </p>

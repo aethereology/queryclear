@@ -5,7 +5,8 @@ import { secretOk } from "@/lib/secret";
 const SESSION_TTL_SECONDS = 12 * 60 * 60;
 
 function adminSecret() {
-  return process.env.SOCIAL_ADMIN_SECRET ?? "";
+  const value = process.env.SOCIAL_ADMIN_SECRET ?? "";
+  return value.length >= 32 ? value : "";
 }
 
 function hmac(value: string, secret = adminSecret()) {

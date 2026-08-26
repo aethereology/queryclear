@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Cta, Logo } from "@/components/ui";
 import { directLinks, megaMenus, type NavMenu } from "@/lib/navigation";
@@ -34,6 +34,7 @@ function RailTick() {
 export function Header() {
   const [open, setOpen] = useState(false);
   const [activeMega, setActiveMega] = useState<NavMenu["id"] | null>(null);
+  const mobileToggleRef = useRef<HTMLButtonElement>(null);
   const activeMenu = megaMenus.find((menu) => menu.id === activeMega);
   const megaGridClass =
     activeMenu?.columns.length === 3
@@ -46,6 +47,17 @@ export function Header() {
     setOpen(false);
     setActiveMega(null);
   }
+
+  useEffect(() => {
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key !== "Escape" || (!open && !activeMega)) return;
+      setOpen(false);
+      setActiveMega(null);
+      mobileToggleRef.current?.focus();
+    }
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [open, activeMega]);
 
   return (
     <header className="sticky top-0 z-50 bg-paper">
@@ -64,6 +76,7 @@ export function Header() {
                     key={menu.id}
                     type="button"
                     aria-expanded={isOpen}
+                    aria-haspopup="true"
                     aria-controls={`mega-${menu.id}`}
                     onClick={() => setActiveMega(isOpen ? null : menu.id)}
                     onMouseEnter={() => setActiveMega(menu.id)}
@@ -78,6 +91,7 @@ export function Header() {
           </div>
 
           <button
+            ref={mobileToggleRef}
             type="button"
             onClick={() => setOpen((o) => !o)}
             aria-expanded={open}
@@ -168,8 +182,8 @@ export function Header() {
                 </h2>
                 <p className="mt-4 max-w-md text-sm leading-relaxed text-muted">
                   {activeMenu.id === "services"
-                    ? "Start with a free read, buy the scored audit, or move straight into a website upgrade, build, operator, or care plan."
-                    : "Resources are organized from strategy to proof: the stack, GEO, schema, llms.txt, sample reports, and self-scoring tools."}
+                    ? "Start with a free preview, buy the scored audit, or move into a website upgrade, build, or eligible care plan."
+                    : "Resources are organized from method to examples: the stack, GEO, schema, llms.txt, a fictional sample report, and self-scoring tools."}
                 </p>
                 <div className="mt-6 flex flex-wrap gap-3">
                   <Cta href="/free-audit" showArrow={false} className="px-4 py-2 text-xs">
@@ -222,6 +236,8 @@ export function Header() {
 
       <div
         id="mobile-nav"
+        aria-hidden={!open}
+        inert={!open ? true : undefined}
         className={`overflow-hidden border-b border-dashed border-line bg-paper transition-[max-height] duration-300 ease-out lg:hidden ${
           open ? "max-h-[980px]" : "max-h-0 border-b-0"
         }`}

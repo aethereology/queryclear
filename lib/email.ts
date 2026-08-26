@@ -97,6 +97,15 @@ export type AuditOrderEmail = {
   website: string;
 };
 
+export type AuditBuyerConfirmationEmail = AuditOrderEmail & {
+  deliveryWindowBusinessDays: number;
+  pageLimit: number;
+  promptLimit: number;
+  engineLimit: number;
+  walkthroughMinutes: number;
+  termsVersion: string;
+};
+
 export type CarePlanOrderEmail = {
   planName: string;
   amount: string;
@@ -424,7 +433,7 @@ export function renderAuditConfirmationEmail(lead: AuditLeadEmail, site?: EmailS
     title: "Your inquiry is in.",
     intro: [
       `Hi ${firstName}, thanks for reaching out about ${lead.business}. We have your details and we are taking a first look at how modern search understands your site.`,
-      "A real person will reply within a couple of business days with a few specifics about your site and a recommended next step — whether that's an upgrade to the site you have or a new build.",
+      "A real person will reply within one business day with a few specifics about your site and a recommended next step — whether that's an upgrade to the site you have or a new build.",
     ],
     cta: {
       label: "Run a free audit while you wait",
@@ -446,7 +455,7 @@ export function renderAuditConfirmationEmail(lead: AuditLeadEmail, site?: EmailS
       {
         number: "02",
         title: "We check the machine view",
-        body: "We test how ChatGPT, Claude, Perplexity, Gemini, and Google AI Overviews describe your business.",
+        body: "We review how clearly your public pages state the business, services, markets, proof, and buyer answers; any agreed answer samples are labeled by source and method.",
       },
       {
         number: "03",
@@ -582,35 +591,61 @@ export function renderPublicAuditReportEmail(
 ) {
   const domain = report.domain_url;
   const issues = report.findings.length;
-  const invisible = report.queries.filter((q) => q.cited_count === 0).length;
+  const measuredWithoutCitation = report.queries.filter(
+    (q) => q.measured && q.cited_count === 0
+  ).length;
+  const modeledWithoutBrand = report.queries.filter(
+    (q) => !q.measured && q.cited_count === 0
+  ).length;
   const plural = (n: number, one: string, many: string) => (n === 1 ? one : many);
   const siteUrl = opts.siteUrl.replace(/\/$/, "");
 
-  const intro = [
-    `We ran a free AI Search Audit on ${domain}: ${issues} technical ${plural(issues, "issue", "issues")} and ${invisible} ${plural(invisible, "query", "queries")} where AI answer engines didn't cite you. Your prioritized fix list is below.`,
-  ];
+  const resultParts = [`${issues} on-page ${plural(issues, "finding", "findings")}`];
+  if (measuredWithoutCitation > 0) {
+    resultParts.push(
+      `${measuredWithoutCitation} measured ${plural(measuredWithoutCitation, "check", "checks")} without a citation`
+    );
+  }
+  if (modeledWithoutBrand > 0) {
+    resultParts.push(
+      `${modeledWithoutBrand} modeled answer ${plural(modeledWithoutBrand, "sample", "samples")} where the brand was absent`
+    );
+  }
+  const intro = [`Your automated preview found ${resultParts.join(" and ")}.`];
+  if (report.queries.some((query) => !query.measured)) {
+    intro.push(
+      "Modeled samples are not live checks of ChatGPT, Claude, Google AI Overviews, or another named product."
+    );
+  }
   if (report.detected_voice) {
-    intro.push(`We also picked up your brand voice — "${report.detected_voice}" — and wrote the sample fix to match it.`);
+    intro.push(`We inferred this writing style from the public copy we fetched — "${report.detected_voice}" — and used it for a draft that still needs your review.`);
   }
 
-  const steps = report.recommendations.slice(0, 5).map((r) => ({
-    number: String(r.rank).padStart(2, "0"),
-    title: r.title,
-    body: r.action,
-  }));
+  const steps = report.recommendations.slice(0, 5).map((r) => {
+    const separator = r.title.indexOf(":");
+    const topic = separator >= 0 ? r.title.slice(separator + 1).trim() : "this buyer question";
+    return {
+      number: String(r.rank).padStart(2, "0"),
+      title: r.provenance === "estimated" ? `Review modeled answer coverage: ${topic}` : r.title,
+      body:
+        r.provenance === "estimated"
+          ? "Compare the site's current answer with verified business facts and first-party evidence before deciding whether content should change."
+          : r.action,
+    };
+  });
 
   return renderQueryclearEmail({
     site,
-    preheader: `Your AI Search Audit for ${domain}.`,
-    eyebrow: "free AI search audit",
-    title: `Your audit for ${domain}.`,
+    preheader: `Your automated search-readiness preview for ${domain}.`,
+    eyebrow: "automated readiness preview",
+    title: `Your preview for ${domain}.`,
     intro,
     steps,
     ctas: [
       {
         label: "Get the full $497 audit",
         href: `${siteUrl}/ai-visibility-audit`,
-        sublabel: "Full prompt testing, scoring across seven layers, and a prioritized roadmap.",
+        sublabel: "Human verification, transparent seven-layer scoring, and a prioritized roadmap.",
       },
       {
         label: "Upgrade my site",
@@ -697,11 +732,11 @@ export function renderOutreachAuditEmail(
     const q = escapeHtml(usedQuery.query);
     hook = usedQuery.measured
       ? `When I checked ${engine} for <strong>&ldquo;${q}&rdquo;</strong>, ${escapeHtml(biz)} didn&rsquo;t come up.`
-      : `For a question like <strong>&ldquo;${q}&rdquo;</strong>, ${escapeHtml(biz)}&rsquo;s site isn&rsquo;t set up to be the answer assistants like ${engine} hand back yet.`;
+      : `In a modeled scenario for <strong>&ldquo;${q}&rdquo;</strong>, ${escapeHtml(biz)} was not cited. This was not a live check of ${engine}.`;
   } else if (report.recommendations[0]) {
     hook = `The biggest thing I spotted: ${escapeHtml(report.recommendations[0].title)}.`;
   } else {
-    hook = `I took a quick look at how AI assistants read ${escapeHtml(prospectDomain)}.`;
+    hook = `I took a quick look at the public-site readiness of ${escapeHtml(prospectDomain)}.`;
   }
 
   const remainingQueries = usedQuery ? Math.max(0, uncited.length - 1) : uncited.length;
@@ -726,13 +761,13 @@ export function renderOutreachAuditEmail(
     p(hook),
     p(moreLine),
     p(`I pulled the whole thing into a short report &mdash; every issue in priority order${voiceBit}. It&rsquo;s already unlocked for you, no sign-up:`),
-    `<p style="margin:0 0 20px"><a href="${link}" style="color:#12352a;font-weight:700;text-decoration:underline">View your AI search audit for ${escapeHtml(prospectDomain)} &rarr;</a></p>`,
+    `<p style="margin:0 0 20px"><a href="${link}" style="color:#12352a;font-weight:700;text-decoration:underline">View your automated readiness preview for ${escapeHtml(prospectDomain)} &rarr;</a></p>`,
     p(`One question, and a yes/no is a fine answer: is being found in AI answers something ${escapeHtml(biz)} is already thinking about, or not on the radar yet?`),
     `<p style="margin:0 0 2px">Kyle</p><p style="margin:0;color:#5b5a4d;font-size:14px">${escapeHtml(siteName)} &middot; ${domainLabel}</p>`,
     `<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;margin:28px 0 0"><tr><td style="border-top:1px solid #e5e2da;padding-top:14px;font-size:12px;line-height:1.5;color:#8a897d">${escapeHtml(footerText)}<br>${escapeHtml(opts.postalAddress)}</td></tr></table>`,
   ].join("");
 
-  return renderPlainEmail({ preheader: `A quick AI search audit I ran for ${prospectDomain}.`, bodyHtml: body });
+  return renderPlainEmail({ preheader: `An automated website-readiness preview for ${prospectDomain}.`, bodyHtml: body });
 }
 
 // Team-notify the FIRST time a cold-outreach prospect opens their report link — the
@@ -787,7 +822,7 @@ export function renderOutreachOpenAcknowledgementEmail(
   const footerText = `You're getting this follow-up because I sent you an audit for ${biz}. Not interested? Reply "unsubscribe" and I'll stop.`;
 
   const body = [
-    p(`Hi again &mdash; thanks for taking a look at the AI-search audit I put together for ${escapeHtml(biz)}.`),
+    p(`Hi again &mdash; thanks for taking a look at the automated readiness preview I put together for ${escapeHtml(biz)}.`),
     p(`If you only tackle one item, I&rsquo;d start here: <strong>${escapeHtml(opts.topFix)}</strong>`),
     p(`That&rsquo;s the first change I&rsquo;d make because it gives search engines and AI assistants a clearer, more reliable picture of the business.`),
     `<p style="margin:0 0 20px"><a href="${escapeHtml(opts.reportUrl)}" style="color:#12352a;font-weight:700;text-decoration:underline">Reopen your audit &rarr;</a></p>`,
@@ -922,13 +957,13 @@ export function renderOutreachFollowupEmail(
   const siteName = opts.siteName || "queryclear";
   const B = escapeHtml(biz);
   const p = (html: string) => `<p style="margin:0 0 16px">${html}</p>`;
-  const linkLine = `<p style="margin:0 0 16px"><a href="${escapeHtml(opts.reportUrl)}" style="color:#12352a;font-weight:700;text-decoration:underline">Your AI search audit &rarr;</a></p>`;
+  const linkLine = `<p style="margin:0 0 16px"><a href="${escapeHtml(opts.reportUrl)}" style="color:#12352a;font-weight:700;text-decoration:underline">Your automated readiness preview &rarr;</a></p>`;
 
   let paras: string[];
   switch (kind) {
     case "bump":
       paras = [
-        p(`Hi again &mdash; just making sure my note about ${B} landed. I ran a quick AI-search audit on your site and the full thing is still here, no sign-up:`),
+        p(`Hi again &mdash; just making sure my note about ${B} landed. I ran an automated public-site readiness preview and it is still here, no sign-up:`),
         linkLine,
         p(`Want me to walk you through just the top fix &mdash; the one I&rsquo;d do first if ${B} were my site? It&rsquo;s a ten-minute call, or I can write it up in a reply, whichever is easier.`),
       ];
@@ -950,7 +985,7 @@ export function renderOutreachFollowupEmail(
       break;
     case "nurture-case":
       paras = [
-        p(`Quick one for ${B}: I keep seeing the same pattern &mdash; sites that answer buyer questions in clear, structured language get surfaced by AI assistants, while polished-but-vague pages get skipped. Your audit flags exactly where ${B} sits:`),
+        p(`Quick one for ${B}: clear, structured answers give search and AI systems more explicit source material than polished-but-vague pages. Your readiness preview flags where ${B}&rsquo;s public site could be more specific:`),
         linkLine,
         p(`Is ${B}&rsquo;s website something you own in-house, or do you have someone who handles it? That changes what I&rsquo;d suggest doing first.`),
       ];
@@ -980,7 +1015,7 @@ export function renderOutreachFollowupEmail(
     `<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;margin:28px 0 0"><tr><td style="border-top:1px solid #e5e2da;padding-top:14px;font-size:12px;line-height:1.5;color:#8a897d">${escapeHtml(footerText)}<br>${escapeHtml(opts.postalAddress)}</td></tr></table>`,
   ].join("");
 
-  return renderPlainEmail({ preheader: `Following up on the AI search audit for ${prospectDomain}.`, bodyHtml: body });
+  return renderPlainEmail({ preheader: `Following up on the readiness preview for ${prospectDomain}.`, bodyHtml: body });
 }
 
 // Team-notify when someone buys the $497 AI Search Audit via Stripe Checkout.
@@ -995,7 +1030,7 @@ export function renderAuditOrderEmail(order: AuditOrderEmail, site?: EmailSite) 
     title: "AI Search Audit purchased.",
     intro: [
       `${who} bought the $497 AI Search Audit. Stripe has recorded the payment; this is your fulfillment cue.`,
-      "Run the audit, then reach out to the email on file to schedule the live walkthrough. Remember the $497 is credited toward an upgrade if they proceed.",
+      "The buyer confirmation asks for the remaining intake details. Keep the order at awaiting intake, and do not start the seven-business-day delivery clock until intake is complete.",
     ],
     summary: [
       { label: "Website", value: order.website || "(not provided — ask the buyer)", href: order.website || undefined },
@@ -1011,10 +1046,96 @@ export function renderAuditOrderEmail(order: AuditOrderEmail, site?: EmailSite) 
         { key: "site", value: order.website || "unknown" },
         { key: "amount", value: `$${order.amount} ${order.currency}` },
       ],
-      status: "paid - fulfillment required",
+      status: "paid - awaiting intake",
     },
     footerNote: "Paid AI Search Audit. We deliver the scored report to the buyer; refunds handled case-by-case if we can't complete it.",
   });
+}
+
+// Transactional confirmation for the buyer of the only enabled self-serve
+// product. It doubles as the intake request, so payment is never confused with
+// a complete brief or the start of the delivery clock.
+export function renderAuditBuyerConfirmationEmail(
+  order: AuditBuyerConfirmationEmail,
+  site?: EmailSite,
+) {
+  const firstName = order.name.trim().split(/\s+/)[0] || "there";
+  return renderQueryclearEmail({
+    site,
+    preheader: "Payment confirmed. Reply with your audit intake details to start the delivery window.",
+    eyebrow: "payment confirmed",
+    title: "Your AI Search Audit is reserved.",
+    intro: [
+      `Hi ${firstName}, Stripe confirmed your $${order.amount} ${order.currency} payment for one AI Search Audit of ${order.website}.`,
+      `Your report is due within ${order.deliveryWindowBusinessDays} business days after intake is complete. The delivery clock has not started yet; reply to this email with the details below so we can confirm intake.` ,
+    ],
+    summary: [
+      { label: "Website", value: order.website, href: order.website },
+      { label: "Amount", value: `$${order.amount} ${order.currency}` },
+      { label: "Scope", value: `Up to ${order.pageLimit} public URLs` },
+      {
+        label: "Answer checks",
+        value: `Up to ${order.promptLimit} total prompt-engine observations distributed across up to ${order.engineLimit} named engines`,
+      },
+      { label: "Walkthrough", value: `${order.walkthroughMinutes} minutes` },
+      { label: "Terms version", value: order.termsVersion },
+    ],
+    steps: [
+      {
+        number: "01",
+        title: "Confirm the business facts",
+        body: "Reply with the business name, priority services, service areas, and the decision-maker for factual approvals.",
+      },
+      {
+        number: "02",
+        title: "Choose the answer checks",
+        body: `Propose buyer-intent questions and choose up to ${order.engineLimit} named answer engines. Identify the question-engine checks that matter most; we will confirm a matrix capped at ${order.promptLimit} total observations, and each prompt × engine check uses one observation.`,
+      },
+      {
+        number: "03",
+        title: "Point us to public proof",
+        body: "Share public source URLs for claims we should verify and scheduling preferences for the walkthrough. Do not email passwords, private customer data, health information, or other sensitive records.",
+      },
+    ],
+    machinePanel: {
+      label: "// audit.intake",
+      lines: [
+        { key: "order", value: order.sessionId },
+        { key: "site", value: order.website },
+        { key: "status", value: "awaiting intake" },
+        {
+          key: "delivery_due",
+          value: `${order.deliveryWindowBusinessDays} business days after complete intake`,
+        },
+      ],
+      status: "reply to complete intake",
+    },
+    closing:
+      "After we confirm intake, we will send the delivery target and walkthrough scheduling details. Stripe sends the payment receipt separately.",
+    footerNote:
+      "This purchase covers the scope stated above. We document observable evidence and do not guarantee rankings, traffic, leads, or AI citations.",
+  });
+}
+
+export function renderAuditBuyerConfirmationText(order: AuditBuyerConfirmationEmail) {
+  return [
+    "Payment confirmed — AI Search Audit",
+    "",
+    `Stripe confirmed your $${order.amount} ${order.currency} payment for ${order.website}.`,
+    `Your report is due within ${order.deliveryWindowBusinessDays} business days after complete intake. The delivery clock has not started yet.`,
+    "",
+    "Reply with:",
+    "1. Business name, priority services, service areas, and factual-approval contact.",
+    `2. Proposed buyer-intent questions and up to ${order.engineLimit} named answer engines. We will confirm up to ${order.promptLimit} total prompt-engine observations; each prompt x engine check uses one observation.`,
+    "3. Public source URLs and walkthrough scheduling preferences.",
+    "",
+    "Do not email passwords, private customer data, health information, or other sensitive records.",
+    `Scope: up to ${order.pageLimit} public URLs; ${order.walkthroughMinutes}-minute walkthrough.`,
+    `Stripe session: ${order.sessionId}`,
+    `Terms version: ${order.termsVersion}`,
+    "",
+    "We document observable evidence and do not guarantee rankings, traffic, leads, or AI citations.",
+  ].join("\n");
 }
 
 // Team-notify when someone starts the AI Search Care Plan (recurring) via Stripe
@@ -1050,7 +1171,7 @@ export function renderCarePlanOrderEmail(order: CarePlanOrderEmail, site?: Email
       ],
       status: "active - onboarding required",
     },
-    footerNote: "Recurring monthly subscription. Cancel anytime, no contract. We report what we measure; we never guarantee rankings or AI citations.",
+    footerNote: "Month-to-month service under the accepted Terms. We report what we measure; we never guarantee rankings or AI citations.",
   });
 }
 
@@ -1098,10 +1219,10 @@ export function renderAuditConfirmationText(lead: AuditLeadEmail, site?: EmailSi
     "",
     "Here's what happens next:",
     "1. We review your site's structure, schema, headings, service clarity, proof, crawlability, and conversion paths.",
-    "2. We check how ChatGPT, Claude, Perplexity, Gemini, and Google AI Overviews describe your business.",
+    "2. We review how clearly your public pages state the business, services, markets, proof, and buyer answers; any agreed answer samples are labeled by source and method.",
     "3. We reply with a plain-English, scoped recommendation — upgrade or build — and what to fix first.",
     "",
-    `A real person will reply within a couple of business days. Want a free read right now? Run a free audit: ${siteUrl}/free-audit`,
+    `A real person will reply within one business day. Want a free read right now? Run a free preview: ${siteUrl}/free-audit`,
     "",
     "Questions? Just reply to this email - a real person will answer.",
     "",

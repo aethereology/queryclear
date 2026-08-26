@@ -1,30 +1,22 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
-import { IBM_Plex_Mono } from "next/font/google";
+import { Bricolage_Grotesque, IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
 import { SiteBackground } from "@/components/SiteBackground";
+import { AnalyticsConsent } from "@/components/AnalyticsConsent";
 import { site } from "@/lib/site";
 import "./globals.css";
 
-const bricolage = localFont({
-  src: [
-    { path: "./fonts/rz-regular.woff2", weight: "400 700", style: "normal" },
-  ],
+const bricolage = Bricolage_Grotesque({
   variable: "--font-bricolage",
+  subsets: ["latin"],
+  weight: "variable",
   display: "swap",
 });
 
-const plexSans = localFont({
-  src: [
-    { path: "./fonts/hagrid-trial-regular.ttf", weight: "400 700", style: "normal" },
-  ],
+const plexSans = IBM_Plex_Sans({
   variable: "--font-plex-sans",
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
   display: "swap",
-  // Hagrid's own digit glyphs render as broken/overlapping shapes at any size
-  // (trial-file glyph corruption, not a style choice) — exclude 0-9 from its
-  // coverage so the browser falls through to Plex Mono, which has real glyphs.
-  declarations: [
-    { prop: "unicode-range", value: "U+0000-002F, U+003A-10FFFF" },
-  ],
 });
 
 const plexMono = IBM_Plex_Mono({
@@ -55,7 +47,6 @@ export const metadata: Metadata = {
     "local SEO",
     "service business websites",
   ],
-  alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     url: site.url,
@@ -71,27 +62,44 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
-const orgSchema = {
+const structuredData = {
   "@context": "https://schema.org",
-  "@type": "Organization",
-  name: site.name,
-  url: site.url,
-  description: site.description,
-  logo: `${site.url}/brand/queryclear-logo.svg`,
-  brand: { "@type": "Brand", name: site.name },
-  parentOrganization: {
-    "@type": "Organization",
-    name: site.parentOrg,
-    url: site.parentOrgUrl,
-  },
-};
-
-const websiteSchema = {
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  name: site.name,
-  url: site.url,
-  description: site.description,
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": site.schemaIds.organization,
+      name: site.legal.operator,
+      legalName: site.legal.operator,
+      url: site.parentOrgUrl,
+      taxID: site.legal.taxId,
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: site.legal.address.street,
+        addressLocality: site.legal.address.city,
+        addressRegion: site.legal.address.region,
+        postalCode: site.legal.address.postalCode,
+        addressCountry: site.legal.address.country,
+      },
+      brand: { "@id": site.schemaIds.brand },
+    },
+    {
+      "@type": "Brand",
+      "@id": site.schemaIds.brand,
+      name: site.name,
+      url: site.url,
+      description: site.description,
+      logo: `${site.url}/brand/queryclear-logo.svg`,
+    },
+    {
+      "@type": "WebSite",
+      "@id": site.schemaIds.website,
+      name: site.name,
+      url: site.url,
+      description: site.description,
+      publisher: { "@id": site.schemaIds.organization },
+      about: { "@id": site.schemaIds.brand },
+    },
+  ],
 };
 
 export default function RootLayout({
@@ -107,15 +115,15 @@ export default function RootLayout({
         <SiteBackground />
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
-        />
+        <a href="#main-content" className="skip-link">
+          Skip to main content
+        </a>
         <div className="relative z-10 flex min-h-screen flex-1 flex-col">
           {children}
         </div>
+        <AnalyticsConsent measurementId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
       </body>
     </html>
   );

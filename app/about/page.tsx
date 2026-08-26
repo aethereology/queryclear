@@ -8,7 +8,7 @@ import { site } from "@/lib/site";
 export const metadata: Metadata = {
   title: "About",
   description:
-    "queryclear is a modern SEO service for the AI search era, a SparkCreatives Inc. brand. We make websites easier for search engines and AI-powered results to understand and trust — without guaranteeing rankings.",
+    "Meet Kyle, queryclear's founder and lead operator, and learn how the SparkCreatives Inc. brand approaches modern SEO and AI-search readiness.",
   alternates: { canonical: "/about" },
   openGraph: {
     title: "About queryclear",
@@ -31,8 +31,8 @@ const principles = [
     d: "We never invent reviews, ratings, credentials, or business details — for our clients or in our own demos. Sample work is clearly labeled as fictional.",
   },
   {
-    t: "Our own site is the proof",
-    d: "queryclear.com is built to the exact standard we recommend: structured data, clean crawlability, clear service pages, fast and accessible. We won't sell a standard we don't meet ourselves.",
+    t: "Evidence before claims",
+    d: "We publish the scoring method, label fictional examples, distinguish modeled output from observed output, and tie recommendations to inspectable pages and technical evidence.",
   },
 ];
 
@@ -43,13 +43,9 @@ const webPageSchema = {
   url: `${site.url}/about`,
   description:
     "queryclear is a modern SEO service for the AI search era, a SparkCreatives Inc. brand.",
-  isPartOf: { "@type": "WebSite", name: site.name, url: site.url },
-  about: {
-    "@type": "Organization",
-    name: site.name,
-    url: site.url,
-    parentOrganization: { "@type": "Organization", name: site.parentOrg, url: site.parentOrgUrl },
-  },
+  isPartOf: { "@id": site.schemaIds.website },
+  about: { "@id": site.schemaIds.brand },
+  publisher: { "@id": site.schemaIds.organization },
 };
 
 const breadcrumbSchema = {
@@ -73,7 +69,7 @@ export default function AboutPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
       <Header />
-      <main>
+      <main id="main-content">
         {/* Hero */}
         <section className="border-b border-line">
           <Container className="py-16 md:py-20">
@@ -82,12 +78,38 @@ export default function AboutPage() {
               We make businesses legible to the machines people now ask.
             </h1>
             <p className="mt-5 max-w-2xl leading-relaxed text-muted">
-              More and more buyers don&apos;t scroll a list of links — they ask
-              ChatGPT, Claude, Perplexity, Gemini, or Google&apos;s AI Overviews
-              and act on the answer. queryclear exists to make sure those systems
-              can actually understand your business, describe it accurately, and
-              consider recommending it.
+              Some buyers now encounter AI-generated answers alongside or instead of
+              a traditional list of links. queryclear structures public business facts,
+              services, and supporting evidence for modern search interfaces while
+              making the same pages more useful to buyers.
             </p>
+          </Container>
+        </section>
+
+        <section className="border-b border-line py-16">
+          <Container className="grid gap-10 md:grid-cols-[0.8fr_1.2fr]">
+            <div>
+              <MonoLabel index="01">The operator</MonoLabel>
+            </div>
+            <div className="max-w-2xl space-y-4 leading-relaxed text-muted">
+              <h2 className="text-3xl text-ink sm:text-4xl">{site.founder.name}, founder and lead operator.</h2>
+              <p>
+                {site.founder.name} leads queryclear&apos;s strategy, engineering, and
+                delivery. He also founded{" "}
+                <a href={site.founder.studioUrl} className="font-medium text-ink underline hover:text-lime-deep">
+                  {site.founder.studioName}
+                </a>
+                , where his role and the broader team are published.
+              </p>
+              <p>
+                You can review the broader studio&apos;s{" "}
+                <a href={site.founder.workUrl} className="font-medium text-ink underline hover:text-lime-deep">
+                  linked project library
+                </a>
+                . Those examples include client and in-house website systems and are
+                shown as broader studio work — not as invented queryclear client outcomes.
+              </p>
+            </div>
           </Container>
         </section>
 
@@ -95,15 +117,15 @@ export default function AboutPage() {
         <section className="border-b border-line py-16">
           <Container className="grid gap-10 md:grid-cols-[0.8fr_1.2fr]">
             <div>
-              <MonoLabel index="01">What queryclear is</MonoLabel>
+              <MonoLabel index="02">What queryclear is</MonoLabel>
             </div>
             <div className="max-w-2xl space-y-4 leading-relaxed text-muted">
               <p>
                 queryclear is <strong className="text-ink">modern SEO for the AI
                 search era</strong> — some people call this work GEO or AEO. We
-                audit and improve the parts of a website that decide whether a
-                search engine or AI-powered result can crawl it, understand who
-                you are and what you do, trust it, and summarize it accurately:
+                audit and improve the parts of a website that affect whether a
+                search engine or AI-powered result can crawl it, identify the
+                business and services, find supporting evidence, and summarize its public facts:
                 clear service pages, useful FAQs, structured data, local business
                 details, metadata, sitemaps, and crawlability.
               </p>
@@ -121,7 +143,7 @@ export default function AboutPage() {
         <section className="border-b border-line bg-paper-2 py-16">
           <Container className="grid gap-10 md:grid-cols-[0.8fr_1.2fr]">
             <div>
-              <MonoLabel index="02">Why it exists &amp; where it sits</MonoLabel>
+              <MonoLabel index="03">Why it exists &amp; where it sits</MonoLabel>
             </div>
             <div className="max-w-2xl space-y-4 leading-relaxed text-muted">
               <p>
@@ -131,14 +153,11 @@ export default function AboutPage() {
                 exists.
               </p>
               <p>
-                queryclear is a{" "}
+                {site.legal.relationship} SparkCreatives Inc. is a {site.legal.entityType}.{" "}
                 <a href={site.parentOrgUrl} className="font-medium text-ink underline hover:text-lime-deep">
-                  SparkCreatives Inc.
+                  Review the parent organization
                 </a>{" "}
-                brand. We started with search readiness because it&apos;s a sharp,
-                concrete problem we can solve well and measure honestly — and
-                because a website that machines and people both understand is the
-                foundation everything else builds on.
+                for its public mission and organization information. {site.legal.serviceFeeNotice}
               </p>
             </div>
           </Container>
@@ -147,7 +166,7 @@ export default function AboutPage() {
         {/* Principles */}
         <section className="border-b border-line py-16">
           <Container>
-            <MonoLabel index="03">How we operate</MonoLabel>
+            <MonoLabel index="04">How we operate</MonoLabel>
             <h2 className="mt-3 text-3xl sm:text-4xl">Operating principles.</h2>
             <Stagger className="mt-8 grid gap-4 sm:grid-cols-2">
               {principles.map((p) => (
@@ -164,21 +183,21 @@ export default function AboutPage() {
         <section className="border-b border-line bg-paper-2 py-16">
           <Container className="grid gap-10 md:grid-cols-[0.8fr_1.2fr]">
             <div>
-              <MonoLabel index="04">What we will and won&apos;t promise</MonoLabel>
+              <MonoLabel index="05">What we will and won&apos;t promise</MonoLabel>
             </div>
             <div className="max-w-2xl space-y-4 leading-relaxed text-muted">
               <p>
-                <strong className="text-ink">We promise:</strong> better technical
-                readiness, clearer content, valid structured data, real crawlability,
-                an honest AI-readable summary of your business, and a conversion path
-                that works.
+                <strong className="text-ink">Our controllable commitments:</strong>{" "}
+                a defined scope, evidence-linked findings, truthful source material,
+                documented approvals, validation of the technical work we deliver,
+                and a clear handoff.
               </p>
               <p>
                 <strong className="text-ink">We don&apos;t promise:</strong>{" "}
                 guaranteed rankings or guaranteed AI citations. Answer engines are
                 changing constantly and no one controls their output. What we control
-                is whether your business is clear and trustworthy to them — and we do
-                that part well.
+                is the agreed website work, its technical validation, and transparent
+                reporting of the evidence we observe.
               </p>
             </div>
           </Container>
@@ -188,9 +207,9 @@ export default function AboutPage() {
         <section className="bg-pine py-20 text-paper">
           <Container className="flex flex-col items-start gap-6 md:flex-row md:items-center md:justify-between">
             <div>
-              <h2 className="text-3xl text-paper sm:text-4xl">See how modern search sees you.</h2>
+              <h2 className="text-3xl text-paper sm:text-4xl">Review your public search foundation.</h2>
               <p className="mt-3 max-w-xl text-paper/70">
-                Run a free AI Search Audit — an instant, read-only read on your
+                Run a free AI Search Audit — an automated, read-only read on your
                 site&apos;s biggest search-readiness opportunities. The full
                 scored AI Search Audit is $497 if you want the deep report.
               </p>

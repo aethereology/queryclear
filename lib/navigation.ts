@@ -19,22 +19,12 @@ export type NavMenu = {
 
 export const serviceColumns: NavColumn[] = [
   {
-    eyebrow: "Operate",
-    links: [
-      {
-        href: "/ai-search-operator",
-        label: "AI Search Operator",
-        desc: "An agent that does the modern-search work continuously — you approve every move. Early access.",
-      },
-    ],
-  },
-  {
     eyebrow: "Diagnose",
     links: [
       {
         href: "/ai-visibility-audit",
         label: "AI Search Audit",
-        desc: "A scored modern-search review with prompt testing and a prioritized fix roadmap.",
+        desc: "An evidence-linked review with labeled answer samples and a prioritized fix roadmap.",
       },
     ],
   },
@@ -42,14 +32,14 @@ export const serviceColumns: NavColumn[] = [
     eyebrow: "Improve",
     links: [
       {
-        href: "/#offers",
+        href: site.upgrade.path,
         label: "Website Upgrade",
-        desc: "Done-for-you improvements to service pages, metadata, schema, links, and conversion paths.",
+        desc: `${site.upgrade.priceLabel}: a fixed-scope improvement sprint for the site you already have.`,
       },
       {
         href: "/ai-search-ready-website",
-        label: "AI-search-ready websites",
-        desc: "Build and optimize pages that people trust and machines can parse.",
+        label: "Website Build",
+        desc: `${site.websiteBuild.priceLabel}: a new, client-owned modern-search foundation.`,
       },
       {
         href: "/local-ai-search-optimization",
@@ -69,7 +59,7 @@ export const serviceColumns: NavColumn[] = [
       {
         href: site.carePlan.path,
         label: `Care Plan (${site.carePlan.priceLabel})`,
-        desc: "A human-delivered monthly retainer that keeps your readiness current. Cancel anytime.",
+        desc: "Monthly maintenance for sites that pass an eligibility review.",
       },
     ],
   },
@@ -92,12 +82,12 @@ export const resourceColumns: NavColumn[] = [
     ],
   },
   {
-    eyebrow: "Tools & proof",
+    eyebrow: "Tools & examples",
     links: [
       {
         href: "/free-audit",
         label: "Free AI Search Audit",
-        desc: "Run an instant, read-only audit — see where AI answer engines can't find you.",
+        desc: "Run an automated, read-only readiness preview of your public website.",
       },
       {
         href: "/scorecard",
@@ -107,7 +97,7 @@ export const resourceColumns: NavColumn[] = [
       {
         href: "/audit",
         label: "Sample audit",
-        desc: "See how the scoring and recommendations work.",
+        desc: "See how scoring and recommendations work in a clearly fictional example.",
       },
     ],
   },

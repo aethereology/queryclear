@@ -1,7 +1,13 @@
 import { randomUUID } from "node:crypto";
 import { NextResponse } from "next/server";
 import { runAudit, AgentRuntimeError } from "@/lib/agent-runtime";
-import { publicAuditConfig, publicAuditStore, summarize } from "@/lib/public-audit";
+import {
+  publicAuditConfig,
+  publicAuditStore,
+  summarize,
+  type PublicAuditStore,
+} from "@/lib/public-audit";
+import { normalizePublicAuditUrl, PublicAuditUrlError } from "@/lib/public-audit-url";
 
 export const dynamic = "force-dynamic";
 
@@ -14,8 +20,8 @@ const DOMAIN_ID = process.env.PUBLIC_AUDIT_DOMAIN_ID ?? "domain_dev_queryclear";
 function clientIp(request: Request): string {
   const fwd = request.headers.get("x-forwarded-for");
   return (
-    fwd?.split(",")[0]?.trim() ||
     request.headers.get("cf-connecting-ip")?.trim() ||
+    fwd?.split(",")[0]?.trim() ||
     request.headers.get("x-real-ip")?.trim() ||
     "unknown"
   );
@@ -23,14 +29,28 @@ function clientIp(request: Request): string {
 
 export async function POST(request: Request) {
   const cfg = publicAuditConfig();
-  const store = publicAuditStore();
+  let store: PublicAuditStore;
+  try {
+    store = publicAuditStore();
+  } catch {
+    console.error("[public-audit] shared storage unavailable");
+    return NextResponse.json(
+      { error: "The preview is temporarily unavailable. Please try again later." },
+      { status: 503 }
+    );
+  }
 
   const body = (await request.json().catch(() => ({}))) as { domainUrl?: string };
   const raw = (body.domainUrl ?? "").trim();
-  if (!raw) {
-    return NextResponse.json({ error: "Please enter a website URL." }, { status: 400 });
+  let domainUrl: string;
+  try {
+    domainUrl = normalizePublicAuditUrl(raw);
+  } catch (error) {
+    if (error instanceof PublicAuditUrlError) {
+      return NextResponse.json({ error: error.message }, { status: 400 });
+    }
+    throw error;
   }
-  const domainUrl = /^https?:\/\//i.test(raw) ? raw : `https://${raw}`;
 
   // Gate 1 — per-IP rate limit (abuse).
   const rl = await store.rateLimit(clientIp(request), cfg.ipLimit, cfg.ipWindowMs);
@@ -59,7 +79,11 @@ export async function POST(request: Request) {
     await store.putReport(token, report, cfg.reportTtlMs);
     return NextResponse.json({ summary: summarize(token, report) });
   } catch (error) {
-    await store.releaseSpend(cfg.costPerAuditUsd); // a failed audit shouldn't burn budget
+    // Once work may have reached the runtime, keep the reservation: a timeout or
+    // malformed success response can still have consumed model budget upstream.
+    if (error instanceof AgentRuntimeError && !error.costMayHaveBeenIncurred) {
+      await store.releaseSpend(cfg.costPerAuditUsd).catch(() => undefined);
+    }
     if (error instanceof AgentRuntimeError) {
       return NextResponse.json({ error: error.message }, { status: error.status });
     }

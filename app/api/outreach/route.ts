@@ -20,10 +20,15 @@ import { sendEmail, dailySendCap } from "@/lib/outreach-send";
 import { secretOk } from "@/lib/secret";
 import { makeUnsubscribeToken } from "@/lib/unsubscribe-token";
 import { site } from "@/lib/site";
+import { operationsStore } from "@/lib/operations-store";
+import { readJsonRequest } from "@/lib/json-request";
 
 export const dynamic = "force-dynamic";
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const MAX_REQUEST_BYTES = 512 * 1024;
+const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000;
+const RATE_LIMIT_MAX = 20;
 const STATUSES: ContactStatus[] = [
   "cold",
   "opened",
@@ -65,16 +70,66 @@ type Body = {
   prospects?: ProspectInput[];
 };
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function clientIp(request: Request) {
+  return (
+    request.headers.get("cf-connecting-ip")?.trim() ||
+    request.headers.get("x-real-ip")?.trim() ||
+    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+    "unknown"
+  );
+}
+
+function sendingPaused() {
+  return process.env.OUTREACH_PAUSED?.trim().toLowerCase() !== "false";
+}
+
+function pausedResponse() {
+  return NextResponse.json(
+    { error: "Outbound sending is paused by the global launch control." },
+    { status: 503 },
+  );
+}
+
 // Founder-only outreach operations, gated by OUTREACH_SECRET (the only endpoint that
 // runs an audit + sends mail outside the rate-limited public flow). One auth point;
 // `action` routes the operation. Defaults to send-cold for the existing form/CLI.
 export async function POST(request: Request) {
   const expected = process.env.OUTREACH_SECRET;
-  if (!expected) {
+  if (!expected || expected.length < 32) {
     return NextResponse.json({ error: "Outreach is not configured." }, { status: 503 });
   }
 
-  const body = (await request.json().catch(() => ({}))) as Body;
+  try {
+    const limit = await operationsStore().rateLimit(
+      "outreach-admin",
+      clientIp(request),
+      RATE_LIMIT_MAX,
+      RATE_LIMIT_WINDOW_MS,
+    );
+    if (!limit.allowed) {
+      return NextResponse.json(
+        { error: "Too many requests." },
+        {
+          status: 429,
+          headers: { "Retry-After": String(Math.max(1, Math.ceil(limit.retryAfterMs / 1000))) },
+        },
+      );
+    }
+  } catch {
+    console.error("[outreach] shared rate-limit storage unavailable");
+    return NextResponse.json({ error: "Outreach operations are temporarily unavailable." }, { status: 503 });
+  }
+
+  const parsed = await readJsonRequest(request, MAX_REQUEST_BYTES);
+  if (!parsed.ok) return NextResponse.json({ error: parsed.error }, { status: parsed.status });
+  if (!isRecord(parsed.value)) {
+    return NextResponse.json({ error: "Invalid request." }, { status: 400 });
+  }
+  const body = parsed.value as Body;
   if (typeof body.secret !== "string" || !secretOk(body.secret, expected)) {
     return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
   }
@@ -181,6 +236,7 @@ export async function POST(request: Request) {
 
   // ── send the next due touch to one contact (the founder-approved action) ──────
   if (action === "send-touch") {
+    if (sendingPaused()) return pausedResponse();
     const email = (body.email ?? "").trim();
     if (!EMAIL.test(email)) {
       return NextResponse.json({ error: "A valid email is required." }, { status: 400 });
@@ -246,6 +302,8 @@ export async function POST(request: Request) {
   const domainUrl = (body.domainUrl ?? "").trim();
   const email = (body.email ?? "").trim();
   const mode = body.mode === "send" ? "send" : "preview";
+
+  if (mode === "send" && sendingPaused()) return pausedResponse();
 
   if (!domainUrl) {
     return NextResponse.json({ error: "A domain is required." }, { status: 400 });

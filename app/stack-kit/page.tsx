@@ -16,7 +16,7 @@ const kit = site.stackKit;
 export const metadata: Metadata = {
   title: "The Local AI Visibility Stack — included with every Upgrade",
   description:
-    "The Local AI Visibility Stack — our 7-layer playbook, copy-paste schema templates, AI-visibility prompts, and a self-scoring scorecard — is now included free with every queryclear Website Upgrade.",
+    "The retired Local AI Visibility Stack product is now included as supporting material with eligible queryclear Website Upgrade engagements.",
   alternates: { canonical: "/stack-kit" },
   robots: { index: false, follow: false },
 };
@@ -43,7 +43,7 @@ const webPageSchema = {
   url: `${site.url}/stack-kit`,
   description:
     "The Local AI Visibility Stack — our 7-layer playbook and templates — is included free with every queryclear Website Upgrade.",
-  isPartOf: { "@type": "WebSite", name: site.name, url: site.url },
+  isPartOf: { "@id": site.schemaIds.website },
 };
 
 const faqSchema = {
@@ -72,7 +72,7 @@ export default function StackKitPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <Header />
-      <main>
+      <main id="main-content">
         {/* Hero */}
         <section className="border-b border-line">
           <Container className="py-16 md:py-20">
@@ -138,7 +138,8 @@ export default function StackKitPage() {
             <Cta href="/#offers">See the Upgrade</Cta>
             <p className="max-w-md text-xs text-paper/50">
               Want a prioritized roadmap first? The $497 AI Search Audit is credited
-              toward your upgrade if you go ahead.
+              once toward qualifying implementation if you go ahead within{" "}
+              {site.auditProduct.creditDays} days.
             </p>
           </Container>
         </section>

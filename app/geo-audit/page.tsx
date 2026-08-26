@@ -9,7 +9,7 @@ import { site } from "@/lib/site";
 export const metadata: Metadata = {
   title: "GEO Audit - Modern SEO for AI Search",
   description:
-    "A practical GEO audit for service businesses: queryclear reviews whether your site can be crawled, understood, trusted, and selected by modern search and AI answer engines. No hype, no ranking guarantees, just a scored fix roadmap.",
+    "A practical GEO audit for service businesses: evidence-linked website scoring, labeled answer samples, and a prioritized modern-search roadmap.",
   alternates: { canonical: "/geo-audit" },
   openGraph: {
     title: "GEO Audit - queryclear",
@@ -70,8 +70,8 @@ const includes = [
     d: "Who you are, what you offer, who it is for, where you operate, and whether those facts stay consistent.",
   },
   {
-    t: "AI visibility prompt tests",
-    d: "Category, city, comparison, and buyer-intent prompts checked across the answer engines that matter to your market.",
+    t: "Labeled answer samples",
+    d: "Buyer-intent prompts recorded with the named engine, prompt, date, access method, and observed brand or source presence.",
   },
   {
     t: "Answer coverage review",
@@ -112,7 +112,7 @@ const prompts = [
 
 const deliverables = [
   "A scored readout across the seven AI Visibility Stack layers",
-  "Prompt-test findings with the exact questions we checked",
+  "Answer-sample findings with the exact questions, engines, methods, and dates checked",
   "A source and competitor gap summary",
   "Schema, metadata, sitemap, robots, and crawlability notes",
   "A prioritized fix roadmap grouped by effort and impact",
@@ -146,7 +146,7 @@ const related = [
   {
     href: "/ai-visibility-audit",
     t: "AI Search Audit",
-    d: "The paid $497 audit with scoring, prompt testing, and a live walkthrough.",
+    d: "The paid $497 audit with evidence-linked scoring, labeled answer samples, and a walkthrough.",
   },
   {
     href: "/ai-search-ready-website",
@@ -166,7 +166,7 @@ const faqs = [
   },
   {
     q: "What do you actually test?",
-    a: "We review crawlability, metadata, structured data, internal links, service-page clarity, local relevance, proof, FAQs, conversion paths, and real answer-engine prompts for the business category and market.",
+    a: "We review crawlability, metadata, structured data, internal links, service-page clarity, local relevance, proof, FAQs, conversion paths, and labeled answer samples for the agreed business category and market.",
   },
   {
     q: "Do you guarantee rankings, traffic, or AI citations?",
@@ -178,7 +178,7 @@ const faqs = [
   },
   {
     q: "Should I run the free audit first?",
-    a: "Yes, if you want a fast read before buying. The free audit gives an instant, read-only snapshot. The full AI Search Audit is the deeper paid version with scoring, prompt testing, a prioritized roadmap, and a live walkthrough.",
+    a: "Yes, if you want an automated read before buying. The free product is a read-only readiness preview with clearly labeled single-sample scenarios. The paid audit adds human review, evidence-linked scoring, bounded multi-engine answer sampling, a roadmap, and a walkthrough.",
   },
 ];
 
@@ -189,7 +189,7 @@ const webPageSchema = {
   url: `${site.url}/geo-audit`,
   description:
     "A practical Generative Engine Optimization audit of a website's modern-search and AI-search readiness.",
-  isPartOf: { "@type": "WebSite", name: site.name, url: site.url },
+  isPartOf: { "@id": site.schemaIds.website },
 };
 
 const serviceSchema = {
@@ -197,7 +197,8 @@ const serviceSchema = {
   "@type": "Service",
   name: "GEO Audit",
   serviceType: "Modern SEO / Generative Engine Optimization audit",
-  provider: { "@type": "Organization", name: site.name, url: site.url },
+  provider: { "@id": site.schemaIds.organization },
+  brand: { "@id": site.schemaIds.brand },
   description:
     "A no-hype audit that scores a website's crawlability, entity clarity, service specificity, proof, local relevance, answer coverage, machine readability, and conversion path for modern search and AI answer engines.",
   areaServed: "United States",
@@ -253,7 +254,7 @@ export default function GeoAuditPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
       <Header />
-      <main>
+      <main id="main-content">
         <section className="border-b border-line">
           <Container className="grid gap-10 py-16 md:grid-cols-[1fr_0.82fr] md:items-center md:py-20">
             <div>
@@ -275,7 +276,7 @@ export default function GeoAuditPage() {
               </div>
             </div>
             <div className="machine-panel">
-              <p className="text-paper/40">{"// GEO audit posture"}</p>
+              <p className="text-paper/70">{"// GEO audit posture"}</p>
               <div className="mt-4 grid gap-3">
                 {outcomes.map((o) => (
                   <div key={o.k}>
@@ -295,7 +296,7 @@ export default function GeoAuditPage() {
           <Container>
             <MonoLabel index="01">What GEO really measures</MonoLabel>
             <h2 className="mt-3 max-w-3xl text-3xl sm:text-4xl">
-              Before an answer engine can recommend you, it has to clear four gates.
+              Four practical questions reveal whether a page is usable source material.
             </h2>
             <Stagger className="mt-8 grid gap-4 md:grid-cols-4">
               {outcomes.map((o) => (
@@ -373,14 +374,14 @@ export default function GeoAuditPage() {
         <section className="border-b border-line bg-paper-2 py-16">
           <Container className="grid gap-10 md:grid-cols-[0.9fr_1.1fr]">
             <div>
-              <MonoLabel index="04">Prompt testing</MonoLabel>
+              <MonoLabel index="04">Answer sampling</MonoLabel>
               <h2 className="mt-3 text-3xl sm:text-4xl">
-                We test the questions buyers actually ask.
+                We record the questions buyers actually ask.
               </h2>
               <p className="mt-4 max-w-md text-sm leading-relaxed text-muted">
-                Prompt tests are not fortune-telling. They are a practical way
-                to see whether answer engines can connect your business to the
-                category, location, service, and proof a buyer cares about.
+                Answer samples are not forecasts. A paid audit records the engine,
+                prompt, date, access method, and observed output, then treats the
+                result as one bounded observation—not a stable ranking.
               </p>
             </div>
             <div className="grid gap-4">
@@ -426,7 +427,7 @@ export default function GeoAuditPage() {
             <div className="mt-8 grid gap-4 md:grid-cols-3">
               {myths.map((m) => (
                 <div key={m.myth} className="card p-6">
-                  <p className="font-mono text-xs uppercase tracking-wider text-red-600">
+                  <p className="font-mono text-xs uppercase tracking-wider text-red-700">
                     Myth
                   </p>
                   <h3 className="mt-3 text-xl">{m.myth}</h3>
@@ -486,7 +487,7 @@ export default function GeoAuditPage() {
               </h2>
               <p className="mt-3 max-w-xl text-paper/70">
                 Start with a free read, or buy the full $497 audit for scoring,
-                prompt testing, a prioritized roadmap, and a live walkthrough.
+                labeled answer samples, a prioritized roadmap, and a live walkthrough.
               </p>
             </div>
             <div className="flex flex-wrap gap-3">

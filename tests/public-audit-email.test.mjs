@@ -60,11 +60,12 @@ test("prospect report email includes the domain, the fix list, and all three off
   assert.ok(/prioritized roadmap/i.test(html), "should frame the $497 audit as added depth");
 });
 
-test("invisible-query count reflects only uncited queries", () => {
-  // stub has 1 uncited (cited_count 0) of 2 — the headline must say one query.
+test("modeled answer samples are never described as live engine citation checks", () => {
   const html = renderPublicAuditReportEmail(stubReport, { siteUrl: site.url }, site);
-  // (apostrophe in "didn't" is HTML-escaped in output, so match up to it)
-  assert.ok(/1 query where AI answer engines/.test(html), "singular, count = 1");
+  assert.ok(/1 modeled answer sample/i.test(html), "singular, modeled count = 1");
+  assert.ok(/not live checks of ChatGPT/i.test(html), "methodology limitation is explicit");
+  assert.doesNotMatch(html, /answer engines (?:didn.t|did not) cite you/i);
+  assert.doesNotMatch(html, /invisible quer/i);
 });
 
 test("team lead email includes free-audit attribution when present", () => {

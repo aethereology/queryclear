@@ -25,6 +25,15 @@ export type ContactStatus =
 // nextStep()/isDue() stop the cadence on the very next tick: an interested
 // prospect must never receive another cold-looking autonomous follow-up.
 export const ACTIVE_STATUSES: ContactStatus[] = ["cold", "opened"];
+export const OUTREACH_ACTIVITY_RETENTION_MS = 18 * 30 * 24 * 60 * 60 * 1000;
+export const SUPPRESSION_STATUSES: ContactStatus[] = ["unsubscribed", "bounced"];
+
+export class OutreachStoreUnavailableError extends Error {
+  constructor(message = "Shared outreach storage is not configured.") {
+    super(message);
+    this.name = "OutreachStoreUnavailableError";
+  }
+}
 
 export interface Touch {
   n: number;
@@ -115,7 +124,11 @@ export function applyContactInput(existing: Contact | null, input: ContactInput,
     city: input.city ?? base.city,
     vertical: input.vertical ?? base.vertical,
     sourceCsv: input.sourceCsv ?? base.sourceCsv,
-    status: input.status ?? base.status,
+    // A CSV re-import must never reactivate a suppression. Re-consent, if ever
+    // supported, needs a separate audited workflow rather than an upsert.
+    status: SUPPRESSION_STATUSES.includes(base.status)
+      ? base.status
+      : (input.status ?? base.status),
   };
 }
 
@@ -128,6 +141,8 @@ export function isDue(contact: Contact, nowIso: string): boolean {
 /** In-memory store — LOCAL DEV / TESTS ONLY (does nothing across Vercel instances). */
 export class InMemoryOutreachStore implements OutreachStore {
   private readonly contacts = new Map<string, Contact>();
+  private readonly contactExpiresAt = new Map<string, number>();
+  private readonly suppressions = new Map<string, { status: ContactStatus; recordedAt: string }>();
   private readonly tokens = new Map<string, { email: string; expiresAt: number }>();
   private sendCap = { day: "", count: 0 };
   constructor(private readonly now: () => number = Date.now) {}
@@ -136,14 +151,35 @@ export class InMemoryOutreachStore implements OutreachStore {
     return new Date(this.now()).toISOString();
   }
 
+  private saveContact(contact: Contact) {
+    this.contacts.set(contact.email, contact);
+    this.contactExpiresAt.set(contact.email, this.now() + OUTREACH_ACTIVITY_RETENTION_MS);
+    if (SUPPRESSION_STATUSES.includes(contact.status)) {
+      this.suppressions.set(contact.email, { status: contact.status, recordedAt: this.iso() });
+    }
+  }
+
   async getContact(email: string): Promise<Contact | null> {
-    return this.contacts.get(normalizeEmail(email)) ?? null;
+    const normalized = normalizeEmail(email);
+    const contact = this.contacts.get(normalized);
+    if (contact && (this.contactExpiresAt.get(normalized) ?? 0) > this.now()) return contact;
+    this.contacts.delete(normalized);
+    this.contactExpiresAt.delete(normalized);
+    const suppression = this.suppressions.get(normalized);
+    return suppression
+      ? {
+          email: normalized,
+          status: suppression.status,
+          touches: [],
+          createdAt: suppression.recordedAt,
+        }
+      : null;
   }
 
   async upsertContact(input: ContactInput): Promise<Contact> {
     const existing = await this.getContact(input.email);
     const merged = applyContactInput(existing, input, this.iso());
-    this.contacts.set(merged.email, merged);
+    this.saveContact(merged);
     return merged;
   }
 
@@ -156,7 +192,7 @@ export class InMemoryOutreachStore implements OutreachStore {
       lastTouchAt: touch.at,
       nextDueAt: nextDueAt === null ? undefined : (nextDueAt ?? c.nextDueAt),
     };
-    this.contacts.set(updated.email, updated);
+    this.saveContact(updated);
     return updated;
   }
 
@@ -166,24 +202,28 @@ export class InMemoryOutreachStore implements OutreachStore {
     const touches = [...c.touches];
     touches[0] = { ...touches[0], reportToken: token };
     const updated = { ...c, touches };
-    this.contacts.set(updated.email, updated);
+    this.saveContact(updated);
     return updated;
   }
 
   async setStatus(email: string, status: ContactStatus): Promise<Contact | null> {
     const c = await this.getContact(email);
     if (!c) return null;
+    if (SUPPRESSION_STATUSES.includes(c.status) && !SUPPRESSION_STATUSES.includes(status)) {
+      return c;
+    }
     const updated = { ...c, status };
-    this.contacts.set(updated.email, updated);
+    this.saveContact(updated);
     return updated;
   }
 
   async listContacts(): Promise<Contact[]> {
-    return [...this.contacts.values()];
+    const contacts = await Promise.all([...this.contacts.keys()].map((email) => this.getContact(email)));
+    return contacts.filter((contact): contact is Contact => contact !== null);
   }
 
   async dueForTouch(nowIso: string): Promise<Contact[]> {
-    return [...this.contacts.values()].filter((c) => isDue(c, nowIso));
+    return (await this.listContacts()).filter((c) => isDue(c, nowIso));
   }
 
   async linkToken(token: string, email: string, ttlMs: number): Promise<void> {
@@ -224,10 +264,16 @@ const globals = globalThis as typeof globalThis & {
 
 export function outreachStore(): OutreachStore {
   if (!globals.__qcOutreachStore) {
-    globals.__qcOutreachStore =
-      process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN
-        ? new RedisOutreachStore()
-        : new InMemoryOutreachStore();
+    const hasUrl = Boolean(process.env.KV_REST_API_URL?.trim());
+    const hasToken = Boolean(process.env.KV_REST_API_TOKEN?.trim());
+    if (hasUrl !== hasToken) {
+      throw new OutreachStoreUnavailableError(
+        "Shared outreach storage is partially configured; both Redis credentials are required.",
+      );
+    }
+    if (hasUrl && hasToken) globals.__qcOutreachStore = new RedisOutreachStore();
+    else if (process.env.NODE_ENV === "production") throw new OutreachStoreUnavailableError();
+    else globals.__qcOutreachStore = new InMemoryOutreachStore();
   }
   return globals.__qcOutreachStore;
 }

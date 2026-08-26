@@ -50,11 +50,13 @@ test("care plan team email surfaces the subscriber, site, monthly amount, and su
   assert.ok(html.includes("AI Search Care Plan"), "names the plan");
 });
 
-test("care plan email is honest: recurring, cancel-anytime, no guarantees", () => {
+test("care plan email is honest: month-to-month under Terms, no guarantees", () => {
   const html = renderCarePlanOrderEmail(order, site);
 
   assert.ok(/recurring/i.test(html), "states it is recurring");
-  assert.ok(/cancel anytime/i.test(html), "states cancel anytime");
+  assert.ok(/month-to-month/i.test(html), "states the engagement cadence");
+  assert.ok(/accepted Terms/i.test(html), "ties service to accepted Terms");
+  assert.doesNotMatch(html, /no contract|cancel anytime/i);
   // Never promise outcomes.
   assert.ok(
     !/guarantee[ds]? (rankings|citations|results)/i.test(html) ||

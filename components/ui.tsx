@@ -81,13 +81,19 @@ export function Container({
 export function MonoLabel({
   index,
   children,
+  tone = "default",
 }: {
   index?: string;
   children: ReactNode;
+  tone?: "default" | "inverse";
 }) {
   return (
-    <p className="mono-label flex items-center gap-2">
-      {index && <span className="text-lime-deep">[ {index} ]</span>}
+    <p className={`mono-label flex items-center gap-2 ${tone === "inverse" ? "text-paper/70" : ""}`}>
+      {index && (
+        <span className={tone === "inverse" ? "text-lime" : "text-lime-deep"}>
+          [ {index} ]
+        </span>
+      )}
       <span>{children}</span>
     </p>
   );

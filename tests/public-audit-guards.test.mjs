@@ -29,7 +29,9 @@ function loadTs(relPath, mocks = {}) {
 const publicAudit = loadTs("lib/public-audit.ts", {
   "./public-audit-redis": { RedisPublicAuditStore: class {} },
 });
-const { InMemoryPublicAuditStore, publicAuditConfig, summarize } = publicAudit;
+const { InMemoryPublicAuditStore, publicAuditConfig, publicAuditStore, summarize } = publicAudit;
+const publicAuditUrl = loadTs("lib/public-audit-url.ts");
+const { normalizePublicAuditUrl, PublicAuditUrlError } = publicAuditUrl;
 
 const stubReport = {
   domain_url: "example.com",
@@ -108,11 +110,12 @@ test("report cache round-trips within TTL and expires after it", async () => {
   assert.equal(await store.getReport("never-stored"), null);
 });
 
-test("summarize counts invisible queries and caps top findings at 3", () => {
+test("summarize separates measured misses from modeled brand-absence samples", () => {
   const s = summarize("tok", stubReport);
   assert.equal(s.token, "tok");
   assert.equal(s.technicalIssues, 4);
-  assert.equal(s.invisibleQueries, 1); // only cited_count === 0
+  assert.equal(s.measuredChecksWithoutCitation, 0);
+  assert.equal(s.modeledSamplesWithoutBrand, 1);
   assert.equal(s.recommendations, 1);
   assert.equal(s.topFindings.length, 3);
   assert.equal(s.topFindings[0].title, "Finding A");
@@ -133,6 +136,51 @@ test("publicAuditConfig falls back to defaults on missing or garbage env", () =>
   }
 });
 
+test("publicAuditConfig never retains public reports for more than 24 hours", () => {
+  const saved = process.env.PUBLIC_AUDIT_REPORT_TTL_MS;
+  try {
+    process.env.PUBLIC_AUDIT_REPORT_TTL_MS = String(7 * 24 * 60 * 60 * 1000);
+    assert.equal(publicAuditConfig().reportTtlMs, 24 * 60 * 60 * 1000);
+  } finally {
+    if (saved === undefined) delete process.env.PUBLIC_AUDIT_REPORT_TTL_MS;
+    else process.env.PUBLIC_AUDIT_REPORT_TTL_MS = saved;
+  }
+});
+
+test("publicAuditStore fails closed without shared Redis in production", () => {
+  const saved = { ...process.env };
+  try {
+    delete globalThis.__qcPublicAuditStore;
+    process.env.NODE_ENV = "production";
+    delete process.env.KV_REST_API_URL;
+    delete process.env.KV_REST_API_TOKEN;
+    assert.throws(() => publicAuditStore(), /shared storage is required/i);
+  } finally {
+    delete globalThis.__qcPublicAuditStore;
+    process.env = saved;
+  }
+});
+
+test("public audit URL normalization keeps only a public website origin", () => {
+  assert.equal(normalizePublicAuditUrl(" Example.COM/path?q=1#x "), "https://example.com/");
+  assert.equal(normalizePublicAuditUrl("http://example.com:80/about"), "http://example.com/");
+});
+
+test("public audit URL normalization rejects local, private, credentialed, and unusual-port targets", () => {
+  for (const value of [
+    "localhost:3000",
+    "http://127.0.0.1/",
+    "http://169.254.169.254/latest/meta-data/",
+    "http://10.1.2.3/",
+    "http://[::1]/",
+    "https://user:password@example.com/",
+    "https://example.com:8443/",
+    "file:///etc/passwd",
+  ]) {
+    assert.throws(() => normalizePublicAuditUrl(value), PublicAuditUrlError, value);
+  }
+});
+
 // --- Route gates (the order that keeps the endpoint from burning money) ------
 
 function fakeRequest(body, ip = "9.9.9.9") {
@@ -144,9 +192,10 @@ function fakeRequest(body, ip = "9.9.9.9") {
 
 function loadAuditRoute({ store, runAudit }) {
   class AgentRuntimeError extends Error {
-    constructor(message, status) {
+    constructor(message, status, costMayHaveBeenIncurred = false) {
       super(message);
       this.status = status;
+      this.costMayHaveBeenIncurred = costMayHaveBeenIncurred;
     }
   }
   const route = loadTs("app/api/public/audit/route.ts", {
@@ -162,6 +211,7 @@ function loadAuditRoute({ store, runAudit }) {
       publicAuditStore: () => store,
       summarize,
     },
+    "@/lib/public-audit-url": { normalizePublicAuditUrl, PublicAuditUrlError },
   });
   return { POST: route.POST, AgentRuntimeError };
 }
@@ -223,13 +273,40 @@ test("route: failed audit releases its spend reservation", async () => {
   }
 });
 
+test("route: timeout-like failure keeps its spend reservation when work may have run", async () => {
+  const store = new InMemoryPublicAuditStore(() => Date.UTC(2026, 0, 1, 12));
+  const { POST, AgentRuntimeError } = loadAuditRoute({
+    store,
+    runAudit: async () => {
+      throw new AgentRuntimeError("Audit timed out.", 503, true);
+    },
+  });
+  process.env.PUBLIC_AUDIT_DAILY_CAP_USD = "0.01";
+  try {
+    const failed = await POST(fakeRequest({ domainUrl: "example.com" }));
+    assert.equal(failed.status, 503);
+    const spend = await store.reserveSpend(0.01, 0.01);
+    assert.equal(spend.allowed, false, "ambiguous failure must count against the cap");
+  } finally {
+    delete process.env.PUBLIC_AUDIT_DAILY_CAP_USD;
+  }
+});
+
 test("route: successful audit caches the full report and returns only the summary", async () => {
   const store = new InMemoryPublicAuditStore(() => Date.UTC(2026, 0, 1, 12));
-  const { POST } = loadAuditRoute({ store, runAudit: async () => stubReport });
+  let runtimeInput;
+  const { POST } = loadAuditRoute({
+    store,
+    runAudit: async (input) => {
+      runtimeInput = input;
+      return stubReport;
+    },
+  });
   const res = await POST(fakeRequest({ domainUrl: "example.com" }));
   assert.equal(res.status, 200);
   assert.equal(res.body.summary.token, "fixed-token");
   assert.equal(res.body.summary.technicalIssues, 4);
+  assert.equal(runtimeInput.domainUrl, "https://example.com/");
   assert.equal(res.body.report, undefined, "full report must stay behind the email gate");
   assert.deepEqual(await store.getReport("fixed-token"), stubReport, "full report cached for unlock");
 });
@@ -244,4 +321,19 @@ test("route: blank URL is rejected before any gate", async () => {
   });
   const res = await POST(fakeRequest({ domainUrl: "   " }));
   assert.equal(res.status, 400);
+});
+
+test("route: a private target is rejected before rate limiting or runtime work", async () => {
+  const store = new InMemoryPublicAuditStore();
+  let runtimeCalls = 0;
+  const { POST } = loadAuditRoute({
+    store,
+    runAudit: async () => {
+      runtimeCalls += 1;
+      return stubReport;
+    },
+  });
+  const res = await POST(fakeRequest({ domainUrl: "http://169.254.169.254/latest/meta-data" }));
+  assert.equal(res.status, 400);
+  assert.equal(runtimeCalls, 0);
 });

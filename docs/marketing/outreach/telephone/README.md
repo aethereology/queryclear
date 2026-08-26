@@ -1,5 +1,11 @@
 # Telephone outreach — the call list
 
+> **QUARANTINED — DO NOT CALL OR REGENERATE (2026-08-25).** The global
+> `OUTREACH_PAUSED` control now blocks every send path while counsel, sourcing,
+> suppression, and phone-compliance review remain open. Generated call data is
+> local/ignored, and 28 report links exposed in prior tracked output were revoked.
+> The operational details below are historical context, not launch authority.
+
 Built 2026-08-10 from the **live** contact ledger in Upstash Redis (`oc:contact:*`),
 not from the CSVs in `../leads/` (those are stale and partly un-ingested).
 
@@ -13,7 +19,7 @@ never got the email at all (it bounced), which is its own, equally good reason t
 
 | File | What it is |
 |---|---|
-| `call-list.csv` | **146 businesses with a phone number**, ranked in dial order |
+| `call-list.csv` | Local ignored historical list; quarantined pending approval |
 | `call-script.md` | What to say — openers, discovery, objections, closes, voicemail |
 | `call-log.csv` | Blank. Fill a row per call; it's the input for improving the script |
 | `no-phone-number.csv` | 13 contacts we could not find a verified number for |
@@ -23,7 +29,7 @@ never got the email at all (it bounced), which is its own, equally good reason t
 
 - **160** contacts in the live ledger. 159 contactable, 1 excluded.
 - **146** have a phone number → `call-list.csv`.
-- **144 of 146** have a **live report link** you can open mid-call (verified 200).
+- Historical report links have been revoked and must not be used.
 - Everyone has had **2–4 emails**. Nobody has ever replied.
 
 **Three tiers, and the difference matters:**
@@ -35,8 +41,8 @@ never got the email at all (it bounced), which is its own, equally good reason t
 | **C — email bounced** | 4 | Their email address is dead, so **they never received a word from us.** The phone is the only channel that reaches them, and they've never been pitched. Genuinely fresh — worth calling early. |
 
 Tier C are *not* do-not-calls. A bounce means a bad email address, not a business that
-declined. The only person you must never call is the single unsubscribed contact in
-`do-not-call.csv` (TREO Construction, Miami) — they asked to be left alone, and that
+declined. The single suppressed contact in `do-not-call.csv` must never be called —
+they asked to be left alone, and that
 applies to every channel.
 
 **By vertical:** med spa / aesthetics 92 · dental 37 · home builder / contractor 17

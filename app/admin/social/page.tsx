@@ -169,8 +169,10 @@ function Stat({ label, value }: { label: string; value: string | number }) {
 
 function Login({ error }: { error?: string }) {
   const unconfigured = error === "unconfigured";
+  const locked = error === "locked";
+  const unavailable = error === "unavailable";
   return (
-    <main className="grid min-h-screen place-items-center bg-pine-2 px-6">
+    <main id="main-content" className="grid min-h-screen place-items-center bg-pine-2 px-6">
       <form action="/api/social/admin/session" method="post" className="w-full max-w-md border border-dashed border-white/20 bg-paper p-8">
         <p className="font-mono text-xs uppercase tracking-[0.18em] text-muted">queryclear // private</p>
         <h1 className="mt-4 text-4xl">Social control room.</h1>
@@ -192,8 +194,16 @@ function Login({ error }: { error?: string }) {
         />
         {unconfigured ? (
           <p className="mt-3 text-sm text-red-700">
-            This deployment has no <code className="font-mono text-xs">SOCIAL_ADMIN_SECRET</code> set, so no secret can
-            be accepted. Set it in the environment and restart.
+            This deployment has no valid 32+ character <code className="font-mono text-xs">SOCIAL_ADMIN_SECRET</code>,
+            so no secret can be accepted. Set it in the environment and restart.
+          </p>
+        ) : locked ? (
+          <p className="mt-3 text-sm text-red-700">
+            Too many attempts. Wait 15 minutes before trying again.
+          </p>
+        ) : unavailable ? (
+          <p className="mt-3 text-sm text-red-700">
+            Secure login is temporarily unavailable because its shared rate-limit store could not be reached.
           </p>
         ) : error ? (
           <p className="mt-3 text-sm text-red-700">
@@ -223,7 +233,7 @@ function Dashboard({
   const published = snapshot.posts.filter((post) => post.status === "published");
   const queued = snapshot.actions.filter((action) => ["queued", "retryable", "leased"].includes(action.status));
   return (
-    <main className="min-h-screen bg-paper-2 px-5 py-8 text-ink sm:px-8">
+    <main id="main-content" className="min-h-screen bg-paper-2 px-5 py-8 text-ink sm:px-8">
       <div className="mx-auto max-w-7xl">
         {oauthError ? (
           <div role="alert" className="mb-6 border border-dashed border-red-700/40 bg-paper p-5">
@@ -383,7 +393,7 @@ export default async function SocialAdminPage({ searchParams }: { searchParams: 
   }
   if (!snapshot) {
     return (
-      <main className="grid min-h-screen place-items-center bg-paper-2 p-8">
+      <main id="main-content" className="grid min-h-screen place-items-center bg-paper-2 p-8">
         <div className="max-w-xl border border-dashed border-red-700/40 bg-paper p-8">
           <p className="font-mono text-xs uppercase text-red-800">configuration required</p>
           <h1 className="mt-3 text-4xl">The control room needs Redis.</h1>

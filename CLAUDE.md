@@ -22,17 +22,46 @@ We sell *readiness*, not outcomes. **Never** promise rankings or AI citations.
   Internally it grew out of Aethelo, but Aethelo no longer appears in public
   copy/schema (decided 2026-06-11; see Decisions.md).
 - Our own site IS our first case study, so it must be a flawless GEO example.
-- **Two tracks (since 2026-06-15; see Decisions.md):** (1) the **done-for-you
-  local/service track** (free `/free-audit` → $497 audit → Upgrade → Build), and (2) the
-  **AI Search Operator** — the recurring agentic offering for **B2B SaaS**, powered
-  by the separate `queryclearagent` product, launched as a founder-led **early-access
-  / design-partner program**. The operator is **Review-mode / human-approved /
-  staging-first** today; market it honestly (no "fully autonomous, live" claims).
+- **Current public track:** the **done-for-you local/service offer** (free
+  `/free-audit` → $497 audit → Upgrade → Build → eligibility-only Care Plan).
+  The AI Search Operator is experimental, noindex, and excluded from primary
+  navigation/sitemap/llms.txt; do not market or sell it as a current offer.
 
 ## 2. Ground-truth state (keep this section current)
 
-> Last verified: 2026-08-20. If you change the site, update this section and
+> Last verified: 2026-08-25. If you change the site, update this section and
 > `memory.md` at the end of your session.
+
+- **COMPREHENSIVE LAUNCH HARDENING 2026-08-25 (LOCAL; NOT DEPLOYED/COMMITTED):**
+  trust/legal/offer/SEO/CRO, production controls, fulfillment, privacy/security,
+  analytics consent, and the public audit runtime were audited and repaired.
+  Canonical launch register: `docs/launch-readiness-audit-2026-08-25.md`.
+  Counsel/CPA/board/management signature files are in
+  `docs/legal/signature-packet/`; supporting MSA/SOW/DPA/release drafts are in
+  `docs/legal/`. Paid audit scope is one public site, 10 URLs, and **12 total
+  prompt-engine observations** across up to three named engines. Checkout fails
+  closed unless `AUDIT_CHECKOUT_PAUSED=false`; Stripe fulfillment validates the
+  exact current $497 USD SKU, paid/complete state, current assent, request ID,
+  email, and public website, then records an authoritative order projection and
+  idempotent owner/buyer delivery state. Public audit runtime fails closed with
+  a 35-second worst-case network window and never serves demo data publicly.
+  GA4 stays absent until a valid ID is configured and the visitor consents;
+  tracked events exclude submitted PII/site URLs. Main verification: build,
+  lint, TypeScript, production launch-config fixture, dependency audit, and
+  **299/299 tests** pass; real-Chrome QA covered 12 representative routes with
+  zero axe WCAG 2.1 A/AA violations or console errors. Runtime CI: **184 tests,
+  7 skipped**, lint/typecheck pass. No deployment or live payment/form was made.
+  **P0 remains:** public repo history still contains contact data/dead report
+  links in `a76f719`; make the repo private and perform an owner-authorized
+  history remediation. Exactly 28 exposed report tokens were revoked and 73
+  scoped Redis keys deleted (zero remain); current source artifacts are removed
+  from tracking and ignored. Outreach remains globally paused and telephone
+  artifacts/generators must be regenerated and reviewed before any unpause.
+  Other external launch gates: counsel/CPA signatures and final public-document
+  approval, board/management execution, DBA/tax/insurance decisions, founder
+  identity/profile, real released proof, production Vercel/Stripe/Redis/Blob/
+  Resend/runtime/GA4 smoke evidence, GSC/Bing/Cloudflare rechecks, and delivery
+  capacity sign-off.
 
 - **COLD EMAIL DECLARED A FAILURE; PHONE-FIRST PIVOT 2026-08-20 (commit
   `a76f719`, DEPLOYED to prod, smoke-checked):** the autonomous engine works
@@ -87,18 +116,11 @@ We sell *readiness*, not outcomes. **Never** promise rankings or AI citations.
   `lib/outreach-open.ts`) which is how we know about the 31, and a real fix to
   `sendEmail` (`return !result.error`, so a Resend failure is no longer recorded
   as a successful send). Verified: build 54 routes, lint clean, **234/234** tests.
-- **⚠️ CLOUDFLARE IS STILL BLOCKING AI CRAWLERS (re-confirmed live 2026-08-20 —
-  6 weeks after it was first flagged on 07-08 and NOT fixed).**
-  `curl https://www.queryclear.com/robots.txt` still shows Cloudflare's managed
-  block: GPTBot, ClaudeBot, Google-Extended, CCBot, Amazonbot,
-  Applebot-Extended, Bytespider, meta-externalagent all `Disallow: /`, plus
-  `Content-Signal: ai-train=no`. **We sell AI-search visibility while blocking
-  the exact crawlers from our own site, and our site is meant to be the first
-  case study.** Our own `app/robots.ts` is correct (its rules appear at the
-  bottom of the served file). Fix is **dashboard-only** — Cloudflare → zone
-  queryclear.com → Security → Bots / AI Crawl Control → Allow + turn OFF
-  "manage AI bot traffic with robots.txt". Not fixable from code or the MCP
-  token. This is the single oldest open founder action.
+- **CLOUDFLARE AI-CRAWLER BLOCK NO LONGER APPEARS LIVE (verified 2026-08-25).**
+  The live `robots.txt` no longer contains the prior Cloudflare-managed GPTBot/
+  ClaudeBot blanket block, and the prior `Content-Signal` header was absent.
+  Still save a dated dashboard export and run named-UA/WAF tests before launch;
+  a point-in-time public response does not prove every Cloudflare policy path.
 - **OUTREACH SAFETY-GATE REPAIR 2026-07-26 (code-complete, verified; deploy
   founder-gated):** the first audit of the autonomous engine since it went live
   found four defects. Evidence: 115 cold emails over 6 days produced **0 replies
@@ -323,17 +345,11 @@ We sell *readiness*, not outcomes. **Never** promise rankings or AI citations.
   Full design + phased plan: `C:\Users\kylel\.claude\plans\we-need-to-get-fancy-tower.md`.
 - **LIVE** at https://www.queryclear.com (apex 307 → www). Deployed on Vercel
   (team `sparkcreativesinc`, project `queryclear`; CLI needs `--scope sparkcreativesinc`).
-- **CLOUDFLARE IS BLOCKING AI CRAWLERS — FOUNDER ACTION PENDING (found 2026-07-08):**
-  Cloudflare's default-on "AI Crawl Control" injects a managed robots.txt block
-  (GPTBot, ClaudeBot, Google-Extended, CCBot, Amazonbot, Applebot-Extended, Bytespider,
-  meta-externalagent all `Disallow: /`, plus `Content-Signal: ai-train=no`) on
-  www.queryclear.com — directly contradicting the GEO pitch. Founder decided
-  **allow all AI crawlers**. Fix is dashboard-only (MCP API token lacks bot-management
-  scope): Cloudflare → zone queryclear.com → Security → Bots / AI Crawl Control →
-  Allow + turn OFF "manage AI bot traffic with robots.txt"; also confirm no WAF-level
-  verified-bot block. Verify: `curl -s https://www.queryclear.com/robots.txt` shows no
-  "Cloudflare Managed content" block. Googlebot was never blocked (fetches 200); our own
-  `app/robots.ts` is correct. Related: site appears absent from Google's index (~5-week-old
+- **CLOUDFLARE CRAWLER POLICY NEEDS DASHBOARD EVIDENCE (live symptom cleared 2026-08-25):**
+  The previous managed AI-crawler block and `Content-Signal` header were absent
+  in the latest live check. Founder policy remains to allow AI crawlers. Before
+  launch, save the dashboard policy and confirm no named-UA/WAF verified-bot
+  block; our own `app/robots.ts` is correct. Related: site appeared absent from Google's index (~5-week-old
   domain, GSC+sitemap submitted 2026-06-04) — founder should check the GSC Pages report,
   Request-index the money pages, and do the same in Bing Webmaster. Triage source: an
   external Gemini review (2026-07-08) whose headline claims (noindex headers, blocked
@@ -343,8 +359,9 @@ We sell *readiness*, not outcomes. **Never** promise rankings or AI citations.
   local font swap + guide-page/Header/Scorecard redesign) pushed to main and shipped via
   `npx vercel deploy --prod --scope sparkcreativesinc`. Smoke-checked: pre/code machine
   view live on /, both font files 200 from /_next/static/media, 9 key routes 200
-  (incl. /care-plan). Font licensing risk (RZ Regular + Hagrid Trial, unlicensed/trial
-  EULAs) remains founder-accepted and is now in production.
+  (incl. /care-plan). That legacy deployment used RZ Regular/Hagrid Trial; the
+  current source no longer contains or references those files and uses the
+  configured Google-font stack, so the next deployment removes that licensing risk.
 - **MACHINE-VIEW SSR FIX 2026-07-08 (commit 4590d20, deployed same day — see above):** the
   homepage Human/Machine toggle previously mounted only the active panel, so the
   "Machine view" demo was absent from prerendered HTML. `components/HumanMachineToggle.tsx`
@@ -646,3 +663,13 @@ founder. For small, in-scope, in-convention changes: proceed and report.
 | `seed_data.md` | Fictional demo business for sample audit |
 | `Decisions.md` | Append-only decision log (ADRs) |
 | `memory.md` | Human-readable running project memory (update each session) |
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->

@@ -33,8 +33,8 @@ export function Reveal({
   return (
     <motion.div
       className={className}
-      initial={{ opacity: 0, y: 22 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={{ y: 22 }}
+      whileInView={{ y: 0 }}
       viewport={{ once: true, amount: 0.3 }}
       transition={{ duration: 0.6, ease: EASE, delay }}
     >
@@ -48,8 +48,8 @@ const containerVariants: Variants = {
   show: { transition: { staggerChildren: 0.09 } },
 };
 const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 22 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.55, ease: EASE } },
+  hidden: { y: 22 },
+  show: { y: 0, transition: { duration: 0.55, ease: EASE } },
 };
 
 /** Parent that staggers its <StaggerItem> children into view once. */

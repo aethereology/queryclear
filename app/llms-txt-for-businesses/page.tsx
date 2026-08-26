@@ -9,7 +9,7 @@ import { site } from "@/lib/site";
 export const metadata: Metadata = {
   title: "llms.txt for Businesses",
   description:
-    "An honest business guide to llms.txt: what it is, when it is worth publishing, what it cannot guarantee, and how to write a useful file without confusing it for an AI-search strategy.",
+    "Learn what llms.txt does, when it may help, what it cannot guarantee, and why useful crawlable pages remain the real modern-search foundation.",
   alternates: { canonical: "/llms-txt-for-businesses" },
   openGraph: {
     title: "llms.txt for Businesses - queryclear",
@@ -145,7 +145,7 @@ const faqs = [
   },
   {
     q: "Will llms.txt make AI cite my business?",
-    a: "No. There is no credible guarantee that any AI system will read the file, follow it, cite you, or rank you. It can make your important pages easier to find and summarize, but it does not control the answer.",
+    a: "No. There is no credible guarantee that any AI system will read the file, follow it, cite you, or rank you. For a compatible tool, it can act as a concise directory of preferred public pages; it does not control discovery or the answer.",
   },
   {
     q: "Is llms.txt the same as robots.txt?",
@@ -171,7 +171,7 @@ const webPageSchema = {
   name: "llms.txt for Businesses",
   url: `${site.url}/llms-txt-for-businesses`,
   description: "An honest guide to llms.txt for businesses.",
-  isPartOf: { "@type": "WebSite", name: site.name, url: site.url },
+  isPartOf: { "@id": site.schemaIds.website },
 };
 
 const serviceSchema = {
@@ -179,7 +179,8 @@ const serviceSchema = {
   "@type": "Service",
   name: "llms.txt planning and implementation",
   serviceType: "AI-search readiness support file",
-  provider: { "@type": "Organization", name: site.name, url: site.url },
+  provider: { "@id": site.schemaIds.organization },
+  brand: { "@id": site.schemaIds.brand },
   description:
     "Planning, writing, publishing, and maintaining llms.txt files as part of broader modern-search website optimization.",
   areaServed: "United States",
@@ -229,7 +230,7 @@ export default function LlmsTxtPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
       <Header />
-      <main>
+      <main id="main-content">
         <section className="border-b border-line">
           <Container className="grid gap-10 py-16 md:grid-cols-[1fr_0.82fr] md:items-center md:py-20">
             <div>
@@ -252,7 +253,7 @@ export default function LlmsTxtPage() {
               </div>
             </div>
             <div className="machine-panel">
-              <p className="text-paper/40">{"// good llms.txt posture"}</p>
+              <p className="text-paper/70">{"// good llms.txt posture"}</p>
               <div className="mt-4 grid gap-3">
                 {verdicts.map((v) => (
                   <div key={v.t}>
@@ -304,7 +305,7 @@ export default function LlmsTxtPage() {
               <ul className="mt-6 grid gap-3">
                 {doesNot.map((m) => (
                   <li key={m} className="flex gap-3 text-ink">
-                    <span aria-hidden="true" className="text-red-600">
+                    <span aria-hidden="true" className="text-red-700">
                       x
                     </span>
                     <span className="text-muted">{m}</span>

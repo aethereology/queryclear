@@ -31,7 +31,7 @@ function loadSecurity() {
 }
 
 test("admin sessions expire, reject tampering, and bind CSRF to the session", () => {
-  process.env.SOCIAL_ADMIN_SECRET = "unit-test-admin-secret";
+  process.env.SOCIAL_ADMIN_SECRET = "unit-test-admin-secret-0123456789abcd";
   const { createAdminSession, verifyAdminSession, csrfForSession, verifyCsrf } = loadSecurity();
   const now = Date.parse("2026-07-26T12:00:00.000Z");
   const session = createAdminSession(now);
@@ -49,6 +49,8 @@ test("stored OAuth tokens are encrypted with authenticated encryption", () => {
   assert.equal(encrypted.includes("platform-token-value"), false);
   assert.equal(decryptSecret(encrypted), "platform-token-value");
   const parts = encrypted.split(".");
-  parts[2] = `${parts[2].slice(0, -1)}A`;
+  const tamperedTag = Buffer.from(parts[2], "base64url");
+  tamperedTag[0] ^= 1;
+  parts[2] = tamperedTag.toString("base64url");
   assert.throws(() => decryptSecret(parts.join(".")));
 });

@@ -38,6 +38,7 @@ Thumbs.db
 .playwright-mcp/
 .firecrawl/
 /*.png
+/artifacts/qa/*.png
 
 # Cold-outreach generated artifacts (rendered prospect emails + send log)
 docs/marketing/outreach/previews/
@@ -47,11 +48,16 @@ docs/marketing/outreach/leads/
 # call-pack email. The README and call-script.md in that folder ARE tracked.
 docs/marketing/outreach/telephone/*.csv
 docs/marketing/outreach/telephone/*.html
+# Generated telephone datasets and personalized call packs can contain contact
+# data and bearer report links. Keep only README.md and call-script.md tracked.
+docs/marketing/outreach/telephone/*.json
+docs/marketing/outreach/telephone/free-fix-pack.md
 
 # Reference docs we don't track in git (kept locally)
 queryclear.com_AI Search Optimized Website Service Business Plan.pdf
 .superpowers/
 .env*
+!.env.example
 
 # Claude Code machine-local permissions (the agents/skills ARE tracked)
 .claude/settings.local.json

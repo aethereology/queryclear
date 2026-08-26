@@ -60,7 +60,7 @@ export function AuditReport({ data }: { data: AuditReportData }) {
   const fixes = sortedFixes(data.fixes);
 
   return (
-    <main>
+    <main id="main-content">
       {/* DEMO banner — only for clearly-fictional examples */}
       {data.demo && (
         <div className="border-b border-line bg-pine px-6 py-2.5 text-center text-xs text-paper/80">
@@ -102,15 +102,15 @@ export function AuditReport({ data }: { data: AuditReportData }) {
         </Container>
       </section>
 
-      {/* AI visibility tests */}
+      {/* Labeled answer samples */}
       <section className="border-b border-line py-16">
         <Container>
-          <MonoLabel index="01">AI visibility tests</MonoLabel>
-          <h2 className="mt-3 text-3xl sm:text-4xl">What the answer engines say now.</h2>
+          <MonoLabel index="01">Labeled answer samples</MonoLabel>
+          <h2 className="mt-3 text-3xl sm:text-4xl">What the recorded samples showed.</h2>
           <p className="mt-3 max-w-2xl text-sm text-muted">
-            We ask the questions a real customer would — across the major answer
-            engines — and record whether the business surfaces, and whether the
-            answer is accurate.
+            We record answers to representative buyer questions and document whether
+            the business appears and whether the sampled answer is accurate. Paid
+            reports label the prompt, engine, date, access method, and observation type.
           </p>
           <div className="mt-8 overflow-hidden border border-dashed border-line">
             <div className="hidden gap-2 border-b border-line bg-paper-2 p-5 sm:grid sm:grid-cols-[1.4fr_0.6fr_1fr]">
@@ -123,7 +123,12 @@ export function AuditReport({ data }: { data: AuditReportData }) {
                 key={v.prompt}
                 className={`grid gap-2 p-5 sm:grid-cols-[1.4fr_0.6fr_1fr] sm:items-center ${i % 2 ? "bg-paper-2" : "bg-paper"}`}
               >
-                <p className="font-mono text-sm">&ldquo;{v.prompt}&rdquo;</p>
+                <div>
+                  <p className="font-mono text-sm">&ldquo;{v.prompt}&rdquo;</p>
+                  <p className="mt-2 font-mono text-[0.68rem] uppercase leading-relaxed tracking-wide text-muted">
+                    {v.engine} · {v.observedAt} · {v.accessMethod} · {v.observationType}
+                  </p>
+                </div>
                 <span className="inline-flex w-fit border border-red-200 bg-red-100 px-3 py-1 font-mono text-xs font-medium uppercase tracking-wider text-red-800">
                   {v.result}
                 </span>
@@ -141,8 +146,9 @@ export function AuditReport({ data }: { data: AuditReportData }) {
           <h2 className="mt-3 text-3xl sm:text-4xl">Scored against the seven layers.</h2>
           <p className="mt-3 max-w-2xl text-sm text-muted">
             Every audit grades each layer of the AI Visibility Stack against the
-            actual site. Lower layers come first — a machine has to identify and
-            trust you before it can recommend you.
+            actual site. The layers show whether the business is identifiable,
+            specific, supported by proof, locally relevant, useful, machine-readable,
+            and connected to a clear next step.
           </p>
           <Stagger className="mt-8 grid gap-3">
             {data.scorecard.map((s) => {
@@ -164,7 +170,8 @@ export function AuditReport({ data }: { data: AuditReportData }) {
           <p className="mt-6 max-w-2xl text-xs leading-relaxed text-muted">
             Scores measure how <span className="text-ink">ready</span> a site is for AI
             search — not a promise of rankings or citations. No one can credibly
-            guarantee those. We remove the reasons an engine would skip you.
+            guarantee those. We identify and prioritize site-level gaps that can
+            weaken crawlability, clarity, supporting evidence, and conversion.
           </p>
         </Container>
       </section>
@@ -210,7 +217,7 @@ export function AuditReport({ data }: { data: AuditReportData }) {
           </p>
           <div className="mt-8 grid gap-4 md:grid-cols-2">
             <Reveal>
-              <p className="mono-label mb-2">Before — nothing to cite</p>
+              <p className="mono-label mb-2">Before — thin source material</p>
               <div className="machine-panel !text-paper/50">
                 {data.machineView.before.map((line) => (
                   <div key={line}>{line}</div>
@@ -238,8 +245,8 @@ export function AuditReport({ data }: { data: AuditReportData }) {
             <div>
               <h2 className="text-3xl text-paper sm:text-4xl">Want this for your website?</h2>
               <p className="mt-3 max-w-xl text-paper/70">
-                Run a free AI Search audit. If your site needs deeper
-                work, we&apos;ll recommend the paid AI Search Audit — a real
+                Run the free automated readiness preview. If you want deeper
+                work, the paid AI Search Audit is a human-reviewed,
                 scored report like this one, built on your verified details and
                 scored against the{" "}
                 <a href="/ai-visibility-stack" className="font-medium text-paper underline hover:text-lime">

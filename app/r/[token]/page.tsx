@@ -31,14 +31,14 @@ export default async function OutreachReportPage({
     <>
       <OutreachOpenTracker token={token} />
       <Header />
-      <main>
+      <main id="main-content">
         <section className="site-section border-b border-line">
           <Container className="py-16 sm:py-20">
             <MonoLabel index="audit">AI Search Audit</MonoLabel>
             <h1 className="mt-5 max-w-3xl">Your AI search audit for {prospectDomain}.</h1>
             <p className="mt-5 max-w-2xl text-lg leading-relaxed text-muted">
-              A read-only look at how AI answer engines find, read, and cite your site — with a
-              prioritized list of what to fix first. Prepared by queryclear.
+              A read-only review of your public source material and labeled answer
+              samples, with a prioritized list of what to fix first. Prepared by queryclear.
             </p>
             <div className="mt-10">
               <AuditReportView report={report} />

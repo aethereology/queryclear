@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -12,9 +13,20 @@ import { Accordion } from "@/components/Accordion";
 import { HeroCircuit } from "@/components/HeroCircuit";
 import { site } from "@/lib/site";
 
+export const metadata: Metadata = {
+  title: "Modern SEO for Service Businesses",
+  description: site.description,
+  alternates: { canonical: "/" },
+  openGraph: {
+    title: "queryclear — Modern SEO for Service Businesses",
+    description: site.description,
+    url: site.url,
+  },
+};
+
 const proofStats = [
   { k: "7 layers", v: "scored across the AI Visibility Stack" },
-  { k: "100 pts", v: "a plain-English readiness rubric" },
+  { k: "Transparent", v: "published layers and scoring method" },
   { k: "Read-only", v: "free audits do not modify your site" },
   { k: "Human-led", v: "strategy, implementation, and review by people" },
 ] as const;
@@ -61,33 +73,33 @@ const layerMatrix = [
   },
   {
     n: "02",
-    name: "Crawl foundation",
-    signal: "Important pages are discoverable, indexable, fast enough, and internally linked.",
-    fix: "Repair metadata, robots, sitemap, canonicals, headings, links, and broken paths.",
+    name: "Service specificity",
+    signal: "Each core service has a dedicated, useful page tied to a real buyer question.",
+    fix: "Clarify fit, process, geography, eligibility, proof, and the next step.",
   },
   {
     n: "03",
-    name: "Service answers",
-    signal: "Each page answers who it is for, what happens, where it is offered, and why it is safe.",
-    fix: "Rebuild thin service pages into useful, answer-first buying pages.",
+    name: "Proof density",
+    signal: "Verified, relevant evidence appears near the claims it supports.",
+    fix: "Add real team details, credentials, policies, examples, reviews, and source context.",
   },
   {
     n: "04",
-    name: "Structured data",
-    signal: "Search systems can read organization, local business, service, and FAQ details.",
-    fix: "Add accurate JSON-LD where it reflects visible page content.",
+    name: "Local relevance",
+    signal: "The business is clearly tied to the places it genuinely serves.",
+    fix: "Align service areas, business profiles, on-page facts, and genuine local proof.",
   },
   {
     n: "05",
-    name: "Local proof",
-    signal: "The site shows real market coverage, reviews, staff, credentials, and examples.",
-    fix: "Tie services to places, evidence, policies, photos, and local language.",
+    name: "Answer coverage",
+    signal: "Key pages directly answer the questions buyers ask before choosing.",
+    fix: "Cover fit, process, timing, constraints, pricing guidance, comparisons, and FAQs.",
   },
   {
     n: "06",
-    name: "Answer-engine tests",
-    signal: "AI tools can describe the business accurately for high-intent prompts.",
-    fix: "Run prompt tests, compare gaps, and add missing source material to the site.",
+    name: "Machine readability",
+    signal: "Pages are crawlable, semantic, connected, and described by consistent metadata and schema.",
+    fix: "Repair indexability, internal links, metadata, canonicals, structured data, and page health.",
   },
   {
     n: "07",
@@ -130,7 +142,7 @@ const deliverableGroups = [
   },
   {
     label: "Measurement",
-    items: ["Prompt testing", "100-point scorecard", "Prioritized roadmap", "Before/after visibility checks"],
+    items: ["Labeled answer samples", "Published scoring method", "Prioritized roadmap", "Before/after readiness checks"],
   },
 ] as const;
 
@@ -164,7 +176,7 @@ const resourceLinks = [
 const faqs = [
   {
     q: "What does queryclear actually do?",
-    a: "We upgrade business websites for modern search. That includes crawlability, page structure, metadata, schema, service-page copy, local signals, FAQs, conversion paths, and prompt testing against AI-powered search experiences.",
+    a: "We upgrade business websites for modern search. That includes crawlability, page structure, metadata, schema, service-page copy, local signals, FAQs, conversion paths, and clearly labeled answer sampling.",
   },
   {
     q: "Is this different from SEO?",
@@ -194,24 +206,24 @@ const serviceSchema = {
   serviceType: "Modern SEO / AI Search Optimization",
   name: "Modern Search Website Optimization",
   description: site.description,
-  provider: { "@type": "Organization", name: site.name, url: site.url },
+  provider: { "@id": site.schemaIds.organization },
+  brand: { "@id": site.schemaIds.brand },
   areaServed: "United States",
   offers: site.offers.map((offer) => ({
     "@type": "Offer",
     name: offer.name,
     description: offer.desc,
     url: `${site.url}${offer.href.startsWith("/") ? offer.href : `/${offer.href}`}`,
-    price: offer.price,
+    priceCurrency: "USD",
+    price:
+      offer.name === "Free AI Search Audit"
+        ? "0"
+        : offer.name === "AI Search Audit"
+          ? "497"
+          : offer.name === "Website Upgrade"
+            ? "2500"
+            : "6500",
   })),
-};
-
-const websiteSchema = {
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  name: site.name,
-  url: site.url,
-  description: site.description,
-  publisher: { "@type": "Organization", name: site.name, url: site.url },
 };
 
 const faqSchema = {
@@ -233,15 +245,11 @@ export default function Home() {
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
-      />
-      <script
-        type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
       <Header />
 
-      <main className="home-page">
+      <main id="main-content" className="home-page">
         <section className="site-section home-hero border-b border-dashed border-line">
           <Container className="relative grid items-center gap-12 py-16 md:py-20 lg:grid-cols-2 lg:py-24">
             <div className="relative z-10">
@@ -252,15 +260,15 @@ export default function Home() {
                 className="fade-up mt-6 max-w-4xl text-balance text-5xl leading-[0.98] sm:text-6xl lg:text-6xl"
                 style={{ animationDelay: "0.08s" }}
               >
-                Modern SEO for businesses that need to be understood by AI search.
+                Make your service business easier to find, understand, and trust.
               </h1>
               <p
                 className="fade-up mt-6 max-w-2xl text-lg leading-relaxed text-muted"
                 style={{ animationDelay: "0.16s" }}
               >
-                We turn unclear service websites into readable, trustworthy source
-                material for Google, AI Overviews, ChatGPT-style answers, and the
-                people who still decide whether to call.
+                We audit and upgrade the pages, proof, structure, and conversion
+                paths that help Google and AI answer tools understand your business —
+                and help qualified visitors take the next step.
               </p>
               <div
                 className="fade-up mt-9 flex flex-wrap items-center gap-3"
@@ -310,7 +318,7 @@ export default function Home() {
                     <TypingPanel
                       className="min-h-full"
                       lines={[
-                        <span key="a" className="text-paper/40">
+                        <span key="a" className="text-paper/70">
                           # answer-engine source profile
                         </span>,
                         <span key="b">
@@ -370,15 +378,16 @@ export default function Home() {
           </div>
         </Section>
 
-        <Section id="method" index="02" label="The route" tone="tinted">
+        <Section id="method" index="02" label="Five outcomes" tone="tinted">
           <div className="home-method-grid grid gap-10 lg:items-start">
             <div>
               <h2 className="max-w-xl text-4xl sm:text-5xl">
-                We make every important page pass five gates.
+                Seven layers drive five practical outcomes.
               </h2>
               <p className="mt-5 max-w-lg leading-relaxed text-muted">
-                The work is not magic. It is a practical sequence: make the site
-                findable, understandable, credible, answer-ready, and easy to act on.
+                Find, Parse, Trust, Answer, and Convert are the outcomes. The seven-layer
+                AI Visibility Stack is the published rubric we use to find and prioritize
+                the work that moves them.
               </p>
               <div className="mt-8">
                 <Cta href="/ai-visibility-stack" variant="ghost">
@@ -481,7 +490,8 @@ export default function Home() {
             </div>
             <p className="max-w-2xl leading-relaxed text-muted lg:justify-self-end">
               Every audit and upgrade is organized around the same stack, so the
-              roadmap is clear: fix the weak layer, re-test, then measure what moved.
+              roadmap is clear: fix the weak layer, re-check it, then document what moved.
+              Paid reports score each layer from 0–10 and normalize the total to 100.
             </p>
           </div>
           <LineDraw className="mb-8" />
@@ -507,7 +517,7 @@ export default function Home() {
               </h2>
               <p className="mt-5 max-w-md leading-relaxed text-muted">
                 The audit gives you the map. The upgrade applies the fixes. The
-                care plan keeps the foundation from drifting as search changes.
+                care plan adds a recurring re-audit and bounded update cadence.
               </p>
             </div>
             <Stagger className="grid gap-4 md:grid-cols-2">
@@ -532,15 +542,16 @@ export default function Home() {
           <Container>
             <div className="grid gap-8 lg:grid-cols-[0.74fr_1.26fr] lg:items-end">
               <div>
-                <MonoLabel index="06">Start here</MonoLabel>
+                <MonoLabel index="06" tone="inverse">Start here</MonoLabel>
                 <h2 className="mt-4 max-w-xl text-4xl text-paper sm:text-5xl">
                   Choose the amount of help you want us to carry.
                 </h2>
               </div>
               <p className="max-w-2xl leading-relaxed text-paper/68 lg:justify-self-end">
                 Begin with a quick read, buy the scored audit, or move straight
-                into implementation. The $497 audit is credited in full toward a
-                Website Upgrade if you go ahead.
+                into implementation. The $497 audit is credited once toward a
+                Website Upgrade or Website Build of $2,500 or more for the same
+                site when the agreement is signed within {site.auditProduct.creditDays} days after report delivery.
               </p>
             </div>
             <Stagger className="mt-12 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
@@ -574,23 +585,52 @@ export default function Home() {
                 </StaggerItem>
               ))}
             </Stagger>
-            <div className="mt-8 grid gap-4 border border-dashed border-paper/18 p-5 md:grid-cols-[1fr_auto] md:items-center">
+            <div className="mt-8 border border-dashed border-paper/18 p-5">
               <p className="text-sm leading-relaxed text-paper/65">
                 Already optimized? The monthly{" "}
                 <Link href={site.carePlan.path} className="text-lime underline">
                   AI Search Care Plan
                 </Link>{" "}
-                keeps the foundation current with a re-audit, hands-on updates,
-                and a measured citation watch. Cancel anytime.
+                provides a re-audit, up to two defined updates, and documented
+                answer samples. Eligibility is confirmed before billing.
               </p>
-              <Cta href={site.operator.path} variant="ghost" className="btn-on-pine">
-                Meet the operator
-              </Cta>
             </div>
           </Container>
         </section>
 
-        <Section id="resources" index="07" label="Deepen the method" tone="tinted">
+        <Section id="trust" index="07" label="Who does the work">
+          <div className="grid gap-10 lg:grid-cols-[0.72fr_1.28fr] lg:items-start">
+            <div>
+              <h2 className="max-w-lg text-4xl sm:text-5xl">
+                Founder-led, with direct accountability.
+              </h2>
+            </div>
+            <div className="max-w-2xl space-y-5 leading-relaxed text-muted">
+              <p>
+                <strong className="text-ink">{site.founder.name}</strong> is queryclear&apos;s
+                founder and lead operator. He leads strategy, engineering, and delivery,
+                so the person scoping the work remains accountable for the implementation.
+              </p>
+              <p>
+                {site.legal.relationship} {site.legal.serviceFeeNotice}
+              </p>
+              <div className="flex flex-wrap gap-4 text-sm">
+                <Link href="/about" className="ulink font-medium text-ink">
+                  About queryclear
+                </Link>
+                <a
+                  href={site.founder.workUrl}
+                  className="ulink font-medium text-ink"
+                  rel="noopener noreferrer"
+                >
+                  See the broader studio&apos;s published work
+                </a>
+              </div>
+            </div>
+          </div>
+        </Section>
+
+        <Section id="resources" index="08" label="Deepen the method" tone="tinted">
           <div className="grid gap-8 lg:grid-cols-[0.72fr_1.28fr] lg:items-start">
             <div>
               <h2 className="max-w-lg text-4xl sm:text-5xl">
@@ -613,7 +653,7 @@ export default function Home() {
           </div>
         </Section>
 
-        <Section id="faq" index="08" label="Good to know">
+        <Section id="faq" index="09" label="Good to know">
           <div className="grid gap-10 lg:grid-cols-[0.62fr_1.38fr]">
             <div>
               <h2 className="text-4xl sm:text-5xl">Questions, answered.</h2>
@@ -629,7 +669,7 @@ export default function Home() {
         <section id="audit-cta" className="site-section scroll-mt-20 bg-paper-2 py-20 md:py-28">
           <Container className="grid gap-12 lg:grid-cols-[0.88fr_1.12fr] lg:items-center">
             <div>
-              <MonoLabel index="09">Get started</MonoLabel>
+              <MonoLabel index="10">Get started</MonoLabel>
               <h2 className="mt-5 max-w-xl text-4xl sm:text-5xl">
                 <ClipReveal lines={["Show us the site.", "We will find the weak layers."]} />
               </h2>

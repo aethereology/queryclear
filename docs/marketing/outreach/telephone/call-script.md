@@ -44,11 +44,11 @@ morning and lunch. Builders — early, 7:30–9am, before they're on site.
 
 ## Tier A opener — they opened the report (20 people)
 
-These read their audit. Lead with that. Don't pretend you don't know.
+These read their automated readiness preview. Lead with that. Don't pretend you don't know.
 
 > "Hi, is this [first name / the owner]?
 >
-> Kyle here — I'm the one who sent over that AI search report for [business] a couple weeks
+> Kyle here — I'm the one who sent over that website-readiness preview for [business] a couple weeks
 > back. I saw you'd had a look at it, and I never followed up properly, so I figured I'd
 > just call. **Did any of it actually land, or was it not really your problem?**"
 
@@ -58,8 +58,9 @@ Why it works: it's true, it gives them an easy out (which makes people talk), an
 you'd had a look" is a fact you can state plainly — the report page records views.
 
 **If they don't remember it:**
-> "No problem at all — it was a short report on how AI assistants like ChatGPT read your
-> site. Want me to give you the 30-second version, or should I just send the link again?"
+> "No problem at all — it was a short automated review of the public-site signals that
+> search and AI systems can parse. It did not query ChatGPT live. Want me to give you the
+> 30-second version, or should I just send the link again?"
 
 ---
 
@@ -83,7 +84,7 @@ Almost nobody knows. "No idea" is the answer you want — it's permission to kee
 | "No idea." | "That's the honest answer most people give. Want to know what I found when I looked at your site?" |
 | "Not on the radar." | "Fair enough. Can I give you 30 seconds on why I think it's worth being on it, and then you tell me to go away?" |
 | "We already do SEO." | Go to **Objection 2**. |
-| "What's this about?" | "AI search — when people ask ChatGPT for a recommendation instead of googling. I ran a free check on your site and found a few things. Two minutes?" |
+| "What's this about?" | "Modern search readiness — I ran an automated review of your public site and found a few concrete clarity and technical gaps. It was not a live ChatGPT test. Two minutes?" |
 
 ---
 
@@ -101,8 +102,8 @@ small favour to ask, which is disarming.
 > it bounced for me it's bouncing for customers too.
 >
 > That's genuinely worth two minutes on its own. And while I've got you — the reason I was
-> emailing is I'd run a free check on how your site shows up when people ask ChatGPT for a
-> [their service] recommendation. Want the short version?"
+> emailing is I'd run an automated readiness check on the public pages search and AI systems
+> can use as source material. It was not a live ChatGPT test. Want the short version?"
 
 Lead with the bounce. It's a real problem you found, you're telling them for free, and it
 costs them nothing to hear. It also proves you actually looked at their business.
@@ -116,11 +117,12 @@ ask, and reading it back to them is the moment they believe you.
 
 Plain, specific, no jargon:
 
-> "So when someone asks ChatGPT '[their_question_1]' — the assistant doesn't crawl the
-> whole web live, it pulls from sites it can read clearly and trusts enough to name.
+> "For a question like '[their_question_1]', search and AI products may use indexes,
+> retrieval, and public web pages as source material. Clear, specific pages give those
+> systems more explicit facts to work from.
 >
 > When I looked at [their domain], **[the concrete finding]**. Which means for a question
-> like that one, your site isn't really set up to be the answer it hands back yet.
+> like that one, your site provides less explicit source material than it could.
 >
 > It's not a ranking thing, and it's not complicated to fix. Mostly it's how the pages are
 > structured and labelled so the machine can tell what you do, where, and for who."
@@ -140,8 +142,8 @@ Plain, specific, no jargon:
 > "Do you have ChatGPT open? Ask it '[their_question_1]' and tell me what names come back."
 
 **If they're not in the answer** — don't gloat. One beat, then:
-> "Right. And whoever is in there didn't get picked because they're better than you. They
-> got picked because their site was easier to read. That's the whole thing."
+> "That is one live sample, so it does not prove a ranking or explain why those names were
+> selected. It does give us a dated baseline we can record alongside the site findings."
 
 **If they ARE in the answer** — say so cheerfully. You don't lose:
 > "Nice — that's genuinely good. That's one question out of the dozens people ask before
@@ -238,8 +240,8 @@ Leave one. Under 20 seconds. Ask for nothing but a callback.
 > Again, Kyle, [phone number]. Thanks."
 
 **Tier B:**
-> "Hi, Kyle here from queryclear. I sent [business] an email a couple weeks back about how
-> your site shows up in ChatGPT and Google's AI answers — probably landed in spam. Worth
+> "Hi, Kyle here from queryclear. I sent [business] an email a couple weeks back with an
+> automated website-readiness preview — probably landed in spam. Worth
 > two minutes if you're curious. [phone number]. Thanks."
 
 Say your number **twice**, slowly. Don't describe the problem in a voicemail — you'll talk
@@ -275,8 +277,8 @@ them out of calling back.
 
 **5. "Does this actually work? Can you guarantee we'll show up in ChatGPT?"**
 > "No, and anyone telling you they can is lying to you. Nobody controls what ChatGPT says —
-> not me, not Google, not OpenAI. What I can do is fix the reasons a site gets skipped:
-> unreadable structure, missing markup, no clear answers on the page. That's readiness, not a
+> not me, not Google, not OpenAI. What I can do is fix observable site-level gaps:
+> unclear structure, missing markup, and missing answers on the page. That's readiness, not a
 > ranking promise. If you want someone to promise you position one, I'm the wrong call."
 >
 > *This objection is a gift. Answering it this way is the most credible thing you'll say all
@@ -330,18 +332,17 @@ being the honest one is the entire position.
 - ❌ Any invented client, testimonial, review, result, or number of years in business.
 
 **Instead say:**
-- ✅ *"For a question like '[q1]', your site isn't set up to be the answer these tools hand
-  back yet."* — This is what the report actually supports, and it's the phrasing your own
-  email already used.
+- ✅ *"For a question like '[q1]', your public site could provide clearer source material."*
+  — This is a readiness claim supported by the page review, not a claim about a live answer.
 - ✅ *"These are the questions I mapped for your business."* — Accurate: they were mapped
   from their services.
 - ✅ *"Your homepage is missing its page title."* — Only when `technical_finding` says so.
   That one **is** measured. State it flat.
-- ✅ *"I can't promise what ChatGPT will say. I can fix the reasons it skips you."*
+- ✅ *"I can't promise what ChatGPT will say. I can fix the site-level gaps we documented."*
 
 **If they ask "did you actually check ChatGPT for my business?"** — tell the truth:
-> "Not query by query, no. What I did was read your site the way these tools read it and map
-> the questions your customers ask. Checking each one properly is part of the paid audit —
+> "Not query by query, no. What I did was inspect the public pages and map representative
+> buyer questions. Checking named products with a dated, labeled method is part of the paid audit —
 > and honestly, we can check one right now together if you want."
 
 That answer builds more trust than the claim you were tempted to make.

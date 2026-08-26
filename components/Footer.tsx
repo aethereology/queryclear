@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Container, Logo } from "@/components/ui";
 import { companyLinks, resourceColumns, serviceColumns, type NavLink } from "@/lib/navigation";
 import { site } from "@/lib/site";
+import { AnalyticsPreferencesButton } from "@/components/AnalyticsConsent";
 
 const footerLinkClass = "text-paper/80 hover:text-lime";
 
@@ -25,28 +26,33 @@ export function Footer() {
             <FooterSection label="Resources" links={resourceLinks} />
             <FooterSection label="Company" links={companyLinks} />
             <div className="flex flex-col gap-3">
-              <span className="mono-label !text-paper/40">Get started</span>
+              <span className="mono-label !text-paper/70">Get started</span>
               <Link href="/free-audit" className={`text-left ${footerLinkClass}`}>
                 Free AI Search Audit
               </Link>
               <a href={`mailto:${site.email}`} className={footerLinkClass}>
                 {site.email}
               </a>
+              <AnalyticsPreferencesButton measurementId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
             </div>
           </nav>
         </div>
 
         <div className="mt-12 flex flex-col gap-2 border-t border-white/10 pt-6 text-xs text-paper/50">
           <p>
-            queryclear is a{" "}
+            queryclear is operated by{" "}
             <a href={site.parentOrgUrl} className="underline hover:text-lime">
-              SparkCreatives Inc.
-            </a>{" "}
-            brand.
+              {site.legal.operator}
+            </a>
+            , a {site.legal.entityType}. EIN {site.legal.taxId}.
           </p>
           <p>
-            © {new Date().getFullYear()} queryclear. We upgrade websites for
-            modern search. We do not guarantee rankings or AI citations.
+            {site.legal.address.street}, {site.legal.address.city},{" "}
+            {site.legal.address.region} {site.legal.address.postalCode} · {site.legal.serviceFeeNotice}
+          </p>
+          <p>
+            © {new Date().getFullYear()} {site.legal.operator}. We do not guarantee
+            rankings, traffic, leads, recommendations, or AI citations.
           </p>
         </div>
       </Container>
@@ -57,7 +63,7 @@ export function Footer() {
 function FooterSection({ label, links }: { label: string; links: NavLink[] }) {
   return (
     <div className="flex flex-col gap-3">
-      <span className="mono-label !text-paper/40">{label}</span>
+      <span className="mono-label !text-paper/70">{label}</span>
       {links.map((link) => (
         <Link key={link.href} href={link.href} className={footerLinkClass}>
           {link.label}

@@ -75,9 +75,10 @@ test("cold email carries CAN-SPAM footer (postal address + opt-out) and no offer
   assert.ok(!/Get the full/i.test(html), "no offer buttons in the email");
 });
 
-test("honesty: estimated findings use soft phrasing, never a measured claim", () => {
+test("honesty: estimated findings are explicitly modeled, never a measured claim", () => {
   const html = renderOutreachAuditEmail(report({ measured: false }), opts, site);
-  assert.ok(/set up to be the answer assistants like/i.test(html), "soft estimated phrasing");
+  assert.ok(/modeled scenario/i.test(html), "modeled method is disclosed");
+  assert.ok(/not a live check/i.test(html), "live-check limitation is explicit");
   assert.ok(!/When I checked/i.test(html), "must NOT claim a live measured check for an estimate");
 });
 

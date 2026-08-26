@@ -7,11 +7,17 @@ import {
   renderLeadNotificationEmail,
 } from "@/lib/email";
 import { site } from "@/lib/site";
+import {
+  operationsStore,
+  type DeliveryState,
+  type OperationsStore,
+} from "@/lib/operations-store";
+import { readJsonRequest } from "@/lib/json-request";
 
 // Lead capture endpoint.
 // On a valid submission we (1) notify the team and (2) send the prospect a
-// confirmation with next steps. Each email sends independently; a delivery
-// failure never blocks the other or loses the lead (always logged server-side).
+// confirmation with next steps. The lead is durably persisted before either
+// email is attempted; failed notifications remain in the operations outbox.
 // Env: RESEND_API_KEY, LEAD_TO (default site.email), LEAD_FROM.
 
 type Lead = {
@@ -35,10 +41,12 @@ type ValidationResult =
 
 const HONEYPOT_FIELD: HoneypotField = "company";
 const EMAIL_TIMEOUT_MS = 8_000;
+const DOMAIN_LOOKUP_TIMEOUT_MS = 3_000;
+const MAX_REQUEST_BYTES = 16 * 1024;
 const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
 const RATE_LIMIT_MAX = 5;
 const WEBSITE_URL_ERROR =
-  "Please add a valid website URL. Valid websites must start with https://.";
+  "Please add a valid public website URL starting with http:// or https://.";
 
 const leadFields = ["name", "email", "website", "business", "service", "city", "interest", "message"] as const;
 const fieldLimits: Record<LeadField | HoneypotField, number> = {
@@ -62,7 +70,6 @@ const fieldLabels: Record<LeadField, string> = {
   interest: "Interested in",
   message: "Message",
 };
-const rateLimitBuckets = new Map<string, { count: number; resetAt: number }>();
 
 function isEmail(v: unknown): v is string {
   return typeof v === "string" && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
@@ -144,7 +151,12 @@ function validateLead(body: unknown): ValidationResult {
     return { ok: false, status: 422, error: WEBSITE_URL_ERROR };
   }
 
-  if (websiteUrl.protocol !== "https:") {
+  if (
+    !["http:", "https:"].includes(websiteUrl.protocol) ||
+    websiteUrl.username ||
+    websiteUrl.password ||
+    websiteUrl.port
+  ) {
     return { ok: false, status: 422, error: WEBSITE_URL_ERROR };
   }
 
@@ -165,34 +177,28 @@ function validateLead(body: unknown): ValidationResult {
 }
 
 function getClientIp(req: Request) {
+  const trustedIp =
+    req.headers.get("cf-connecting-ip")?.trim() ||
+    req.headers.get("x-real-ip")?.trim();
+  if (trustedIp) return trustedIp;
+
   const forwardedFor = req.headers.get("x-forwarded-for");
   if (forwardedFor) {
     return forwardedFor.split(",")[0]?.trim() || "unknown";
   }
-
-  return (
-    req.headers.get("cf-connecting-ip")?.trim() ||
-    req.headers.get("x-real-ip")?.trim() ||
-    "unknown"
-  );
+  return "unknown";
 }
 
-function checkRateLimit(req: Request): ValidationError | null {
-  const now = Date.now();
-  const ip = getClientIp(req);
-  const bucket = rateLimitBuckets.get(ip);
-
-  if (!bucket || bucket.resetAt <= now) {
-    rateLimitBuckets.set(ip, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS });
-    return null;
-  }
-
-  if (bucket.count >= RATE_LIMIT_MAX) {
-    return { ok: false, status: 429, error: "Please try again later." };
-  }
-
-  bucket.count += 1;
-  return null;
+async function checkRateLimit(store: OperationsStore, req: Request): Promise<ValidationError | null> {
+  const result = await store.rateLimit(
+    "inquiry",
+    getClientIp(req),
+    RATE_LIMIT_MAX,
+    RATE_LIMIT_WINDOW_MS,
+  );
+  return result.allowed
+    ? null
+    : { ok: false, status: 429, error: "Please try again later." };
 }
 
 function emailSubjectText(value: string) {
@@ -227,8 +233,19 @@ async function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
 async function validateWebsiteDomain(
   websiteUrl: URL,
 ): Promise<{ ok: true } | { ok: false; error: string }> {
+  const host = websiteUrl.hostname.toLowerCase();
+  if (host === "localhost" || host.endsWith(".localhost")) {
+    return { ok: false, error: WEBSITE_URL_ERROR };
+  }
+
   try {
-    await dns.resolve4(websiteUrl.hostname);
+    const addresses = await withTimeout(
+      dns.lookup(host, { all: true, verbatim: true }),
+      DOMAIN_LOOKUP_TIMEOUT_MS,
+    );
+    if (!addresses.length || addresses.some(({ address }) => isPrivateOrReservedAddress(address))) {
+      return { ok: false, error: WEBSITE_URL_ERROR };
+    }
     return { ok: true };
   } catch {
     return {
@@ -236,6 +253,38 @@ async function validateWebsiteDomain(
       error: "Please enter a website with a valid, existing domain.",
     };
   }
+}
+
+function isPrivateOrReservedAddress(address: string): boolean {
+  let value = address.toLowerCase().split("%", 1)[0] ?? "";
+  if (value.startsWith("::ffff:")) value = value.slice(7);
+  if (/^\d{1,3}(?:\.\d{1,3}){3}$/.test(value)) {
+    const [a, b, c] = value.split(".").map(Number);
+    return (
+      a === 0 ||
+      a === 10 ||
+      a === 127 ||
+      (a === 100 && b >= 64 && b <= 127) ||
+      (a === 169 && b === 254) ||
+      (a === 172 && b >= 16 && b <= 31) ||
+      (a === 192 && b === 0 && c === 0) ||
+      (a === 192 && b === 0 && c === 2) ||
+      (a === 192 && b === 168) ||
+      (a === 198 && (b === 18 || b === 19)) ||
+      (a === 198 && b === 51 && c === 100) ||
+      (a === 203 && b === 0 && c === 113) ||
+      a >= 224
+    );
+  }
+  return (
+    value === "::" ||
+    value === "::1" ||
+    value.startsWith("fc") ||
+    value.startsWith("fd") ||
+    /^fe[89ab]/.test(value) ||
+    value.startsWith("ff") ||
+    value.startsWith("2001:db8:")
+  );
 }
 
 function teamHtml(lead: Lead) {
@@ -250,25 +299,31 @@ function confirmationText(lead: Lead) {
   return renderAuditConfirmationText(lead, site);
 }
 
-async function sendEmails(lead: Lead) {
+async function sendEmails(
+  lead: Lead,
+  leadId: string,
+): Promise<{ team: DeliveryState; prospect: DeliveryState }> {
   const key = process.env.RESEND_API_KEY;
-  if (!key) return; // delivery not configured — lead is still logged
+  if (!key) return { team: "not_configured", prospect: "not_configured" };
   const resend = new Resend(key);
   const to = process.env.LEAD_TO ?? site.email;
-  const from = process.env.LEAD_FROM ?? "queryclear <onboarding@resend.dev>";
+  const from = process.env.LEAD_FROM ?? `queryclear <${site.email}>`;
 
   const jobs = [
     {
       target: "team",
       promise: withTimeout(
         Promise.resolve().then(async () => {
-          const response = await resend.emails.send({
-            from,
-            to,
-            replyTo: lead.email,
-            subject: `New website inquiry — ${emailSubjectText(lead.business || lead.name)}`,
-            html: teamHtml(lead),
-          });
+          const response = await resend.emails.send(
+            {
+              from,
+              to,
+              replyTo: lead.email,
+              subject: `New website inquiry — ${emailSubjectText(lead.business || lead.name)}`,
+              html: teamHtml(lead),
+            },
+            { idempotencyKey: `lead-${leadId}-team` },
+          );
           assertEmailSent(response);
           return response;
         }),
@@ -279,14 +334,17 @@ async function sendEmails(lead: Lead) {
       target: "confirmation",
       promise: withTimeout(
         Promise.resolve().then(async () => {
-          const response = await resend.emails.send({
-            from,
-            to: lead.email,
-            replyTo: to,
-            subject: "We got your inquiry — next steps",
-            html: confirmationHtml(lead),
-            text: confirmationText(lead),
-          });
+          const response = await resend.emails.send(
+            {
+              from,
+              to: lead.email,
+              replyTo: to,
+              subject: "We got your inquiry — next steps",
+              html: confirmationHtml(lead),
+              text: confirmationText(lead),
+            },
+            { idempotencyKey: `lead-${leadId}-prospect` },
+          );
           assertEmailSent(response);
           return response;
         }),
@@ -296,7 +354,7 @@ async function sendEmails(lead: Lead) {
   ] as const;
 
   const results = await Promise.allSettled(jobs.map((job) => job.promise));
-  results.forEach((result, index) => {
+  const delivery: DeliveryState[] = results.map((result, index) => {
     if (result.status === "rejected") {
       console.error(
         "[lead] delivery failed",
@@ -305,24 +363,48 @@ async function sendEmails(lead: Lead) {
           reason: deliveryErrorReason(result.reason),
         }),
       );
+      return "failed";
     }
+    return "sent";
   });
+  return { team: delivery[0], prospect: delivery[1] };
 }
 
 export async function POST(req: Request) {
-  const rateLimitError = checkRateLimit(req);
+  let store: OperationsStore;
+  try {
+    store = operationsStore();
+  } catch {
+    console.error("[lead] shared storage unavailable");
+    return NextResponse.json(
+      { error: "We couldn't safely save your request. Please email us instead." },
+      { status: 503 },
+    );
+  }
+
+  let rateLimitError: ValidationError | null;
+  try {
+    rateLimitError = await checkRateLimit(store, req);
+  } catch {
+    console.error("[lead] rate limit storage unavailable");
+    return NextResponse.json(
+      { error: "We couldn't safely save your request. Please email us instead." },
+      { status: 503 },
+    );
+  }
   if (rateLimitError) {
     return NextResponse.json({ error: rateLimitError.error }, { status: rateLimitError.status });
   }
 
-  let body: unknown;
-  try {
-    body = await req.json();
-  } catch {
-    return NextResponse.json({ error: "Invalid request." }, { status: 400 });
+  const parsedBody = await readJsonRequest(req, MAX_REQUEST_BYTES);
+  if (!parsedBody.ok) {
+    return NextResponse.json(
+      { error: parsedBody.error },
+      { status: parsedBody.status },
+    );
   }
 
-  const validation = validateLead(body);
+  const validation = validateLead(parsedBody.value);
   if (!validation.ok) {
     return NextResponse.json({ error: validation.error }, { status: validation.status });
   }
@@ -332,7 +414,25 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: domainValidation.error }, { status: 422 });
   }
 
-  // Always record an accepted lead with privacy-safe metadata, regardless of delivery state.
+  const leadId = crypto.randomUUID();
+  const receivedAt = new Date().toISOString();
+  try {
+    await store.saveLead({
+      id: leadId,
+      kind: "inquiry",
+      receivedAt,
+      websiteHost: validation.websiteUrl.hostname,
+      payload: { ...validation.lead, website: validation.websiteUrl.href },
+      delivery: { team: "pending", prospect: "pending", updatedAt: receivedAt },
+    });
+  } catch {
+    console.error("[lead] durable save failed");
+    return NextResponse.json(
+      { error: "We couldn't safely save your request. Please email us instead." },
+      { status: 503 },
+    );
+  }
+
   console.log(
     "[lead]",
     JSON.stringify({
@@ -342,7 +442,24 @@ export async function POST(req: Request) {
     }),
   );
 
-  await sendEmails(validation.lead);
+  let delivery: { team: DeliveryState; prospect: DeliveryState } = {
+    team: "failed",
+    prospect: "failed",
+  };
+  try {
+    delivery = await sendEmails(
+      { ...validation.lead, website: validation.websiteUrl.href },
+      leadId,
+    );
+  } catch {
+    console.error("[lead] notification setup failed");
+  }
+  try {
+    await store.updateLeadDelivery(leadId, { ...delivery, updatedAt: new Date().toISOString() });
+  } catch {
+    // The original durable record remains pending in the outbox.
+    console.error("[lead] delivery status update failed");
+  }
 
   return NextResponse.json({ ok: true });
 }

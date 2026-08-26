@@ -1,11 +1,8 @@
-// Private per-client audit report registry.
+// Public demonstration report registry.
 //
-// Maps an (unguessable) slug → AuditReport, rendered at /reports/[slug] — a
-// noindexed, sitemap-excluded route used to deliver a paid client's report as a
-// private web link (and Save-as-PDF). To add a real client: create
-// lib/reports/<unguessable-slug>.ts exporting an AuditReport (demo: false,
-// variant: "client", verified details only — see docs/playbooks/running-an-audit.md),
-// import it here, and add it to `reports`.
+// Real client data must never be committed or imported here. The paid-report
+// route loads authenticated client reports from private Vercel Blob storage;
+// see docs/playbooks/running-an-audit.md.
 //
 // The committed entry below is a CLEARLY FICTIONAL EXAMPLE (demo: true) so the
 // route builds and can be demonstrated. Goldleaf lives in goldleaf-demo.ts and is
@@ -23,10 +20,10 @@ const rivermarkExample: AuditReport = {
   variant: "client",
   demo: true,
   visibilityTests: [
-    { prompt: "Who's a good family dentist in Rivermark?", result: "Not surfaced", note: "Two chains named; Rivermark Family Dental absent." },
-    { prompt: "Where can I get Invisalign near Rivermark?", result: "Not surfaced", note: "Generic directory results returned." },
-    { prompt: "Does Rivermark Family Dental take new patients?", result: "Unknown", note: "No machine-readable services or new-patient info to cite." },
-    { prompt: "Tell me about Rivermark Family Dental.", result: "Vague / wrong", note: "AI guesses services; can't confirm location or hours." },
+    { prompt: "Who's a good family dentist in Rivermark?", result: "Not surfaced", note: "Illustrative answer names two fictional chains; Rivermark Family Dental is absent.", engine: "Fictional demo", observedAt: "2026-08-25", accessMethod: "Illustrative sample", observationType: "modeled" },
+    { prompt: "Where can I get Invisalign near Rivermark?", result: "Not surfaced", note: "Illustrative answer returns generic directory results.", engine: "Fictional demo", observedAt: "2026-08-25", accessMethod: "Illustrative sample", observationType: "modeled" },
+    { prompt: "Does Rivermark Family Dental take new patients?", result: "Unknown", note: "The fictional source material provides no machine-readable services or new-patient facts.", engine: "Fictional demo", observedAt: "2026-08-25", accessMethod: "Illustrative sample", observationType: "modeled" },
+    { prompt: "Tell me about Rivermark Family Dental.", result: "Vague / wrong", note: "Illustrative answer cannot confirm location, hours, or services.", engine: "Fictional demo", observedAt: "2026-08-25", accessMethod: "Illustrative sample", observationType: "modeled" },
   ],
   scorecard: [
     { layer: "entity-clarity", score: 5, finding: "Practice name and city are on the homepage, but there's no Organization/LocalBusiness schema and no machine-readable summary." },
@@ -64,7 +61,7 @@ const rivermarkExample: AuditReport = {
   },
 };
 
-/** Slug → report. Add real clients here (see this file's header). */
+/** Slug → fictional public demonstration report. Never add real clients. */
 export const reports: Record<string, AuditReport> = {
   [rivermarkExample.slug]: rivermarkExample,
 };

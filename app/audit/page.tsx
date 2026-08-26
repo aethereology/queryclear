@@ -8,7 +8,7 @@ import { site } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Sample Modern Search Readiness Report",
   description:
-    "A sample modern-search readiness report — crawlability, service clarity, local relevance, useful content, metadata, schema, and AI-search readiness, scored against the seven-layer AI Visibility Stack. Built on a fictional med-spa demo business.",
+    "Explore a clearly fictional modern-search report with seven-layer scoring, evidence examples, prioritized fixes, and stated limitations.",
   alternates: { canonical: "/audit" },
   openGraph: {
     title: "Sample Modern Search Readiness Report — queryclear",
@@ -24,7 +24,7 @@ const webPageSchema = {
   url: `${site.url}/audit`,
   description:
     "A sample modern-search readiness report, scored against the AI Visibility Stack, on a fictional med-spa demo business.",
-  isPartOf: { "@type": "WebSite", name: site.name, url: site.url },
+  isPartOf: { "@id": site.schemaIds.website },
 };
 
 const breadcrumbSchema = {

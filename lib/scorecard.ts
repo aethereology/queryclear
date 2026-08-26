@@ -52,8 +52,8 @@ export const ANSWER_LABELS: Record<Answer, string> = {
   no: "No",
 };
 
-// Layer order matches the AI Visibility Stack: a machine has to identify and
-// trust you before it can recommend you, so lower layers come first.
+// Layer order matches the AI Visibility Stack: identity, service clarity, and
+// supporting evidence anchor the higher layers, so foundational gaps come first.
 export const layers: Layer[] = [
   {
     id: "entity-clarity",
@@ -73,7 +73,7 @@ export const layers: Layer[] = [
     id: "proof-density",
     n: "03",
     name: "Proof Density",
-    blurb: "Are there enough credible, specific signals to be treated as trustworthy?",
+    blurb: "Are credible, specific signals visible to support the site's key claims?",
     weight: 14,
   },
   {
@@ -94,7 +94,7 @@ export const layers: Layer[] = [
     id: "machine-readability",
     n: "06",
     name: "Machine Readability",
-    blurb: "Can engines actually crawl, parse, and summarize the site?",
+    blurb: "Can compatible crawlers access and parse the important site content?",
     weight: 18,
   },
   {

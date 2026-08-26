@@ -1,16 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { MonoLabel } from "@/components/ui";
 import { AuditReportView } from "@/components/AuditReportView";
 import type { AuditReportData } from "@/lib/agent-runtime";
+import { trackAnalyticsEvent } from "@/lib/analytics";
 
 interface AuditSummary {
   token: string;
   domainUrl: string;
   pageTitle: string;
   technicalIssues: number;
-  invisibleQueries: number;
+  measuredChecksWithoutCitation: number;
+  modeledSamplesWithoutBrand: number;
   recommendations: number;
   topFindings: { title: string; severity: string }[];
 }
@@ -64,9 +66,20 @@ export function FreeAudit() {
   const [summary, setSummary] = useState<AuditSummary | null>(null);
   const [gatedDomain, setGatedDomain] = useState("");
   const [fullReport, setFullReport] = useState<AuditReportData | null>(null);
+  const urlInputRef = useRef<HTMLInputElement>(null);
+  const resultRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (phase !== "input") resultRef.current?.focus();
+  }, [phase]);
+
+  useEffect(() => {
+    if (error) urlInputRef.current?.focus();
+  }, [error]);
 
   async function runAudit(e: React.FormEvent) {
     e.preventDefault();
+    trackAnalyticsEvent("audit_preview_start");
     setBusy(true);
     setError(null);
     setSummary(null);
@@ -81,9 +94,11 @@ export function FreeAudit() {
       if ((data as { gated?: boolean }).gated) {
         setGatedDomain((data as { domainUrl: string }).domainUrl);
         setPhase("gated");
+        trackAnalyticsEvent("audit_preview_capacity_gate");
       } else {
         setSummary((data as { summary: AuditSummary }).summary);
         setPhase("summary");
+        trackAnalyticsEvent("audit_preview_complete");
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Audit failed.");
@@ -93,17 +108,28 @@ export function FreeAudit() {
   }
 
   if (phase === "full" && fullReport) {
-    return <AuditReportView report={fullReport} />;
+    return (
+      <div
+        ref={resultRef}
+        tabIndex={-1}
+        role="region"
+        aria-label="Full automated audit preview"
+        className="outline-none"
+      >
+        <AuditReportView report={fullReport} />
+      </div>
+    );
   }
 
   return (
     <div className="space-y-8">
-      <form onSubmit={runAudit} className="card p-6 sm:p-8">
+      <form onSubmit={runAudit} aria-busy={busy} className="card p-6 sm:p-8">
         <label htmlFor="fa-url" className="mb-1.5 block text-sm font-medium">
           Your website <span className="text-lime-deep">*</span>
         </label>
         <div className="flex flex-col gap-3 sm:flex-row">
           <input
+            ref={urlInputRef}
             id="fa-url"
             value={url}
             onChange={(e) => setUrl(e.target.value)}
@@ -111,6 +137,7 @@ export function FreeAudit() {
             required
             disabled={busy}
             autoComplete="url"
+            aria-describedby={`fa-url-help${error ? " fa-url-error" : ""}`}
             className={INPUT}
           />
           <button type="submit" disabled={busy} aria-busy={busy} className={`${BTN} shrink-0 sm:w-auto`}>
@@ -119,40 +146,52 @@ export function FreeAudit() {
                 <Spinner /> Auditing…
               </>
             ) : (
-              "Run free audit"
+              "Run free preview"
             )}
           </button>
         </div>
-        <p className="mt-3 text-xs text-muted">
-          Read-only. We crawl public pages and probe AI visibility — we never write to your site.
+        <p id="fa-url-help" className="mt-3 text-xs text-muted">
+          Read-only. We inspect up to five public pages and generate up to five clearly labeled model
+          scenarios, with one sample per question. We never write to your site or query named AI
+          products in this free preview.
         </p>
       </form>
 
       {error ? (
-        <p role="alert" className="card p-5 text-sm text-ink">
+        <p id="fa-url-error" role="alert" className="card p-5 text-sm text-ink">
           <span className="font-medium text-lime-deep">Error: </span>
           {error}
         </p>
       ) : null}
 
       {busy ? (
-        <div className="card flex items-center gap-3 p-5 text-sm text-muted">
+        <div role="status" aria-live="polite" className="card flex items-center gap-3 p-5 text-sm text-muted">
           <span className="h-2 w-2 animate-pulse bg-lime" aria-hidden />
-          Crawling, checking AI visibility, and drafting a sample fix… (~15s)
+          Crawling public pages, running on-page checks, and generating modeled answer scenarios… usually under a minute.
         </div>
       ) : null}
 
-      {phase === "summary" && summary ? (
-        <SummaryCard
-          summary={summary}
-          onUnlock={(report) => {
-            setFullReport(report);
-            setPhase("full");
-          }}
-        />
+      {phase !== "input" ? (
+        <div
+          ref={resultRef}
+          tabIndex={-1}
+          role="region"
+          aria-live="polite"
+          aria-label="Audit preview result"
+          className="outline-none"
+        >
+          {phase === "summary" && summary ? (
+            <SummaryCard
+              summary={summary}
+              onUnlock={(report) => {
+                setFullReport(report);
+                setPhase("full");
+              }}
+            />
+          ) : null}
+          {phase === "gated" ? <CapacityGate domainUrl={gatedDomain} /> : null}
+        </div>
       ) : null}
-
-      {phase === "gated" ? <CapacityGate domainUrl={gatedDomain} /> : null}
     </div>
   );
 }
@@ -169,10 +208,18 @@ function SummaryCard({
       <div className="card p-6 sm:p-8">
         <MonoLabel index="preview">Free preview</MonoLabel>
         <h2 className="mt-3 text-2xl sm:text-3xl">{summary.domainUrl}</h2>
+        <p className="mt-3 max-w-2xl text-xs leading-relaxed text-muted">
+          This is an automated readiness preview, not a live test of ChatGPT, Claude, Google AI
+          Overviews, or another named engine. On-page findings come from the public pages we fetched;
+          answer results are single-sample scenarios generated by a general language model.
+        </p>
         <div className="mt-6 flex flex-wrap gap-8">
-          <Stat n={summary.technicalIssues} label="Technical issues" />
-          <Stat n={summary.invisibleQueries} label="Invisible queries" />
-          <Stat n={summary.recommendations} label="Recommendations" />
+          <Stat n={summary.technicalIssues} label="On-page findings" />
+          {summary.measuredChecksWithoutCitation > 0 ? (
+            <Stat n={summary.measuredChecksWithoutCitation} label="Measured checks without citation" />
+          ) : null}
+          <Stat n={summary.modeledSamplesWithoutBrand} label="Model samples without brand" />
+          <Stat n={summary.recommendations} label="Suggested actions" />
         </div>
         {summary.topFindings.length > 0 ? (
           <ul className="mt-6 divide-y divide-line border-t border-dashed border-line">
@@ -205,6 +252,12 @@ function UnlockForm({
   const [email, setEmail] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const uid = useId();
+  const emailRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (error) emailRef.current?.focus();
+  }, [error]);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -226,7 +279,10 @@ function UnlockForm({
         report?: AuditReportData;
       };
       if (!res.ok) throw new Error(data.error ?? "Something went wrong.");
-      if (data.report) onUnlock(data.report);
+      if (data.report) {
+        trackAnalyticsEvent("generate_lead", { lead_type: "free_audit_unlock" });
+        onUnlock(data.report);
+      }
       else throw new Error("This report expired — please run the audit again.");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong.");
@@ -236,12 +292,20 @@ function UnlockForm({
   }
 
   return (
-    <form onSubmit={submit} className="card card-marker p-6 sm:p-8">
+    <form onSubmit={submit} aria-busy={busy} className="card card-marker p-6 sm:p-8">
       <MonoLabel index="unlock">Full report</MonoLabel>
-      <h3 className="mt-3 text-xl sm:text-2xl">Prioritized fixes + a sample draft in your brand voice.</h3>
-      <p className="mt-2 text-sm text-muted">Enter your email and we&apos;ll unlock the complete audit instantly.</p>
+      <h3 className="mt-3 text-xl sm:text-2xl">Prioritized observations + a sample draft based on your site.</h3>
+      <p id={`${uid}-unlock-help`} className="mt-2 text-sm text-muted">
+        Enter your email to deliver and unlock this automated preview. It is not a subscription to
+        marketing email.
+      </p>
+      <label htmlFor={`${uid}-unlock-email`} className="sr-only">
+        Work email
+      </label>
       <div className="mt-5 flex flex-col gap-3 sm:flex-row">
         <input
+          ref={emailRef}
+          id={`${uid}-unlock-email`}
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -249,25 +313,27 @@ function UnlockForm({
           required
           disabled={busy}
           autoComplete="email"
+          aria-describedby={`${uid}-unlock-help${error ? ` ${uid}-unlock-error` : ""}`}
           className={INPUT}
         />
-        <button type="submit" disabled={busy} className={`${BTN} shrink-0 sm:w-auto`}>
+        <button type="submit" disabled={busy} aria-busy={busy} className={`${BTN} shrink-0 sm:w-auto`}>
           {busy ? (
             <>
               <Spinner /> Unlocking…
             </>
           ) : (
-            "Show full report"
+            "Deliver my preview"
           )}
         </button>
       </div>
       {error ? (
-        <p role="alert" className="mt-3 text-sm text-red-700">
+        <p id={`${uid}-unlock-error`} role="alert" className="mt-3 text-sm text-red-700">
           {error}
         </p>
       ) : null}
       <p className="mt-3 text-xs text-muted">
-        We&apos;ll email occasional, useful AI-search tips. No spam; unsubscribe anytime.
+        We use this address to deliver the requested report and respond about it. Any marketing
+        messages require separate consent.
       </p>
     </form>
   );
@@ -278,6 +344,12 @@ function CapacityGate({ domainUrl }: { domainUrl: string }) {
   const [done, setDone] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const uid = useId();
+  const emailRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (error) emailRef.current?.focus();
+  }, [error]);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -295,6 +367,7 @@ function CapacityGate({ domainUrl }: { domainUrl: string }) {
       });
       const data = (await res.json().catch(() => ({}))) as { error?: string };
       if (!res.ok) throw new Error(data.error ?? "Something went wrong.");
+      trackAnalyticsEvent("generate_lead", { lead_type: "manual_audit_followup" });
       setDone(true);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong.");
@@ -305,22 +378,28 @@ function CapacityGate({ domainUrl }: { domainUrl: string }) {
 
   if (done) {
     return (
-      <div className="card card-marker p-6 text-sm text-ink sm:p-8">
+      <div role="status" className="card card-marker p-6 text-sm text-ink sm:p-8">
         <MonoLabel index="queued">Request received</MonoLabel>
-        <p className="mt-3">We&apos;ll email your audit for {domainUrl} shortly.</p>
+        <p className="mt-3">We&apos;ll follow up about a manual review of {domainUrl}.</p>
       </div>
     );
   }
 
   return (
-    <form onSubmit={submit} className="card card-marker p-6 sm:p-8">
-      <MonoLabel index="capacity">High demand today</MonoLabel>
-      <h3 className="mt-3 text-xl sm:text-2xl">We&apos;re at capacity for the free tier.</h3>
-      <p className="mt-2 text-sm text-muted">
-        Leave your email and we&apos;ll send your full audit for {domainUrl} as soon as a slot opens.
+    <form onSubmit={submit} aria-busy={busy} className="card card-marker p-6 sm:p-8">
+      <MonoLabel index="capacity">Automated limit reached</MonoLabel>
+      <h3 className="mt-3 text-xl sm:text-2xl">Today&apos;s automated preview limit has been reached.</h3>
+      <p id={`${uid}-capacity-help`} className="mt-2 text-sm text-muted">
+        Leave your email to request a manual follow-up about {domainUrl}. We won&apos;t claim an
+        automated report was completed when it wasn&apos;t.
       </p>
+      <label htmlFor={`${uid}-capacity-email`} className="sr-only">
+        Work email
+      </label>
       <div className="mt-5 flex flex-col gap-3 sm:flex-row">
         <input
+          ref={emailRef}
+          id={`${uid}-capacity-email`}
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -328,20 +407,21 @@ function CapacityGate({ domainUrl }: { domainUrl: string }) {
           required
           disabled={busy}
           autoComplete="email"
+          aria-describedby={`${uid}-capacity-help${error ? ` ${uid}-capacity-error` : ""}`}
           className={INPUT}
         />
-        <button type="submit" disabled={busy} className={`${BTN} shrink-0 sm:w-auto`}>
+        <button type="submit" disabled={busy} aria-busy={busy} className={`${BTN} shrink-0 sm:w-auto`}>
           {busy ? (
             <>
               <Spinner /> Sending…
             </>
           ) : (
-            "Email me the audit"
+            "Request manual follow-up"
           )}
         </button>
       </div>
       {error ? (
-        <p role="alert" className="mt-3 text-sm text-red-700">
+        <p id={`${uid}-capacity-error`} role="alert" className="mt-3 text-sm text-red-700">
           {error}
         </p>
       ) : null}

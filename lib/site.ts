@@ -7,14 +7,43 @@ export const site = {
   url: "https://www.queryclear.com",
   tagline: "Modern SEO for the AI search era.",
   description:
-    "queryclear helps service businesses upgrade their websites for modern search — clearer service pages, crawlability, metadata, schema, local signals, and AI-search readiness across Google, ChatGPT, Claude, Perplexity, Gemini, and Bing Copilot.",
+    "queryclear audits and upgrades service-business websites so public facts, proof, services, and conversion paths are clearer to people and search systems.",
   parentOrg: "SparkCreatives Inc.",
   parentOrgUrl: "https://sparkcreativesinc.org",
-  // The free AI Search Audit is the primary action everywhere — an instant,
+  legal: {
+    termsVersion: "2026-08-25",
+    privacyVersion: "2026-08-25",
+    operator: "SparkCreatives Inc.",
+    relationship: "queryclear is a brand operated by SparkCreatives Inc.",
+    entityType: "Florida not-for-profit corporation recognized as tax-exempt under Section 501(c)(3)",
+    taxId: "33-4477854",
+    address: {
+      street: "6120 Caladesi Ct",
+      city: "Jacksonville",
+      region: "FL",
+      postalCode: "32258",
+      country: "US",
+    },
+    serviceFeeNotice:
+      "queryclear service fees are payments for services, not charitable contributions.",
+  },
+  founder: {
+    name: "Kyle",
+    role: "Founder and lead operator",
+    studioName: "Aethelo",
+    studioUrl: "https://aethelo.sparkcreativesinc.org/about",
+    workUrl: "https://aethelo.sparkcreativesinc.org/projects",
+  },
+  schemaIds: {
+    organization: "https://sparkcreativesinc.org/#organization",
+    brand: "https://www.queryclear.com/#brand",
+    website: "https://www.queryclear.com/#website",
+  },
+  // The free AI Search Audit is the primary action everywhere — an automated,
   // read-only automated audit at /free-audit (replaced the manual "Snapshot"
   // lead magnet 2026-06-17; see Decisions.md). This is a real page navigation,
   // not an overlay trigger.
-  primaryCta: { label: "Run a free AI Search Audit", href: "/free-audit" },
+  primaryCta: { label: "Run a free readiness preview", href: "/free-audit" },
   secondaryCta: { label: "See what we optimize", href: "#solution" },
   // The lead form is now only the higher-intent "edit / rebuild my website"
   // inquiry. The two service offers (Upgrade/Build) open it via <SnapshotCta>;
@@ -32,7 +61,7 @@ export const site = {
     "Bing Copilot",
   ],
   // Public offer ladder (free audit replaced the manual Snapshot 2026-06-17;
-  // see Decisions.md). Free Audit is the instant lead magnet; Audit is the
+  // see Decisions.md). Free Audit is the automated lead magnet; Audit is the
   // paid diagnostic; Upgrade is the main offer; Build is the top tier. "from"
   // prices are floors, not quotes. `need` preselects the lead form's "What do
   // you need?" select when the offer's CTA opens the inquiry overlay (must
@@ -44,15 +73,15 @@ export const site = {
     {
       name: "Free AI Search Audit",
       price: "Free",
-      desc: "An instant, read-only audit of your site's search clarity, technical foundation, and where AI answer engines can't yet find you.",
+      desc: "An automated, read-only readiness preview of your public site: technical checks, clarity signals, and a short prioritized fix list.",
       href: "/free-audit",
-      cta: "Run a free audit",
+      cta: "Run the free preview",
       need: null,
     },
     {
       name: "AI Search Audit",
       price: "$497",
-      desc: "A scored report, walked through with you live: prompt testing, page review, technical findings, and a prioritized roadmap. The $497 is credited in full toward a Website Upgrade if you go ahead.",
+      desc: "A human-reviewed, evidence-linked report for one public website, plus labeled answer checks, a 45-minute walkthrough, and a prioritized roadmap.",
       href: "/ai-visibility-audit",
       cta: "See what's in the audit",
       need: null,
@@ -64,16 +93,16 @@ export const site = {
     {
       name: "Website Upgrade",
       price: "from $2,500",
-      desc: "Done-for-you improvements to the site you have: service pages, metadata, FAQs, schema, crawlability, internal links, and conversion paths. Includes the Local AI Visibility Stack (playbook + templates) free.",
-      href: "#audit-cta",
+      desc: "A fixed-scope improvement sprint for an existing site. The base scope covers up to five priority pages, technical foundations, structured data, internal links, and conversion paths.",
+      href: "/website-upgrade",
       cta: "Upgrade my site",
       need: "Website Upgrade",
     },
     {
       name: "Modern Search Website Build",
       price: "from $6,500",
-      desc: "A full website build for businesses that need a clearer, faster, more useful, and more search-ready foundation.",
-      href: "#audit-cta",
+      desc: "A new, client-owned marketing site with up to seven core pages, verified copy structure, technical SEO, analytics setup, lead capture, and launch QA.",
+      href: "/ai-search-ready-website",
       cta: "Talk about a build",
       need: "Modern Search Website Build",
     },
@@ -88,6 +117,33 @@ export const site = {
     priceLabel: "$497",
     currency: "usd",
     unitAmount: 49700, // cents, for Stripe
+    deliveryBusinessDays: 7,
+    delivery: "Within 7 business days after complete intake",
+    walkthroughMinutes: 45,
+    pageLimit: 10,
+    // Total prompt-engine observations, not 12 prompts on every engine. Each
+    // execution of one prompt against one named engine consumes one observation.
+    promptLimit: 12,
+    engineLimit: 3,
+    correctionRounds: 1,
+    creditDays: 60,
+    creditMinimumImplementationUsd: 2500,
+  },
+  upgrade: {
+    name: "Website Upgrade",
+    path: "/website-upgrade",
+    priceLabel: "from $2,500",
+    pageLimit: 5,
+    typicalTimeline: "2–4 weeks after intake, access, and source materials are complete",
+    revisionRounds: 1,
+  },
+  websiteBuild: {
+    name: "Modern Search Website Build",
+    path: "/ai-search-ready-website",
+    priceLabel: "from $6,500",
+    pageLimit: 7,
+    typicalTimeline: "4–8 weeks after kickoff and receipt of required materials",
+    revisionRounds: 2,
   },
   // T14 demand-test offer. The product is NOT built yet — this is a refundable
   // pre-order to measure demand (GATE-MODEL). Keep every claim honest.
@@ -130,12 +186,11 @@ export const site = {
       "Founding pre-order. The Local AI Visibility Stack ships within 30 days of purchase. Full refund anytime before delivery — just email us. If we miss 30 days, we refund you automatically.",
   },
   // Recurring offer for the local/service track (added 2026-06-23; see
-  // Decisions.md). queryclear's first SUBSCRIPTION product — a human-delivered
-  // monthly retainer that keeps a site's modern-search readiness from drifting
-  // after an upgrade. Distinct from the agentic B2B `operator`: this is
-  // human-delivered, local, and self-serve. Self-serve Stripe Checkout in
-  // `subscription` mode (see app/api/checkout/route.ts). Honest framing only:
-  // we report what we measure; we never guarantee rankings or AI citations.
+  // Decisions.md). queryclear's first subscription product: a human-delivered
+  // monthly retainer for maintaining an eligible site's modern-search foundation.
+  // Enrollment follows an eligibility review; billing is not publicly self-serve.
+  // Honest framing only: we report what we measure; we never guarantee rankings
+  // or AI citations.
   carePlan: {
     name: "AI Search Care Plan",
     path: "/care-plan",
@@ -153,19 +208,19 @@ export const site = {
       },
       {
         title: "Up to two updates a month",
-        desc: "Small content or schema changes applied to your live site as search and AI systems shift — handled for you, no queue.",
+        desc: "Up to two small, pre-approved page-level content, metadata, schema, or internal-link changes. Updates do not roll over.",
       },
       {
         title: "A measured score + citation watch",
-        desc: "We track your readiness score and how AI answer engines describe your business, and report what we actually find — no guesswork.",
+        desc: "We track the readiness rubric and labeled answer samples over time, documenting the engine, method, prompt, and date used.",
       },
       {
         title: "A real person on call",
-        desc: "Reply to any report and a person answers — priority over one-off requests, with no extra ticket system.",
+        desc: "Reply to any report for questions about the included work. New pages, redesigns, and custom development are scoped separately.",
       },
     ],
     terms:
-      "$997/month, billed monthly. Cancel anytime — no contract and no cancellation fee. We report what we measure; we do not guarantee rankings or AI citations.",
+      "$997/month after an eligibility review. Month-to-month under the enrollment order and Terms; cancel before the next renewal. We report what we measure and do not guarantee rankings or AI citations.",
   },
   // Second track (added 2026-06-15; see Decisions.md). queryclear's recurring
   // "operator" offering for B2B SaaS teams: an agent that does the modern-search
@@ -176,7 +231,9 @@ export const site = {
   // unattended. No public monthly price yet — early access / talk to us.
   operator: {
     name: "AI Search Operator",
-    // One-liner reused on the homepage two-track band, the page hero, and nav.
+    // This unlaunched secondary-ICP page is intentionally not linked from the
+    // primary launch journey, sitemap, or llms.txt. Keep it direct/noindex until
+    // the separate offer is validated.
     tagline:
       "An agent that does the modern-search work continuously — and you approve every move.",
     status: "Early access",

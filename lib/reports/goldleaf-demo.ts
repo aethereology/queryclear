@@ -20,12 +20,12 @@ export const goldleafDemo: AuditReport = {
 
   // AI-visibility test prompts (patterns from prompts.md), recorded results.
   visibilityTests: [
-    { prompt: `Who are the best med spas in ${market}?`, result: "Not surfaced", note: "Three competitors named; Goldleaf absent." },
-    { prompt: `Where can I get Botox near ${market}?`, result: "Not surfaced", note: "Directory and chain results returned." },
-    { prompt: `Recommend a trustworthy med spa for fillers in ${market}.`, result: "Not surfaced", note: "No specific local providers named." },
-    { prompt: `Tell me about ${business}.`, result: "Vague / wrong", note: "AI invents treatments; can't confirm location or services." },
-    { prompt: `Does Goldleaf offer laser hair removal?`, result: "Unknown", note: "No machine-readable service list to cite." },
-    { prompt: `Who are the providers at Goldleaf, and are they licensed?`, result: "Unknown", note: "No credentials or medical oversight stated anywhere." },
+    { prompt: `Who are the best med spas in ${market}?`, result: "Not surfaced", note: "Illustrative answer names three fictional competitors; Goldleaf is absent.", engine: "Fictional demo", observedAt: "2026-08-25", accessMethod: "Illustrative sample", observationType: "modeled" },
+    { prompt: `Where can I get Botox near ${market}?`, result: "Not surfaced", note: "Illustrative answer returns directory and chain results.", engine: "Fictional demo", observedAt: "2026-08-25", accessMethod: "Illustrative sample", observationType: "modeled" },
+    { prompt: `Recommend a trustworthy med spa for fillers in ${market}.`, result: "Not surfaced", note: "Illustrative answer names no specific local provider.", engine: "Fictional demo", observedAt: "2026-08-25", accessMethod: "Illustrative sample", observationType: "modeled" },
+    { prompt: `Tell me about ${business}.`, result: "Vague / wrong", note: "Illustrative answer cannot confirm treatments, location, or services.", engine: "Fictional demo", observedAt: "2026-08-25", accessMethod: "Illustrative sample", observationType: "modeled" },
+    { prompt: "Does Goldleaf offer laser hair removal?", result: "Unknown", note: "The fictional source material has no machine-readable service list.", engine: "Fictional demo", observedAt: "2026-08-25", accessMethod: "Illustrative sample", observationType: "modeled" },
+    { prompt: "Who are the providers at Goldleaf, and are they licensed?", result: "Unknown", note: "The fictional source material states no credentials or medical oversight.", engine: "Fictional demo", observedAt: "2026-08-25", accessMethod: "Illustrative sample", observationType: "modeled" },
   ],
 
   // Scored against the 7 layers of the AI Visibility Stack (each 0–10).

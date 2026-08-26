@@ -355,7 +355,7 @@ metrics, plan upkeep. No third parties.
 4. **Operator pricing floor** before design partner #2.
 5. **Social strategy reset:** channel roles, cadence, account ownership, and
    measurement will be decided in the replacement plan.
-6. **Font licensing risk** (RZ Regular/Hagrid Trial in prod) — accepted by
+6. **Font licensing risk** (RZ Regular/Hagrid Trial in the legacy deployment; removed from current source) — previously accepted by
    founder 2026-07-08; noted here because "trustworthy" is a brand pillar.
 7. **Next-metro sequence confirmation:** Orlando → Tampa → St. Augustine →
    Miami assumed; reorder freely.

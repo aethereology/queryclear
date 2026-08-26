@@ -14,17 +14,17 @@ export const metadata: Metadata = {
 
 // A few high-value destinations so a 404 still routes people somewhere useful.
 const destinations = [
-  { href: "/ai-visibility-audit", label: "AI visibility audit", note: "See how AI search understands your business." },
+  { href: "/ai-visibility-audit", label: "AI visibility audit", note: "Review your website's modern-search readiness." },
   { href: "/ai-visibility-stack", label: "The AI Visibility Stack", note: "The 7-layer method we audit and build against." },
   { href: "/audit", label: "Sample audit", note: "A full example audit on a fictional business." },
-  { href: "/contact", label: "Contact", note: "Ask a question or request a real audit." },
+  { href: "/contact", label: "Contact", note: "Ask a question or request a human-reviewed audit." },
 ];
 
 export default function NotFound() {
   return (
     <>
       <Header />
-      <main>
+      <main id="main-content">
         <section className="border-b border-line">
           <Container className="py-20 md:py-28">
             <MonoLabel index="404">Page not found</MonoLabel>

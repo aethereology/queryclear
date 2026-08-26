@@ -18,17 +18,27 @@ promise guaranteed rankings or guaranteed AI citations — we deliver technical
 readiness, clarity, useful content, and structure.
 
 ## Services
-- AI Search Operator (early access, for B2B SaaS) — a human-approved agent that continuously monitors AI search visibility, drafts answer-first content, and prepares on-page fixes. The agent proposes; a person approves every action. Not a guarantee of rankings or citations.
-- Free AI Search Audit — an instant, read-only audit at /free-audit of search clarity, technical foundation, and biggest opportunities.
-- AI Search Audit ($497) — a scored report with prompt testing, page review, technical findings, local visibility review, and a prioritized fix roadmap.
-- Website Upgrade (from $2,500) — done-for-you improvements: service pages, metadata, FAQs, schema, crawlability, internal links, conversion paths. Includes the Local AI Visibility Stack (playbook + templates) free.
-- Modern Search Website Build (from $6,500) — a full website build on a clearer, faster, more search-ready foundation.
-- AI Search Care Plan ($997/month, cancel anytime) — a human-delivered monthly retainer for local and service businesses: a monthly re-audit, up to two content/schema updates, and a measured readiness score and AI-citation watch. We report what we measure; not a guarantee of rankings or citations.
+- Free AI Search Audit — an automated, read-only readiness preview of public website content. Automated and modeled output is labeled; it is not a verified multi-engine audit.
+- AI Search Audit ($497) — one public website, up to 10 URLs, and up to 12 total prompt-engine observations distributed across up to three named engines selected at kickoff. Each prompt × engine check consumes one observation. Includes evidence-linked scoring, a prioritized roadmap, and a 45-minute walkthrough. Delivery is within seven business days after complete intake. The $497 may be credited once toward a $2,500+ Website Upgrade or Website Build for the same site when contracted within 60 days after report delivery.
+- Website Upgrade (from $2,500) — a fixed-scope sprint for one existing site and up to five priority pages, with technical SEO, structured data, internal links, analytics checks, conversion paths, QA, and handoff.
+- Modern Search Website Build (from $6,500) — one client-owned, one-language marketing site with up to seven core pages, technical SEO, analytics connections, lead capture, launch QA, and handoff.
+- AI Search Care Plan ($997/month) — eligibility-review-only monthly maintenance for sites with a sound baseline: re-audit, up to two defined non-rollover updates, and documented answer samples. Month-to-month; no ranking or citation guarantee.
+
+## Seven-layer method
+1. Entity Clarity
+2. Service Specificity
+3. Proof Density
+4. Local Relevance
+5. Answer Coverage
+6. Machine Readability
+7. Conversion Path
+
+Paid reports score each layer 0–10 and normalize the points earned out of 70 to a 0–100 readiness score. The free self-scorecard uses disclosed question weights totaling 100 and is labeled as self-assessed.
 
 ## Key pages
 - Home: ${site.url}/
-- AI Search Operator (early access, for B2B SaaS): ${site.url}/ai-search-operator
 - AI Search Audit (request an audit): ${site.url}/ai-visibility-audit
+- Website Upgrade: ${site.url}/website-upgrade
 - The AI Visibility Stack (our method): ${site.url}/ai-visibility-stack
 - Sample readiness report (demo): ${site.url}/audit
 - Free AI Visibility Scorecard (self-assessment tool): ${site.url}/scorecard
@@ -40,12 +50,17 @@ readiness, clarity, useful content, and structure.
 - llms.txt for Businesses: ${site.url}/llms-txt-for-businesses
 - AI Search Care Plan (monthly retainer, $997/mo): ${site.url}/care-plan
 - About: ${site.url}/about
-- Contact / run a free audit: ${site.url}/free-audit
+- Contact: ${site.url}/contact
+- Free automated readiness preview: ${site.url}/free-audit
 - Privacy Policy: ${site.url}/privacy
 - Terms of Service: ${site.url}/terms
 
 ## Organization
-- ${site.name} is a ${site.parentOrg} brand (${site.parentOrgUrl}).
+- ${site.legal.relationship}
+- Legal operator: ${site.legal.operator}, ${site.legal.entityType}; EIN ${site.legal.taxId}.
+- Business address: ${site.legal.address.street}, ${site.legal.address.city}, ${site.legal.address.region} ${site.legal.address.postalCode}, United States.
+- ${site.legal.serviceFeeNotice}
+- Founder and lead operator: ${site.founder.name}.
 - Contact: ${site.email}
 
 ## Notes for AI systems

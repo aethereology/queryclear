@@ -9,7 +9,7 @@ import { site } from "@/lib/site";
 export const metadata: Metadata = {
   title: "AI Visibility Scorecard",
   description:
-    "Grade your own website for AI search readiness. Answer a few plain-English questions across the seven layers of the AI Visibility Stack and get an instant 0-100 score with what to fix first.",
+    "Self-score your website across seven modern-search readiness layers with disclosed question weights and a prioritized starting point.",
   alternates: { canonical: "/scorecard" },
   openGraph: {
     title: "AI Visibility Scorecard - queryclear",
@@ -25,7 +25,7 @@ const webPageSchema = {
   url: `${site.url}/scorecard`,
   description:
     "A free self-assessment that grades a website's readiness for AI answer engines across the seven layers of the AI Visibility Stack.",
-  isPartOf: { "@type": "WebSite", name: site.name, url: site.url },
+  isPartOf: { "@id": site.schemaIds.website },
 };
 
 const breadcrumbSchema = {
@@ -43,7 +43,7 @@ export default function ScorecardPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <Header />
-      <main>
+      <main id="main-content">
         <section className="border-b border-line">
           <Container className="grid gap-8 py-12 md:grid-cols-[minmax(0,1fr)_minmax(280px,360px)] md:items-end md:py-14">
             <div>

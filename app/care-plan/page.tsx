@@ -3,7 +3,6 @@ import Link from "next/link";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Container, MonoLabel, Cta } from "@/components/ui";
-import { CheckoutButton } from "@/components/CheckoutButton";
 import { Stagger, StaggerItem } from "@/components/motion";
 import { Accordion } from "@/components/Accordion";
 import { LeadForm } from "@/components/LeadForm";
@@ -14,38 +13,52 @@ const plan = site.carePlan;
 export const metadata: Metadata = {
   title: "AI Search Care Plan",
   description:
-    "Keep your site's modern-search readiness from drifting. The AI Search Care Plan is a human-delivered monthly retainer ($997/month, cancel anytime): a re-audit, up to two updates a month, and a measured score and AI-citation watch. We report what we measure — never a guarantee of rankings or citations.",
+    "Monthly modern-search maintenance for eligible service websites: a re-audit, up to two defined updates, and documented answer samples for $997/month.",
   alternates: { canonical: "/care-plan" },
   openGraph: {
     title: "AI Search Care Plan — queryclear",
     description:
-      "A human-delivered monthly retainer that keeps your site clear to search and AI engines as they change. $997/month, cancel anytime.",
+      "Human-delivered maintenance for eligible service websites: $997/month under a month-to-month enrollment.",
   },
 };
 
 const steps = [
   {
     t: "We set the baseline",
-    d: "Month one, we re-audit your site across the seven readiness layers and record where AI answer engines stand on your business today.",
+    d: "Month one, we re-audit your public site across the seven readiness layers and record labeled answer samples for the agreed prompts and engines.",
   },
   {
     t: "We keep it current",
-    d: "Each month we apply up to two content or schema updates and re-check the score, so your site keeps pace as search and AI systems shift.",
+    d: "Each month we apply up to two pre-approved, defined updates and re-score the agreed public pages.",
   },
   {
     t: "You see what moved",
-    d: "You get a short, plain-English report: what we changed, what the score did, and how AI engines describe you now. No dashboards to babysit.",
+    d: "You get a short report documenting what changed, how the readiness score moved, and what the labeled answer samples showed.",
   },
+];
+
+const eligibility = [
+  "The site has completed a queryclear audit, upgrade, or build — or passes a baseline review before enrollment",
+  "You can provide authorized CMS or repository access and approve changes before publication",
+  "The existing platform can support scoped content, metadata, schema, and internal-link updates without a rebuild",
+  "There is one named client approver and verified source material for every business, service, credential, and regulated claim",
+];
+
+const boundaries = [
+  "One update means one small change to one existing page or shared template: copy, metadata, schema, or internal links",
+  "Up to two updates are included per billing month and unused updates do not roll over",
+  "New pages, redesigns, migrations, custom development, emergency fixes, and third-party fees are quoted separately",
+  "Changes are scheduled after required access, source material, and approval are available",
 ];
 
 const faqs = [
   {
-    q: "How is this different from the AI Search Operator?",
-    a: "The AI Search Operator is an agentic product for B2B SaaS teams (early access) — software that proposes work for a person to approve. The Care Plan is human-delivered monthly work for local and service businesses: we do the re-audit and updates ourselves.",
+    q: "How is this different from a one-time upgrade?",
+    a: "A Website Upgrade is a fixed-scope implementation project. The Care Plan is human-delivered monthly maintenance for an eligible existing site: a re-audit, up to two defined updates, and documented answer samples.",
   },
   {
-    q: "Do I have to sign a contract?",
-    a: "No. It's month-to-month at $997/month. Cancel anytime, no cancellation fee — you keep the month you've paid for.",
+    q: "Is there a long-term contract?",
+    a: "No. The plan is month-to-month at $997/month after eligibility is approved. Cancel before the next renewal to stop future billing; service continues through the paid billing period. Fees already billed are not prorated except where required by law.",
   },
   {
     q: "Do you guarantee my rankings or AI citations will improve?",
@@ -57,7 +70,7 @@ const faqs = [
   },
   {
     q: "How do I cancel?",
-    a: `Anytime — from the link on your Stripe receipt, or just email ${site.email} and we'll take care of it. No retention runaround.`,
+    a: `Email ${site.email} before the next renewal. We confirm the effective cancellation date in writing. There is no cancellation fee or long-term commitment.`,
   },
 ];
 
@@ -68,7 +81,7 @@ const webPageSchema = {
   url: `${site.url}/care-plan`,
   description:
     "A human-delivered monthly retainer that keeps a website's modern-search readiness current: re-audit, updates, and a measured score and citation watch.",
-  isPartOf: { "@type": "WebSite", name: site.name, url: site.url },
+  isPartOf: { "@id": site.schemaIds.website },
 };
 
 const serviceSchema = {
@@ -76,9 +89,10 @@ const serviceSchema = {
   "@type": "Service",
   name: plan.name,
   serviceType: "Recurring modern SEO / AI search readiness retainer",
-  provider: { "@type": "Organization", name: site.name, url: site.url },
+  provider: { "@id": site.schemaIds.organization },
+  brand: { "@id": site.schemaIds.brand },
   description:
-    "A monthly retainer that maintains a website's readiness for search engines and AI answer engines: a monthly re-audit, up to two content or schema updates, and a measured readiness score and AI-citation watch.",
+    "Eligibility-reviewed monthly website maintenance: a re-audit, up to two bounded updates, and documented answer samples.",
   areaServed: "United States",
   offers: {
     "@type": "Offer",
@@ -121,29 +135,27 @@ export default function CarePlanPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <Header />
-      <main>
+      <main id="main-content">
         {/* Hero */}
         <section className="border-b border-line">
           <Container className="py-16 md:py-20">
             <MonoLabel index="care">{plan.name} · {plan.priceLabel}</MonoLabel>
             <h1 className="mt-5 max-w-3xl text-4xl sm:text-5xl">
-              Keep your site clear to AI — every month, not just once.
+              Maintain your site&apos;s modern-search foundation each month.
             </h1>
             <p className="mt-5 max-w-2xl leading-relaxed text-muted">
-              A one-time audit or upgrade fixes today. But search engines and AI
-              answer engines keep changing — and a site that was clear last quarter
-              can quietly drift. The {plan.name} is a human-delivered monthly retainer
-              that keeps your readiness current: a re-audit, hands-on updates, and a
-              report on how AI engines actually describe your business.
+              A human-delivered maintenance plan for sites that already have a sound
+              baseline. Each month includes a re-audit, up to two clearly bounded
+              updates, and documented answer samples. We confirm platform, access,
+              baseline, and approval fit before billing begins.
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
-              <CheckoutButton product="care-plan" label={`Start the Care Plan — ${plan.priceLabel}`} />
-              <Cta href="#care-cta" variant="ghost">Talk to us first</Cta>
+              <Cta href="#care-cta">Check eligibility</Cta>
               <Cta href="/free-audit" variant="ghost">Run a free audit</Cta>
             </div>
             <p className="mt-3 text-xs text-muted">
-              Secure recurring checkout via Stripe. {plan.priceLabel}, billed monthly —
-              cancel anytime, no contract.
+              {plan.priceLabel}, billed month-to-month after written eligibility
+              approval. No long-term commitment.
             </p>
           </Container>
         </section>
@@ -178,10 +190,39 @@ export default function CarePlanPage() {
           </Container>
         </section>
 
-        {/* How it works */}
         <section className="border-b border-line bg-paper-2 py-16">
+          <Container className="grid gap-10 md:grid-cols-2">
+            <div>
+              <MonoLabel index="02">Eligibility</MonoLabel>
+              <h2 className="mt-3 text-3xl sm:text-4xl">A maintenance plan, not a rescue plan.</h2>
+              <ul className="mt-6 grid gap-3 text-sm leading-relaxed text-muted">
+                {eligibility.map((item) => (
+                  <li key={item} className="flex gap-3">
+                    <span aria-hidden="true" className="text-lime-deep">✓</span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <MonoLabel index="scope">What an update means</MonoLabel>
+              <h2 className="mt-3 text-3xl sm:text-4xl">The monthly boundary is explicit.</h2>
+              <ul className="mt-6 grid gap-3 text-sm leading-relaxed text-muted">
+                {boundaries.map((item) => (
+                  <li key={item} className="flex gap-3">
+                    <span aria-hidden="true">—</span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </Container>
+        </section>
+
+        {/* How it works */}
+        <section className="border-b border-line py-16">
           <Container>
-            <MonoLabel index="02">How it works</MonoLabel>
+            <MonoLabel index="03">How it works</MonoLabel>
             <h2 className="mt-3 text-3xl sm:text-4xl">Three steps, repeated monthly.</h2>
             <div className="mt-8 grid gap-4 md:grid-cols-3">
               {steps.map((s, i) => (
@@ -195,8 +236,8 @@ export default function CarePlanPage() {
             <p className="mt-8 max-w-2xl text-sm leading-relaxed text-muted">
               <span className="font-medium text-ink">Who it&apos;s for: </span>
               local and service businesses that have already done the work once — an
-              audit, an upgrade, or a build — and want it to stay current instead of
-              going stale.
+              audit, an upgrade, or a build — and want a defined recurring review
+              and update cadence.
             </p>
           </Container>
         </section>
@@ -208,24 +249,26 @@ export default function CarePlanPage() {
               <span className="font-medium text-ink">An honest note: </span>
               we don&apos;t guarantee rankings or AI citations — no one credibly can.
               The Care Plan is ongoing, hands-on work plus honest measurement: we track
-              your readiness score and how AI engines describe you, and we report what
-              we find. That&apos;s the part we control.
+              your readiness score and labeled answer samples, and report the method,
+              date, prompt, engine, and observations.
             </p>
           </Container>
         </section>
 
-        {/* Price + CTA */}
+        {/* Price + eligibility CTA */}
         <section className="border-b border-line bg-pine py-20 text-paper">
           <Container className="flex flex-col items-start gap-6">
             <div>
-              <p className="mono-label !text-paper/50">{plan.name}</p>
+              <p className="mono-label !text-paper/70">{plan.name}</p>
               <p className="mt-3 font-display text-6xl tnum text-paper">{plan.priceLabel}</p>
-              <p className="mt-2 text-paper/70">Billed monthly · cancel anytime · no contract.</p>
+              <p className="mt-2 text-paper/70">
+                Billed month-to-month after eligibility approval · no long-term commitment.
+              </p>
             </div>
-            <CheckoutButton product="care-plan" label={`Start the Care Plan — ${plan.priceLabel}`} />
-            <p className="max-w-md text-xs text-paper/50">
-              Secure recurring checkout by Stripe. We report what we measure — this is
-              not a guarantee of rankings or AI citations.
+            <Cta href="#care-cta">Check eligibility</Cta>
+            <p className="max-w-md text-xs text-paper/70">
+              Billing does not begin from this page. We first confirm baseline,
+              access, scope, and approval fit in writing.
             </p>
           </Container>
         </section>
@@ -233,7 +276,7 @@ export default function CarePlanPage() {
         {/* FAQ */}
         <section className="border-b border-line py-16">
           <Container>
-            <MonoLabel index="03">Good to know</MonoLabel>
+            <MonoLabel index="04">Good to know</MonoLabel>
             <h2 className="mt-3 mb-8 text-3xl sm:text-4xl">Common questions.</h2>
             <Accordion items={faqs} className="max-w-3xl" />
           </Container>
@@ -243,17 +286,14 @@ export default function CarePlanPage() {
         <section id="care-cta" className="scroll-mt-20 bg-pine py-20 text-paper">
           <Container className="grid gap-10 md:grid-cols-[1fr_1.1fr] md:items-start">
             <div>
-              <h2 className="text-3xl text-paper sm:text-4xl">Want to talk it through first?</h2>
+              <h2 className="text-3xl text-paper sm:text-4xl">Check Care Plan eligibility.</h2>
               <p className="mt-4 max-w-md text-paper/70">
-                Ready to start? Begin the {plan.priceLabel} plan above. Prefer to ask a
-                question or see if it fits your business first? Tell us about your site
-                and a real person will reply — not a sales bot.
+                Tell us about your site and current platform. A real person reviews
+                the baseline, access needs, and likely monthly scope before sending
+                any enrollment or billing link.
               </p>
-              <div className="mt-6">
-                <CheckoutButton product="care-plan" label={`Start now — ${plan.priceLabel}`} />
-              </div>
             </div>
-            <LeadForm defaultNeed="AI Search Care Plan" submitLabel="Ask about the Care Plan" />
+            <LeadForm defaultNeed="AI Search Care Plan" submitLabel="Check my eligibility" />
           </Container>
         </section>
       </main>

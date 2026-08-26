@@ -3,6 +3,7 @@
 // provisioned Upstash instance as public-audit-redis.ts.
 
 import { Redis } from "@upstash/redis";
+import { createHash } from "node:crypto";
 import {
   applyContactInput,
   isDue,
@@ -15,11 +16,22 @@ import {
   type Touch,
 } from "./outreach-store";
 
-const CONTACT_KEY = (email: string) => `oc:contact:${email}`;
+const contactId = (email: string) =>
+  createHash("sha256").update(normalizeEmail(email)).digest("hex");
+const CONTACT_KEY = (email: string) => `oc:contact:v2:${contactId(email)}`;
+const CONTACT_KEY_FROM_ID = (id: string) => `oc:contact:v2:${id}`;
+const LEGACY_CONTACT_KEY = (email: string) => `oc:contact:${email}`;
+const SUPPRESSION_KEY = (email: string) => `oc:suppression:${contactId(email)}`;
 const TOKEN_KEY = (token: string) => `oc:token:${token}`;
-const INDEX_KEY = "oc:contacts";
+const INDEX_KEY = "oc:contacts:v2";
+const LEGACY_INDEX_KEY = "oc:contacts";
 const SENDCAP_KEY = (day: string) => `oc:sendcap:${day}`;
 const SENDCAP_TTL_SECONDS = 2 * 24 * 60 * 60; // keep the counter ~2 days
+// Kept local to avoid reading a const across the deliberate store/Redis module
+// cycle during Next.js route initialization.
+const CONTACT_TTL_SECONDS = 18 * 30 * 24 * 60 * 60;
+const isSuppressionStatus = (status: ContactStatus) =>
+  status === "unsubscribed" || status === "bounced";
 
 function utcDate(): string {
   return new Date().toISOString().slice(0, 10);
@@ -29,11 +41,16 @@ export class RedisOutreachStore implements OutreachStore {
   private readonly redis: Redis;
 
   constructor(redis?: Redis) {
+    const url = process.env.KV_REST_API_URL?.trim();
+    const token = process.env.KV_REST_API_TOKEN?.trim();
+    if (!redis && (!url || !token)) {
+      throw new Error("Both Redis credentials are required for the outreach store.");
+    }
     this.redis =
       redis ??
       new Redis({
-        url: process.env.KV_REST_API_URL!,
-        token: process.env.KV_REST_API_TOKEN!,
+        url: url!,
+        token: token!,
       });
   }
 
@@ -43,13 +60,43 @@ export class RedisOutreachStore implements OutreachStore {
 
   private async readContact(email: string): Promise<Contact | null> {
     const value = await this.redis.get<string | Contact>(CONTACT_KEY(email));
-    if (!value) return null;
-    return typeof value === "string" ? (JSON.parse(value) as Contact) : value;
+    if (value) return typeof value === "string" ? (JSON.parse(value) as Contact) : value;
+
+    const legacy = await this.redis.get<string | Contact>(LEGACY_CONTACT_KEY(email));
+    if (legacy) {
+      const migrated = typeof legacy === "string" ? (JSON.parse(legacy) as Contact) : legacy;
+      await this.writeContact(migrated);
+      await this.redis.expire(LEGACY_CONTACT_KEY(email), CONTACT_TTL_SECONDS);
+      await this.redis.srem(LEGACY_INDEX_KEY, normalizeEmail(email));
+      return migrated;
+    }
+
+    const suppression = await this.redis.get<
+      string | { email: string; status: ContactStatus; recordedAt: string }
+    >(SUPPRESSION_KEY(email));
+    if (!suppression) return null;
+    const parsed =
+      typeof suppression === "string"
+        ? (JSON.parse(suppression) as { email: string; status: ContactStatus; recordedAt: string })
+        : suppression;
+    return {
+      email: parsed.email,
+      status: parsed.status,
+      touches: [],
+      createdAt: parsed.recordedAt,
+    };
   }
 
   private async writeContact(c: Contact): Promise<void> {
-    await this.redis.set(CONTACT_KEY(c.email), JSON.stringify(c));
-    await this.redis.sadd(INDEX_KEY, c.email);
+    await this.redis.set(CONTACT_KEY(c.email), JSON.stringify(c), { ex: CONTACT_TTL_SECONDS });
+    await this.redis.sadd(INDEX_KEY, contactId(c.email));
+    await this.redis.expire(INDEX_KEY, CONTACT_TTL_SECONDS);
+    if (isSuppressionStatus(c.status)) {
+      await this.redis.set(
+        SUPPRESSION_KEY(c.email),
+        JSON.stringify({ email: c.email, status: c.status, recordedAt: this.iso() }),
+      );
+    }
   }
 
   async getContact(email: string): Promise<Contact | null> {
@@ -80,6 +127,7 @@ export class RedisOutreachStore implements OutreachStore {
   async setStatus(email: string, status: ContactStatus): Promise<Contact | null> {
     const c = await this.readContact(normalizeEmail(email));
     if (!c) return null;
+    if (isSuppressionStatus(c.status) && !isSuppressionStatus(status)) return c;
     const updated = { ...c, status };
     await this.writeContact(updated);
     return updated;
@@ -96,9 +144,32 @@ export class RedisOutreachStore implements OutreachStore {
   }
 
   async listContacts(): Promise<Contact[]> {
-    const emails = await this.redis.smembers(INDEX_KEY);
-    if (!emails.length) return [];
-    const contacts = await Promise.all(emails.map((e) => this.readContact(e)));
+    // One-time, non-destructive migration from the legacy email-valued index.
+    // Full records receive the 18-month TTL and the old PII index member is
+    // removed only after the v2 record is safely written.
+    const legacyEmails = await this.redis.smembers(LEGACY_INDEX_KEY);
+    for (const email of legacyEmails) {
+      const value = await this.redis.get<string | Contact>(LEGACY_CONTACT_KEY(email));
+      if (value) {
+        const contact = typeof value === "string" ? (JSON.parse(value) as Contact) : value;
+        await this.writeContact(contact);
+        await this.redis.expire(LEGACY_CONTACT_KEY(email), CONTACT_TTL_SECONDS);
+      }
+      await this.redis.srem(LEGACY_INDEX_KEY, email);
+    }
+
+    const ids = await this.redis.smembers(INDEX_KEY);
+    if (!ids.length) return [];
+    const contacts = await Promise.all(
+      ids.map(async (id) => {
+        const value = await this.redis.get<string | Contact>(CONTACT_KEY_FROM_ID(id));
+        if (!value) {
+          await this.redis.srem(INDEX_KEY, id);
+          return null;
+        }
+        return typeof value === "string" ? (JSON.parse(value) as Contact) : value;
+      }),
+    );
     return contacts.filter((c): c is Contact => c !== null);
   }
 
