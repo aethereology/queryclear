@@ -84,3 +84,12 @@ for (const path of ["/", "/free-audit", "/ai-visibility-audit", "/contact"]) {
     expect(result.violations).toEqual([]);
   });
 }
+
+test("blocked browser storage does not break the audit form", async ({ page }) => {
+  await page.addInitScript(() => Object.defineProperty(Storage.prototype, "getItem", { value() { throw new Error("Storage blocked"); } }));
+  await page.route("**/api/public/audit", route => route.fulfill({ json: { summary } }));
+  await page.goto("/free-audit");
+  await page.getByRole("textbox", { name: "Your website" }).fill("example.com");
+  await page.getByRole("button", { name: "Run free preview" }).click();
+  await expect(page.getByRole("textbox", { name: "Work email" })).toBeVisible();
+});
