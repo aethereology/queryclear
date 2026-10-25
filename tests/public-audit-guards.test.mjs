@@ -337,3 +337,18 @@ test("route: a private target is rejected before rate limiting or runtime work",
   assert.equal(res.status, 400);
   assert.equal(runtimeCalls, 0);
 });
+
+
+test("route: malformed JSON shapes return 400 rather than crashing", async () => {
+  for (const body of [null, [], { domainUrl: 42 }, { domainUrl: {} }, { domainUrl: ["example.com"] }]) {
+    const store = new InMemoryPublicAuditStore();
+    let runtimeCalls = 0;
+    const { POST } = loadAuditRoute({
+      store,
+      runAudit: async () => { runtimeCalls++; return stubReport; },
+    });
+    const result = await POST(fakeRequest(body));
+    assert.equal(result.status, 400, JSON.stringify(body));
+    assert.equal(runtimeCalls, 0);
+  }
+});
