@@ -1,13 +1,11 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
-import { useRouter } from "next/navigation";
 import { filterOwnerHistory, parseOwnerHistory } from "@/lib/owner-workspace";
 import type { AuditReportData } from "@/lib/agent-runtime";
 import type { OwnerAuditEntry } from "@/lib/owner-audits";
 const AuditReportView = dynamic(() => import("./AuditReportView").then(m => m.AuditReportView), { loading: () => <p role="status">Preparing your report…</p> });
 export function OwnerAuditConsole({ csrf }: { csrf: string }) {
-  const router = useRouter();
   const [history, setHistory] = useState<OwnerAuditEntry[]>([]);
   const [report, setReport] = useState<AuditReportData | null>(null);
   const [domainUrl, setDomainUrl] = useState("");
@@ -90,7 +88,7 @@ export function OwnerAuditConsole({ csrf }: { csrf: string }) {
         if (!response.ok) throw new Error();
         setReport(null);
         setHistory([]);
-        router.refresh();
+        window.location.reload();
       } catch { setError("Sign-out could not be completed. Please try again."); }
     }}>Sign out</button></div>
     {needsSignIn && <div role="alert" className="print-hide rounded border border-line p-4">
