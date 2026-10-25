@@ -154,7 +154,10 @@ test("report unlock persists before team and prospect notifications", async () =
   assert.equal(stored.length, 1);
   assert.equal(sent.length, 2);
   assert.equal(timeline[0], "saved");
-  assert.deepEqual((await response.json()).report, report);
+  const body = await response.json();
+  assert.deepEqual(body.report, report);
+  assert.equal(body.emailDelivery, "sent");
+  assert.equal(response.headers.get("cache-control"), "no-store");
   assert.equal(stored[0].payload.reportToken, undefined);
   assert.equal(stored[0].payload.reportUnlocked, true);
   assert.match(stored[0].payload.reportReference, /^[0-9a-f]{16}$/);
@@ -261,4 +264,15 @@ test("stored attribution strips credentials, fragments, and non-UTM query data",
   assert.equal(stored[0].payload.attribution.referrer, "https://referrer.example/path");
   assert.equal(stored[0].payload.attribution.landingPath, "/free-audit");
   assert.equal(stored[0].payload.attribution.utmSource, "linkedin");
+});
+
+
+test("failed report email still unlocks and exposes an honest delivery state", async () => {
+  process.env.RESEND_API_KEY = "test_key";
+  const { route } = loadRoute({ reportForToken: report, sendImpl: async () => ({ error: { message: "provider unavailable" } }) });
+  const response = await route.POST(request({ email: "owner@example.com", token: validToken }));
+  const body = await response.json();
+  assert.equal(response.status, 200);
+  assert.deepEqual(body.report, report);
+  assert.equal(body.emailDelivery, "failed");
 });

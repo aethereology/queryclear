@@ -14,6 +14,7 @@
 - Preserve cost reservations when upstream work might have consumed budget.
 - Give the route a 60-second execution budget; browser stops waiting after 65 seconds and exposes support references.
 - Clear stale summary state on rerun. Improve mobile report wrapping, evidence disclosure and accessible draft toggles.
+- Expose email-provider acceptance/failure honestly on unlock and log delivery states without contact information. Acceptance does not guarantee inbox receipt.
 - Add 12 public route contract tests and a scheduled, cost-free public smoke check every six hours. GitHub Actions failures are the monitoring signal; this is not an external alerting integration.
 
 ## Remaining release gates / backlog

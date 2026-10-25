@@ -372,6 +372,11 @@ export async function POST(request: Request) {
     console.error("[free-audit-lead] delivery status update failed");
   }
 
-  if (report) return NextResponse.json({ report });
+  console.info("[free-audit-delivery]", JSON.stringify({
+    team: teamDelivery, prospect: prospectDelivery,
+  }));
+  if (report) return NextResponse.json({ report, emailDelivery: prospectDelivery }, {
+    headers: { "cache-control": "no-store" },
+  });
   return NextResponse.json({ queued: true });
 }

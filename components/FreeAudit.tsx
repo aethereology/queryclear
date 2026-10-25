@@ -65,6 +65,7 @@ export function FreeAudit() {
   const [phase, setPhase] = useState<Phase>("input");
   const [summary, setSummary] = useState<AuditSummary | null>(null);
   const [gatedDomain, setGatedDomain] = useState("");
+  const [emailDelivery, setEmailDelivery] = useState<string | undefined>();
   const [fullReport, setFullReport] = useState<AuditReportData | null>(null);
   const urlInputRef = useRef<HTMLInputElement>(null);
   const resultRef = useRef<HTMLDivElement>(null);
@@ -124,6 +125,11 @@ export function FreeAudit() {
         aria-label="Full automated audit preview"
         className="outline-none"
       >
+        <p role="status" className="card mb-6 p-5 text-sm text-muted">
+          {emailDelivery === "sent"
+            ? "Your report is unlocked. The email provider accepted your copy; check your inbox and spam folder."
+            : "Your report is unlocked below, but we could not confirm email sending. Keep this page open or print a copy."}
+        </p>
         <AuditReportView report={fullReport} />
       </div>
     );
@@ -194,7 +200,8 @@ export function FreeAudit() {
           {phase === "summary" && summary ? (
             <SummaryCard
               summary={summary}
-              onUnlock={(report) => {
+              onUnlock={(report, delivery) => {
+                setEmailDelivery(delivery);
                 setFullReport(report);
                 setPhase("full");
               }}
@@ -212,7 +219,7 @@ function SummaryCard({
   onUnlock
 }: {
   summary: AuditSummary;
-  onUnlock: (report: AuditReportData) => void;
+  onUnlock: (report: AuditReportData, delivery?: string) => void;
 }) {
   return (
     <div className="space-y-8">
@@ -258,7 +265,7 @@ function UnlockForm({
 }: {
   token: string;
   domainUrl: string;
-  onUnlock: (report: AuditReportData) => void;
+  onUnlock: (report: AuditReportData, delivery?: string) => void;
 }) {
   const [email, setEmail] = useState("");
   const [busy, setBusy] = useState(false);
@@ -288,11 +295,12 @@ function UnlockForm({
       const data = (await res.json().catch(() => ({}))) as {
         error?: string;
         report?: AuditReportData;
+        emailDelivery?: string;
       };
       if (!res.ok) throw new Error(data.error ?? "Something went wrong.");
       if (data.report) {
         trackAnalyticsEvent("generate_lead", { lead_type: "free_audit_unlock" });
-        onUnlock(data.report);
+        onUnlock(data.report, data.emailDelivery);
       }
       else throw new Error("This report expired — please run the audit again.");
     } catch (err) {
