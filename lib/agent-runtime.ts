@@ -239,10 +239,10 @@ export function parseAuditReport(value: unknown, expectedDomainUrl: string): Aud
         priority: asCount(recommendation.priority, "recommendation priority", 100),
         kind: asText(recommendation.kind, "recommendation kind", 40, false),
         title: asText(recommendation.title, "recommendation title", 300, false),
-        rationale: asText(recommendation.rationale, "recommendation rationale", 4_000),
+        rationale: asText(recommendation.rationale, "recommendation rationale", 24_000),
         action: asText(recommendation.action, "recommendation action", 4_000),
         provenance,
-        evidence: asText(recommendation.evidence, "recommendation evidence", 4_000),
+        evidence: asText(recommendation.evidence, "recommendation evidence", 16_000),
       };
     }
   );

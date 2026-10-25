@@ -1,6 +1,7 @@
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 const report = {
+  methodology: { version: "free-readiness-preview-v2", crawled_page_limit: 5, visibility_method: "modeled-scenario", samples_per_query: 1 },
   domain_url: "https://example.com/", page_title: "Example business",
   audited_at: "2026-10-25T00:00:00.000Z", crawled_urls: ["https://example.com/", "https://example.com/services"],
   findings: [{ code: "missing_h1", severity: "medium", title: "Missing primary heading", detail: "No H1 in fetched HTML.", recommendation: "Add a descriptive primary heading.", url: "https://example.com/" }],
@@ -25,6 +26,9 @@ test("complete preview, unlock, evidence, review checklist and export", async ({
   const full = page.getByRole("region", { name: "Full automated audit preview" });
   await expect(full).toBeFocused();
   await expect(page.getByText("The email provider accepted your copy", { exact: false })).toBeVisible();
+  await page.getByText("Methodology and sample size", { exact: true }).click();
+  await expect(page.getByText("free-readiness-preview-v2", { exact: true })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Read the checks, priorities, and limitations" })).toHaveAttribute("href", "/audit-methodology");
   await page.getByRole("checkbox", { name: "Mark action 1 reviewed" }).check();
   await expect(page.getByText("1 of 2 reviewed", { exact: true })).toBeVisible();
   await page.getByLabel("Show actions").selectOption("estimated");

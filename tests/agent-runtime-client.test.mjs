@@ -178,3 +178,12 @@ for (const fields of [{ crawled_urls: ["javascript:alert(1)"] }, { crawled_urls:
     assert.throws(() => parseAuditReport({ ...validReport, ...fields }, "https://example.com/"), AgentRuntimeError);
   });
 }
+
+test('multi-page recommendation evidence survives validation within bounded limits', () => {
+  const evidence = Array.from({ length: 5 }, (_, i) => `technical:missing_h1 (https://example.com/${i}/${'a'.repeat(1000)})`).join('\n');
+  const recommendation = { ...validReport.recommendations[0], evidence, rationale: 'Observed on multiple pages. '.repeat(200) };
+  const parsed = parseAuditReport({ ...validReport, recommendations: [recommendation] }, validReport.domain_url);
+  assert.equal(parsed.recommendations[0].evidence, evidence);
+  assert.throws(() => parseAuditReport({ ...validReport, recommendations: [{ ...recommendation, evidence: 'a'.repeat(16001) }] }, validReport.domain_url), AgentRuntimeError);
+  assert.throws(() => parseAuditReport({ ...validReport, recommendations: [{ ...recommendation, rationale: 'a'.repeat(24001) }] }, validReport.domain_url), AgentRuntimeError);
+});

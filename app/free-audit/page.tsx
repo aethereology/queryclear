@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Metadata } from "next";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -72,6 +73,7 @@ export default function FreeAuditPage() {
               On-page findings are based on the public pages fetched during this run. Answer-scenario
               results are model-generated hypotheses, not live engine measurements, citation rates,
               ranking data, or a promise of future visibility. Review every suggestion before acting.
+              {" "}<Link className="underline" href="/audit-methodology">Read our audit methodology.</Link>
             </p>
           </Container>
         </section>
