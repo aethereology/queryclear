@@ -37,7 +37,6 @@ export default function OpengraphImage() {
         }}
       >
         {/* Brand lockup: open Q / query field + wordmark */}
-        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={LOGO_DATA_URI} width={340} height={66} alt="" />
 
         {/* Headline + supporting line */}

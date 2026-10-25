@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { usePathname } from "next/navigation";
-import { ANALYTICS_CONSENT_KEY } from "@/lib/analytics";
+import { ANALYTICS_CONSENT_KEY, isPrivateAnalyticsPath, readAnalyticsConsent } from "@/lib/analytics";
 
 const PREFERENCES_EVENT = "queryclear:open-analytics-preferences";
 type Consent = "granted" | "denied" | null;
@@ -15,11 +15,8 @@ function validMeasurementId(value: string | undefined) {
 export function AnalyticsConsent({ measurementId }: { measurementId?: string }) {
   const id = validMeasurementId(measurementId);
   const pathname = usePathname();
-  const [consent, setConsent] = useState<Consent>(() => {
-    if (typeof window === "undefined") return null;
-    const stored = window.localStorage.getItem(ANALYTICS_CONSENT_KEY);
-    return stored === "granted" || stored === "denied" ? stored : null;
-  });
+  const [consent, setConsent] = useState<Consent>(readAnalyticsConsent);
+  const privatePage = isPrivateAnalyticsPath(pathname);
   const mounted = useSyncExternalStore(subscribeToMount, () => true, () => false);
   const [preferencesOpen, setPreferencesOpen] = useState(false);
 
@@ -31,7 +28,10 @@ export function AnalyticsConsent({ measurementId }: { measurementId?: string }) 
   }, [id]);
 
   useEffect(() => {
-    if (!id || consent !== "granted") return;
+    if (!id) return;
+    window[`ga-disable-${id}`] = privatePage || consent !== "granted";
+    if (privatePage || consent !== "granted") return;
+    try {
     window.dataLayer ??= [];
     window.gtag ??= (...args: unknown[]) => window.dataLayer?.push(args);
     window.gtag("consent", "update", {
@@ -58,16 +58,17 @@ export function AnalyticsConsent({ measurementId }: { measurementId?: string }) 
       page_location: `${window.location.origin}${pathname}`,
       page_title: document.title,
     });
-  }, [consent, id, pathname]);
+    } catch { /* Analytics availability must never affect the application. */ }
+  }, [consent, id, pathname, privatePage]);
 
-  if (!id || !mounted || (consent !== null && !preferencesOpen)) return null;
+  if (privatePage || !id || !mounted || (consent !== null && !preferencesOpen)) return null;
 
   function choose(value: Exclude<Consent, null>) {
-    window.localStorage.setItem(ANALYTICS_CONSENT_KEY, value);
+    try { window.localStorage.setItem(ANALYTICS_CONSENT_KEY, value); } catch { /* Keep the choice in memory when storage is blocked. */ }
     setConsent(value);
     setPreferencesOpen(false);
     if (value === "denied") {
-      window.gtag?.("consent", "update", { analytics_storage: "denied" });
+      try { window.gtag?.("consent", "update", { analytics_storage: "denied" }); } catch { /* Best effort. */ }
     }
   }
 

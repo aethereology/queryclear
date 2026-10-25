@@ -777,3 +777,18 @@
     display: none;
   }
 }
+
+/* Report workspace: bounded mobile layout and complete printable evidence. */
+.audit-action-filtered, .audit-draft-collapsed { display: none; }
+.audit-report { min-width: 0; overflow-wrap: anywhere; }
+.audit-report button:focus-visible, .audit-report a:focus-visible,
+.audit-report summary:focus-visible, .audit-report select:focus-visible {
+  outline: 2px solid var(--color-lime-deep); outline-offset: 4px;
+}
+@media print {
+  .audit-report section, .audit-plan { break-inside: auto; }
+  .audit-action-filtered, .audit-draft-collapsed { display: block !important; }
+  .audit-draft { max-height: none !important; overflow: visible !important; }
+  .audit-evidence::details-content { content-visibility: visible !important; }
+  .audit-report * { transform: none !important; animation: none !important; }
+}

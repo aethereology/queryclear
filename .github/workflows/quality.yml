@@ -25,6 +25,8 @@ jobs:
           cache: npm
       - name: Install locked dependencies
         run: npm ci
+      - name: Production dependency security
+        run: npm audit --omit=dev --audit-level=high
       - name: Lint
         run: npm run lint
       - name: Unit and contract tests
@@ -33,3 +35,14 @@ jobs:
         run: npx tsc --noEmit
       - name: Production build
         run: npm run build
+      - name: Install browser for regression tests
+        run: npx playwright install --with-deps chromium
+      - name: Browser, responsive, SEO and accessibility regressions
+        run: npm run test:e2e
+      - name: Keep synthetic test diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-test-report
+          path: playwright-report/
+          retention-days: 7

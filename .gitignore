@@ -61,3 +61,6 @@ queryclear.com_AI Search Optimized Website Service Business Plan.pdf
 
 # Claude Code machine-local permissions (the agents/skills ARE tracked)
 .claude/settings.local.json
+
+/playwright-report/
+/test-results/
