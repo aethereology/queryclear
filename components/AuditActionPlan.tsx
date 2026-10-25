@@ -30,10 +30,10 @@ export function AuditActionPlan({ recommendations }: { recommendations: AuditRec
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2"><span className="border border-line bg-paper-2 px-2 py-1 text-xs">{r.provenance === "measured" ? "Evidence-backed" : "Modeled suggestion"}</span><span className="text-xs text-muted">{r.kind}</span></div>
             <h4 className="mt-3 break-words text-lg">{r.title}</h4>
-            <p className="mt-2 text-sm leading-relaxed text-muted">{r.rationale}</p>
+            <p className="mt-2 whitespace-pre-line text-sm leading-relaxed text-muted">{r.rationale}</p>
             {r.provenance !== "measured" ? <p className="mt-2 text-xs text-muted">This is a hypothesis. Confirm a real content gap before making changes.</p> : null}
             <p className="mt-3 text-sm leading-relaxed"><strong>Next step: </strong>{r.action}</p>
-            <details className="audit-evidence mt-3 text-xs text-muted"><summary className="cursor-pointer py-2 font-medium text-ink">Evidence and source</summary><p className="mt-2 break-words">{r.evidence || "No supporting evidence was recorded."}</p></details>
+            <details className="audit-evidence mt-3 text-xs text-muted"><summary className="cursor-pointer py-2 font-medium text-ink">Evidence and source</summary><p className="mt-2 whitespace-pre-line break-words">{r.evidence || "No supporting evidence was recorded."}</p></details>
             <label className="mt-4 flex min-h-11 cursor-pointer items-center gap-3 text-sm print-hide"><input type="checkbox" checked={completed.has(index)} onChange={() => setCompleted(previous => { const next = new Set(previous); if (next.has(index)) next.delete(index); else next.add(index); return next; })} className="h-5 w-5 accent-lime-deep" />Mark action {index + 1} reviewed</label>
           </div>
         </div>

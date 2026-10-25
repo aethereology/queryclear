@@ -71,6 +71,16 @@ export function AuditReportView({ report }: { report: AuditReportData }) {
             {report.crawled_urls.map((url, index) => <li key={`${url}-${index}`} className="break-all">{url}</li>)}
           </ul>
         </details> : null}
+        <details className="audit-evidence mt-4 text-sm">
+          <summary className="cursor-pointer font-medium">Methodology and sample size</summary>
+          {report.methodology ? <dl className="mt-3 grid gap-2 text-muted">
+            <div><dt className="inline font-medium">Version: </dt><dd className="inline break-all">{report.methodology.version}</dd></div>
+            <div><dt className="inline font-medium">Page limit: </dt><dd className="inline">{report.methodology.crawled_page_limit}</dd></div>
+            <div><dt className="inline font-medium">Answer method: </dt><dd className="inline">{report.methodology.visibility_method.replaceAll("-", " ")}</dd></div>
+            <div><dt className="inline font-medium">Maximum samples per question: </dt><dd className="inline">{report.methodology.samples_per_query}</dd></div>
+          </dl> : <p className="mt-3 text-muted">Methodology version was not recorded for this report. Each scenario below shows its own sample count and evidence label.</p>}
+          <a className="mt-3 inline-block underline" href="/audit-methodology">Read the checks, priorities, and limitations</a>
+        </details>
         <p className="mt-3 text-xs text-muted">Modeled answer scenarios are exploratory suggestions. Prioritize verified technical issues and business facts before acting on a model-generated hypothesis.</p>
       </section>
 
@@ -105,6 +115,7 @@ export function AuditReportView({ report }: { report: AuditReportData }) {
                 <span className={`${CHIP} ${SEV[f.severity] ?? SEV.low}`}>{f.severity}</span>
                 <div>
                   <h4 className="text-lg">{f.title}</h4>
+                  {f.url ? <p className="mt-2 break-all text-xs text-muted">Observed on: {f.url}</p> : null}
                   <p className="mt-1.5 text-sm leading-relaxed text-muted">{f.detail}</p>
                   <p className="mt-1.5 text-sm leading-relaxed text-muted">
                     <span className="font-medium text-ink">Fix: </span>

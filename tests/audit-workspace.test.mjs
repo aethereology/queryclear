@@ -41,3 +41,10 @@ test('private report and administration URLs are excluded from analytics', () =>
     assert.equal(readAnalyticsConsent(), null);
   } finally { if (previous === undefined) delete globalThis.window; else globalThis.window = previous; }
 });
+
+test('portable report records the original methodology and actual sampling limits', () => {
+  const report = { domain_url: 'https://example.com', page_title: 'Example', findings: [], queries: [], recommendations: [], methodology: { version: 'free-readiness-preview-v2', crawled_page_limit: 5, visibility_method: 'modeled-scenario', samples_per_query: 1 } };
+  const result = reportAsText(report);
+  for (const value of ['Methodology: free-readiness-preview-v2', 'Page limit: 5', 'Answer method: modeled-scenario', 'Maximum samples per question: 1']) assert.ok(result.includes(value));
+  assert.ok(reportAsText({ ...report, methodology: undefined }).includes('Methodology version: Not recorded'));
+});

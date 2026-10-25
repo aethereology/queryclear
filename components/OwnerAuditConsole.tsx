@@ -50,7 +50,7 @@ export function OwnerAuditConsole({ csrf }: { csrf: string }) {
     }}>Sign out</button></div>
     <div className="print-hide grid gap-6 lg:grid-cols-[1.3fr_1fr]">
       <section className="card p-6 sm:p-8" aria-labelledby="new-audit"><h2 id="new-audit" className="text-2xl font-semibold">Start an audit</h2>
-        <p className="mt-2 text-sm text-muted">A focused scan of one public page. Existing rate limits and the daily spending cap apply. No email is sent.</p>
+        <p className="mt-2 text-sm text-muted">A focused scan of up to five public pages. Existing rate limits and the daily spending cap apply. No email is sent.</p>
         <form className="mt-6 space-y-4" aria-busy={busy} onSubmit={e => { e.preventDefault(); void load(); }}>
           <label htmlFor="owner-url" className="block font-medium">Website URL</label>
           <input id="owner-url" required maxLength={2048} inputMode="url" autoComplete="url" value={domainUrl} onChange={e => setDomainUrl(e.target.value)} placeholder="https://example.com" className="w-full rounded border border-line bg-paper px-4 py-3" />

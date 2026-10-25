@@ -36,6 +36,7 @@ readiness, clarity, useful content, and structure.
 Paid reports score each layer 0–10 and normalize the points earned out of 70 to a 0–100 readiness score. The free self-scorecard uses disclosed question weights totaling 100 and is labeled as self-assessed.
 
 ## Key pages
+- Automated preview methodology and limitations: ${site.url}/audit-methodology
 - Home: ${site.url}/
 - AI Search Audit (request an audit): ${site.url}/ai-visibility-audit
 - Website Upgrade: ${site.url}/website-upgrade

@@ -5,6 +5,13 @@ export function reportAsText(report: AuditReportData): string {
   const lines = ["QUERYCLEAR — SEARCH READINESS PREVIEW", report.domain_url, report.page_title,
     `Completed: ${report.audited_at ?? "Not recorded"}`, "",
     "SCOPE", "A limited public-page review. Modeled scenarios are hypotheses, not live engine measurements.",
+    ...(report.methodology ? [
+      `Methodology: ${report.methodology.version}`,
+      `Page limit: ${report.methodology.crawled_page_limit}`,
+      `Answer method: ${report.methodology.visibility_method}`,
+      `Maximum samples per question: ${report.methodology.samples_per_query}`,
+    ] : ["Methodology version: Not recorded"]),
+    "Method and limitations: https://www.queryclear.com/audit-methodology",
     ...(report.crawled_urls ?? []).map(url => `Page: ${url}`), "", "PRIORITIZED ACTIONS"];
   for (const r of report.recommendations) lines.push(
     `${r.rank}. ${r.title} [${r.provenance}]`, `Why: ${r.rationale}`, `Action: ${r.action}`, `Evidence: ${r.evidence}`, "");
