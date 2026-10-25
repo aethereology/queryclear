@@ -70,6 +70,8 @@ export function FreeAudit() {
   const [fullReport, setFullReport] = useState<AuditReportData | null>(null);
   const urlInputRef = useRef<HTMLInputElement>(null);
   const resultRef = useRef<HTMLDivElement>(null);
+  const inFlight = useRef(false);
+  const attempt = useRef<{ url: string; id: string } | null>(null);
 
   useEffect(() => {
     if (phase !== "input") resultRef.current?.focus();
@@ -81,20 +83,24 @@ export function FreeAudit() {
 
   async function runAudit(e: React.FormEvent) {
     e.preventDefault();
+    if (inFlight.current) return;
+    inFlight.current = true;
     trackAnalyticsEvent("audit_preview_start");
     setBusy(true);
     setError(null);
     setSummary(null);
     setPhase("input");
     try {
+      if (!attempt.current || attempt.current.url !== url.trim()) attempt.current = { url: url.trim(), id: crypto.randomUUID() };
       const res = await fetch("/api/public/audit", {
         method: "POST",
-        headers: { "content-type": "application/json" },
+        headers: { "content-type": "application/json", "x-audit-attempt": attempt.current.id },
         body: JSON.stringify({ domainUrl: url.trim() }),
         signal: AbortSignal.timeout(65_000)
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
+        if (res.status === 410) attempt.current = null;
         const reference = typeof data.requestId === "string" ? ` Support reference: ${data.requestId}` : "";
         throw new Error((data.error ?? "Audit failed. Please try again.") + reference);
       }
@@ -104,6 +110,7 @@ export function FreeAudit() {
         trackAnalyticsEvent("audit_preview_capacity_gate");
       } else {
         if (!data.summary?.token) throw new Error("The preview returned an incomplete result. Please try again.");
+        attempt.current = null;
         setSummary((data as { summary: AuditSummary }).summary);
         setPhase("summary");
         trackAnalyticsEvent("audit_preview_complete");
@@ -113,6 +120,7 @@ export function FreeAudit() {
         ? "This check took too long. Please try again in a moment."
         : err instanceof Error ? err.message : "Audit failed.");
     } finally {
+      inFlight.current = false;
       setBusy(false);
     }
   }

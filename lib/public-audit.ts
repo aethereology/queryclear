@@ -26,7 +26,12 @@ export interface SpendResult {
   capUsd: number;
 }
 
+export type AuditAttempt = "claimed" | "pending" | { token: string };
+
 export interface PublicAuditStore {
+  claimAttempt(key: string, owner: string): Promise<AuditAttempt>;
+  finishAttempt(key: string, owner: string, token: string, ttlMs: number): Promise<void>;
+  releaseAttempt(key: string, owner: string): Promise<void>;
   rateLimit(ip: string, limit: number, windowMs: number): Promise<RateLimitResult>;
   reserveSpend(costUsd: number, capUsd: number): Promise<SpendResult>;
   releaseSpend(costUsd: number): Promise<void>;
@@ -51,6 +56,20 @@ export class InMemoryPublicAuditStore implements PublicAuditStore {
   private spend = { day: "", usd: 0 };
   private readonly reports = new Map<string, CachedReport>();
   private readonly viewed = new Set<string>();
+  private readonly attempts = new Map<string, { owner?: string; token?: string; expiresAt: number }>();
+  async claimAttempt(key: string, owner: string): Promise<AuditAttempt> {
+    const value = this.attempts.get(key);
+    if (value && value.expiresAt > this.now()) return value.token ? { token: value.token } : "pending";
+    this.attempts.set(key, { owner, expiresAt: this.now() + 120_000 });
+    return "claimed";
+  }
+  async finishAttempt(key: string, owner: string, token: string, ttlMs: number) {
+    const value = this.attempts.get(key);
+    if (value?.owner === owner && value.expiresAt > this.now()) this.attempts.set(key, { token, expiresAt: this.now() + ttlMs });
+  }
+  async releaseAttempt(key: string, owner: string) {
+    if (this.attempts.get(key)?.owner === owner) this.attempts.delete(key);
+  }
   constructor(private readonly now: () => number = Date.now) {}
 
   async rateLimit(ip: string, limit: number, windowMs: number): Promise<RateLimitResult> {

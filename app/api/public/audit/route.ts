@@ -1,5 +1,5 @@
 import { readJsonRequest } from "@/lib/json-request";
-import { randomUUID } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import { NextResponse } from "next/server";
 import { runAudit, AgentRuntimeError } from "@/lib/agent-runtime";
 import {
@@ -44,6 +44,10 @@ export async function POST(request: Request) {
     logOutcome("invalid_request", parsed.status);
     return respond({ error: parsed.error }, parsed.status);
   }
+  const attemptId = request.headers.get("x-audit-attempt");
+  if (attemptId !== null && !/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(attemptId)) {
+    return respond({ error: "Refresh the page before trying again." }, 400);
+  }
   const cfg = publicAuditConfig();
   let store: PublicAuditStore;
   try {
@@ -70,6 +74,9 @@ export async function POST(request: Request) {
     throw error;
   }
 
+  const attemptKey = attemptId ? createHash("sha256").update(JSON.stringify([clientIp(request), domainUrl, attemptId])).digest("hex") : null;
+  let claimed = false;
+  let workStarted = false;
   let reserved = false;
   try {
     const rl = await store.rateLimit(clientIp(request), cfg.ipLimit, cfg.ipWindowMs);
@@ -78,6 +85,20 @@ export async function POST(request: Request) {
       return respond({ error: "You've run a few audits already — please try again later." }, 429,
         { "retry-after": String(Math.ceil(rl.retryAfterMs / 1000)) });
     }
+    if (attemptKey) {
+      const attempt = await store.claimAttempt(attemptKey, requestId);
+      if (attempt === "pending") {
+        logOutcome("attempt_pending", 409);
+        return respond({ error: "This audit may still be running. Wait two minutes, then retry the same website to recover its result." }, 409, { "retry-after": "120" });
+      }
+      if (attempt !== "claimed") {
+        const existing = await store.getReport(attempt.token);
+        if (!existing) return respond({ error: "The saved result has expired. Submit again to start a new audit." }, 410);
+        logOutcome("attempt_recovered", 200);
+        return respond({ summary: summarize(attempt.token, existing), recovered: true });
+      }
+      claimed = true;
+    }
     const spend = await store.reserveSpend(cfg.costPerAuditUsd, cfg.dailyCapUsd);
     if (!spend.allowed) {
       logOutcome("budget_gated", 200);
@@ -85,6 +106,7 @@ export async function POST(request: Request) {
     }
     reserved = true;
     // samples: 1 keeps the public audit well under the Vercel Hobby 60s cap.
+    workStarted = true;
     const report = await runAudit({
       orgId: ORG_ID,
       domainId: DOMAIN_ID,
@@ -93,12 +115,16 @@ export async function POST(request: Request) {
     });
     const token = randomUUID();
     await store.putReport(token, report, cfg.reportTtlMs);
+    if (attemptKey) await store.finishAttempt(attemptKey, requestId, token, Math.min(cfg.reportTtlMs, 600_000)).catch(() => {
+      logOutcome("recovery_cache_unavailable", 200);
+    });
     logOutcome("success", 200);
     return respond({ summary: summarize(token, report) });
   } catch (error) {
     // Once work may have reached the runtime, keep the reservation: a timeout or
     // malformed success response can still have consumed model budget upstream.
     if (reserved && error instanceof AgentRuntimeError && !error.costMayHaveBeenIncurred) {
+      workStarted = false;
       await store.releaseSpend(cfg.costPerAuditUsd).catch(() => undefined);
     }
     if (error instanceof AgentRuntimeError) {
@@ -107,5 +133,7 @@ export async function POST(request: Request) {
     }
     logOutcome("storage_or_unexpected_failure", 503);
     return respond({ error: "The preview is temporarily unavailable. Please try again later." }, 503);
+  } finally {
+    if (attemptKey && claimed && !workStarted) await store.releaseAttempt(attemptKey, requestId).catch(() => undefined);
   }
 }

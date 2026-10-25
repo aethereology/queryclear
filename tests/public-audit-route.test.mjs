@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import test from 'node:test';
-import { randomUUID } from 'node:crypto';
+import { createHash, randomUUID } from 'node:crypto';
 import ts from 'typescript';
 
 function load(file, imports = {}) {
@@ -19,10 +19,10 @@ function fixture(overrides = {}) {
   const store = Object.fromEntries(Object.entries({
     rateLimit: async () => ({ allowed: true }),
     reserveSpend: async () => ({ allowed: true }),
-    putReport: async () => {}, releaseSpend: async () => {}, ...overrides,
+    claimAttempt: async () => 'claimed', finishAttempt: async () => {}, releaseAttempt: async () => {}, getReport: async () => ({ findings: [] }), putReport: async () => {}, releaseSpend: async () => {}, ...overrides,
   }).map(([key, fn]) => [key, async (...args) => { calls.push(key); return fn(...args); }]));
   const route = load('app/api/public/audit/route.ts', {
-    'node:crypto': { randomUUID },
+    'node:crypto': { createHash, randomUUID },
     'next/server': { NextResponse: { json: Response.json } },
     '@/lib/json-request': load('lib/json-request.ts'),
     '@/lib/public-audit-url': load('lib/public-audit-url.ts'),
@@ -78,4 +78,51 @@ for (const incurred of [true, false]) test('runtime cost reservation: incurred='
   const { route, calls } = fixture({ run: () => { throw new runtime.AgentRuntimeError('Unavailable', 503, incurred); } });
   assert.equal((await route.POST(request())).status, 503);
   assert.equal(calls.includes('releaseSpend'), !incurred);
+});
+
+function retryRequest(key = '10000000-0000-4000-8000-000000000001') {
+  const r = request(); r.headers.set('x-audit-attempt', key); return r;
+}
+test('malformed attempt IDs cannot allocate storage or invoke the runtime', async () => {
+  const f = fixture(); assert.equal((await f.route.POST(retryRequest('bad'))).status, 400); assert.deepEqual(f.calls, []);
+});
+test('pending attempt returns Retry-After without spending or model work', async () => {
+  const f = fixture({ claimAttempt: async () => 'pending' }); const res = await f.route.POST(retryRequest());
+  assert.equal(res.status, 409); assert.equal(res.headers.get('retry-after'), '120');
+  assert.deepEqual(f.calls, ['rateLimit', 'claimAttempt']);
+});
+test('completed attempt recovers its report without another spend reservation', async () => {
+  const f = fixture({ claimAttempt: async () => ({ token: 'original' }) }); const res = await f.route.POST(retryRequest());
+  assert.equal((await res.json()).summary.token, 'original'); assert.deepEqual(f.calls, ['rateLimit', 'claimAttempt', 'getReport']);
+});
+test('new attempt records recovery only after report persistence', async () => {
+  const f = fixture(); assert.equal((await f.route.POST(retryRequest())).status, 200);
+  assert.deepEqual(f.calls, ['rateLimit', 'claimAttempt', 'reserveSpend', 'runtime', 'putReport', 'finishAttempt']);
+});
+test('capacity gate releases the unused attempt', async () => {
+  const f = fixture({ reserveSpend: async () => ({ allowed: false }) }); await f.route.POST(retryRequest());
+  assert.ok(f.calls.includes('releaseAttempt')); assert.ok(!f.calls.includes('runtime'));
+});
+test('uncertain runtime failure retains the lock and spend reservation', async () => {
+  const f = fixture({ run: () => { throw new runtime.AgentRuntimeError('Timed out', 504, true); } }); await f.route.POST(retryRequest());
+  assert.ok(!f.calls.includes('releaseAttempt')); assert.ok(!f.calls.includes('releaseSpend'));
+});
+test('known pre-work runtime rejection permits a safe retry', async () => {
+  const f = fixture({ run: () => { throw new runtime.AgentRuntimeError('Unavailable', 503, false); } }); await f.route.POST(retryRequest());
+  assert.ok(f.calls.includes('releaseAttempt')); assert.ok(f.calls.includes('releaseSpend'));
+});
+test('recovery-cache outage does not hide an already persisted successful report', async () => {
+  const f = fixture({ finishAttempt: async () => { throw Error('storage'); } });
+  assert.equal((await f.route.POST(retryRequest())).status, 200);
+});
+test('missing cached report requests a fresh attempt instead of repeated paid work', async () => {
+  const f = fixture({ claimAttempt: async () => ({ token: 'expired' }), getReport: async () => null });
+  assert.equal((await f.route.POST(retryRequest())).status, 410); assert.ok(!f.calls.includes('runtime'));
+});
+test('attempt scope binds the caller, normalized target and nonce without storing raw identity', async () => {
+  const keys = [];
+  const f = fixture({ claimAttempt: async key => { keys.push(key); return 'pending'; } });
+  await f.route.POST(retryRequest());
+  const other = retryRequest(); other.headers.set('x-forwarded-for', '203.0.113.10'); await f.route.POST(other);
+  assert.notEqual(keys[0], keys[1]); assert.match(keys[0], /^[a-f0-9]{64}$/);
 });

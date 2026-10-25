@@ -353,3 +353,16 @@ test("route: malformed JSON shapes return 400 rather than crashing", async () =>
     assert.equal(runtimeCalls, 0);
   }
 });
+
+test('attempt lease expires, recovers completion and rejects stale owners', async () => {
+  let now = 1000; const store = new InMemoryPublicAuditStore(() => now);
+  assert.equal(await store.claimAttempt('key', 'one'), 'claimed');
+  assert.equal(await store.claimAttempt('key', 'two'), 'pending');
+  now += 120001;
+  assert.equal(await store.claimAttempt('key', 'two'), 'claimed');
+  await store.releaseAttempt('key', 'one'); await store.finishAttempt('key', 'one', 'stale', 1000);
+  assert.equal(await store.claimAttempt('key', 'three'), 'pending');
+  await store.finishAttempt('key', 'two', 'report', 1000);
+  assert.deepEqual(await store.claimAttempt('key', 'three'), { token: 'report' });
+  now += 1001; assert.equal(await store.claimAttempt('key', 'three'), 'claimed');
+});
