@@ -34,8 +34,8 @@ test('invalid website receives keyboard focus without submitting the inquiry', a
   expect(requests).toBe(0);
 });
 
-test('expired report offers a private accessible recovery path', async ({ page }) => {
-  const response = await page.goto('/r/00000000-0000-4000-8000-000000000000');
+test('unavailable report offers a private accessible recovery path', async ({ page }) => {
+  const response = await page.goto('/r/invalid-report');
   expect(response?.headers()['referrer-policy']).toBe('no-referrer');
   expect(response?.headers()['x-robots-tag']).toContain('noindex');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('This report link is no longer available.');
