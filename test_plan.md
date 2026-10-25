@@ -45,3 +45,8 @@ if our own site fails any of these, we can't sell GEO.
 ## Future (when code exists)
 - [ ] Unit/integration tests for the audit/report generator
 - [ ] CI runs Lighthouse + a11y + schema validation on PRs
+
+
+## Automated report journey regression
+
+`npm run build && npm run test:e2e` uses Playwright Chromium at 360/768/1280px with axe WCAG A/AA scans. It tests the preview/unlock/report journey, source evidence, review filters, download, print controls, API failure retry, and email failure retention. All API responses are synthetic; it does not verify production providers. Unit tests cover portable report provenance and analytics failure isolation. The live provider flow was separately exercised and the user confirmed email delivery.

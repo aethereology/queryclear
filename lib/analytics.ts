@@ -16,6 +16,10 @@ export function trackAnalyticsEvent(
   parameters: Record<string, AnalyticsValue> = {},
 ) {
   if (typeof window === "undefined") return;
-  if (window.localStorage.getItem(ANALYTICS_CONSENT_KEY) !== "granted") return;
-  window.gtag?.("event", name, parameters);
+  try {
+    if (window.localStorage.getItem(ANALYTICS_CONSENT_KEY) !== "granted") return;
+    window.gtag?.("event", name, parameters);
+  } catch {
+    // Privacy settings or a blocked analytics script must never break a form.
+  }
 }

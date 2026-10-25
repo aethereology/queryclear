@@ -1,5 +1,7 @@
 "use client";
 
+import { AuditActionPlan } from "@/components/AuditActionPlan";
+import { AuditReportTools } from "@/components/AuditReportTools";
 import { useId, useState } from "react";
 import { MonoLabel, Cta } from "@/components/ui";
 import { SnapshotCta } from "@/components/SnapshotCta";
@@ -35,7 +37,8 @@ export function AuditReportView({ report }: { report: AuditReportData }) {
     (q) => !q.measured && q.cited_count === 0
   ).length;
   return (
-    <div className="space-y-12">
+    <div className="audit-report space-y-10">
+      <AuditReportTools report={report} />
       {/* Header */}
       <div className="card grid items-center gap-6 p-6 sm:grid-cols-[1fr_auto] sm:p-8">
         <div>
@@ -86,45 +89,7 @@ export function AuditReportView({ report }: { report: AuditReportData }) {
         </Reveal>
       ) : null}
 
-      {report.recommendations.length > 0 ? (
-        <section>
-          <MonoLabel index="01">Prioritized recommendations</MonoLabel>
-          <h3 className="mt-3 text-2xl sm:text-3xl">What to fix first.</h3>
-          <Stagger className="mt-6 grid gap-3">
-            {report.recommendations.map((r) => (
-              <StaggerItem key={r.rank} className="card grid gap-4 p-6 sm:grid-cols-[auto_1fr] sm:items-start">
-                <span className="font-display text-2xl leading-none text-lime-deep tnum">
-                  {String(r.rank).padStart(2, "0")}
-                </span>
-                <div>
-                  <div className="flex flex-wrap items-center gap-2">
-                    <h4 className="text-lg">
-                      {r.provenance === "estimated" ? modeledRecommendationTitle(r.title) : r.title}
-                    </h4>
-                    <span className={`${CHIP} border-line bg-paper-2 text-muted`}>{r.kind}</span>
-                    {r.provenance === "estimated" ? <ModeledBadge /> : null}
-                  </div>
-                  <p className="mt-2 text-sm leading-relaxed text-muted">
-                    {r.provenance === "estimated"
-                      ? "A single-sample model scenario suggests this buyer question deserves a human content review. It is not evidence of visibility in a named engine."
-                      : r.rationale}
-                  </p>
-                  <p className="mt-1.5 text-sm leading-relaxed text-muted">
-                    <span className="font-medium text-ink">Do: </span>
-                    {r.provenance === "estimated"
-                      ? "Check the site's current answer against verified business facts and first-party evidence, then improve it only where a real gap exists."
-                      : r.action}
-                  </p>
-                  {r.evidence ? <details className="mt-3 text-xs text-muted">
-                    <summary className="cursor-pointer font-medium text-ink">Evidence and source</summary>
-                    <p className="mt-2 break-words">{r.evidence}</p>
-                  </details> : null}
-                </div>
-              </StaggerItem>
-            ))}
-          </Stagger>
-        </section>
-      ) : null}
+      <AuditActionPlan recommendations={report.recommendations} />
 
       <section>
         <MonoLabel index="02">Technical findings</MonoLabel>
@@ -225,12 +190,6 @@ export function AuditReportView({ report }: { report: AuditReportData }) {
   );
 }
 
-function modeledRecommendationTitle(title: string): string {
-  const separator = title.indexOf(":");
-  const topic = separator >= 0 ? title.slice(separator + 1).trim() : "this buyer question";
-  return `Review modeled answer coverage: ${topic}`;
-}
-
 // Conversion block shown at the bottom of the unlocked report. The free audit
 // above is honest about being read-only/estimated; these are the paid next
 // steps. Mirrors the homepage offer-ladder logic: `need === null` navigates
@@ -238,7 +197,7 @@ function modeledRecommendationTitle(title: string): string {
 function OffersCta() {
   const offers = site.offers.slice(1); // drop the free audit itself
   return (
-    <section className="card bg-pine p-7 text-paper sm:p-9">
+    <section className="print-hide card bg-pine p-7 text-paper sm:p-9">
       <MonoLabel index="05">Fix what we found</MonoLabel>
       <h3 className="mt-3 text-2xl text-paper sm:text-3xl">Ready to close the gaps?</h3>
       <p className="mt-3 max-w-xl text-sm leading-relaxed text-paper/70">
@@ -292,7 +251,7 @@ function Draft({ body }: { body: string }) {
       >
         {open ? "Hide draft" : "Show draft"}
       </button>
-      <pre id={draftId} hidden={!open} className="machine-panel mt-3 max-h-96 whitespace-pre-wrap">{body}</pre>
+      <pre id={draftId} hidden={!open} className="audit-draft machine-panel mt-3 max-h-96 whitespace-pre-wrap">{body}</pre>
     </div>
   );
 }

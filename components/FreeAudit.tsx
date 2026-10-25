@@ -2,7 +2,8 @@
 
 import { useEffect, useId, useRef, useState } from "react";
 import { MonoLabel } from "@/components/ui";
-import { AuditReportView } from "@/components/AuditReportView";
+import dynamic from "next/dynamic";
+const AuditReportView = dynamic(() => import("@/components/AuditReportView").then(module => module.AuditReportView), { loading: () => <p role="status">Preparing your report…</p> });
 import type { AuditReportData } from "@/lib/agent-runtime";
 import { trackAnalyticsEvent } from "@/lib/analytics";
 
@@ -137,6 +138,9 @@ export function FreeAudit() {
 
   return (
     <div className="space-y-8">
+      <ol aria-label="Audit steps" className="grid grid-cols-3 gap-2 text-xs sm:gap-4 sm:text-sm">
+        {["Check website", "Review preview", "Unlock report"].map((step, index) => <li key={step} aria-current={(phase === "input" ? index === 0 : index === 1) ? "step" : undefined} className="border-b-2 border-line px-1 pb-3 aria-[current=step]:border-lime-deep"><span className="mr-2 font-mono text-lime-deep">0{index + 1}</span>{step}</li>)}
+      </ol>
       <form onSubmit={runAudit} aria-busy={busy} className="card p-6 sm:p-8">
         <label htmlFor="fa-url" className="mb-1.5 block text-sm font-medium">
           Your website <span className="text-lime-deep">*</span>
@@ -285,6 +289,7 @@ function UnlockForm({
       const res = await fetch("/api/public/lead", {
         method: "POST",
         headers: { "content-type": "application/json" },
+        signal: AbortSignal.timeout(25_000),
         body: JSON.stringify({
           email: email.trim(),
           token,
@@ -332,6 +337,7 @@ function UnlockForm({
           required
           disabled={busy}
           autoComplete="email"
+          aria-invalid={Boolean(error)}
           aria-describedby={`${uid}-unlock-help${error ? ` ${uid}-unlock-error` : ""}`}
           className={INPUT}
         />
@@ -378,6 +384,7 @@ function CapacityGate({ domainUrl }: { domainUrl: string }) {
       const res = await fetch("/api/public/lead", {
         method: "POST",
         headers: { "content-type": "application/json" },
+        signal: AbortSignal.timeout(25_000),
         body: JSON.stringify({
           email: email.trim(),
           domainUrl,
@@ -426,6 +433,7 @@ function CapacityGate({ domainUrl }: { domainUrl: string }) {
           required
           disabled={busy}
           autoComplete="email"
+          aria-invalid={Boolean(error)}
           aria-describedby={`${uid}-capacity-help${error ? ` ${uid}-capacity-error` : ""}`}
           className={INPUT}
         />
