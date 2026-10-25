@@ -28,12 +28,17 @@ function clientIp(request: Request): string {
 }
 
 export async function POST(request: Request) {
+  const requestId = randomUUID();
+  const startedAt = Date.now();
+  const logOutcome = (outcome: string, status: number) => {
+    console.info("[public-audit]", JSON.stringify({ requestId, outcome, status, durationMs: Date.now() - startedAt }));
+  };
   const cfg = publicAuditConfig();
   let store: PublicAuditStore;
   try {
     store = publicAuditStore();
   } catch {
-    console.error("[public-audit] shared storage unavailable");
+    console.error("[public-audit]", JSON.stringify({ requestId, outcome: "storage_unavailable", status: 503 }));
     return NextResponse.json(
       { error: "The preview is temporarily unavailable. Please try again later." },
       { status: 503 }
@@ -51,7 +56,8 @@ export async function POST(request: Request) {
     domainUrl = normalizePublicAuditUrl(raw);
   } catch (error) {
     if (error instanceof PublicAuditUrlError) {
-      return NextResponse.json({ error: error.message }, { status: 400 });
+      logOutcome("invalid_url", 400);
+      return NextResponse.json({ error: error.message, requestId }, { status: 400 });
     }
     throw error;
   }
@@ -59,6 +65,7 @@ export async function POST(request: Request) {
   // Gate 1 — per-IP rate limit (abuse).
   const rl = await store.rateLimit(clientIp(request), cfg.ipLimit, cfg.ipWindowMs);
   if (!rl.allowed) {
+    logOutcome("rate_limited", 429);
     return NextResponse.json(
       { error: "You've run a few audits already — please try again later." },
       { status: 429, headers: { "retry-after": String(Math.ceil(rl.retryAfterMs / 1000)) } }
@@ -68,7 +75,8 @@ export async function POST(request: Request) {
   // Gate 2 — global daily spend cap. When hit, don't call OpenAI; offer email capture.
   const spend = await store.reserveSpend(cfg.costPerAuditUsd, cfg.dailyCapUsd);
   if (!spend.allowed) {
-    return NextResponse.json({ gated: true, domainUrl });
+    logOutcome("budget_gated", 200);
+    return NextResponse.json({ gated: true, domainUrl, requestId });
   }
 
   try {
@@ -81,7 +89,8 @@ export async function POST(request: Request) {
     });
     const token = randomUUID();
     await store.putReport(token, report, cfg.reportTtlMs);
-    return NextResponse.json({ summary: summarize(token, report) });
+    logOutcome("success", 200);
+    return NextResponse.json({ summary: summarize(token, report), requestId });
   } catch (error) {
     // Once work may have reached the runtime, keep the reservation: a timeout or
     // malformed success response can still have consumed model budget upstream.
@@ -89,8 +98,10 @@ export async function POST(request: Request) {
       await store.releaseSpend(cfg.costPerAuditUsd).catch(() => undefined);
     }
     if (error instanceof AgentRuntimeError) {
-      return NextResponse.json({ error: error.message }, { status: error.status });
+      logOutcome("runtime_failure", error.status);
+      return NextResponse.json({ error: error.message, requestId }, { status: error.status });
     }
+    console.error("[public-audit]", JSON.stringify({ requestId, outcome: "unexpected_failure", status: 500, durationMs: Date.now() - startedAt }));
     throw error;
   }
 }
