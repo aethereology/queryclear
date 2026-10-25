@@ -83,25 +83,33 @@ export function FreeAudit() {
     setBusy(true);
     setError(null);
     setSummary(null);
+    setPhase("input");
     try {
       const res = await fetch("/api/public/audit", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ domainUrl: url.trim() })
+        body: JSON.stringify({ domainUrl: url.trim() }),
+        signal: AbortSignal.timeout(65_000)
       });
       const data = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error((data as { error?: string }).error ?? "Audit failed.");
+      if (!res.ok) {
+        const reference = typeof data.requestId === "string" ? ` Support reference: ${data.requestId}` : "";
+        throw new Error((data.error ?? "Audit failed. Please try again.") + reference);
+      }
       if ((data as { gated?: boolean }).gated) {
         setGatedDomain((data as { domainUrl: string }).domainUrl);
         setPhase("gated");
         trackAnalyticsEvent("audit_preview_capacity_gate");
       } else {
+        if (!data.summary?.token) throw new Error("The preview returned an incomplete result. Please try again.");
         setSummary((data as { summary: AuditSummary }).summary);
         setPhase("summary");
         trackAnalyticsEvent("audit_preview_complete");
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Audit failed.");
+      setError(err instanceof Error && (err.name === "TimeoutError" || err.name === "AbortError")
+        ? "This check took too long. Please try again in a moment."
+        : err instanceof Error ? err.message : "Audit failed.");
     } finally {
       setBusy(false);
     }
@@ -137,6 +145,9 @@ export function FreeAudit() {
             required
             disabled={busy}
             autoComplete="url"
+            inputMode="url"
+            maxLength={2048}
+            aria-invalid={Boolean(error)}
             aria-describedby={`fa-url-help${error ? " fa-url-error" : ""}`}
             className={INPUT}
           />

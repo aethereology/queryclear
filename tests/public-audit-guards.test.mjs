@@ -184,10 +184,10 @@ test("public audit URL normalization rejects local, private, credentialed, and u
 // --- Route gates (the order that keeps the endpoint from burning money) ------
 
 function fakeRequest(body, ip = "9.9.9.9") {
-  return {
-    headers: { get: (name) => (name === "x-forwarded-for" ? ip : null) },
-    json: async () => body,
-  };
+  return new Request("https://queryclear.com/api/public/audit", {
+    method: "POST", headers: { "content-type": "application/json", "x-forwarded-for": ip },
+    body: JSON.stringify(body),
+  });
 }
 
 function loadAuditRoute({ store, runAudit }) {
@@ -200,6 +200,7 @@ function loadAuditRoute({ store, runAudit }) {
   }
   const route = loadTs("app/api/public/audit/route.ts", {
     "node:crypto": { randomUUID: () => "fixed-token" },
+    "@/lib/json-request": loadTs("lib/json-request.ts"),
     "next/server": {
       NextResponse: {
         json: (body, init) => ({ body, status: init?.status ?? 200 }),
