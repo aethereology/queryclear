@@ -5,5 +5,5 @@ export default defineConfig({
   reporter: [["list"], ["html", { open: "never" }]],
   use: { baseURL: "http://127.0.0.1:3000", trace: "retain-on-failure", reducedMotion: "reduce" },
   projects: [360, 768, 1280].map(width => ({ name: `chromium-${width}`, use: { browserName: "chromium", viewport: { width, height: 900 } } })),
-  webServer: { command: "npm run start -- --hostname 127.0.0.1", url: "http://127.0.0.1:3000/free-audit", reuseExistingServer: !process.env.CI, timeout: 60000 },
+  webServer: { env: { SOCIAL_ADMIN_SECRET: "queryclear-browser-test-only-secret-000000" }, command: "npm run start -- --hostname 127.0.0.1", url: "http://127.0.0.1:3000/free-audit", reuseExistingServer: !process.env.CI, timeout: 60000 },
 });

@@ -269,6 +269,7 @@ function Dashboard({
           <div>
             <p className="font-mono text-xs uppercase tracking-[0.18em] text-muted">queryclear // autonomous social</p>
             <h1 className="mt-3 text-5xl">Control room.</h1>
+            <a href="/admin/audits" className="mt-3 inline-block underline">Open owner audit workspace</a>
             <p className="mt-2 text-muted">Official APIs only. Every external write is logged, capped, and idempotent.</p>
           </div>
           <div className="flex flex-wrap gap-2">

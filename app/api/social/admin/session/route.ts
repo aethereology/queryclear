@@ -16,8 +16,12 @@ function clientIp(request: Request) {
   );
 }
 
+function destination(request: Request) {
+  return new URL(request.url).searchParams.get("returnTo") === "audits" ? "/admin/audits" : "/admin/social";
+}
+
 function loginRedirect(request: Request, error: string) {
-  return NextResponse.redirect(new URL(`/admin/social?login_error=${error}`, request.url), 303);
+  return NextResponse.redirect(new URL(`${destination(request)}?login_error=${error}`, request.url), 303);
 }
 
 export async function POST(request: Request) {
@@ -53,13 +57,13 @@ export async function POST(request: Request) {
     console.warn("[social-admin] rejected login attempt");
     return loginRedirect(request, "1");
   }
-  const response = NextResponse.redirect(new URL("/admin/social", request.url), 303);
+  const response = NextResponse.redirect(new URL(destination(request), request.url), 303);
   response.cookies.set("social_admin", createAdminSession(), sessionCookieOptions());
   return response;
 }
 
 export async function DELETE(request: Request) {
-  const response = NextResponse.redirect(new URL("/admin/social", request.url), 303);
+  const response = NextResponse.redirect(new URL(destination(request), request.url), 303);
   response.cookies.set("social_admin", "", { ...sessionCookieOptions(), maxAge: 0 });
   return response;
 }
