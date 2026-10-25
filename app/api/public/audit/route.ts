@@ -14,8 +14,8 @@ export const dynamic = "force-dynamic";
 // Public org/domain the runtime meters audits against (a per-audit cost backstop
 // beneath the web layer's daily cap). MUST equal QUERYCLEAR_DEV_ORG_ID on the
 // agent-runtime project or every audit fails with BudgetExceeded.
-const ORG_ID = process.env.PUBLIC_AUDIT_ORG_ID ?? "org_dev_queryclear";
-const DOMAIN_ID = process.env.PUBLIC_AUDIT_DOMAIN_ID ?? "domain_dev_queryclear";
+const ORG_ID = process.env.PUBLIC_AUDIT_ORG_ID ?? "org_public_queryclear";
+const DOMAIN_ID = process.env.PUBLIC_AUDIT_DOMAIN_ID ?? "domain_public_queryclear";
 
 function clientIp(request: Request): string {
   const fwd = request.headers.get("x-forwarded-for");
