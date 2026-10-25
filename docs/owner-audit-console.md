@@ -1,12 +1,12 @@
 # Owner audit console
 
-The private workspace at `/admin/audits` runs the existing single-page audit and displays its evidence, action checklist, text download and print report. It sends no email and creates no customer accounts. The existing public workflow is unchanged.
+The private workspace at `/admin/audits` runs the existing bounded public-page audit and displays its evidence, action checklist, text download and print report. It sends no email and creates no customer accounts. The existing public workflow is unchanged.
 
 ## Access and deployment
 
 Uses the existing signed `social_admin` HttpOnly, Secure production cookie (12-hour expiry), existing login rate limiter, and session-bound CSRF token. POST additionally checks same origin. Login redirects accept only the fixed `audits` target or existing social destination. Server authentication precedes report/history access and paid work. Missing administrator configuration denies access.
 
-Production currently has no `SOCIAL_ADMIN_SECRET` configured. The owner must securely set a strong random value of at least 32 characters in Vercel's production environment, retain it in their password manager, then redeploy and sign in. Never put this credential in chat, source control or a public-prefixed environment variable. This activates the existing administrator identity, which also has access to the pre-existing social console; outreach pause settings are not changed. No secret was created or rotated in this release.
+The owner configured `SOCIAL_ADMIN_SECRET` and redeployed successfully on October 25, 2026. The production sign-in form is available. The credential must remain a strong random value of at least 32 characters, retained in the owner's password manager. Never put this credential in chat, source control or a public-prefixed environment variable. This activates the existing administrator identity, which also has access to the pre-existing social console; outreach pause settings are not changed. No secret was created or rotated in this release.
 
 ## Limits and storage
 
@@ -18,4 +18,4 @@ Underlying reports retain the existing unguessable, temporary bearer-token deliv
 
 Unit coverage checks authentication before storage/runtime, CSRF/origin rejection, rate/budget preservation, history failure, owner-history membership, expiry, bounded reads and redirect allowlisting. Browser cases use a synthetic test-only signed session and mocked audit data, covering mobile/tablet/desktop layout, accessibility, running/reopening/downloading reports and session expiry. These fixtures are isolated in Playwright configuration and tests; production has no test login bypass.
 
-An authenticated production owner run remains pending credential configuration. Production unauthenticated API checks can be performed without credentials or paid model calls. The public paid-runtime journey has separate production smoke and prior end-to-end verification. Multi-user roles, durable history, scheduled audits, trend comparisons and comprehensive named-engine measurements remain future scope; modeled scenarios remain clearly labeled estimates.
+The production sign-in form has been verified without reading the credential. An authenticated production owner run still requires the owner's sign-in; automated browser tests use a separate synthetic session. Production unauthenticated API checks can be performed without credentials or paid model calls. The public paid-runtime journey has separate production smoke and prior end-to-end verification. Multi-user roles, durable history, scheduled audits, trend comparisons and comprehensive named-engine measurements remain future scope; modeled scenarios remain clearly labeled estimates.

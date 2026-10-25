@@ -55,6 +55,56 @@ test("owner session expiration preserves entered URL and shows recoverable error
   await page.goto("/admin/audits");
   await page.getByLabel("Website URL").fill("example.com");
   await page.getByRole("button", { name: "Run audit", exact: true }).click();
-  await expect(page.getByRole("alert").filter({ hasText: "session has expired" })).toContainText("session has expired");
+  await expect(page.getByRole("alert", { name: "Audit request error" })).toContainText("session has expired");
   await expect(page.getByLabel("Website URL")).toHaveValue("example.com");
+  await expect(page.getByRole("alert", { name: "Audit request error" })).toBeFocused();
+  await expect(page.getByRole("link", { name: "Return to sign in" })).toHaveAttribute("href", "/admin/audits");
+});
+
+test("history errors can be refreshed, searched and expired reports removed", async ({ page, context }) => {
+  await signIn(context);
+  let reads = 0;
+  const entries = [
+    { token: "alpha", domainUrl: "https://alpha.example", createdAt: Date.now(), expiresAt: Date.now() + 60000 },
+    { token: "beta", domainUrl: "https://beta.example", createdAt: Date.now(), expiresAt: Date.now() + 60000 },
+  ];
+  await page.route("**/api/admin/audits*", route => {
+    if (route.request().url().includes("token=")) return route.fulfill({ status: 404, json: { error: "This report has expired. Run a fresh audit." } });
+    reads++;
+    return route.fulfill(reads === 1 ? { status: 503, json: { error: "Unavailable" } } : { json: { history: entries } });
+  });
+  await page.goto("/admin/audits");
+  await expect(page.getByRole("alert").filter({ hasText: "Recent audits could not be loaded" })).toBeVisible();
+  await expect(page.getByText("No recent audits to show.", { exact: false })).toHaveCount(0);
+  await page.getByRole("button", { name: "Refresh history" }).click();
+  await expect(page.getByRole("button", { name: /Open report/ })).toHaveCount(2);
+  await page.getByLabel("Search recent audits").fill("ALPHA");
+  await expect(page.getByRole("button", { name: /Open report/ })).toHaveCount(1);
+  await expect(page.getByRole("button", { name: /alpha.example/ })).toContainText("Expires");
+  await page.getByRole("button", { name: /alpha.example/ }).click();
+  await expect(page.getByRole("alert", { name: "Audit request error" })).toBeFocused();
+  await expect(page.getByText("No recent audits match this address.")).toBeVisible();
+});
+
+test("history requests time out and can be retried without reloading", async ({ page, context }) => {
+  await signIn(context);
+  await page.clock.install();
+  await page.route("**/api/admin/audits", () => {});
+  await page.goto("/admin/audits");
+  await expect(page.getByText("Loading recent audits…")).toBeVisible();
+  await page.clock.fastForward(16000);
+  await expect(page.getByRole("alert").filter({ hasText: "Recent audits could not be loaded" })).toBeVisible();
+  await page.unroute("**/api/admin/audits");
+  await page.route("**/api/admin/audits", route => route.fulfill({ json: { history: [] } }));
+  await page.getByRole("button", { name: "Refresh history" }).click();
+  await expect(page.getByText("No recent audits to show.", { exact: false })).toBeVisible();
+});
+
+test("sign-out clears the owner workspace and denies subsequent private API reads", async ({ page, context }) => {
+  await signIn(context);
+  await page.route("**/api/admin/audits", route => route.fulfill({ json: { history: [] } }));
+  await page.goto("/admin/audits");
+  await page.getByRole("button", { name: "Sign out", exact: true }).click();
+  await expect(page.getByRole("heading", { name: "Owner access required" })).toBeVisible();
+  expect((await page.request.get("/api/admin/audits")).status()).toBe(401);
 });
