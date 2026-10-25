@@ -97,3 +97,24 @@ test("blocked browser storage does not break the audit form", async ({ page }) =
   await page.getByRole("button", { name: "Run free preview" }).click();
   await expect(page.getByRole("textbox", { name: "Work email" })).toBeVisible();
 });
+
+test("network retry reuses its audit attempt while a completed new run gets a fresh ID", async ({ page }) => {
+  const attempts: string[] = [];
+  await page.route("**/api/public/audit", async route => {
+    attempts.push(route.request().headers()["x-audit-attempt"]);
+    if (attempts.length === 1) await route.abort("failed");
+    else await route.fulfill({ json: { summary } });
+  });
+  await page.goto("/free-audit");
+  await page.getByRole("textbox", { name: "Your website" }).fill("example.com");
+  await page.getByRole("button", { name: "Run free preview" }).click();
+  await expect(page.getByRole("button", { name: "Run free preview" })).toBeEnabled();
+  await page.getByRole("button", { name: "Run free preview" }).click();
+  await expect(page.getByRole("region", { name: "Audit preview result" })).toBeVisible();
+  expect(attempts[0]).toMatch(/^[a-f0-9-]{36}$/);
+  expect(attempts[1]).toBe(attempts[0]);
+  await page.getByRole("button", { name: "Run free preview" }).click();
+  await expect(page.getByRole("region", { name: "Audit preview result" })).toBeVisible();
+  expect(attempts).toHaveLength(3);
+  expect(attempts[2]).not.toBe(attempts[1]);
+});

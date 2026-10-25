@@ -6,6 +6,7 @@ import { Redis } from "@upstash/redis";
 import { createHash } from "node:crypto";
 import type {
   PublicAuditStore,
+  AuditAttempt,
   RateLimitResult,
   SpendResult
 } from "./public-audit";
@@ -27,6 +28,28 @@ export class RedisPublicAuditStore implements PublicAuditStore {
         url: process.env.KV_REST_API_URL!,
         token: process.env.KV_REST_API_TOKEN!
       });
+  }
+
+  async claimAttempt(key: string, owner: string): Promise<AuditAttempt> {
+    const claimed = await this.redis.set(`pa:attempt:${key}`, { owner }, { nx: true, px: 120_000 });
+    if (claimed === "OK") return "claimed";
+    const value = await this.redis.get<{ token?: string }>(`pa:attempt:${key}`);
+    return value?.token ? { token: value.token } : "pending";
+  }
+
+  async finishAttempt(key: string, owner: string, token: string, ttlMs: number): Promise<void> {
+    await this.redis.eval(`local raw = redis.call('GET', KEYS[1])
+if raw and cjson.decode(raw).owner == ARGV[1] then
+  redis.call('SET', KEYS[1], ARGV[2], 'PX', ARGV[3])
+  return 1
+end
+return 0`, [`pa:attempt:${key}`], [owner, JSON.stringify({ token }), ttlMs]);
+  }
+
+  async releaseAttempt(key: string, owner: string): Promise<void> {
+    await this.redis.eval(`local raw = redis.call('GET', KEYS[1])
+if raw and cjson.decode(raw).owner == ARGV[1] then return redis.call('DEL', KEYS[1]) end
+return 0`, [`pa:attempt:${key}`], [owner]);
   }
 
   async rateLimit(ip: string, limit: number, windowMs: number): Promise<RateLimitResult> {

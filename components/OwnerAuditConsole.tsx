@@ -13,6 +13,8 @@ export function OwnerAuditConsole({ csrf }: { csrf: string }) {
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
   const resultRef = useRef<HTMLDivElement>(null);
+  const inFlight = useRef(false);
+  const attempt = useRef<{ url: string; id: string } | null>(null);
   useEffect(() => {
     const controller = new AbortController();
     fetch("/api/admin/audits", { signal: controller.signal, cache: "no-store" }).then(async response => {
@@ -23,22 +25,27 @@ export function OwnerAuditConsole({ csrf }: { csrf: string }) {
     return () => controller.abort();
   }, []);
   async function load(token?: string) {
+    if (inFlight.current) return;
+    inFlight.current = true;
     setBusy(true); setError(""); setNotice("");
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 65000);
     try {
+      if (!token && (!attempt.current || attempt.current.url !== domainUrl.trim())) attempt.current = { url: domainUrl.trim(), id: crypto.randomUUID() };
       const response = await fetch(token ? `/api/admin/audits?token=${encodeURIComponent(token)}` : "/api/admin/audits", {
         method: token ? "GET" : "POST", signal: controller.signal, cache: "no-store",
-        ...(token ? {} : { headers: { "content-type": "application/json", "x-owner-csrf": csrf }, body: JSON.stringify({ domainUrl }) }),
+        ...(token ? {} : { headers: { "content-type": "application/json", "x-owner-csrf": csrf, "x-audit-attempt": attempt.current!.id }, body: JSON.stringify({ domainUrl }) }),
       });
       const body = await response.json();
+      if (response.status === 410) attempt.current = null;
       if (!response.ok || !body.report) throw new Error((body.error || "The report could not be loaded.") + (body.requestId ? ` Reference: ${body.requestId}` : ""));
+      if (!token) attempt.current = null;
       setReport(body.report);
       if (body.entry && body.historySaved) setHistory(rows => [body.entry, ...rows.filter(row => row.token !== body.entry.token)].slice(0, 40));
       if (body.historySaved === false) setNotice("Your report is ready, but recent history could not be saved. Download it before leaving this page.");
       requestAnimationFrame(() => resultRef.current?.focus());
     } catch (e) { setError(e instanceof Error && e.name !== "AbortError" && !(e instanceof SyntaxError) ? e.message : "The request did not finish. Try again shortly; an audit may still count toward your allowance."); }
-    finally { clearTimeout(timeout); setBusy(false); }
+    finally { inFlight.current = false; clearTimeout(timeout); setBusy(false); }
   }
   return <div className="mt-10 space-y-8">
     <div className="print-hide flex justify-end"><button className="text-sm underline" onClick={async () => {

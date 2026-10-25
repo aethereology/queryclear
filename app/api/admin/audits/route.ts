@@ -32,7 +32,8 @@ export async function POST(request: Request) {
   try {
     const report = await publicAuditStore().getReport(body.summary.token);
     if (!report) throw new Error("Report unavailable");
-    const createdAt = Date.now();
+    const recordedAt = report.audited_at ? Date.parse(report.audited_at) : NaN;
+    const createdAt = Number.isFinite(recordedAt) ? Math.min(recordedAt, Date.now()) : Date.now();
     const entry = { token: body.summary.token, domainUrl: report.domain_url, createdAt, expiresAt: createdAt + publicAuditConfig().reportTtlMs };
     let historySaved = true;
     try { await ownerAuditHistory().add(entry); } catch { historySaved = false; }
