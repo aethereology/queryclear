@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import { MonoLabel, Cta } from "@/components/ui";
 import { SnapshotCta } from "@/components/SnapshotCta";
 import { Reveal, Stagger, StaggerItem } from "@/components/motion";
@@ -40,10 +40,10 @@ export function AuditReportView({ report }: { report: AuditReportData }) {
       <div className="card grid items-center gap-6 p-6 sm:grid-cols-[1fr_auto] sm:p-8">
         <div>
           <MonoLabel index="report">Automated search-readiness preview</MonoLabel>
-          <h2 className="mt-3 text-2xl sm:text-3xl">{report.domain_url}</h2>
+          <h2 className="mt-3 break-all text-2xl sm:text-3xl">{report.domain_url}</h2>
           <p className="mt-1.5 text-sm text-muted">{report.page_title || "(no page title found)"}</p>
         </div>
-        <div className="flex gap-8">
+        <div className="flex flex-wrap gap-8">
           <Stat n={report.findings.length} label="On-page findings" />
           {measuredWithoutCitation > 0 ? (
             <Stat n={measuredWithoutCitation} label="Measured checks without citation" />
@@ -96,6 +96,10 @@ export function AuditReportView({ report }: { report: AuditReportData }) {
                       ? "Check the site's current answer against verified business facts and first-party evidence, then improve it only where a real gap exists."
                       : r.action}
                   </p>
+                  {r.evidence ? <details className="mt-3 text-xs text-muted">
+                    <summary className="cursor-pointer font-medium text-ink">Evidence and source</summary>
+                    <p className="mt-2 break-words">{r.evidence}</p>
+                  </details> : null}
                 </div>
               </StaggerItem>
             ))}
@@ -108,7 +112,7 @@ export function AuditReportView({ report }: { report: AuditReportData }) {
         <h3 className="mt-3 text-2xl sm:text-3xl">On-page readiness.</h3>
         {report.findings.length === 0 ? (
           <p className="card mt-6 p-6 text-sm text-muted">
-            No on-page issues found in the checks we run.
+            No issues were detected by this limited set of on-page checks. This does not establish that the entire website is error-free.
           </p>
         ) : (
           <Stagger className="mt-6 grid gap-3">
@@ -155,7 +159,7 @@ export function AuditReportView({ report }: { report: AuditReportData }) {
             return (
               <div
                 key={`${q.engine}-${q.query}`}
-                className={`flex items-center justify-between gap-3 p-5 ${i % 2 ? "bg-paper-2" : "bg-paper"}`}
+                className={`flex flex-col items-start justify-between gap-3 p-5 sm:flex-row sm:items-center ${i % 2 ? "bg-paper-2" : "bg-paper"}`}
               >
                 <span className="min-w-0 text-sm text-ink">
                   <span className="mr-2 inline-flex items-center gap-1 border border-line bg-paper px-1.5 py-0.5 font-mono text-[11px] uppercase tracking-wider text-muted">
@@ -257,16 +261,19 @@ function Stat({ n, label }: { n: number; label: string }) {
 
 function Draft({ body }: { body: string }) {
   const [open, setOpen] = useState(false);
+  const draftId = useId();
   return (
     <div className="mt-4">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        aria-controls={draftId}
         className="mono-label text-lime-deep underline print-hide"
       >
         {open ? "Hide draft" : "Show draft"}
       </button>
-      {open ? <pre className="machine-panel mt-3 max-h-96 whitespace-pre-wrap">{body}</pre> : null}
+      <pre id={draftId} hidden={!open} className="machine-panel mt-3 max-h-96 whitespace-pre-wrap">{body}</pre>
     </div>
   );
 }

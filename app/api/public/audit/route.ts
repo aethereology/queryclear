@@ -1,3 +1,4 @@
+import { readJsonRequest } from "@/lib/json-request";
 import { randomUUID } from "node:crypto";
 import { NextResponse } from "next/server";
 import { runAudit, AgentRuntimeError } from "@/lib/agent-runtime";
@@ -10,6 +11,7 @@ import {
 import { normalizePublicAuditUrl, PublicAuditUrlError } from "@/lib/public-audit-url";
 
 export const dynamic = "force-dynamic";
+export const maxDuration = 60;
 
 // Public org/domain the runtime meters audits against (a per-audit cost backstop
 // beneath the web layer's daily cap). MUST equal QUERYCLEAR_DEV_ORG_ID on the
@@ -33,19 +35,25 @@ export async function POST(request: Request) {
   const logOutcome = (outcome: string, status: number) => {
     console.info("[public-audit]", JSON.stringify({ requestId, outcome, status, durationMs: Date.now() - startedAt }));
   };
+  const respond = (body: Record<string, unknown>, status = 200, headers: Record<string, string> = {}) =>
+    NextResponse.json({ ...body, requestId }, {
+      status, headers: { "cache-control": "no-store", "x-request-id": requestId, ...headers },
+    });
+  const parsed = await readJsonRequest(request, 8_192);
+  if (!parsed.ok) {
+    logOutcome("invalid_request", parsed.status);
+    return respond({ error: parsed.error }, parsed.status);
+  }
   const cfg = publicAuditConfig();
   let store: PublicAuditStore;
   try {
     store = publicAuditStore();
   } catch {
-    console.error("[public-audit]", JSON.stringify({ requestId, outcome: "storage_unavailable", status: 503 }));
-    return NextResponse.json(
-      { error: "The preview is temporarily unavailable. Please try again later." },
-      { status: 503 }
-    );
+    logOutcome("storage_unavailable", 503);
+    return respond({ error: "The preview is temporarily unavailable. Please try again later." }, 503);
   }
 
-  const body: unknown = await request.json().catch(() => null);
+  const body: unknown = parsed.value;
   const raw =
     body && typeof body === "object" && !Array.isArray(body) &&
     "domainUrl" in body && typeof body.domainUrl === "string"
@@ -57,29 +65,25 @@ export async function POST(request: Request) {
   } catch (error) {
     if (error instanceof PublicAuditUrlError) {
       logOutcome("invalid_url", 400);
-      return NextResponse.json({ error: error.message, requestId }, { status: 400 });
+      return respond({ error: error.message }, 400);
     }
     throw error;
   }
 
-  // Gate 1 — per-IP rate limit (abuse).
-  const rl = await store.rateLimit(clientIp(request), cfg.ipLimit, cfg.ipWindowMs);
-  if (!rl.allowed) {
-    logOutcome("rate_limited", 429);
-    return NextResponse.json(
-      { error: "You've run a few audits already — please try again later." },
-      { status: 429, headers: { "retry-after": String(Math.ceil(rl.retryAfterMs / 1000)) } }
-    );
-  }
-
-  // Gate 2 — global daily spend cap. When hit, don't call OpenAI; offer email capture.
-  const spend = await store.reserveSpend(cfg.costPerAuditUsd, cfg.dailyCapUsd);
-  if (!spend.allowed) {
-    logOutcome("budget_gated", 200);
-    return NextResponse.json({ gated: true, domainUrl, requestId });
-  }
-
+  let reserved = false;
   try {
+    const rl = await store.rateLimit(clientIp(request), cfg.ipLimit, cfg.ipWindowMs);
+    if (!rl.allowed) {
+      logOutcome("rate_limited", 429);
+      return respond({ error: "You've run a few audits already — please try again later." }, 429,
+        { "retry-after": String(Math.ceil(rl.retryAfterMs / 1000)) });
+    }
+    const spend = await store.reserveSpend(cfg.costPerAuditUsd, cfg.dailyCapUsd);
+    if (!spend.allowed) {
+      logOutcome("budget_gated", 200);
+      return respond({ gated: true, domainUrl });
+    }
+    reserved = true;
     // samples: 1 keeps the public audit well under the Vercel Hobby 60s cap.
     const report = await runAudit({
       orgId: ORG_ID,
@@ -90,18 +94,18 @@ export async function POST(request: Request) {
     const token = randomUUID();
     await store.putReport(token, report, cfg.reportTtlMs);
     logOutcome("success", 200);
-    return NextResponse.json({ summary: summarize(token, report), requestId });
+    return respond({ summary: summarize(token, report) });
   } catch (error) {
     // Once work may have reached the runtime, keep the reservation: a timeout or
     // malformed success response can still have consumed model budget upstream.
-    if (error instanceof AgentRuntimeError && !error.costMayHaveBeenIncurred) {
+    if (reserved && error instanceof AgentRuntimeError && !error.costMayHaveBeenIncurred) {
       await store.releaseSpend(cfg.costPerAuditUsd).catch(() => undefined);
     }
     if (error instanceof AgentRuntimeError) {
       logOutcome("runtime_failure", error.status);
-      return NextResponse.json({ error: error.message, requestId }, { status: error.status });
+      return respond({ error: error.message }, error.status);
     }
-    console.error("[public-audit]", JSON.stringify({ requestId, outcome: "unexpected_failure", status: 500, durationMs: Date.now() - startedAt }));
-    throw error;
+    logOutcome("storage_or_unexpected_failure", 503);
+    return respond({ error: "The preview is temporarily unavailable. Please try again later." }, 503);
   }
 }
