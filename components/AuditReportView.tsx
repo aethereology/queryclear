@@ -251,7 +251,7 @@ function Draft({ body }: { body: string }) {
       >
         {open ? "Hide draft" : "Show draft"}
       </button>
-      <pre id={draftId} hidden={!open} className="audit-draft machine-panel mt-3 max-h-96 whitespace-pre-wrap">{body}</pre>
+      <pre id={draftId} className={`audit-draft machine-panel mt-3 max-h-96 whitespace-pre-wrap ${open ? "" : "audit-draft-collapsed"}`}>{body}</pre>
     </div>
   );
 }
