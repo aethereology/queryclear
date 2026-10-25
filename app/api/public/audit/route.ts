@@ -40,8 +40,12 @@ export async function POST(request: Request) {
     );
   }
 
-  const body = (await request.json().catch(() => ({}))) as { domainUrl?: string };
-  const raw = (body.domainUrl ?? "").trim();
+  const body: unknown = await request.json().catch(() => null);
+  const raw =
+    body && typeof body === "object" && !Array.isArray(body) &&
+    "domainUrl" in body && typeof body.domainUrl === "string"
+      ? body.domainUrl.trim()
+      : "";
   let domainUrl: string;
   try {
     domainUrl = normalizePublicAuditUrl(raw);
