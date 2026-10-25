@@ -82,6 +82,7 @@ const nextConfig: NextConfig = {
       {
         source: "/admin/:path*",
         headers: [
+          { key: "Referrer-Policy", value: "no-referrer" },
           {
             key: "Cache-Control",
             value: "private, no-store, no-cache, max-age=0, must-revalidate",
