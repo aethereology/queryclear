@@ -40,7 +40,12 @@ test("complete preview, unlock, evidence, review checklist and export", async ({
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   const accessibility = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]).analyze();
   expect(accessibility.violations).toEqual([]);
+  await page.getByRole("button", { name: "Hide draft" }).click();
+  await page.getByLabel("Show actions").selectOption("estimated");
   await page.emulateMedia({ media: "print" });
+  await expect(page.getByRole("heading", { name: "Add a primary heading" })).toBeVisible();
+  await expect(page.getByText("technical:missing_h1 (https://example.com/)", { exact: true })).toBeVisible();
+  await expect(page.locator(".audit-draft")).toBeVisible();
   await expect(page.getByRole("button", { name: "Download report", exact: true })).toBeHidden();
 });
 

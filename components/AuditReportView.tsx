@@ -65,7 +65,7 @@ export function AuditReportView({ report }: { report: AuditReportData }) {
         {report.audited_at ? <p className="mt-2 text-xs text-muted">
           Completed <time dateTime={report.audited_at}>{report.audited_at.replace("T", " ").replace(".000Z", " UTC")}</time>
         </p> : null}
-        {report.crawled_urls?.length ? <details className="mt-3 text-sm">
+        {report.crawled_urls?.length ? <details className="audit-evidence mt-3 text-sm">
           <summary className="cursor-pointer font-medium">View crawled pages</summary>
           <ul className="mt-3 space-y-2 text-muted">
             {report.crawled_urls.map((url, index) => <li key={`${url}-${index}`} className="break-all">{url}</li>)}
