@@ -198,7 +198,7 @@ function OffersCta() {
   const offers = site.offers.slice(1); // drop the free audit itself
   return (
     <section className="print-hide card bg-pine p-7 text-paper sm:p-9">
-      <MonoLabel index="05">Fix what we found</MonoLabel>
+      <MonoLabel index="05" tone="inverse">Fix what we found</MonoLabel>
       <h3 className="mt-3 text-2xl text-paper sm:text-3xl">Ready to close the gaps?</h3>
       <p className="mt-3 max-w-xl text-sm leading-relaxed text-paper/70">
         This automated preview is a read-only first pass. When you want a
