@@ -15,3 +15,14 @@ assert.equal(typeof body.error, 'string');
 assert.match(body.requestId, /^[a-f\d-]{36}$/);
 assert.equal(invalid.headers.get('cache-control'), 'no-store');
 console.log('PASS: audit page, public API validation, support ID, no-store. No AI or email invoked.');
+// Reach the Python function without a credential, valid target, model call or email.
+// A 401 proves that the runtime loaded and its authentication boundary is active.
+const runtime = new URL(process.env.QUERYCLEAR_SMOKE_RUNTIME_URL || 'https://agent-runtime-eta.vercel.app/api/audit');
+assert.equal(runtime.protocol, 'https:');
+const denied = await fetch(runtime, {
+  method: 'POST', headers: { 'content-type': 'application/json' }, body: '{}',
+  signal: AbortSignal.timeout(20000),
+});
+assert.equal(denied.status, 401, 'Runtime must be reachable and reject unauthenticated requests');
+assert.equal((await denied.json()).error, 'Unauthorized.');
+console.log('PASS: Python runtime reachable and authentication enforced. No model or email invoked.');

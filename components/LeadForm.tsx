@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { trackAnalyticsEvent } from "@/lib/analytics";
@@ -55,6 +55,8 @@ const saasInterestOptions = ["AI Search Operator (early access)"] as const;
 export type InterestOption = (typeof interestOptions)[number];
 type LeadFormInterest = InterestOption | (typeof saasInterestOptions)[number];
 
+const FIELD_LIMITS: Record<string, number> = { name: 120, email: 254, website: 2048, business: 160, service: 120, city: 120 };
+
 const DEFAULT_NOTE = (
   <>
     No obligation. A real person reads every inquiry and replies — not a sales
@@ -81,6 +83,13 @@ export function LeadForm({
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState<string>("");
   const [websiteError, setWebsiteError] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
+  const errorRef = useRef<HTMLParagraphElement>(null);
+  useEffect(() => {
+    if (status !== "error") return;
+    if (websiteError) formRef.current?.querySelector<HTMLInputElement>('input[name="website"]')?.focus();
+    else errorRef.current?.focus();
+  }, [status, error, websiteError]);
   const fields = audience === "saas" ? saasFields : serviceBusinessFields;
   const displayedInterestOptions = audience === "saas" ? saasInterestOptions : interestOptions;
 
@@ -117,8 +126,13 @@ export function LeadForm({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
+        signal: AbortSignal.timeout(25000),
       });
-      if (!res.ok) throw new Error((await res.json()).error ?? "Something went wrong.");
+      const result = await res.json().catch(() => null);
+      if (!res.ok || result?.ok !== true) {
+        const message = typeof result?.error === "string" ? result.error : "We could not confirm your request. Your details are still here; please try again.";
+        throw new Error(message);
+      }
       trackAnalyticsEvent("generate_lead", {
         lead_type: audience,
         interest: String(data.interest ?? "unspecified").slice(0, 80),
@@ -127,12 +141,15 @@ export function LeadForm({
       router.push("/thank-you");
     } catch (err) {
       setStatus("error");
-      setError(err instanceof Error ? err.message : "Something went wrong.");
+      setError(err instanceof Error && ["TimeoutError", "AbortError"].includes(err.name)
+        ? "The connection timed out before we could confirm receipt. Your details are still here. Check your email before retrying."
+        : err instanceof TypeError ? "We could not connect. Check your connection and try again; your details are still here."
+        : err instanceof Error ? err.message : "We could not confirm your request. Please try again.");
     }
   }
 
   return (
-    <form onSubmit={onSubmit} className="card p-6 text-ink sm:p-8">
+    <form ref={formRef} aria-busy={status === "submitting"} onSubmit={onSubmit} className="card p-6 text-ink sm:p-8">
       <div aria-hidden="true" className="absolute left-[-9999px] top-auto h-px w-px overflow-hidden">
         <label htmlFor={`${uid}-company`}>Company</label>
         <input
@@ -159,6 +176,7 @@ export function LeadForm({
               name={f.name}
               type={f.type}
               required={f.required}
+              maxLength={FIELD_LIMITS[f.name]}
               autoComplete={"autoComplete" in f ? f.autoComplete : undefined}
               inputMode={"inputMode" in f ? f.inputMode : undefined}
               placeholder={"placeholder" in f ? f.placeholder : undefined}
@@ -194,13 +212,14 @@ export function LeadForm({
             id={`${uid}-message`}
             name="message"
             rows={3}
+            maxLength={2000}
             className="input-halo w-full border border-line bg-paper px-3.5 py-2.5 text-sm text-ink placeholder:text-muted outline-none transition-colors"
           />
         </div>
       </div>
 
       {status === "error" && (
-        <p id={`${uid}-form-status`} role="alert" className="mt-4 text-sm text-red-700">
+        <p ref={errorRef} tabIndex={-1} id={`${uid}-form-status`} role="alert" className="mt-4 text-sm text-red-700">
           {error}
         </p>
       )}

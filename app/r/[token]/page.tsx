@@ -23,6 +23,8 @@ export default async function OutreachReportPage({
   params: Promise<{ token: string }>;
 }) {
   const { token } = await params;
+  // Reject malformed bearer tokens before touching shared storage.
+  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(token)) notFound();
   const report = await publicAuditStore().getReport(token);
   if (!report) notFound();
   const prospectDomain = report.domain_url.replace(/^https?:\/\//, "").replace(/\/$/, "");
