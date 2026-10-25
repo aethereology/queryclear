@@ -52,6 +52,25 @@ export function AuditReportView({ report }: { report: AuditReportData }) {
         </div>
       </div>
 
+      <section className="card p-6 sm:p-8" aria-label="Audit scope and evidence">
+        <MonoLabel index="scope">Coverage and confidence</MonoLabel>
+        <h3 className="mt-3 text-xl">Know what this preview checked.</h3>
+        <p className="mt-2 text-sm text-muted">
+          {report.crawled_urls ? `${report.crawled_urls.length} public pages fetched.` : "Page-by-page coverage was not recorded for this report."}
+          {" "}Findings apply to the fetched pages and supported checks, not every page or every search engine.
+        </p>
+        {report.audited_at ? <p className="mt-2 text-xs text-muted">
+          Completed <time dateTime={report.audited_at}>{report.audited_at.replace("T", " ").replace(".000Z", " UTC")}</time>
+        </p> : null}
+        {report.crawled_urls?.length ? <details className="mt-3 text-sm">
+          <summary className="cursor-pointer font-medium">View crawled pages</summary>
+          <ul className="mt-3 space-y-2 text-muted">
+            {report.crawled_urls.map((url, index) => <li key={`${url}-${index}`} className="break-all">{url}</li>)}
+          </ul>
+        </details> : null}
+        <p className="mt-3 text-xs text-muted">Modeled answer scenarios are exploratory suggestions. Prioritize verified technical issues and business facts before acting on a model-generated hypothesis.</p>
+      </section>
+
       {report.detected_voice ? (
         <Reveal>
           <MonoLabel index="voice">Inferred writing style</MonoLabel>

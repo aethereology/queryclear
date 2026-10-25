@@ -48,6 +48,8 @@ export interface RuntimeDraft {
 export interface AuditReportData {
   domain_url: string;
   page_title: string;
+  crawled_urls?: string[];
+  audited_at?: string | null;
   findings: AuditFinding[];
   queries: AuditQuery[];
   recommendations: AuditRecommendation[];
@@ -277,8 +279,31 @@ export function parseAuditReport(value: unknown, expectedDomainUrl: string): Aud
     }
   }
 
+  const crawledUrls = root.crawled_urls === undefined ? undefined
+    : asArray(root.crawled_urls, "crawled pages", 100).map((value) => {
+      const raw = asText(value, "crawled page URL", 2048, false);
+      let url: URL;
+      try { url = new URL(raw); } catch {
+        throw new AgentRuntimeError("Audit service returned invalid crawl evidence.", 502);
+      }
+      if (!["https:", "http:"].includes(url.protocol) || url.username || url.password) {
+        throw new AgentRuntimeError("Audit service returned invalid crawl evidence.", 502);
+      }
+      return url.href;
+    });
+  let auditedAt: string | null = null;
+  if (root.audited_at !== undefined && root.audited_at !== null) {
+    auditedAt = asText(root.audited_at, "audit timestamp", 80, false);
+    if (!Number.isFinite(Date.parse(auditedAt))) {
+      throw new AgentRuntimeError("Audit service returned invalid audit timestamp.", 502);
+    }
+    auditedAt = new Date(auditedAt).toISOString();
+  }
+
   return {
     domain_url: expectedDomainUrl,
+    crawled_urls: crawledUrls,
+    audited_at: auditedAt,
     page_title: asText(root.page_title, "page title", 500),
     findings,
     queries,

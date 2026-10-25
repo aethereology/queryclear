@@ -18,9 +18,9 @@
 
 ## Remaining release gates / backlog
 
-1. Live email delivery and complete report unlock need a designated test recipient; existing mocked contract tests cover delivery failures, persistence, claims, and replay behavior. Do not send unsolicited test reports to real prospects.
-2. Python test baseline initially exposed an exact-floating-time assertion failure, plus missing local optional dependencies. Track runtime changes separately and verify its CLI deployment source before release.
+1. Live browser journey verified through full report unlock using the user-approved hello@queryclear.com recipient. Inbox receipt is not independently confirmed; the UI unlock alone is not proof of mailbox delivery.
+2. Runtime PR fixes the clock-dependent test and adds actual crawl coverage/time and conservative modeled recommendation priority. Python suite: 185 run, 178 pass, 7 database integration tests require CI.
 3. Runtime scenario results are modeled hypotheses, not live AI-engine measurements. Do not promote an absent brand in one model sample into a visibility score or ranking claim.
-4. Add actual crawl coverage/timestamps and source evidence to the runtime report contract; evaluate against curated site fixtures before changing model behavior.
+4. Actual crawl coverage/timestamps are added to the report contract and validated in the frontend. Older cached reports explicitly say coverage was not recorded. Wider model-quality evaluation against curated sites remains open.
 5. Full authenticated dashboard, payment, consent, accessibility and mobile regression coverage remain separate work. This release does not certify those flows.
 6. Scheduled smoke checks exercise rendering and validation, not model availability, Redis persistence or email delivery. A real paid audit probe should be deliberately budgeted and use an authorized recipient.

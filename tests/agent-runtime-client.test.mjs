@@ -166,3 +166,15 @@ test("runtime client does not expose upstream exception details", async () => {
     process.env = savedEnv;
   }
 });
+
+
+test("runtime report preserves actual crawl coverage and UTC timestamp", () => {
+  const report = parseAuditReport({ ...validReport, crawled_urls: ["https://example.com/about"], audited_at: "2026-10-25T00:00:00+00:00" }, "https://example.com/");
+  assert.deepEqual(report.crawled_urls, ["https://example.com/about"]);
+  assert.equal(report.audited_at, "2026-10-25T00:00:00.000Z");
+});
+for (const fields of [{ crawled_urls: ["javascript:alert(1)"] }, { crawled_urls: ["https://user:password@example.com"] }, { audited_at: "not-a-date" }]) {
+  test("runtime report rejects unsafe or malformed evidence " + JSON.stringify(fields), () => {
+    assert.throws(() => parseAuditReport({ ...validReport, ...fields }, "https://example.com/"), AgentRuntimeError);
+  });
+}
