@@ -44,6 +44,9 @@ test("owner runs, revisits and downloads a report with accessible mobile layout"
   await page.getByRole("button", { name: "Download report", exact: true }).click();
   expect((await download).suggestedFilename()).toBe("queryclear-example.com.txt");
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await page.emulateMedia({ media: "print" });
+  await expect(page.getByRole("button", { name: "Run audit", exact: true })).toBeHidden();
+  await page.emulateMedia({ media: "screen" });
   expect((await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21aa"]).analyze()).violations).toEqual([]);
 });
 test("owner session expiration preserves entered URL and shows recoverable error", async ({ page, context }) => {
@@ -52,6 +55,6 @@ test("owner session expiration preserves entered URL and shows recoverable error
   await page.goto("/admin/audits");
   await page.getByLabel("Website URL").fill("example.com");
   await page.getByRole("button", { name: "Run audit", exact: true }).click();
-  await expect(page.getByRole("alert")).toContainText("session has expired");
+  await expect(page.getByRole("alert").filter({ hasText: "session has expired" })).toContainText("session has expired");
   await expect(page.getByLabel("Website URL")).toHaveValue("example.com");
 });

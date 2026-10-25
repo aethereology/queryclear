@@ -41,14 +41,14 @@ export function OwnerAuditConsole({ csrf }: { csrf: string }) {
     finally { clearTimeout(timeout); setBusy(false); }
   }
   return <div className="mt-10 space-y-8">
-    <div className="flex justify-end"><button className="text-sm underline" onClick={async () => {
+    <div className="print-hide flex justify-end"><button className="text-sm underline" onClick={async () => {
       try {
         const response = await fetch("/api/social/admin/session?returnTo=audits", { method: "DELETE" });
         if (!response.ok) throw new Error();
         window.location.assign("/admin/audits");
       } catch { setError("Sign-out could not be completed. Please try again."); }
     }}>Sign out</button></div>
-    <div className="grid gap-6 lg:grid-cols-[1.3fr_1fr]">
+    <div className="print-hide grid gap-6 lg:grid-cols-[1.3fr_1fr]">
       <section className="card p-6 sm:p-8" aria-labelledby="new-audit"><h2 id="new-audit" className="text-2xl font-semibold">Start an audit</h2>
         <p className="mt-2 text-sm text-muted">A focused scan of one public page. Existing rate limits and the daily spending cap apply. No email is sent.</p>
         <form className="mt-6 space-y-4" aria-busy={busy} onSubmit={e => { e.preventDefault(); void load(); }}>
@@ -64,7 +64,7 @@ export function OwnerAuditConsole({ csrf }: { csrf: string }) {
         {loadingHistory ? <p role="status" className="mt-5">Loading recent audits…</p> : history.length ? <ul className="mt-5 max-h-64 space-y-3 overflow-y-auto">{history.map(entry => <li key={entry.token}><button disabled={busy} onClick={() => void load(entry.token)} className="w-full rounded border border-line p-3 text-left hover:bg-paper-2 disabled:opacity-60"><span className="block break-all font-medium">{entry.domainUrl}</span><span className="text-xs text-muted">{new Date(entry.createdAt).toLocaleString()} · Open report</span></button></li>)}</ul> : <p className="mt-5 text-sm text-muted">No recent audits to show. Your next saved report will appear here.</p>}
       </section>
     </div>
-    {notice && <p role="status" className="rounded border border-line p-4 text-sm">{notice}</p>}
+    {notice && <p role="status" className="print-hide rounded border border-line p-4 text-sm">{notice}</p>}
     {report && <div ref={resultRef} tabIndex={-1} aria-label="Audit results" className="scroll-mt-6"><AuditReportView report={report} /></div>}
   </div>;
 }
