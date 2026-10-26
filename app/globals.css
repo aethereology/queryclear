@@ -814,3 +814,5 @@ input:not([type="checkbox"]):not([type="radio"]), select { min-height: 44px; }
 .audit-report summary { min-height: 36px; }
 @media (prefers-reduced-motion: reduce) { .clarity-nav { backdrop-filter: none; } }
 @media print { .evidence-preview { box-shadow: none; } }
+
+button:not(:disabled), summary { cursor: pointer; }

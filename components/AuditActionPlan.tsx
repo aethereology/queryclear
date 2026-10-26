@@ -11,7 +11,7 @@ export function AuditActionPlan({ recommendations }: { recommendations: AuditRec
   return <section id={`${uid}-actions`} aria-label="Your action plan" className="audit-plan">
     <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
       <div><p className="mono-label">Your action plan</p><h3 className="mt-3 text-2xl sm:text-3xl">Turn findings into next steps.</h3>
-        <p className="mt-2 text-sm text-muted">{measured} evidence-backed {measured === 1 ? "action" : "actions"} · {recommendations.length - measured} modeled suggestions</p></div>
+        <p className="mt-2 text-sm text-muted">{measured} evidence-backed {measured === 1 ? "action" : "actions"} · {recommendations.length - measured} modeled {recommendations.length - measured === 1 ? "suggestion" : "suggestions"}</p></div>
       <div className="print-hide"><label htmlFor={`${uid}-filter`} className="mb-2 block text-xs font-medium">Show actions</label>
         <select id={`${uid}-filter`} value={filter} onChange={e => setFilter(e.target.value)} className="min-h-11 border border-line bg-paper px-3 text-sm">
           <option value="all">All actions</option><option value="measured">Evidence-backed</option><option value="estimated">Modeled suggestions</option>
