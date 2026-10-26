@@ -75,7 +75,7 @@ export default function AboutPage() {
           <Container className="py-16 md:py-20">
             <MonoLabel index="about">Who we are</MonoLabel>
             <h1 className="mt-5 max-w-3xl text-4xl sm:text-5xl">
-              We make businesses legible to the machines people now ask.
+              Better discovery starts with a clearer website.
             </h1>
             <p className="mt-5 max-w-2xl leading-relaxed text-muted">
               Some buyers now encounter AI-generated answers alongside or instead of
@@ -209,13 +209,13 @@ export default function AboutPage() {
             <div>
               <h2 className="text-3xl text-paper sm:text-4xl">Review your public search foundation.</h2>
               <p className="mt-3 max-w-xl text-paper/70">
-                Run a free AI Search Audit — an automated, read-only read on your
+                Run a free readiness preview — an automated, read-only read on your
                 site&apos;s biggest search-readiness opportunities. The full
                 scored AI Search Audit is $497 if you want the deep report.
               </p>
             </div>
             <div className="flex flex-wrap gap-3">
-              <Cta href="/free-audit">Run a free audit</Cta>
+              <Cta href="/free-audit">Run a free preview</Cta>
               <Cta href="/audit" variant="ghost" className="!border-paper/30 !text-paper hover:!bg-white/10">
                 See a sample audit
               </Cta>

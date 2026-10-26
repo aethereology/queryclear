@@ -138,7 +138,7 @@ export default function MedSpaPage() {
               remains responsible for clinical and regulatory approval of every claim.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Cta href="/free-audit">Run a free audit</Cta>
+              <Cta href="/free-audit">Run a free preview</Cta>
               <Cta href="/ai-visibility-stack" variant="ghost">See our method</Cta>
             </div>
           </Container>
@@ -229,7 +229,7 @@ export default function MedSpaPage() {
                 The full human-reviewed audit is $497. Do not submit patient information.
               </p>
             </div>
-            <Cta href="/free-audit">Run a free audit</Cta>
+            <Cta href="/free-audit">Run a free preview</Cta>
           </Container>
         </section>
       </main>

@@ -256,7 +256,7 @@ export function AuditReport({ data }: { data: AuditReportData }) {
               </p>
             </div>
             <div className="flex flex-wrap gap-3">
-              <Cta href="/free-audit">Run a free audit</Cta>
+              <Cta href="/free-audit">Run a free preview</Cta>
               <Cta href="/scorecard" variant="ghost" className="!text-paper !border-paper/30 hover:!bg-white/10">
                 Score your own site
               </Cta>

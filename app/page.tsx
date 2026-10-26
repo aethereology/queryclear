@@ -1,725 +1,359 @@
-import Link from "next/link";
 import type { Metadata } from "next";
-import type { ReactNode } from "react";
+import Link from "next/link";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { LeadForm } from "@/components/LeadForm";
-import { Container, MonoLabel, Cta, Mark } from "@/components/ui";
-import { SnapshotCta } from "@/components/SnapshotCta";
-import { Stagger, StaggerItem, ClipReveal, LineDraw } from "@/components/motion";
-import { TypingPanel } from "@/components/TypingPanel";
-import { HumanMachineToggle } from "@/components/HumanMachineToggle";
+import { Container, MonoLabel, Cta } from "@/components/ui";
+import { EvidencePreview } from "@/components/EvidencePreview";
 import { Accordion } from "@/components/Accordion";
-import { HeroCircuit } from "@/components/HeroCircuit";
+import { SnapshotCta } from "@/components/SnapshotCta";
+import { LeadForm } from "@/components/LeadForm";
 import { site } from "@/lib/site";
-
 export const metadata: Metadata = {
-  title: "Modern SEO for Service Businesses",
+  title: "Website clarity for search and AI discovery",
   description: site.description,
   alternates: { canonical: "/" },
   openGraph: {
-    title: "queryclear — Modern SEO for Service Businesses",
+    title: "QueryClear — Make your website easier to understand",
     description: site.description,
     url: site.url,
   },
 };
-
-const proofStats = [
-  { k: "7 layers", v: "scored across the AI Visibility Stack" },
-  { k: "Transparent", v: "published layers and scoring method" },
-  { k: "Read-only", v: "free audits do not modify your site" },
-  { k: "Human-led", v: "strategy, implementation, and review by people" },
-] as const;
-
-const searchRoute = [
-  {
-    n: "01",
-    label: "Find",
-    title: "Can the site be reached?",
-    desc: "Crawlability, indexability, sitemap, robots, canonicals, and page health.",
-  },
-  {
-    n: "02",
-    label: "Parse",
-    title: "Can the business be understood?",
-    desc: "Entity clarity, service hierarchy, locations, internal links, and schema.",
-  },
-  {
-    n: "03",
-    label: "Trust",
-    title: "Can the claim be believed?",
-    desc: "Specific proof, staff credentials, examples, reviews, policies, and freshness.",
-  },
-  {
-    n: "04",
-    label: "Answer",
-    title: "Can the page satisfy a real question?",
-    desc: "Buyer-intent copy, FAQs, comparison language, constraints, and next steps.",
-  },
-  {
-    n: "05",
-    label: "Convert",
-    title: "Can the visitor act?",
-    desc: "Clear calls to action, fast forms, accessible layout, and local intent paths.",
-  },
-] as const;
-
-const layerMatrix = [
-  {
-    n: "01",
-    name: "Entity clarity",
-    signal: "The business, category, market, services, and proof are unmistakable.",
-    fix: "Clarify homepage, about, service, location, and organization signals.",
-  },
-  {
-    n: "02",
-    name: "Service specificity",
-    signal: "Each core service has a dedicated, useful page tied to a real buyer question.",
-    fix: "Clarify fit, process, geography, eligibility, proof, and the next step.",
-  },
-  {
-    n: "03",
-    name: "Proof density",
-    signal: "Verified, relevant evidence appears near the claims it supports.",
-    fix: "Add real team details, credentials, policies, examples, reviews, and source context.",
-  },
-  {
-    n: "04",
-    name: "Local relevance",
-    signal: "The business is clearly tied to the places it genuinely serves.",
-    fix: "Align service areas, business profiles, on-page facts, and genuine local proof.",
-  },
-  {
-    n: "05",
-    name: "Answer coverage",
-    signal: "Key pages directly answer the questions buyers ask before choosing.",
-    fix: "Cover fit, process, timing, constraints, pricing guidance, comparisons, and FAQs.",
-  },
-  {
-    n: "06",
-    name: "Machine readability",
-    signal: "Pages are crawlable, semantic, connected, and described by consistent metadata and schema.",
-    fix: "Repair indexability, internal links, metadata, canonicals, structured data, and page health.",
-  },
-  {
-    n: "07",
-    name: "Conversion path",
-    signal: "Visitors and agents can find the right action without hunting.",
-    fix: "Tighten CTAs, forms, contact paths, booking paths, and offer hierarchy.",
-  },
-] as const;
-
-const issueCards = [
-  {
-    eyebrow: "What people see",
-    title: "A good-looking site that still feels vague.",
-    desc: "Polished pages can still miss the basics: what you do, who it is for, where you do it, and why someone should trust you.",
-  },
-  {
-    eyebrow: "What crawlers see",
-    title: "Unclear pages, weak links, thin metadata.",
-    desc: "Search systems need readable structure. If the site buries services, locations, and proof, it gives them less to work with.",
-  },
-  {
-    eyebrow: "What AI answers see",
-    title: "Not enough citable material.",
-    desc: "AI-powered search compares sources. Generic copy, missing proof, and thin FAQs make you easier to skip or misdescribe.",
-  },
-] as const;
-
-const deliverableGroups = [
-  {
-    label: "Foundation",
-    items: ["Crawl and index review", "Metadata and headings", "Sitemap and robots guidance", "Page speed and accessibility notes"],
-  },
-  {
-    label: "Clarity",
-    items: ["Homepage message architecture", "Service-page structure", "Local market language", "FAQ and objection coverage"],
-  },
-  {
-    label: "Signals",
-    items: ["Organization and LocalBusiness schema", "Service and FAQ schema", "Internal links", "Open Graph metadata"],
-  },
-  {
-    label: "Measurement",
-    items: ["Labeled answer samples", "Published scoring method", "Prioritized roadmap", "Before/after readiness checks"],
-  },
-] as const;
-
-const resourceLinks = [
-  {
-    href: "/ai-visibility-stack",
-    eyebrow: "Framework",
-    title: "The AI Visibility Stack",
-    desc: "The seven layers we use to audit and upgrade answer-engine readiness.",
-  },
-  {
-    href: "/geo-audit",
-    eyebrow: "Audit",
-    title: "GEO, without the hype",
-    desc: "A practical audit model for generative-engine visibility and modern SEO.",
-  },
-  {
-    href: "/schema-for-ai-search",
-    eyebrow: "Technical",
-    title: "Schema for AI search",
-    desc: "Structured data guidance for service businesses that need clearer signals.",
-  },
-  {
-    href: "/llms-txt-for-businesses",
-    eyebrow: "Support file",
-    title: "llms.txt for businesses",
-    desc: "What it can help with, what it cannot do, and when it is worth publishing.",
-  },
-] as const;
-
+const capabilities = [
+  [
+    "01",
+    "Understand what your pages say.",
+    "Review titles, headings, descriptions and structured data from the public HTML we fetch. See the pages behind the findings.",
+  ],
+  [
+    "02",
+    "Explore the questions buyers ask.",
+    "Modeled answer scenarios suggest questions to investigate. Each is labeled as generated, with its sample size and limitations.",
+  ],
+  [
+    "03",
+    "Know what to work on next.",
+    "A prioritized action plan connects observations to recommendations. Review the evidence, check the business facts, then make the change.",
+  ],
+];
 const faqs = [
   {
-    q: "What does queryclear actually do?",
-    a: "We upgrade business websites for modern search. That includes crawlability, page structure, metadata, schema, service-page copy, local signals, FAQs, conversion paths, and clearly labeled answer sampling.",
+    q: "What does QueryClear actually check?",
+    a: "The free preview fetches up to five public pages and checks supported on-page signals, including titles, headings, descriptions and structured data. It also generates up to five modeled buyer-answer scenarios. The report lists its coverage and limitations.",
   },
   {
-    q: "Is this different from SEO?",
-    a: "It is not separate from SEO. It is modern SEO with more emphasis on clarity, structure, usefulness, entity signals, and the way AI answer engines summarize sources.",
-  },
-  {
-    q: "Do you guarantee rankings or AI citations?",
-    a: "No. We do not control Google, ChatGPT, Claude, Perplexity, Gemini, Bing, or any answer engine. We improve the parts you do control: your website, source material, structure, and measurement.",
-  },
-  {
-    q: "Where should I start?",
-    a: "Start with the free AI Search Audit if you want a quick read. Choose the $497 AI Search Audit if you want a scored report and roadmap. Choose a Website Upgrade or Build if you want us to implement.",
-  },
-  {
-    q: "Do I need schema or llms.txt?",
-    a: "Schema is often useful when it accurately reflects visible page content. llms.txt is optional and not a ranking factor. We treat both as supporting signals, not magic fixes.",
+    q: "Does this measure my visibility in ChatGPT or Google AI Overviews?",
+    a: "The free preview does not query named AI products or measure their rankings or citation rates. Modeled scenarios come from a general language model and are hypotheses to review. The paid, human-reviewed audit has a separate scope and labeled answer observations.",
   },
   {
     q: "Who is this for?",
-    a: "Service businesses that depend on search, trust, and high-intent leads: med spas, clinics, contractors, consultants, attorneys, dentists, home service companies, and local professional firms.",
+    a: "Business owners, marketers and agencies who need clearer service pages and a practical starting point for website improvements. You can review the automated preview yourself or ask us to scope implementation.",
+  },
+  {
+    q: "What happens after the free preview?",
+    a: "You see a summary first. Provide your email to unlock the detailed report and request an emailed copy. You can download the report or print it. Reports expire within 24 hours, so keep a copy you want to retain.",
+  },
+  {
+    q: "Will QueryClear change my website?",
+    a: "The automated preview is read-only. Human-delivered upgrades and builds are separately scoped and agreed before work starts. We cannot guarantee rankings, traffic, leads or AI citations.",
   },
 ];
-
-const serviceSchema = {
-  "@context": "https://schema.org",
-  "@type": "Service",
-  serviceType: "Modern SEO / AI Search Optimization",
-  name: "Modern Search Website Optimization",
-  description: site.description,
-  provider: { "@id": site.schemaIds.organization },
-  brand: { "@id": site.schemaIds.brand },
-  areaServed: "United States",
-  offers: site.offers.map((offer) => ({
-    "@type": "Offer",
-    name: offer.name,
-    description: offer.desc,
-    url: `${site.url}${offer.href.startsWith("/") ? offer.href : `/${offer.href}`}`,
-    priceCurrency: "USD",
-    price:
-      offer.name === "Free AI Search Audit"
-        ? "0"
-        : offer.name === "AI Search Audit"
-          ? "497"
-          : offer.name === "Website Upgrade"
-            ? "2500"
-            : "6500",
-  })),
-};
-
-const faqSchema = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: faqs.map((f) => ({
-    "@type": "Question",
-    name: f.q,
-    acceptedAnswer: { "@type": "Answer", text: f.a },
-  })),
-};
-
-export default function Home() {
+export default function HomePage() {
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
-      />
       <Header />
-
-      <main id="main-content" className="home-page">
-        <section className="site-section home-hero border-b border-dashed border-line">
-          <Container className="relative grid items-center gap-12 py-16 md:py-20 lg:grid-cols-2 lg:py-24">
-            <div className="relative z-10">
-              <div className="fade-up">
-                <MonoLabel>queryclear / modern search</MonoLabel>
-              </div>
-              <h1
-                className="fade-up mt-6 max-w-4xl text-balance text-5xl leading-[0.98] sm:text-6xl lg:text-6xl"
-                style={{ animationDelay: "0.08s" }}
-              >
-                Make your service business easier to find, understand, and trust.
+      <main id="main-content">
+        <section className="clarity-hero">
+          <Container className="grid items-center gap-12 py-16 md:py-24 lg:grid-cols-[1fr_1.08fr] lg:gap-16">
+            <div>
+              <MonoLabel>Website clarity. Backed by evidence.</MonoLabel>
+              <h1 className="mt-6 max-w-2xl">
+                Make your website
+                <br className="hidden xl:block" /> easier to understand.
               </h1>
-              <p
-                className="fade-up mt-6 max-w-2xl text-lg leading-relaxed text-muted"
-                style={{ animationDelay: "0.16s" }}
-              >
-                We audit and upgrade the pages, proof, structure, and conversion
-                paths that help Google and AI answer tools understand your business —
-                and help qualified visitors take the next step.
+              <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted">
+                For your customers. For search. For AI discovery.
               </p>
-              <div
-                className="fade-up mt-9 flex flex-wrap items-center gap-3"
-                style={{ animationDelay: "0.24s" }}
-              >
-                <Cta href={site.primaryCta.href}>{site.primaryCta.label}</Cta>
-                <Cta href="#offers" variant="ghost">
-                  Compare offers
+              <p className="mt-4 max-w-xl leading-relaxed text-muted">
+                QueryClear checks your public pages, shows the evidence behind
+                the issues, and gives you a clear plan to improve them.
+              </p>
+              <div className="mt-8 flex flex-wrap gap-3">
+                <Cta href="/free-audit">Check my website</Cta>
+                <Cta
+                  href="/audit-methodology"
+                  variant="ghost"
+                  showArrow={false}
+                >
+                  Explore the method
                 </Cta>
               </div>
-              <div
-                className="fade-up mt-10 grid gap-2 sm:grid-cols-2"
-                style={{ animationDelay: "0.32s" }}
+              <p className="mt-4 text-xs text-muted">
+                Free preview · Up to five public pages · Read-only
+              </p>
+              <Link
+                href="/audit?view=automated"
+                className="mt-4 inline-block text-sm text-muted underline underline-offset-4"
               >
-                {proofStats.map((stat) => (
-                  <div key={stat.k} className="home-proof-chip">
-                    <span className="font-mono text-xs uppercase text-lime-deep">{stat.k}</span>
-                    <span className="text-sm text-muted">{stat.v}</span>
-                  </div>
-                ))}
-              </div>
+                Explore a sample preview →
+              </Link>
             </div>
-
-            <div className="fade-up min-w-0" style={{ animationDelay: "0.36s" }}>
-              <div className="home-console">
-                <div className="home-console__bar">
-                  <span className="flex items-center gap-2">
-                    <Mark className="h-4 w-4" />
-                    visibility console
-                  </span>
-                  <span>sample trace</span>
-                </div>
-                <div className="grid gap-4 p-4 md:p-5">
-                  <HeroCircuit />
-                  <div className="grid gap-4 lg:grid-cols-[0.82fr_1.18fr]">
-                    <div className="home-answer-card">
-                      <p className="mono-label !text-lime">Prompt</p>
-                      <p className="mt-3 text-2xl leading-tight text-paper">
-                        Who is the best-fit local provider for this service?
-                      </p>
-                      <div className="mt-5 grid gap-2 text-xs text-paper/65">
-                        <span>Needs entity clarity</span>
-                        <span>Needs service proof</span>
-                        <span>Needs source pages worth citing</span>
-                      </div>
-                    </div>
-                    <TypingPanel
-                      className="min-h-full"
-                      lines={[
-                        <span key="a" className="text-paper/70">
-                          # answer-engine source profile
-                        </span>,
-                        <span key="b">
-                          <span className="k">business</span>:{" "}
-                          <span className="s">verified service provider</span>
-                        </span>,
-                        <span key="c">
-                          <span className="k">market</span>:{" "}
-                          <span className="s">clear local coverage</span>
-                        </span>,
-                        <span key="d">
-                          <span className="k">services</span>:{" "}
-                          <span className="s">named, linked, explained</span>
-                        </span>,
-                        <span key="e">
-                          <span className="k">proof</span>:{" "}
-                          <span className="s">credentials, policies, examples</span>
-                        </span>,
-                        <span key="f" className="mt-3 block text-lime">
-                          status: readable source material
-                        </span>,
-                      ]}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
+            <EvidencePreview />
           </Container>
         </section>
-
-        <Section id="problem" index="01" label="Why sites disappear">
-          <div className="grid gap-10 lg:grid-cols-[0.78fr_1.22fr] lg:items-end">
-            <div>
-              <h2 className="max-w-2xl text-4xl sm:text-5xl">
-                <ClipReveal
-                  lines={[
-                    "Your site is being evaluated",
-                    "before anyone clicks.",
-                  ]}
-                />
-              </h2>
-              <p className="mt-5 max-w-lg leading-relaxed text-muted">
-                Modern search does not only rank pages. It extracts, compares,
-                summarizes, and decides what deserves to be shown. If your website
-                is vague, thin, or hard to parse, it becomes weak source material.
-              </p>
-            </div>
-            <Stagger className="grid gap-4 md:grid-cols-3">
-              {issueCards.map((card) => (
-                <StaggerItem key={card.title} className="home-issue-card">
-                  <p className="mono-label !text-lime-deep">{card.eyebrow}</p>
-                  <h3 className="mt-5 text-2xl">{card.title}</h3>
-                  <p className="mt-4 text-sm leading-relaxed text-muted">{card.desc}</p>
-                </StaggerItem>
-              ))}
-            </Stagger>
-          </div>
-        </Section>
-
-        <Section id="method" index="02" label="Five outcomes" tone="tinted">
-          <div className="home-method-grid grid gap-10 lg:items-start">
-            <div>
-              <h2 className="max-w-xl text-4xl sm:text-5xl">
-                Seven layers drive five practical outcomes.
-              </h2>
-              <p className="mt-5 max-w-lg leading-relaxed text-muted">
-                Find, Parse, Trust, Answer, and Convert are the outcomes. The seven-layer
-                AI Visibility Stack is the published rubric we use to find and prioritize
-                the work that moves them.
-              </p>
-              <div className="mt-8">
-                <Cta href="/ai-visibility-stack" variant="ghost">
-                  See the full stack
-                </Cta>
-              </div>
-            </div>
-            <div className="home-route">
-              {searchRoute.map((step, index) => (
-                <div key={step.n} className="home-route__step">
-                  <div className="flex items-center justify-between gap-4">
-                    <span className="font-mono text-sm text-lime-deep">{step.n}</span>
-                    <span className="font-mono text-xs uppercase text-muted">{step.label}</span>
-                  </div>
-                  <h3 className="mt-5 text-xl">{step.title}</h3>
-                  <p className="mt-3 text-sm leading-relaxed text-muted">{step.desc}</p>
-                  {index < searchRoute.length - 1 && <span className="home-route__connector" />}
-                </div>
-              ))}
-            </div>
-          </div>
-        </Section>
-
-        <Section id="solution" index="03" label="What changes">
-          <div className="grid gap-12 lg:grid-cols-[0.96fr_1.04fr] lg:items-center">
-            <div>
-              <MonoLabel>human-readable / machine-readable</MonoLabel>
-              <h2 className="mt-4 max-w-xl text-4xl sm:text-5xl">
-                One website, two audiences, no fake robot copy.
-              </h2>
-              <p className="mt-5 max-w-lg leading-relaxed text-muted">
-                The best AI-search work starts with better pages for humans:
-                sharper offers, useful details, visible proof, and fewer vague
-                claims. Then we structure those facts so search systems can use them.
-              </p>
-              <div className="mt-8 grid gap-3 text-sm">
-                {[
-                  "Specific service pages instead of broad brochure copy",
-                  "Local and trust signals placed where they support decisions",
-                  "Schema that matches visible content",
-                  "FAQs written from real buyer questions",
-                ].map((item) => (
-                  <span key={item} className="flex items-center gap-3">
-                    <span className="h-1.5 w-1.5 bg-lime" aria-hidden="true" />
-                    {item}
-                  </span>
-                ))}
-              </div>
-            </div>
-            <div>
-              <HumanMachineToggle
-                human={
-                  <div className="home-page-preview">
-                    <p className="mono-label !text-lime-deep">Service page</p>
-                    <h3 className="mt-4 text-3xl">
-                      Botox and fillers in Westhaven, performed by licensed injectors.
-                    </h3>
-                    <p className="mt-4 text-sm leading-relaxed text-muted">
-                      A page that explains who the treatment is for, what happens
-                      during the visit, who performs it, realistic timing, aftercare,
-                      safety policies, and how to book.
-                    </p>
-                    <div className="mt-6 grid gap-2 sm:grid-cols-3">
-                      {["Provider proof", "Treatment FAQs", "Booking path"].map((x) => (
-                        <span key={x} className="border border-dashed border-line px-3 py-2 text-xs">
-                          {x}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                }
-                machine={
-                  <pre className="machine-panel min-h-[13rem]">
-                    <code>
-                      <span className="k">{"@type"}</span>: <span className="s">MedicalBusiness</span>
-                      {"\n"}
-                      <span className="k">service</span>: <span className="s">Botox / dermal fillers</span>
-                      {"\n"}
-                      <span className="k">areaServed</span>: <span className="s">Westhaven metro</span>
-                      {"\n"}
-                      <span className="k">provider</span>: <span className="s">licensed injectors</span>
-                      {"\n"}
-                      <span className="k">mainEntity</span>: <span className="s">visible treatment FAQ</span>
-                      {"\n\n"}
-                      <span className="text-lime">source can be parsed and checked</span>
-                    </code>
-                  </pre>
-                }
-              />
-            </div>
-          </div>
-        </Section>
-
-        <Section id="stack" index="04" label="The stack" tone="tinted">
-          <div className="mb-10 grid gap-8 lg:grid-cols-[0.82fr_1.18fr] lg:items-end">
-            <div>
-              <h2 className="max-w-xl text-4xl sm:text-5xl">
-                Seven layers, scored without theatrics.
-              </h2>
-            </div>
-            <p className="max-w-2xl leading-relaxed text-muted lg:justify-self-end">
-              Every audit and upgrade is organized around the same stack, so the
-              roadmap is clear: fix the weak layer, re-check it, then document what moved.
-              Paid reports score each layer from 0–10 and normalize the total to 100.
+        <div className="border-y border-line bg-paper">
+          <Container className="grid gap-5 py-6 text-sm text-muted sm:grid-cols-3">
+            <p>
+              <span className="mr-2 text-pine">↳</span> Page-level evidence
             </p>
-          </div>
-          <LineDraw className="mb-8" />
-          <Stagger className="home-layer-grid">
-            {layerMatrix.map((layer) => (
-              <StaggerItem key={layer.n} className="home-layer-row">
-                <div className="home-layer-row__index">{layer.n}</div>
-                <div>
-                  <h3 className="text-2xl">{layer.name}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-muted">{layer.signal}</p>
-                </div>
-                <p className="text-sm leading-relaxed text-muted">{layer.fix}</p>
-              </StaggerItem>
-            ))}
-          </Stagger>
-        </Section>
-
-        <Section id="deliverables" index="05" label="What you get">
-          <div className="grid gap-10 lg:grid-cols-[0.72fr_1.28fr]">
-            <div>
-              <h2 className="max-w-lg text-4xl sm:text-5xl">
-                Practical outputs, not a mystery report.
-              </h2>
-              <p className="mt-5 max-w-md leading-relaxed text-muted">
-                The audit gives you the map. The upgrade applies the fixes. The
-                care plan adds a recurring re-audit and bounded update cadence.
-              </p>
-            </div>
-            <Stagger className="grid gap-4 md:grid-cols-2">
-              {deliverableGroups.map((group) => (
-                <StaggerItem key={group.label} className="card p-6">
-                  <p className="mono-label !text-lime-deep">[ {group.label} ]</p>
-                  <ul className="mt-5 grid gap-3 text-sm text-muted">
-                    {group.items.map((item) => (
-                      <li key={item} className="flex gap-3">
-                        <span className="font-mono text-lime-deep">+</span>
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </StaggerItem>
-              ))}
-            </Stagger>
-          </div>
-        </Section>
-
-        <section id="offers" className="site-section scroll-mt-20 bg-pine py-20 text-paper md:py-24">
-          <Container>
-            <div className="grid gap-8 lg:grid-cols-[0.74fr_1.26fr] lg:items-end">
+            <p>
+              <span className="mr-2 text-pine">↳</span> Clearly labeled modeled
+              scenarios
+            </p>
+            <p>
+              <span className="mr-2 text-pine">↳</span> Prioritized, reviewable
+              actions
+            </p>
+          </Container>
+        </div>
+        <section id="solution">
+          <Container className="py-16 md:py-24">
+            <div className="grid gap-6 md:grid-cols-2">
               <div>
-                <MonoLabel index="06" tone="inverse">Start here</MonoLabel>
-                <h2 className="mt-4 max-w-xl text-4xl text-paper sm:text-5xl">
-                  Choose the amount of help you want us to carry.
+                <MonoLabel>The problem</MonoLabel>
+                <h2 className="mt-5 max-w-xl">
+                  A good website should leave fewer questions.
                 </h2>
               </div>
-              <p className="max-w-2xl leading-relaxed text-paper/68 lg:justify-self-end">
-                Begin with a quick read, buy the scored audit, or move straight
-                into implementation. The $497 audit is credited once toward a
-                Website Upgrade or Website Build of $2,500 or more for the same
-                site when the agreement is signed within {site.auditProduct.creditDays} days after report delivery.
+              <p className="self-end text-muted leading-relaxed">
+                What do you offer? Who is it for? What supports your claims?
+                When these answers are hard to find, customers and search
+                systems have less useful information to work with. Start with
+                the pages you control.
               </p>
             </div>
-            <Stagger className="mt-12 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-              {site.offers.map((offer, index) => (
-                <StaggerItem key={offer.name} className="home-offer-card">
-                  <div>
-                    <p className="font-mono text-xs uppercase text-lime">{offer.price}</p>
-                    <h3 className="mt-4 text-2xl text-paper">{offer.name}</h3>
-                    <p className="mt-4 text-sm leading-relaxed text-paper/65">{offer.desc}</p>
-                  </div>
-                  <div className="mt-7">
-                    {offer.need === null ? (
-                      <Cta
-                        href={offer.href}
-                        variant={index === 0 ? "primary" : "ghost"}
-                        className={index === 0 ? "" : "btn-on-pine"}
-                      >
-                        {offer.cta}
-                      </Cta>
-                    ) : (
-                      <SnapshotCta
-                        href={offer.href}
-                        variant="ghost"
-                        defaultNeed={offer.need}
-                        className="btn-on-pine"
-                      >
-                        {offer.cta}
-                      </SnapshotCta>
-                    )}
-                  </div>
-                </StaggerItem>
+            <div className="mt-12 grid gap-5 md:grid-cols-3">
+              {capabilities.map(([n, t, d]) => (
+                <article className="card p-7" key={n}>
+                  <span className="mono-label text-lime-deep!">
+                    {n} / CLARITY
+                  </span>
+                  <h3 className="mt-8 text-xl leading-snug">{t}</h3>
+                  <p className="mt-4 text-sm leading-relaxed text-muted">{d}</p>
+                </article>
               ))}
-            </Stagger>
-            <div className="mt-8 border border-dashed border-paper/18 p-5">
-              <p className="text-sm leading-relaxed text-paper/65">
-                Already optimized? The monthly{" "}
-                <Link href={site.carePlan.path} className="text-lime underline">
-                  AI Search Care Plan
-                </Link>{" "}
-                provides a re-audit, up to two defined updates, and documented
-                answer samples. Eligibility is confirmed before billing.
-              </p>
             </div>
           </Container>
         </section>
-
-        <Section id="trust" index="07" label="Who does the work">
-          <div className="grid gap-10 lg:grid-cols-[0.72fr_1.28fr] lg:items-start">
+        <section className="border-y border-line bg-paper-2">
+          <Container className="grid gap-12 py-16 md:grid-cols-[0.8fr_1.2fr] md:py-24">
             <div>
-              <h2 className="max-w-lg text-4xl sm:text-5xl">
-                Founder-led, with direct accountability.
+              <MonoLabel>A useful starting point</MonoLabel>
+              <h2 className="mt-5">
+                From website
+                <br />
+                to next steps.
               </h2>
+              <p className="mt-5 text-muted leading-relaxed">
+                No account to create. No website access to grant. Begin with a
+                public address.
+              </p>
+              <Cta href="/free-audit" className="mt-7">
+                Run the free preview
+              </Cta>
             </div>
-            <div className="max-w-2xl space-y-5 leading-relaxed text-muted">
-              <p>
-                <strong className="text-ink">{site.founder.name}</strong> is queryclear&apos;s
-                founder and lead operator. He leads strategy, engineering, and delivery,
-                so the person scoping the work remains accountable for the implementation.
-              </p>
-              <p>
-                {site.legal.relationship} {site.legal.serviceFeeNotice}
-              </p>
-              <div className="flex flex-wrap gap-4 text-sm">
-                <Link href="/about" className="ulink font-medium text-ink">
-                  About queryclear
-                </Link>
-                <a
-                  href={site.founder.workUrl}
-                  className="ulink font-medium text-ink"
-                  rel="noopener noreferrer"
+            <ol className="grid gap-7">
+              {[
+                [
+                  "01",
+                  "Enter your website",
+                  "We fetch up to five eligible public pages and run supported on-page checks.",
+                ],
+                [
+                  "02",
+                  "Review your preview",
+                  "See the initial findings. Use your email to unlock the detailed report and request a copy.",
+                ],
+                [
+                  "03",
+                  "Choose the next action",
+                  "Review page evidence, explore modeled scenarios, and download a plan to share with your team.",
+                ],
+              ].map(([n, t, d]) => (
+                <li
+                  key={n}
+                  className="grid grid-cols-[40px_1fr] gap-5 border-b border-line pb-7"
                 >
-                  See the broader studio&apos;s published work
-                </a>
-              </div>
-            </div>
-          </div>
-        </Section>
-
-        <Section id="resources" index="08" label="Deepen the method" tone="tinted">
-          <div className="grid gap-8 lg:grid-cols-[0.72fr_1.28fr] lg:items-start">
+                  <span className="font-mono text-sm text-lime-deep">{n}</span>
+                  <div>
+                    <h3 className="text-xl">{t}</h3>
+                    <p className="mt-3 text-sm leading-relaxed text-muted">
+                      {d}
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </Container>
+        </section>
+        <section>
+          <Container className="grid gap-10 py-16 md:grid-cols-2 md:py-24">
             <div>
-              <h2 className="max-w-lg text-4xl sm:text-5xl">
-                The supporting guides are part of the product.
+              <MonoLabel>Confidence comes from context</MonoLabel>
+              <h2 className="mt-5">
+                See the evidence.
+                <br />
+                Understand the limits.
               </h2>
-              <p className="mt-5 max-w-md leading-relaxed text-muted">
-                These pages explain the exact principles behind the work, so you
-                can evaluate the method before you buy anything.
+              <p className="mt-5 leading-relaxed text-muted">
+                An observation in fetched HTML and a model-generated suggestion
+                answer different questions. Your report keeps that distinction
+                visible.
               </p>
+              <Link
+                href="/audit-methodology"
+                className="mt-6 inline-block font-medium underline underline-offset-4"
+              >
+                Read our methodology →
+              </Link>
             </div>
-            <div className="grid gap-4 sm:grid-cols-2">
-              {resourceLinks.map((resource) => (
-                <Link key={resource.href} href={resource.href} className="home-resource-link">
-                  <span className="mono-label !text-lime-deep">[ {resource.eyebrow} ]</span>
-                  <span className="mt-4 block font-display text-2xl">{resource.title}</span>
-                  <span className="mt-3 block text-sm leading-relaxed text-muted">{resource.desc}</span>
-                </Link>
+            <div className="grid gap-4">
+              <article className="card p-6">
+                <span className="evidence-tag">Observed</span>
+                <h3 className="mt-4 text-xl">What the fetched page contains</h3>
+                <p className="mt-3 text-sm leading-relaxed text-muted">
+                  Technical findings reference the pages checked. These are
+                  bounded checks, with recommendations that still need human
+                  review.
+                </p>
+              </article>
+              <article className="card p-6">
+                <span className="evidence-tag evidence-tag--modeled">
+                  Modeled
+                </span>
+                <h3 className="mt-4 text-xl">What to investigate next</h3>
+                <p className="mt-3 text-sm leading-relaxed text-muted">
+                  Answer scenarios explore possible content gaps. They do not
+                  establish live visibility in ChatGPT, Claude, Gemini or Google
+                  AI Overviews.
+                </p>
+              </article>
+            </div>
+          </Container>
+        </section>
+        <section id="offers" className="border-y border-line bg-paper-2">
+          <Container className="py-16 md:py-24">
+            <div className="flex flex-wrap items-end justify-between gap-6">
+              <div>
+                <MonoLabel>Start with clarity. Then improve.</MonoLabel>
+                <h2 className="mt-5">The right level of help.</h2>
+              </div>
+              <Link
+                href="/pricing"
+                className="font-medium underline underline-offset-4"
+              >
+                Compare scope and pricing →
+              </Link>
+            </div>
+            <div className="mt-10 grid gap-5 md:grid-cols-3">
+              {site.offers.slice(0, 3).map((o, i) => (
+                <article
+                  key={o.name}
+                  className={`card flex flex-col p-7 ${i === 0 ? "border-pine!" : ""}`}
+                >
+                  <p className="text-sm font-medium text-muted">
+                    {i === 0 ? "Explore" : i === 1 ? "Diagnose" : "Implement"}
+                  </p>
+                  <h3 className="mt-5 text-2xl">{o.name}</h3>
+                  <p className="mt-5 font-display text-3xl">{o.price}</p>
+                  <p className="mt-4 flex-1 text-sm leading-relaxed text-muted">
+                    {o.desc}
+                  </p>
+                  <Cta
+                    href={o.href}
+                    variant={i === 0 ? "primary" : "ghost"}
+                    className="mt-7"
+                    showArrow={false}
+                  >
+                    {i === 0
+                      ? "Start free"
+                      : i === 1
+                        ? "See the paid audit"
+                        : "Explore an upgrade"}
+                  </Cta>
+                </article>
               ))}
             </div>
-          </div>
-        </Section>
-
-        <Section id="faq" index="09" label="Good to know">
-          <div className="grid gap-10 lg:grid-cols-[0.62fr_1.38fr]">
+            <p className="mt-6 text-sm text-muted">
+              Need a new website?{" "}
+              <Link className="underline" href="/ai-search-ready-website">
+                Explore a client-owned build
+              </Link>
+              . Ongoing work is available through the{" "}
+              <Link className="underline" href="/care-plan">
+                Care Plan
+              </Link>{" "}
+              after an eligibility review.
+            </p>
+          </Container>
+        </section>
+        <section>
+          <Container className="grid gap-10 py-16 md:grid-cols-[0.8fr_1.2fr] md:py-24">
             <div>
-              <h2 className="text-4xl sm:text-5xl">Questions, answered.</h2>
-              <p className="mt-5 max-w-md leading-relaxed text-muted">
-                Honest constraints matter here. We do not sell guaranteed rankings,
-                AI-citation promises, or magic files.
+              <MonoLabel>Before you start</MonoLabel>
+              <h2 className="mt-5">Clear answers.</h2>
+              <p className="mt-5 text-muted">
+                A useful tool should be clear about what it does.
               </p>
             </div>
-            <Accordion items={faqs.map((f) => ({ q: f.q, a: f.a }))} />
-          </div>
-        </Section>
-
-        <section id="audit-cta" className="site-section scroll-mt-20 bg-paper-2 py-20 md:py-28">
-          <Container className="grid gap-12 lg:grid-cols-[0.88fr_1.12fr] lg:items-center">
+            <Accordion items={faqs} />
+          </Container>
+        </section>
+        <section className="bg-pine text-paper">
+          <Container className="flex flex-wrap items-center justify-between gap-8 py-16">
             <div>
-              <MonoLabel index="10">Get started</MonoLabel>
-              <h2 className="mt-5 max-w-xl text-4xl sm:text-5xl">
-                <ClipReveal lines={["Show us the site.", "We will find the weak layers."]} />
+              <p className="mono-label text-paper/70!">Your next useful step</p>
+              <h2 className="mt-4 max-w-2xl">
+                Find the clarity gaps
+                <br />
+                in your website.
               </h2>
-              <p className="mt-5 max-w-md leading-relaxed text-muted">
-                Tell us what you run, where you compete, and what you want the site
-                to do. A real person reads every inquiry and replies with a practical
-                next step.
+            </div>
+            <Cta href="/free-audit">Check my website</Cta>
+          </Container>
+        </section>
+        <section id="audit-cta">
+          <Container className="grid gap-10 py-16 md:grid-cols-2">
+            <div>
+              <MonoLabel>Work with QueryClear</MonoLabel>
+              <h2 className="mt-5">
+                Want help putting
+                <br />
+                the plan into practice?
+              </h2>
+              <p className="mt-5 text-muted leading-relaxed">
+                Tell us about your website and what you need. Kyle, our founder
+                and lead operator, reviews the scope with you.
               </p>
-              <div className="mt-8 grid gap-3 text-sm text-muted">
-                <Link href="/free-audit" className="ulink w-fit font-medium text-ink">
-                  Run the free AI Search Audit first
-                </Link>
-                <Link href="/ai-visibility-audit" className="ulink w-fit font-medium text-ink">
-                  Or see the $497 scored audit
-                </Link>
-              </div>
+              <SnapshotCta
+                href="/#audit-cta"
+                defaultNeed="Website Upgrade"
+                className="mt-6"
+              >
+                Discuss my website
+              </SnapshotCta>
+              <br />
+              <Link
+                href="/about"
+                className="mt-5 inline-block underline underline-offset-4"
+              >
+                Meet the team behind the work →
+              </Link>
             </div>
             <LeadForm />
           </Container>
         </section>
       </main>
-
       <Footer />
     </>
-  );
-}
-
-function Section({
-  id,
-  index,
-  label,
-  children,
-  tone = "paper",
-}: {
-  id: string;
-  index: string;
-  label: string;
-  children: ReactNode;
-  tone?: "paper" | "tinted";
-}) {
-  const toneClass = tone === "tinted" ? "home-band-tinted" : "home-band-paper";
-
-  return (
-    <section id={id} className={`site-section scroll-mt-20 py-20 md:py-24 ${toneClass}`}>
-      <Container>
-        <div className="mb-3">
-          <MonoLabel index={index}>{label}</MonoLabel>
-        </div>
-        {children}
-      </Container>
-    </section>
   );
 }

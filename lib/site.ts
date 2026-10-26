@@ -5,9 +5,9 @@ export const site = {
   name: "queryclear",
   // Canonical = www (apex 307 → www in production). Decided 2026-06-03; see Decisions.md.
   url: "https://www.queryclear.com",
-  tagline: "Modern SEO for the AI search era.",
+  tagline: "Website clarity for search and AI discovery.",
   description:
-    "queryclear audits and upgrades service-business websites so public facts, proof, services, and conversion paths are clearer to people and search systems.",
+    "Understand how clearly your website communicates to customers, search systems and AI discovery experiences. Review on-page evidence, modeled scenarios and practical next steps.",
   parentOrg: "SparkCreatives Inc.",
   parentOrgUrl: "https://sparkcreativesinc.org",
   legal: {
@@ -71,7 +71,7 @@ export const site = {
   // → its sales page).
   offers: [
     {
-      name: "Free AI Search Audit",
+      name: "Free readiness preview",
       price: "Free",
       desc: "An automated, read-only readiness preview of your public site: technical checks, clarity signals, and a short prioritized fix list.",
       href: "/free-audit",

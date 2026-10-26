@@ -12,9 +12,9 @@ export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
 // Brand colors mirror app/globals.css (paper / pine / lime).
-const PINE = "#0c2a21";
-const PAPER = "#f7f4ee";
-const LIME = "#b6f03c";
+const PINE = "#102f26";
+const PAPER = "#fafbf8";
+const LIME = "#d2ed82";
 const MUTED = "rgba(247,244,238,0.62)";
 const LOGO_DATA_URI = `data:image/png;base64,${readFileSync(
   join(process.cwd(), "public", "brand", "queryclear-logo-light.png"),
@@ -43,7 +43,7 @@ export default function OpengraphImage() {
         <div style={{ display: "flex", flexDirection: "column", maxWidth: 940 }}>
           <div
             style={{
-              fontSize: 86,
+              fontSize: 74,
               fontWeight: 700,
               lineHeight: 1.02,
               letterSpacing: "-0.03em",
@@ -52,8 +52,8 @@ export default function OpengraphImage() {
             {site.tagline}
           </div>
           <div style={{ marginTop: 28, fontSize: 30, lineHeight: 1.35, color: MUTED }}>
-            Websites built to be clearer, more useful, and easier to understand
-            — for Google, AI search, and real customers.
+            On-page evidence. Clearly labeled modeled scenarios.
+            A practical plan for the pages you control.
           </div>
         </div>
 
@@ -69,7 +69,7 @@ export default function OpengraphImage() {
           }}
         >
           <div style={{ display: "flex", width: 12, height: 12, borderRadius: 9999, backgroundColor: LIME }} />
-          <div style={{ display: "flex" }}>Modern SEO · AI search · www.queryclear.com</div>
+          <div style={{ display: "flex" }}>Website clarity · Evidence · Action · www.queryclear.com</div>
         </div>
       </div>
     ),

@@ -141,7 +141,7 @@ export default function CarePlanPage() {
           <Container className="py-16 md:py-20">
             <MonoLabel index="care">{plan.name} · {plan.priceLabel}</MonoLabel>
             <h1 className="mt-5 max-w-3xl text-4xl sm:text-5xl">
-              Maintain your site&apos;s modern-search foundation each month.
+              Keep your website clear, current and working.
             </h1>
             <p className="mt-5 max-w-2xl leading-relaxed text-muted">
               A human-delivered maintenance plan for sites that already have a sound
@@ -151,7 +151,7 @@ export default function CarePlanPage() {
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <Cta href="#care-cta">Check eligibility</Cta>
-              <Cta href="/free-audit" variant="ghost">Run a free audit</Cta>
+              <Cta href="/free-audit" variant="ghost">Run a free preview</Cta>
             </div>
             <p className="mt-3 text-xs text-muted">
               {plan.priceLabel}, billed month-to-month after written eligibility
@@ -260,7 +260,7 @@ export default function CarePlanPage() {
           <Container className="flex flex-col items-start gap-6">
             <div>
               <p className="mono-label !text-paper/70">{plan.name}</p>
-              <p className="mt-3 font-display text-6xl tnum text-paper">{plan.priceLabel}</p>
+              <p className="mt-3 font-display text-4xl sm:text-6xl tnum text-paper">{plan.priceLabel}</p>
               <p className="mt-2 text-paper/70">
                 Billed month-to-month after eligibility approval · no long-term commitment.
               </p>

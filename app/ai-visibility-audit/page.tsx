@@ -125,7 +125,7 @@ export default function AuditLandingPage() {
           <Container className="py-16 md:py-20">
             <MonoLabel index="audit">AI Search Audit · $497</MonoLabel>
             <h1 className="mt-5 max-w-3xl text-4xl sm:text-5xl">
-              Review your website&apos;s modern-search readiness.
+              A human-reviewed plan for a clearer website.
             </h1>
             <p className="mt-5 max-w-2xl leading-relaxed text-muted">
               Get an evidence-linked review of one public website: seven readiness
@@ -135,7 +135,7 @@ export default function AuditLandingPage() {
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <CheckoutButton product="ai-search-audit" label="Buy the audit — $497" />
-              <Cta href="/free-audit" variant="ghost">Run a free audit</Cta>
+              <Cta href="/free-audit" variant="ghost">Run a free preview</Cta>
               <Cta href="/audit" variant="ghost">See a sample report</Cta>
             </div>
             <p className="mt-3 text-xs text-muted">

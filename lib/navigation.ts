@@ -86,7 +86,7 @@ export const resourceColumns: NavColumn[] = [
     links: [
       {
         href: "/free-audit",
-        label: "Free AI Search Audit",
+        label: "Free readiness preview",
         desc: "Run an automated, read-only readiness preview of your public website.",
       },
       {
@@ -126,6 +126,8 @@ export const megaMenus: NavMenu[] = [
 export const directLinks: NavLink[] = [{ href: "/about", label: "About" }];
 
 export const companyLinks: NavLink[] = [
+  { href: "/pricing", label: "Pricing" },
+  { href: "/audit-methodology", label: "Audit methodology" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
   { href: "/privacy", label: "Privacy" },

@@ -56,7 +56,7 @@ test("navigating offers (need === null) point at real routes, including the free
   const navigating = site.offers.filter((o) => o.need === null);
   // Free Audit + the $497 Audit both navigate (no overlay).
   const byName = Object.fromEntries(navigating.map((o) => [o.name, o.href]));
-  assert.equal(byName["Free AI Search Audit"], "/free-audit");
+  assert.equal(byName["Free readiness preview"], "/free-audit");
   assert.equal(byName["AI Search Audit"], "/ai-visibility-audit");
   for (const o of navigating) {
     assert.ok(o.href.startsWith("/"), `navigating offer "${o.name}" must link to a root-relative route`);

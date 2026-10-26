@@ -259,7 +259,7 @@ export default function SchemaPage() {
             <div>
               <MonoLabel index="schema">Structured data</MonoLabel>
               <h1 className="mt-5 max-w-3xl text-4xl sm:text-5xl">
-                Schema turns your business facts into a machine-readable map.
+                Structured data starts with accurate business facts.
               </h1>
               <p className="mt-5 max-w-2xl leading-relaxed text-muted">
                 Schema, usually published as JSON-LD, is not an AI-search cheat
@@ -372,7 +372,7 @@ export default function SchemaPage() {
                 the actual URL, phone, service area, and visible page content.
               </p>
             </div>
-            <pre className="machine-panel overflow-x-auto">
+            <pre tabIndex={0} aria-label="Illustrative code example" className="machine-panel overflow-x-auto">
               <code>{example}</code>
             </pre>
           </Container>
@@ -457,13 +457,13 @@ export default function SchemaPage() {
                 Is your schema accurate, connected, and useful?
               </h2>
               <p className="mt-3 max-w-xl text-paper/70">
-                Run a free audit to see what your current markup says, what is
+                Run a free preview to see what your current markup says, what is
                 missing, and whether your pages give modern search enough clear
                 evidence to work with.
               </p>
             </div>
             <div className="flex flex-wrap gap-3">
-              <Cta href="/free-audit">Run a free audit</Cta>
+              <Cta href="/free-audit">Run a free preview</Cta>
               <Cta
                 href="/ai-visibility-audit"
                 variant="ghost"

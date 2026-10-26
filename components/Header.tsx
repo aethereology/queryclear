@@ -1,311 +1,133 @@
 "use client";
-
-import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { Cta, Logo } from "@/components/ui";
-import { directLinks, megaMenus, type NavMenu } from "@/lib/navigation";
-
-const navText = "font-mono text-xs font-medium uppercase tracking-wider";
-const navBlock = "nav-block px-2 -mx-2 py-1";
-
-function Chevron({ open }: { open: boolean }) {
-  return (
-    <svg
-      viewBox="0 0 20 20"
-      fill="none"
-      aria-hidden="true"
-      className={`h-3.5 w-3.5 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
-    >
-      <path
-        d="M5 7.5 10 12.5 15 7.5"
-        stroke="currentColor"
-        strokeWidth="1.7"
-        strokeLinecap="square"
-        strokeLinejoin="miter"
-      />
-    </svg>
-  );
-}
-
-function RailTick() {
-  return <span aria-hidden="true" className="hidden h-1.5 w-1.5 bg-lime lg:block" />;
-}
-
+import { useEffect, useRef, useState } from "react";
+import { Logo, Cta } from "@/components/ui";
+import { megaMenus } from "@/lib/navigation";
 export function Header() {
   const [open, setOpen] = useState(false);
-  const [activeMega, setActiveMega] = useState<NavMenu["id"] | null>(null);
-  const mobileToggleRef = useRef<HTMLButtonElement>(null);
-  const activeMenu = megaMenus.find((menu) => menu.id === activeMega);
-  const megaGridClass =
-    activeMenu?.columns.length === 3
-      ? "lg:grid-cols-3"
-      : activeMenu?.columns.length === 4
-        ? "lg:grid-cols-4"
-        : "lg:grid-cols-5";
-
-  function closeAll() {
-    setOpen(false);
-    setActiveMega(null);
-  }
-
+  const toggle = useRef<HTMLButtonElement>(null);
   useEffect(() => {
-    function onKeyDown(event: KeyboardEvent) {
-      if (event.key !== "Escape" || (!open && !activeMega)) return;
+    function close(e: KeyboardEvent) {
+      if (e.key !== "Escape") return;
+      const expanded = [
+        ...document.querySelectorAll<HTMLDetailsElement>(
+          "header details[open]",
+        ),
+      ];
+      if (!open && expanded.length === 0) return;
+      const summary = expanded
+        .find((detail) => detail.contains(document.activeElement))
+        ?.querySelector("summary");
+      expanded.forEach((detail) => detail.removeAttribute("open"));
       setOpen(false);
-      setActiveMega(null);
-      mobileToggleRef.current?.focus();
+      if (open) toggle.current?.focus();
+      else summary?.focus();
     }
-    document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
-  }, [open, activeMega]);
-
+    document.addEventListener("keydown", close);
+    return () => document.removeEventListener("keydown", close);
+  }, [open]);
   return (
-    <header className="sticky top-0 z-50 bg-paper">
-      <div
-        className="relative border-b border-dashed border-line bg-paper"
-        onMouseLeave={() => setActiveMega(null)}
-      >
-        <div className="nav-scanline relative mx-auto flex h-16 max-w-[1600px] items-center justify-between px-4 md:px-8">
-          <div className="hidden items-center gap-3 lg:flex">
-            <RailTick />
-            <nav className="flex items-center gap-2" aria-label="Primary">
-              {megaMenus.map((menu) => {
-                const isOpen = activeMega === menu.id;
-                return (
-                  <button
-                    key={menu.id}
-                    type="button"
-                    aria-expanded={isOpen}
-                    aria-haspopup="true"
-                    aria-controls={`mega-${menu.id}`}
-                    onClick={() => setActiveMega(isOpen ? null : menu.id)}
-                    onMouseEnter={() => setActiveMega(menu.id)}
-                    className={`nav-command flex items-center gap-1.5 ${navText}`}
-                  >
-                    <span>{menu.label}</span>
-                    <Chevron open={isOpen} />
-                  </button>
-                );
-              })}
-            </nav>
-          </div>
-
-          <button
-            ref={mobileToggleRef}
-            type="button"
-            onClick={() => setOpen((o) => !o)}
-            aria-expanded={open}
-            aria-controls="mobile-nav"
-            aria-label={open ? "Close menu" : "Open menu"}
-            className="flex h-10 w-10 items-center justify-center border border-dashed border-line text-ink transition-colors hover:bg-lime hover:text-pine-2 lg:hidden"
-          >
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 20 20"
-              aria-hidden="true"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.6"
-              strokeLinecap="square"
-            >
-              {open ? (
-                <>
-                  <line x1="5" y1="5" x2="15" y2="15" />
-                  <line x1="15" y1="5" x2="5" y2="15" />
-                </>
-              ) : (
-                <>
-                  <line x1="3" y1="6" x2="17" y2="6" />
-                  <line x1="3" y1="10" x2="17" y2="10" />
-                  <line x1="3" y1="14" x2="17" y2="14" />
-                </>
-              )}
-            </svg>
-          </button>
-
-          <Link
-            href="/"
-            className="brand-hub absolute left-1/2 -translate-x-1/2"
-            onClick={closeAll}
-            aria-label="queryclear home"
-          >
-            <span aria-hidden="true" className="brand-hub__rail hidden sm:block" />
-            <Logo className="h-7 w-auto sm:h-8" />
-            <span aria-hidden="true" className="brand-hub__rail hidden sm:block" />
-          </Link>
-
-          <div className="flex items-center justify-end gap-3">
-            <nav className="hidden items-center gap-5 lg:flex" aria-label="Company">
-              {directLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setActiveMega(null)}
-                  className={`${navBlock} ${navText}`}
-                >
-                  {link.label}
-                </Link>
-              ))}
-              <Link
-                href="/contact"
-                onClick={() => setActiveMega(null)}
-                className={`${navBlock} ${navText}`}
-              >
-                Contact
-              </Link>
-            </nav>
-            <div className="hidden sm:block">
-              <Cta
-                href="/free-audit"
-                showArrow={false}
-                className="px-3 py-2 text-xs sm:px-5 sm:py-2.5 lg:px-4 lg:py-1.5"
-              >
-                Free audit
-              </Cta>
-            </div>
-          </div>
-        </div>
-
-        {activeMenu && (
-          <div
-            id={`mega-${activeMenu.id}`}
-            className="absolute left-0 right-0 top-full hidden border-b border-dashed border-line bg-paper lg:block"
-          >
-            <div className="mx-auto grid max-w-[1600px] border-x border-dashed border-line xl:grid-cols-[0.78fr_1.22fr]">
-              <div className="mega-feature border-b border-dashed border-line p-6 xl:border-b-0 xl:border-r">
-                <p className="mono-label !text-lime-deep">[ {activeMenu.label} ]</p>
-                <h2 className="mt-4 max-w-sm text-3xl">
-                  {activeMenu.id === "services"
-                    ? "Choose how much modern-search work you want us to carry."
-                    : "Read the method, run the tools, then fix the weak layers."}
-                </h2>
-                <p className="mt-4 max-w-md text-sm leading-relaxed text-muted">
-                  {activeMenu.id === "services"
-                    ? "Start with a free preview, buy the scored audit, or move into a website upgrade, build, or eligible care plan."
-                    : "Resources are organized from method to examples: the stack, GEO, schema, llms.txt, a fictional sample report, and self-scoring tools."}
-                </p>
-                <div className="mt-6 flex flex-wrap gap-3">
-                  <Cta href="/free-audit" showArrow={false} className="px-4 py-2 text-xs">
-                    Free audit
-                  </Cta>
-                  <Cta
-                    href={activeMenu.id === "services" ? "/ai-visibility-audit" : "/ai-visibility-stack"}
-                    variant="ghost"
-                    showArrow={false}
-                    className="px-4 py-2 text-xs"
-                  >
-                    {activeMenu.id === "services" ? "Paid audit" : "See method"}
-                  </Cta>
-                </div>
-              </div>
-
-              <div className={`grid ${megaGridClass}`}>
-                {activeMenu.columns.map((column, index) => (
-                  <div
-                    key={column.eyebrow}
-                    className={`min-h-64 p-5 ${index < activeMenu.columns.length - 1 ? "border-r border-dashed border-line" : ""}`}
-                  >
-                    <p className="mono-label !text-lime-deep">[ {column.eyebrow} ]</p>
-                    <div className="mt-4 grid gap-2">
-                      {column.links.map((link) => (
-                        <Link
-                          key={link.href}
-                          href={link.href}
-                          onClick={() => setActiveMega(null)}
-                          className="mega-link group block p-3"
-                        >
-                          <span className="font-mono text-xs font-medium uppercase tracking-wider">
-                            {link.label}
-                          </span>
-                          {link.desc && (
-                            <span className="mt-1.5 block text-xs leading-relaxed text-muted group-hover:text-pine-2">
-                              {link.desc}
-                            </span>
-                          )}
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-
-      <div
-        id="mobile-nav"
-        aria-hidden={!open}
-        inert={!open ? true : undefined}
-        className={`overflow-hidden border-b border-dashed border-line bg-paper transition-[max-height] duration-300 ease-out lg:hidden ${
-          open ? "max-h-[980px]" : "max-h-0 border-b-0"
-        }`}
-      >
-        <nav className="grid gap-5 px-4 py-5" aria-label="Mobile">
+    <header className="clarity-nav sticky top-0 z-50 border-b border-line">
+      <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-5 px-5 sm:px-8">
+        <Link
+          href="/"
+          aria-label="queryclear home"
+          onClick={() => setOpen(false)}
+        >
+          <Logo className="h-8 w-auto" />
+        </Link>
+        <nav
+          aria-label="Primary"
+          className="hidden items-center gap-7 text-sm lg:flex"
+        >
+          <Link href="/free-audit">Free preview</Link>
           {megaMenus.map((menu) => (
-            <div key={menu.id} className="grid gap-3 border border-dashed border-line p-4">
-              <button
-                type="button"
-                aria-expanded={activeMega === menu.id}
-                aria-controls={`mobile-${menu.id}`}
-                onClick={() => setActiveMega(activeMega === menu.id ? null : menu.id)}
-                className="flex items-center justify-between text-left"
-              >
-                <span className="mono-label !text-lime-deep">[ {menu.label} ]</span>
-                <Chevron open={activeMega === menu.id} />
-              </button>
-              <div
-                id={`mobile-${menu.id}`}
-                className={`${activeMega === menu.id ? "grid" : "hidden"} gap-4 pt-3`}
-              >
-                {menu.columns.map((column) => (
-                  <div key={column.eyebrow} className="grid gap-2">
-                    <p className="font-mono text-[0.65rem] font-medium uppercase tracking-wider text-muted">
-                      {column.eyebrow}
-                    </p>
-                    {column.links.map((link) => (
-                      <Link
-                        key={link.href}
-                        href={link.href}
-                        onClick={closeAll}
-                        className={`${navBlock} ${navText}`}
-                      >
-                        {link.label}
-                      </Link>
-                    ))}
-                  </div>
-                ))}
+            <details
+              key={menu.id}
+              name="queryclear-desktop-nav"
+              className="relative"
+            >
+              <summary className="py-3">
+                {menu.label} <span aria-hidden>⌄</span>
+              </summary>
+              <div className="absolute left-1/2 top-full grid w-[560px] -translate-x-1/2 grid-cols-2 gap-3 rounded-xl border border-line bg-paper p-5 shadow-xl">
+                {menu.columns
+                  .flatMap((c) => c.links)
+                  .map((link) => (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      className="block! rounded-lg p-3 hover:bg-paper-2"
+                    >
+                      <span className="block font-medium">{link.label}</span>
+                      <span className="mt-1 block text-xs leading-relaxed text-muted">
+                        {link.desc}
+                      </span>
+                    </Link>
+                  ))}
               </div>
-            </div>
+            </details>
           ))}
-
-          <div className="grid gap-3 border border-dashed border-line p-4">
-            <p className="mono-label !text-lime-deep">[ Company ]</p>
-            {directLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={closeAll}
-                className={`${navBlock} ${navText}`}
-              >
-                {link.label}
-              </Link>
-            ))}
-            <Link href="/contact" onClick={closeAll} className={`${navBlock} ${navText}`}>
-              Contact
-            </Link>
-          </div>
-
+          <Link href="/pricing">Pricing</Link>
+          <Link href="/about">About</Link>
+        </nav>
+        <div className="flex items-center gap-3">
           <Cta
             href="/free-audit"
+            className="hidden! sm:inline-flex! px-4!"
             showArrow={false}
-            className="w-full py-2.5 text-xs"
           >
-            Free audit
+            Check my website
           </Cta>
-        </nav>
+          <button
+            ref={toggle}
+            type="button"
+            aria-label={open ? "Close menu" : "Open menu"}
+            aria-controls="mobile-nav"
+            aria-expanded={open}
+            className="rounded-lg border border-line px-3 lg:hidden"
+            onClick={() => setOpen((v) => !v)}
+          >
+            {open ? "Close" : "Menu"}
+          </button>
+        </div>
       </div>
+      <nav
+        id="mobile-nav"
+        aria-label="Mobile"
+        hidden={!open}
+        className="max-h-[calc(100dvh-80px)] overflow-y-auto border-t border-line bg-paper px-5 py-5 lg:hidden"
+      >
+        <div className="grid gap-3">
+          <Link href="/free-audit" onClick={() => setOpen(false)}>
+            Free preview →
+          </Link>
+          <Link href="/pricing" onClick={() => setOpen(false)}>
+            Pricing
+          </Link>
+          {megaMenus.map((menu) => (
+            <details key={menu.id} className="border-t border-line pt-3">
+              <summary className="py-3 font-medium">{menu.label}</summary>
+              <div className="grid py-3">
+                {menu.columns
+                  .flatMap((c) => c.links)
+                  .map((link) => (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      onClick={() => setOpen(false)}
+                    >
+                      {link.label}
+                    </Link>
+                  ))}
+              </div>
+            </details>
+          ))}
+          <Link href="/audit-methodology">Audit methodology</Link>
+          <Link href="/about">About</Link>
+          <Link href="/contact">Contact</Link>
+        </div>
+      </nav>
     </header>
   );
 }

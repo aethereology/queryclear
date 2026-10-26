@@ -28,7 +28,7 @@ const faqs = [
   },
   {
     q: "What if I just want to do it myself?",
-    a: "Start with a free AI Search audit to see your biggest opportunities, then a $497 AI Search Audit gives you a prioritized, plain-English roadmap you're free to run on your own. If you'd like us to do the work, every Upgrade includes the Stack's templates and playbook.",
+    a: "Start with a free readiness preview to see your biggest opportunities, then a $497 AI Search Audit gives you a prioritized, plain-English roadmap you're free to run on your own. If you'd like us to do the work, every Upgrade includes the Stack's templates and playbook.",
   },
   {
     q: "Does any of this guarantee I'll rank or get cited by AI?",
@@ -92,7 +92,7 @@ export default function StackKitPage() {
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <Cta href="/#offers">See the Upgrade</Cta>
-              <Cta href="/free-audit" variant="ghost">Run a free audit</Cta>
+              <Cta href="/free-audit" variant="ghost">Run a free preview</Cta>
             </div>
           </Container>
         </section>

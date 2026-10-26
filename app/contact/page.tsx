@@ -91,13 +91,13 @@ export default function ContactPage() {
           <Container className="py-16 md:py-20">
             <MonoLabel index="contact">Get in touch</MonoLabel>
             <h1 className="mt-5 max-w-3xl text-4xl sm:text-5xl">
-              Tell us about your site. We&apos;ll tell you how modern search sees it.
+              A clearer website starts with a conversation.
             </h1>
             <p className="mt-5 max-w-2xl leading-relaxed text-muted">
               Tell us about your site below and what you&apos;re after — an
               upgrade, a new build, or an audit. Want a free read first?{" "}
               <a href="/free-audit" className="font-medium text-ink underline hover:text-lime-deep">
-                Run a free AI Search Audit
+                Run a free readiness preview
               </a>
               . Prefer email? Reach us any time at{" "}
               <a href={`mailto:${site.email}`} className="font-medium text-ink underline hover:text-lime-deep">

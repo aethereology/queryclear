@@ -245,7 +245,7 @@ export default function StackPage() {
             <div>
               <MonoLabel index="method">Our method</MonoLabel>
               <h1 className="mt-5 max-w-3xl text-4xl sm:text-5xl">
-                Seven layers from unclear source to usable website.
+                Seven questions for a clearer website.
               </h1>
               <p className="mt-5 max-w-2xl leading-relaxed text-muted">
                 Modern search does not reward a single trick. It rewards a
@@ -254,7 +254,7 @@ export default function StackPage() {
                 foundation and decide what to fix first.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
-                <Cta href="/free-audit">Run a free audit</Cta>
+                <Cta href="/free-audit">Run a free preview</Cta>
                 <Cta href="/geo-audit" variant="ghost">
                   See the GEO audit
                 </Cta>
@@ -367,7 +367,7 @@ export default function StackPage() {
           <Container>
             <MonoLabel index="03">Scoring</MonoLabel>
             <h2 className="mt-3 max-w-3xl text-3xl sm:text-4xl">
-              We score for usefulness, not checklist theater.
+              A repeatable rubric for useful website information.
             </h2>
             <div className="mt-8 grid gap-4 md:grid-cols-4">
               {scoreBands.map((band) => (
@@ -497,7 +497,7 @@ export default function StackPage() {
               </p>
             </div>
             <div className="flex flex-wrap gap-3">
-              <Cta href="/free-audit">Run a free audit</Cta>
+              <Cta href="/free-audit">Run a free preview</Cta>
               <Cta
                 href="/ai-visibility-audit"
                 variant="ghost"

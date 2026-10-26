@@ -61,13 +61,13 @@ export function CheckoutButton({
 
   return (
     <div className={className}>
-      <label htmlFor={termsId} className="mb-3 flex max-w-xl items-start gap-2 text-left text-xs leading-relaxed opacity-75">
+      <label htmlFor={termsId} className="mb-3 flex min-h-11 max-w-xl items-center gap-2 text-left text-xs leading-relaxed opacity-75">
         <input
           id={termsId}
           type="checkbox"
           checked={accepted}
           onChange={(event) => setAccepted(event.target.checked)}
-          className="mt-0.5 h-4 w-4 shrink-0 accent-lime-deep"
+          className="h-5 w-5 shrink-0 accent-lime-deep"
         />
         <span>
           I agree to the{" "}

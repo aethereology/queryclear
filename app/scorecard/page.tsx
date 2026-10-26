@@ -98,12 +98,12 @@ export default function ScorecardPage() {
             <div>
               <h2 className="text-3xl text-paper sm:text-4xl">Want the verified version?</h2>
               <p className="mt-3 max-w-xl text-paper/70">
-                The scorecard is a self-check. A free AI Search audit reads your
+                The scorecard is a self-check. A free readiness preview reads your
                 live site and shows what to fix first, in plain English.
               </p>
             </div>
             <div className="flex flex-wrap gap-3">
-              <Cta href="/free-audit">Run a free audit</Cta>
+              <Cta href="/free-audit">Run a free preview</Cta>
               <Cta href="/ai-visibility-audit" variant="ghost" className="!text-paper !border-paper/30 hover:!bg-white/10">
                 Get the $497 audit
               </Cta>

@@ -20,11 +20,11 @@ export const metadata: Metadata = {
 
 const verdicts = [
   {
-    t: "Worth doing",
+    t: "Optional support",
     d: "A concise llms.txt file is cheap to publish and can point AI-oriented tools toward your best pages.",
   },
   {
-    t: "Not magic",
+    t: "No guaranteed effect",
     d: "It is not a ranking factor, access-control file, citation guarantee, or replacement for your actual website.",
   },
   {
@@ -111,7 +111,7 @@ const related = [
   },
   {
     href: "/free-audit",
-    t: "Free AI Search Audit",
+    t: "Free readiness preview",
     d: "See whether your current site gives modern search enough to understand.",
   },
 ];
@@ -236,17 +236,17 @@ export default function LlmsTxtPage() {
             <div>
               <MonoLabel index="llms">llms.txt</MonoLabel>
               <h1 className="mt-5 max-w-3xl text-4xl sm:text-5xl">
-                llms.txt is useful. It is not your AI-search strategy.
+                An optional directory for AI-oriented tools.
               </h1>
               <p className="mt-5 max-w-2xl leading-relaxed text-muted">
                 <code className="font-mono text-ink">llms.txt</code> is an
                 optional Markdown file that gives AI-oriented tools a curated
                 summary of your business and the pages worth reading first.
-                Used well, it reduces noise. Used as a silver bullet, it
-                distracts from the work that matters.
+                For a tool that supports it, a concise directory can make source selection easier.
+                Prioritize readable pages and verified facts first.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
-                <Cta href="/free-audit">Audit my AI-search setup</Cta>
+                <Cta href="/free-audit">Check my website</Cta>
                 <Cta href="/llms.txt" variant="ghost">
                   View our llms.txt
                 </Cta>
@@ -270,7 +270,7 @@ export default function LlmsTxtPage() {
           <Container>
             <MonoLabel index="01">The honest verdict</MonoLabel>
             <h2 className="mt-3 max-w-3xl text-3xl sm:text-4xl">
-              Publish it, but keep it in its lane.
+              Choose it when a tool or workflow will use it.
             </h2>
             <Stagger className="mt-8 grid gap-4 md:grid-cols-3">
               {verdicts.map((v) => (
@@ -351,7 +351,7 @@ export default function LlmsTxtPage() {
                 well.
               </p>
             </div>
-            <pre className="machine-panel overflow-x-auto">
+            <pre tabIndex={0} aria-label="Illustrative code example" className="machine-panel overflow-x-auto">
               <code>{sample}</code>
             </pre>
           </Container>
@@ -446,7 +446,7 @@ export default function LlmsTxtPage() {
               </p>
             </div>
             <div className="flex flex-wrap gap-3">
-              <Cta href="/free-audit">Run a free audit</Cta>
+              <Cta href="/free-audit">Run a free preview</Cta>
               <Cta
                 href="/ai-search-ready-website"
                 variant="ghost"
