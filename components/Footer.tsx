@@ -28,7 +28,7 @@ export function Footer() {
             <div className="flex flex-col gap-3">
               <span className="mono-label !text-paper/70">Get started</span>
               <Link href="/free-audit" className={`text-left ${footerLinkClass}`}>
-                Free AI Search Audit
+                Free readiness preview
               </Link>
               <a href={`mailto:${site.email}`} className={footerLinkClass}>
                 {site.email}
@@ -40,7 +40,7 @@ export function Footer() {
 
         <div className="mt-12 flex flex-col gap-2 border-t border-white/10 pt-6 text-xs text-paper/50">
           <p>
-            queryclear is operated by{" "}
+            QueryClear is part of Adilo and operated by{" "}
             <a href={site.parentOrgUrl} className="underline hover:text-lime">
               {site.legal.operator}
             </a>

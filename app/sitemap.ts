@@ -8,6 +8,7 @@ import { site } from "@/lib/site";
 // noindex and unlinked but kept reachable for old inbound links).
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
+    { url: `${site.url}/pricing`, changeFrequency: "monthly", priority: 0.8 },
     { url: `${site.url}/audit-methodology`, changeFrequency: "monthly", priority: 0.6 },
     {
       url: `${site.url}/`,

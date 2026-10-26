@@ -126,6 +126,8 @@ export const megaMenus: NavMenu[] = [
 export const directLinks: NavLink[] = [{ href: "/about", label: "About" }];
 
 export const companyLinks: NavLink[] = [
+  { href: "/pricing", label: "Pricing" },
+  { href: "/audit-methodology", label: "Audit methodology" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
   { href: "/privacy", label: "Privacy" },

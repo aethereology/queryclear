@@ -17,6 +17,9 @@ Overviews, ChatGPT-style answer engines, and future AI agents. We do not
 promise guaranteed rankings or guaranteed AI citations — we deliver technical
 readiness, clarity, useful content, and structure.
 
+## Pricing
+Compare current scope and pricing: https://www.queryclear.com/pricing
+
 ## Services
 - Free AI Search Audit — an automated, read-only readiness preview of public website content. Automated and modeled output is labeled; it is not a verified multi-engine audit.
 - AI Search Audit ($497) — one public website, up to 10 URLs, and up to 12 total prompt-engine observations distributed across up to three named engines selected at kickoff. Each prompt × engine check consumes one observation. Includes evidence-linked scoring, a prioritized roadmap, and a 45-minute walkthrough. Delivery is within seven business days after complete intake. The $497 may be credited once toward a $2,500+ Website Upgrade or Website Build for the same site when contracted within 60 days after report delivery.

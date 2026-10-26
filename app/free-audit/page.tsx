@@ -43,9 +43,9 @@ export default function FreeAuditPage() {
         <section className="site-section border-b border-line">
           <Container className="py-16 sm:py-20">
             <MonoLabel index="free">Free automated preview</MonoLabel>
-            <h1 className="mt-5 max-w-3xl">What can machines clearly understand about your website?</h1>
+            <h1 className="mt-5 max-w-3xl">Find the clarity gaps in your website.</h1>
             <p className="mt-5 max-w-2xl text-lg leading-relaxed text-muted">
-              This read-only preview checks up to five public pages for on-page search readiness,
+              Start with a public website address. This free, read-only preview checks up to five pages for on-page search readiness,
               generates up to five modeled buyer-answer scenarios with one sample per question, and
               suggests what to review next. It does not query ChatGPT, Claude, Google AI Overviews,
               or another named answer engine.

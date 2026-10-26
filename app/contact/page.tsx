@@ -91,7 +91,7 @@ export default function ContactPage() {
           <Container className="py-16 md:py-20">
             <MonoLabel index="contact">Get in touch</MonoLabel>
             <h1 className="mt-5 max-w-3xl text-4xl sm:text-5xl">
-              Tell us about your site. We&apos;ll tell you how modern search sees it.
+              A clearer website starts with a conversation.
             </h1>
             <p className="mt-5 max-w-2xl leading-relaxed text-muted">
               Tell us about your site below and what you&apos;re after — an

@@ -116,7 +116,7 @@ export function Cta({
   showArrow = true,
 }: CtaProps) {
   const base =
-    "btn-hex group inline-flex items-center justify-center gap-2 border px-6 py-3 font-mono text-sm font-medium uppercase tracking-wider";
+    "btn-hex group inline-flex items-center justify-center gap-2 border px-6 py-3 font-sans text-sm font-medium";
   const styles =
     variant === "primary"
       ? "border-lime bg-lime text-pine-2 hover:border-pine-2 hover:bg-pine-2 hover:text-lime active:border-pine-2 active:bg-pine-2 active:text-lime focus-visible:border-pine-2 focus-visible:bg-pine-2 focus-visible:text-lime"

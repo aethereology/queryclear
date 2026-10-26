@@ -75,7 +75,7 @@ export default function AboutPage() {
           <Container className="py-16 md:py-20">
             <MonoLabel index="about">Who we are</MonoLabel>
             <h1 className="mt-5 max-w-3xl text-4xl sm:text-5xl">
-              We make businesses legible to the machines people now ask.
+              Better discovery starts with a clearer website.
             </h1>
             <p className="mt-5 max-w-2xl leading-relaxed text-muted">
               Some buyers now encounter AI-generated answers alongside or instead of
