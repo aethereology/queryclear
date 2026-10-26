@@ -86,7 +86,7 @@ export const resourceColumns: NavColumn[] = [
     links: [
       {
         href: "/free-audit",
-        label: "Free AI Search Audit",
+        label: "Free readiness preview",
         desc: "Run an automated, read-only readiness preview of your public website.",
       },
       {

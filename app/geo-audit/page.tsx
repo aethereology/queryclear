@@ -269,7 +269,7 @@ export default function GeoAuditPage() {
                 foundation, test real buyer prompts, and hand you the fix roadmap.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
-                <Cta href="/free-audit">Run a free audit</Cta>
+                <Cta href="/free-audit">Run a free preview</Cta>
                 <Cta href="/ai-visibility-audit" variant="ghost">
                   Get the $497 audit
                 </Cta>
@@ -491,7 +491,7 @@ export default function GeoAuditPage() {
               </p>
             </div>
             <div className="flex flex-wrap gap-3">
-              <Cta href="/free-audit">Run a free audit</Cta>
+              <Cta href="/free-audit">Run a free preview</Cta>
               <Cta
                 href="/ai-visibility-audit"
                 variant="ghost"

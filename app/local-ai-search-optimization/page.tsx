@@ -94,7 +94,7 @@ export default function LocalPage() {
               business profiles, structured data, and a reliable path to contact.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Cta href="/free-audit">Run a free audit</Cta>
+              <Cta href="/free-audit">Run a free preview</Cta>
               <Cta href="/ai-visibility-stack" variant="ghost">See our method</Cta>
             </div>
           </Container>
@@ -163,7 +163,7 @@ export default function LocalPage() {
                 The full human-reviewed audit is $497.
               </p>
             </div>
-            <Cta href="/free-audit">Run a free audit</Cta>
+            <Cta href="/free-audit">Run a free preview</Cta>
           </Container>
         </section>
       </main>

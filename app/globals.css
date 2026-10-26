@@ -816,3 +816,7 @@ input:not([type="checkbox"]):not([type="radio"]), select { min-height: 44px; }
 @media print { .evidence-preview { box-shadow: none; } }
 
 button:not(:disabled), summary { cursor: pointer; }
+
+/* Long labels and plan prices must wrap inside narrow cards. */
+.card > * { min-width: 0; }
+.btn-hex { max-width: 100%; white-space: normal; text-align: center; }

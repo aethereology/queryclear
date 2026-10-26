@@ -71,7 +71,7 @@ export const site = {
   // → its sales page).
   offers: [
     {
-      name: "Free AI Search Audit",
+      name: "Free readiness preview",
       price: "Free",
       desc: "An automated, read-only readiness preview of your public site: technical checks, clarity signals, and a short prioritized fix list.",
       href: "/free-audit",

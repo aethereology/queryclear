@@ -111,7 +111,7 @@ const related = [
   },
   {
     href: "/free-audit",
-    t: "Free AI Search Audit",
+    t: "Free readiness preview",
     d: "See whether your current site gives modern search enough to understand.",
   },
 ];
@@ -246,7 +246,7 @@ export default function LlmsTxtPage() {
                 distracts from the work that matters.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
-                <Cta href="/free-audit">Audit my AI-search setup</Cta>
+                <Cta href="/free-audit">Check my website</Cta>
                 <Cta href="/llms.txt" variant="ghost">
                   View our llms.txt
                 </Cta>
@@ -351,7 +351,7 @@ export default function LlmsTxtPage() {
                 well.
               </p>
             </div>
-            <pre className="machine-panel overflow-x-auto">
+            <pre tabIndex={0} aria-label="Illustrative code example" className="machine-panel overflow-x-auto">
               <code>{sample}</code>
             </pre>
           </Container>
@@ -446,7 +446,7 @@ export default function LlmsTxtPage() {
               </p>
             </div>
             <div className="flex flex-wrap gap-3">
-              <Cta href="/free-audit">Run a free audit</Cta>
+              <Cta href="/free-audit">Run a free preview</Cta>
               <Cta
                 href="/ai-search-ready-website"
                 variant="ghost"

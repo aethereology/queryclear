@@ -254,7 +254,7 @@ export default function StackPage() {
                 foundation and decide what to fix first.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
-                <Cta href="/free-audit">Run a free audit</Cta>
+                <Cta href="/free-audit">Run a free preview</Cta>
                 <Cta href="/geo-audit" variant="ghost">
                   See the GEO audit
                 </Cta>
@@ -497,7 +497,7 @@ export default function StackPage() {
               </p>
             </div>
             <div className="flex flex-wrap gap-3">
-              <Cta href="/free-audit">Run a free audit</Cta>
+              <Cta href="/free-audit">Run a free preview</Cta>
               <Cta
                 href="/ai-visibility-audit"
                 variant="ghost"

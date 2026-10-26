@@ -135,7 +135,7 @@ export default function AuditLandingPage() {
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <CheckoutButton product="ai-search-audit" label="Buy the audit — $497" />
-              <Cta href="/free-audit" variant="ghost">Run a free audit</Cta>
+              <Cta href="/free-audit" variant="ghost">Run a free preview</Cta>
               <Cta href="/audit" variant="ghost">See a sample report</Cta>
             </div>
             <p className="mt-3 text-xs text-muted">

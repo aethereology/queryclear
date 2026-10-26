@@ -92,7 +92,7 @@ export default function StackKitPage() {
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <Cta href="/#offers">See the Upgrade</Cta>
-              <Cta href="/free-audit" variant="ghost">Run a free audit</Cta>
+              <Cta href="/free-audit" variant="ghost">Run a free preview</Cta>
             </div>
           </Container>
         </section>
