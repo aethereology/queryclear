@@ -6,6 +6,18 @@ import { megaMenus } from "@/lib/navigation";
 export function Header() {
   const [open,setOpen] = useState(false);
   const toggle = useRef<HTMLButtonElement>(null);
-  useEffect(() => { function close(e:KeyboardEvent) { if(e.key === 'Escape') { setOpen(false); document.querySelectorAll("header details[open]").forEach(el => el.removeAttribute("open")); toggle.current?.focus(); } } document.addEventListener('keydown',close); return () => document.removeEventListener('keydown',close); },[]);
+  useEffect(() => {
+    function close(e: KeyboardEvent) {
+      if (e.key !== "Escape") return;
+      const expanded = [...document.querySelectorAll<HTMLDetailsElement>("header details[open]")];
+      if (!open && expanded.length === 0) return;
+      const summary = expanded.find(detail => detail.contains(document.activeElement))?.querySelector("summary");
+      expanded.forEach(detail => detail.removeAttribute("open"));
+      setOpen(false);
+      if (open) toggle.current?.focus(); else summary?.focus();
+    }
+    document.addEventListener("keydown", close);
+    return () => document.removeEventListener("keydown", close);
+  }, [open]);
   return <header className="clarity-nav sticky top-0 z-50 border-b border-line"><div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-5 px-5 sm:px-8"><Link href="/" aria-label="queryclear home" onClick={() => setOpen(false)}><Logo className="h-8 w-auto" /></Link><nav aria-label="Primary" className="hidden items-center gap-7 text-sm lg:flex"><Link href="/free-audit">Free preview</Link>{megaMenus.map(menu => <details key={menu.id} name="queryclear-desktop-nav" className="relative"><summary className="py-3">{menu.label} <span aria-hidden>⌄</span></summary><div className="absolute left-1/2 top-full grid w-[560px] -translate-x-1/2 grid-cols-2 gap-3 rounded-xl border border-line bg-paper p-5 shadow-xl">{menu.columns.flatMap(c => c.links).map(link => <Link key={link.href} href={link.href} className="block! rounded-lg p-3 hover:bg-paper-2"><span className="block font-medium">{link.label}</span><span className="mt-1 block text-xs leading-relaxed text-muted">{link.desc}</span></Link>)}</div></details>)}<Link href="/pricing">Pricing</Link><Link href="/about">About</Link></nav><div className="flex items-center gap-3"><Cta href="/free-audit" className="hidden! sm:inline-flex! px-4!" showArrow={false}>Check my website</Cta><button ref={toggle} type="button" aria-label={open?'Close menu':'Open menu'} aria-controls="mobile-nav" aria-expanded={open} className="rounded-lg border border-line px-3 lg:hidden" onClick={() => setOpen(v => !v)}>{open?'Close':'Menu'}</button></div></div><nav id="mobile-nav" aria-label="Mobile" hidden={!open} className="max-h-[calc(100dvh-80px)] overflow-y-auto border-t border-line bg-paper px-5 py-5 lg:hidden"><div className="grid gap-3"><Link href="/free-audit" onClick={() => setOpen(false)}>Free preview →</Link><Link href="/pricing" onClick={() => setOpen(false)}>Pricing</Link>{megaMenus.map(menu => <details key={menu.id} className="border-t border-line pt-3"><summary className="py-3 font-medium">{menu.label}</summary><div className="grid py-3">{menu.columns.flatMap(c => c.links).map(link => <Link key={link.href} href={link.href} onClick={() => setOpen(false)}>{link.label}</Link>)}</div></details>)}<Link href="/audit-methodology">Audit methodology</Link><Link href="/about">About</Link><Link href="/contact">Contact</Link></div></nav></header>;
 }
