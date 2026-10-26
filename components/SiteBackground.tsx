@@ -1,5 +1,7 @@
 "use client";
 
+import { usePathname } from "next/navigation";
+import { isPrivateAnalyticsPath } from "@/lib/analytics";
 import React, { useCallback, useEffect, useRef } from "react";
 
 type PixelCanvasProps = React.HTMLAttributes<HTMLDivElement> & {
@@ -91,14 +93,16 @@ function PixelCanvas({
     const ctx = canvas.getContext("2d", { alpha: true });
     if (!ctx) return;
 
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const motionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const canAnimate = () => !motionPreference.matches && finePointer.matches && !document.hidden;
     let cols = 0;
     let rows = 0;
     const pixelSize = Math.max(gap, 6);
 
     const initPixels = () => {
       const rect = container.getBoundingClientRect();
-      const dpr = window.devicePixelRatio || 1;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
       canvas.width = Math.max(1, Math.round(rect.width * dpr));
       canvas.height = Math.max(1, Math.round(rect.height * dpr));
@@ -131,7 +135,11 @@ function PixelCanvas({
     };
 
     const draw = (timestamp: number) => {
-      const deltaTime = timestamp - lastTimeRef.current;
+      if (canAnimate() && timestamp - lastTimeRef.current < 1000 / 30) {
+        animationRef.current = requestAnimationFrame(draw);
+        return;
+      }
+      const deltaTime = Math.min(timestamp - lastTimeRef.current, 100);
       lastTimeRef.current = timestamp;
 
       const rect = container.getBoundingClientRect();
@@ -167,7 +175,7 @@ function PixelCanvas({
           const lerpSpeed = pixel.targetIntensity > pixel.intensity ? 0.24 : speed;
           pixel.intensity += (pixel.targetIntensity - pixel.intensity) * lerpSpeed;
 
-          if (!reducedMotion) {
+          if (canAnimate()) {
             pixel.colorPhase = (pixel.colorPhase + 0.00055 * (deltaTime / 16)) % 1;
           }
 
@@ -200,7 +208,7 @@ function PixelCanvas({
       }
 
       ctx.globalAlpha = 1;
-      if (!reducedMotion) {
+      if (canAnimate()) {
         animationRef.current = requestAnimationFrame(draw);
       }
     };
@@ -214,37 +222,39 @@ function PixelCanvas({
     };
 
     const onMouseMove = (event: MouseEvent) => {
-      updateMouse(event.clientX, event.clientY);
+      if (canAnimate()) updateMouse(event.clientX, event.clientY);
     };
 
     const onMouseLeave = () => {
       mouseRef.current = { x: -1000, y: -1000 };
     };
 
-    const onTouchMove = (event: TouchEvent) => {
-      const touch = event.touches[0];
-      if (touch) updateMouse(touch.clientX, touch.clientY);
+    const refresh = () => {
+      cancelAnimationFrame(animationRef.current);
+      mouseRef.current = { x: -1000, y: -1000 };
+      if (document.hidden) return;
+      initPixels();
+      lastTimeRef.current = performance.now() - 100;
+      draw(performance.now());
     };
-
-    initPixels();
-    lastTimeRef.current = performance.now();
-    draw(lastTimeRef.current);
-
-    window.addEventListener("resize", initPixels);
-    if (!noFocus && !reducedMotion) {
-      window.addEventListener("mousemove", onMouseMove);
+    refresh();
+    window.addEventListener("resize", refresh);
+    document.addEventListener("visibilitychange", refresh);
+    motionPreference.addEventListener("change", refresh);
+    finePointer.addEventListener("change", refresh);
+    if (!noFocus) {
+      window.addEventListener("mousemove", onMouseMove, { passive: true });
       window.addEventListener("mouseleave", onMouseLeave);
-      window.addEventListener("touchmove", onTouchMove, { passive: true });
-      window.addEventListener("touchend", onMouseLeave);
     }
 
     return () => {
       cancelAnimationFrame(animationRef.current);
-      window.removeEventListener("resize", initPixels);
+      window.removeEventListener("resize", refresh);
+      document.removeEventListener("visibilitychange", refresh);
+      motionPreference.removeEventListener("change", refresh);
+      finePointer.removeEventListener("change", refresh);
       window.removeEventListener("mousemove", onMouseMove);
       window.removeEventListener("mouseleave", onMouseLeave);
-      window.removeEventListener("touchmove", onTouchMove);
-      window.removeEventListener("touchend", onMouseLeave);
     };
   }, [alpha, baseIntensity, gap, getColorFromIntensity, noFocus, speed, variant]);
 
@@ -260,6 +270,8 @@ function PixelCanvas({
 }
 
 export function SiteBackground() {
+  const pathname = usePathname();
+  if (isPrivateAnalyticsPath(pathname)) return <div aria-hidden="true" className="site-background" />;
   return (
     <div aria-hidden="true" className="site-background">
       <PixelCanvas
