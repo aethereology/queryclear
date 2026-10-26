@@ -98,7 +98,7 @@ export default function ScorecardPage() {
             <div>
               <h2 className="text-3xl text-paper sm:text-4xl">Want the verified version?</h2>
               <p className="mt-3 max-w-xl text-paper/70">
-                The scorecard is a self-check. A free AI Search audit reads your
+                The scorecard is a self-check. A free readiness preview reads your
                 live site and shows what to fix first, in plain English.
               </p>
             </div>

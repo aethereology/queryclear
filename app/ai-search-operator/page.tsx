@@ -78,7 +78,7 @@ const faqs = [
   },
   {
     q: "What does it cost?",
-    a: "We're onboarding five founding design partners first, so pricing is set with each one and locked for your first year — no surprise increases. Request access below and we'll talk through scope and a fair founding rate.",
+    a: "Scope and pricing are agreed individually before enrollment. Request access below to discuss your website, approval process and the work the program can support.",
   },
 ];
 

@@ -24,9 +24,9 @@ Direction: The clarity workspace. Warm white canvas, white panels, deep forest t
 - [x] Pricing index grounded in existing offers
 - [x] Supporting page copy and hierarchy review
 - [x] Owner workspace presentation
-- [ ] All public routes metadata, responsive and accessibility QA
-- [ ] Build, unit, Redis and browser regression checks
-- [ ] Preview screenshots and visual refinement
+- [x] All public routes metadata, responsive and accessibility QA
+- [x] Build, unit, Redis and browser regression checks
+- [x] Preview screenshots and visual refinement
 - [ ] Merge, production deployment and workflow smoke checks
 
 ## Measurement and limits
@@ -43,3 +43,10 @@ Private/noindex inventory includes /admin/audits, /admin/social, /outreach, /rep
 Sample reports: /audit retains the existing fictional human-reviewed report; /audit?view=automated exposes the real automated report component with a hand-authored, clearly fictional dataset. No crawl, model call, trend, benchmark or visibility score is implied. The report can be inspected without requiring a lead email. Downloaded example text retains the fictional labels in the page title, evidence and details.
 
 Legal language, refund/credit provisions, prices and entitlements are preserved. Typography and layout changes do not amend the Terms or Privacy Policy. No customer/customer-logo/social-proof content was invented.
+
+
+## Verification record
+
+Revision bde75ee passed 356 unit/contract tests, two real-Redis recovery integration tests, the production build, lint, typecheck, dependency security and all 180 browser checks across 360/768/1280/1536 widths. Expanded coverage exposed and fixed mobile pricing-heading overflow, a Care Plan price overflow, and keyboard-inaccessible scrollable examples. Responsive screenshots were inspected; a deployed code example was confirmed keyboard-focusable and arrow-scrollable. Final copy/formatting changes receive the same gate before merge. Current merge/deployment outcome is recorded on https://github.com/aethereology/queryclear/pull/13; the checklist above is the pre-release implementation snapshot.
+
+Production smoke checks after the separate owner-recovery release passed: public audit page, private-address rejection with support ID and no-store response, and Python authentication enforcement. Final redesign deployment receives fresh smoke checks. Remaining limits: field Core Web Vitals and conversion impact need real post-release data; the owner-only console requires secure owner sign-in for its authenticated production walkthrough. Existing 6-hour public smoke checks and weekly production dependency reviews remain active. The previous production deployment and Git commits provide the rollback path.

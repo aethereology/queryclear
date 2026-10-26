@@ -97,7 +97,7 @@ export default function ContactPage() {
               Tell us about your site below and what you&apos;re after — an
               upgrade, a new build, or an audit. Want a free read first?{" "}
               <a href="/free-audit" className="font-medium text-ink underline hover:text-lime-deep">
-                Run a free AI Search Audit
+                Run a free readiness preview
               </a>
               . Prefer email? Reach us any time at{" "}
               <a href={`mailto:${site.email}`} className="font-medium text-ink underline hover:text-lime-deep">

@@ -367,7 +367,7 @@ export default function StackPage() {
           <Container>
             <MonoLabel index="03">Scoring</MonoLabel>
             <h2 className="mt-3 max-w-3xl text-3xl sm:text-4xl">
-              We score for usefulness, not checklist theater.
+              A repeatable rubric for useful website information.
             </h2>
             <div className="mt-8 grid gap-4 md:grid-cols-4">
               {scoreBands.map((band) => (

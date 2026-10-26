@@ -24,7 +24,7 @@ const verdicts = [
     d: "A concise llms.txt file is cheap to publish and can point AI-oriented tools toward your best pages.",
   },
   {
-    t: "Not magic",
+    t: "No guaranteed effect",
     d: "It is not a ranking factor, access-control file, citation guarantee, or replacement for your actual website.",
   },
   {
@@ -242,8 +242,8 @@ export default function LlmsTxtPage() {
                 <code className="font-mono text-ink">llms.txt</code> is an
                 optional Markdown file that gives AI-oriented tools a curated
                 summary of your business and the pages worth reading first.
-                Used well, it reduces noise. Used as a silver bullet, it
-                distracts from the work that matters.
+                For a tool that supports it, a concise directory can make source selection easier.
+                Prioritize readable pages and verified facts first.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <Cta href="/free-audit">Check my website</Cta>

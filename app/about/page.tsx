@@ -209,7 +209,7 @@ export default function AboutPage() {
             <div>
               <h2 className="text-3xl text-paper sm:text-4xl">Review your public search foundation.</h2>
               <p className="mt-3 max-w-xl text-paper/70">
-                Run a free AI Search Audit — an automated, read-only read on your
+                Run a free readiness preview — an automated, read-only read on your
                 site&apos;s biggest search-readiness opportunities. The full
                 scored AI Search Audit is $497 if you want the deep report.
               </p>

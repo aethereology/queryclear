@@ -8,31 +8,352 @@ import { Accordion } from "@/components/Accordion";
 import { SnapshotCta } from "@/components/SnapshotCta";
 import { LeadForm } from "@/components/LeadForm";
 import { site } from "@/lib/site";
-export const metadata: Metadata = { title: "Website clarity for search and AI discovery", description: site.description, alternates: { canonical: "/" }, openGraph: { title: "QueryClear — Make your website easier to understand", description: site.description, url: site.url } };
+export const metadata: Metadata = {
+  title: "Website clarity for search and AI discovery",
+  description: site.description,
+  alternates: { canonical: "/" },
+  openGraph: {
+    title: "QueryClear — Make your website easier to understand",
+    description: site.description,
+    url: site.url,
+  },
+};
 const capabilities = [
-  ["01", "Understand what your pages say.", "Review titles, headings, descriptions and structured data from the public HTML we fetch. See the pages behind the findings."],
-  ["02", "Explore the questions buyers ask.", "Modeled answer scenarios suggest questions to investigate. Each is labeled as generated, with its sample size and limitations."],
-  ["03", "Know what to work on next.", "A prioritized action plan connects observations to recommendations. Review the evidence, check the business facts, then make the change."],
+  [
+    "01",
+    "Understand what your pages say.",
+    "Review titles, headings, descriptions and structured data from the public HTML we fetch. See the pages behind the findings.",
+  ],
+  [
+    "02",
+    "Explore the questions buyers ask.",
+    "Modeled answer scenarios suggest questions to investigate. Each is labeled as generated, with its sample size and limitations.",
+  ],
+  [
+    "03",
+    "Know what to work on next.",
+    "A prioritized action plan connects observations to recommendations. Review the evidence, check the business facts, then make the change.",
+  ],
 ];
 const faqs = [
-  { q: "What does QueryClear actually check?", a: "The free preview fetches up to five public pages and checks supported on-page signals, including titles, headings, descriptions and structured data. It also generates up to five modeled buyer-answer scenarios. The report lists its coverage and limitations." },
-  { q: "Does this measure my visibility in ChatGPT or Google AI Overviews?", a: "The free preview does not query named AI products or measure their rankings or citation rates. Modeled scenarios come from a general language model and are hypotheses to review. The paid, human-reviewed audit has a separate scope and labeled answer observations." },
-  { q: "Who is this for?", a: "Business owners, marketers and agencies who need clearer service pages and a practical starting point for website improvements. You can review the automated preview yourself or ask us to scope implementation." },
-  { q: "What happens after the free preview?", a: "You see a summary first. Provide your email to unlock the detailed report and request an emailed copy. You can download the report or print it. Reports expire within 24 hours, so keep a copy you want to retain." },
-  { q: "Will QueryClear change my website?", a: "The automated preview is read-only. Human-delivered upgrades and builds are separately scoped and agreed before work starts. We cannot guarantee rankings, traffic, leads or AI citations." },
+  {
+    q: "What does QueryClear actually check?",
+    a: "The free preview fetches up to five public pages and checks supported on-page signals, including titles, headings, descriptions and structured data. It also generates up to five modeled buyer-answer scenarios. The report lists its coverage and limitations.",
+  },
+  {
+    q: "Does this measure my visibility in ChatGPT or Google AI Overviews?",
+    a: "The free preview does not query named AI products or measure their rankings or citation rates. Modeled scenarios come from a general language model and are hypotheses to review. The paid, human-reviewed audit has a separate scope and labeled answer observations.",
+  },
+  {
+    q: "Who is this for?",
+    a: "Business owners, marketers and agencies who need clearer service pages and a practical starting point for website improvements. You can review the automated preview yourself or ask us to scope implementation.",
+  },
+  {
+    q: "What happens after the free preview?",
+    a: "You see a summary first. Provide your email to unlock the detailed report and request an emailed copy. You can download the report or print it. Reports expire within 24 hours, so keep a copy you want to retain.",
+  },
+  {
+    q: "Will QueryClear change my website?",
+    a: "The automated preview is read-only. Human-delivered upgrades and builds are separately scoped and agreed before work starts. We cannot guarantee rankings, traffic, leads or AI citations.",
+  },
 ];
 export default function HomePage() {
-  return <><Header /><main id="main-content">
-    <section className="clarity-hero"><Container className="grid items-center gap-12 py-16 md:py-24 lg:grid-cols-[1fr_1.08fr] lg:gap-16">
-      <div><MonoLabel>Website clarity. Backed by evidence.</MonoLabel><h1 className="mt-6 max-w-2xl">Make your website<br className="hidden xl:block" /> easier to understand.</h1><p className="mt-6 max-w-xl text-lg leading-relaxed text-muted">For your customers. For search. For AI discovery.</p><p className="mt-4 max-w-xl leading-relaxed text-muted">QueryClear checks your public pages, shows the evidence behind the issues, and gives you a clear plan to improve them.</p><div className="mt-8 flex flex-wrap gap-3"><Cta href="/free-audit">Check my website</Cta><Cta href="/audit-methodology" variant="ghost" showArrow={false}>Explore the method</Cta></div><p className="mt-4 text-xs text-muted">Free preview · Up to five public pages · Read-only</p><Link href="/audit?view=automated" className="mt-4 inline-block text-sm text-muted underline underline-offset-4">Explore a sample preview →</Link></div><EvidencePreview />
-    </Container></section>
-    <div className="border-y border-line bg-paper"><Container className="grid gap-5 py-6 text-sm text-muted sm:grid-cols-3"><p><span className="mr-2 text-pine">↳</span> Page-level evidence</p><p><span className="mr-2 text-pine">↳</span> Clearly labeled modeled scenarios</p><p><span className="mr-2 text-pine">↳</span> Prioritized, reviewable actions</p></Container></div>
-    <section id="solution"><Container className="py-16 md:py-24"><div className="grid gap-6 md:grid-cols-2"><div><MonoLabel>The problem</MonoLabel><h2 className="mt-5 max-w-xl">A good website should leave fewer questions.</h2></div><p className="self-end text-muted leading-relaxed">What do you offer? Who is it for? What supports your claims? When these answers are hard to find, customers and search systems have less useful information to work with. Start with the pages you control.</p></div><div className="mt-12 grid gap-5 md:grid-cols-3">{capabilities.map(([n,t,d]) => <article className="card p-7" key={n}><span className="mono-label text-lime-deep!">{n} / CLARITY</span><h3 className="mt-8 text-xl leading-snug">{t}</h3><p className="mt-4 text-sm leading-relaxed text-muted">{d}</p></article>)}</div></Container></section>
-    <section className="border-y border-line bg-paper-2"><Container className="grid gap-12 py-16 md:grid-cols-[0.8fr_1.2fr] md:py-24"><div><MonoLabel>A useful starting point</MonoLabel><h2 className="mt-5">From website<br />to next steps.</h2><p className="mt-5 text-muted leading-relaxed">No account to create. No website access to grant. Begin with a public address.</p><Cta href="/free-audit" className="mt-7">Run the free preview</Cta></div><ol className="grid gap-7">{[["01","Enter your website","We fetch up to five eligible public pages and run supported on-page checks."],["02","Review your preview","See the initial findings. Use your email to unlock the detailed report and request a copy."],["03","Choose the next action","Review page evidence, explore modeled scenarios, and download a plan to share with your team."]].map(([n,t,d]) => <li key={n} className="grid grid-cols-[40px_1fr] gap-5 border-b border-line pb-7"><span className="font-mono text-sm text-lime-deep">{n}</span><div><h3 className="text-xl">{t}</h3><p className="mt-3 text-sm leading-relaxed text-muted">{d}</p></div></li>)}</ol></Container></section>
-    <section><Container className="grid gap-10 py-16 md:grid-cols-2 md:py-24"><div><MonoLabel>Confidence comes from context</MonoLabel><h2 className="mt-5">See the evidence.<br />Understand the limits.</h2><p className="mt-5 leading-relaxed text-muted">An observation in fetched HTML and a model-generated suggestion answer different questions. Your report keeps that distinction visible.</p><Link href="/audit-methodology" className="mt-6 inline-block font-medium underline underline-offset-4">Read our methodology →</Link></div><div className="grid gap-4"><article className="card p-6"><span className="evidence-tag">Observed</span><h3 className="mt-4 text-xl">What the fetched page contains</h3><p className="mt-3 text-sm leading-relaxed text-muted">Technical findings reference the pages checked. These are bounded checks, with recommendations that still need human review.</p></article><article className="card p-6"><span className="evidence-tag evidence-tag--modeled">Modeled</span><h3 className="mt-4 text-xl">What to investigate next</h3><p className="mt-3 text-sm leading-relaxed text-muted">Answer scenarios explore possible content gaps. They do not establish live visibility in ChatGPT, Claude, Gemini or Google AI Overviews.</p></article></div></Container></section>
-    <section id="offers" className="border-y border-line bg-paper-2"><Container className="py-16 md:py-24"><div className="flex flex-wrap items-end justify-between gap-6"><div><MonoLabel>Start with clarity. Then improve.</MonoLabel><h2 className="mt-5">The right level of help.</h2></div><Link href="/pricing" className="font-medium underline underline-offset-4">Compare scope and pricing →</Link></div><div className="mt-10 grid gap-5 md:grid-cols-3">{site.offers.slice(0,3).map((o,i) => <article key={o.name} className={`card flex flex-col p-7 ${i===0?'border-pine!':''}`}><p className="text-sm font-medium text-muted">{i===0?'Explore':i===1?'Diagnose':'Implement'}</p><h3 className="mt-5 text-2xl">{o.name}</h3><p className="mt-5 font-display text-3xl">{o.price}</p><p className="mt-4 flex-1 text-sm leading-relaxed text-muted">{o.desc}</p><Cta href={o.href} variant={i===0?'primary':'ghost'} className="mt-7" showArrow={false}>{i===0?'Start free':i===1?'See the paid audit':'Explore an upgrade'}</Cta></article>)}</div><p className="mt-6 text-sm text-muted">Need a new website? <Link className="underline" href="/ai-search-ready-website">Explore a client-owned build</Link>. Ongoing work is available through the <Link className="underline" href="/care-plan">Care Plan</Link> after an eligibility review.</p></Container></section>
-    <section><Container className="grid gap-10 py-16 md:grid-cols-[0.8fr_1.2fr] md:py-24"><div><MonoLabel>Before you start</MonoLabel><h2 className="mt-5">Clear answers.</h2><p className="mt-5 text-muted">A useful tool should be clear about what it does.</p></div><Accordion items={faqs} /></Container></section>
-    <section className="bg-pine text-paper"><Container className="flex flex-wrap items-center justify-between gap-8 py-16"><div><p className="mono-label text-paper/70!">Your next useful step</p><h2 className="mt-4 max-w-2xl">Find the clarity gaps<br />in your website.</h2></div><Cta href="/free-audit">Check my website</Cta></Container></section>
-    <section id="audit-cta"><Container className="grid gap-10 py-16 md:grid-cols-2"><div><MonoLabel>Work with QueryClear</MonoLabel><h2 className="mt-5">Want help putting<br />the plan into practice?</h2><p className="mt-5 text-muted leading-relaxed">Tell us about your website and what you need. Kyle, our founder and lead operator, reviews the scope with you.</p><SnapshotCta href="/#audit-cta" defaultNeed="Website Upgrade" className="mt-6">Discuss my website</SnapshotCta><br /><Link href="/about" className="mt-5 inline-block underline underline-offset-4">Meet the team behind the work →</Link></div><LeadForm /></Container></section>
-  </main><Footer /></>;
+  return (
+    <>
+      <Header />
+      <main id="main-content">
+        <section className="clarity-hero">
+          <Container className="grid items-center gap-12 py-16 md:py-24 lg:grid-cols-[1fr_1.08fr] lg:gap-16">
+            <div>
+              <MonoLabel>Website clarity. Backed by evidence.</MonoLabel>
+              <h1 className="mt-6 max-w-2xl">
+                Make your website
+                <br className="hidden xl:block" /> easier to understand.
+              </h1>
+              <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted">
+                For your customers. For search. For AI discovery.
+              </p>
+              <p className="mt-4 max-w-xl leading-relaxed text-muted">
+                QueryClear checks your public pages, shows the evidence behind
+                the issues, and gives you a clear plan to improve them.
+              </p>
+              <div className="mt-8 flex flex-wrap gap-3">
+                <Cta href="/free-audit">Check my website</Cta>
+                <Cta
+                  href="/audit-methodology"
+                  variant="ghost"
+                  showArrow={false}
+                >
+                  Explore the method
+                </Cta>
+              </div>
+              <p className="mt-4 text-xs text-muted">
+                Free preview · Up to five public pages · Read-only
+              </p>
+              <Link
+                href="/audit?view=automated"
+                className="mt-4 inline-block text-sm text-muted underline underline-offset-4"
+              >
+                Explore a sample preview →
+              </Link>
+            </div>
+            <EvidencePreview />
+          </Container>
+        </section>
+        <div className="border-y border-line bg-paper">
+          <Container className="grid gap-5 py-6 text-sm text-muted sm:grid-cols-3">
+            <p>
+              <span className="mr-2 text-pine">↳</span> Page-level evidence
+            </p>
+            <p>
+              <span className="mr-2 text-pine">↳</span> Clearly labeled modeled
+              scenarios
+            </p>
+            <p>
+              <span className="mr-2 text-pine">↳</span> Prioritized, reviewable
+              actions
+            </p>
+          </Container>
+        </div>
+        <section id="solution">
+          <Container className="py-16 md:py-24">
+            <div className="grid gap-6 md:grid-cols-2">
+              <div>
+                <MonoLabel>The problem</MonoLabel>
+                <h2 className="mt-5 max-w-xl">
+                  A good website should leave fewer questions.
+                </h2>
+              </div>
+              <p className="self-end text-muted leading-relaxed">
+                What do you offer? Who is it for? What supports your claims?
+                When these answers are hard to find, customers and search
+                systems have less useful information to work with. Start with
+                the pages you control.
+              </p>
+            </div>
+            <div className="mt-12 grid gap-5 md:grid-cols-3">
+              {capabilities.map(([n, t, d]) => (
+                <article className="card p-7" key={n}>
+                  <span className="mono-label text-lime-deep!">
+                    {n} / CLARITY
+                  </span>
+                  <h3 className="mt-8 text-xl leading-snug">{t}</h3>
+                  <p className="mt-4 text-sm leading-relaxed text-muted">{d}</p>
+                </article>
+              ))}
+            </div>
+          </Container>
+        </section>
+        <section className="border-y border-line bg-paper-2">
+          <Container className="grid gap-12 py-16 md:grid-cols-[0.8fr_1.2fr] md:py-24">
+            <div>
+              <MonoLabel>A useful starting point</MonoLabel>
+              <h2 className="mt-5">
+                From website
+                <br />
+                to next steps.
+              </h2>
+              <p className="mt-5 text-muted leading-relaxed">
+                No account to create. No website access to grant. Begin with a
+                public address.
+              </p>
+              <Cta href="/free-audit" className="mt-7">
+                Run the free preview
+              </Cta>
+            </div>
+            <ol className="grid gap-7">
+              {[
+                [
+                  "01",
+                  "Enter your website",
+                  "We fetch up to five eligible public pages and run supported on-page checks.",
+                ],
+                [
+                  "02",
+                  "Review your preview",
+                  "See the initial findings. Use your email to unlock the detailed report and request a copy.",
+                ],
+                [
+                  "03",
+                  "Choose the next action",
+                  "Review page evidence, explore modeled scenarios, and download a plan to share with your team.",
+                ],
+              ].map(([n, t, d]) => (
+                <li
+                  key={n}
+                  className="grid grid-cols-[40px_1fr] gap-5 border-b border-line pb-7"
+                >
+                  <span className="font-mono text-sm text-lime-deep">{n}</span>
+                  <div>
+                    <h3 className="text-xl">{t}</h3>
+                    <p className="mt-3 text-sm leading-relaxed text-muted">
+                      {d}
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </Container>
+        </section>
+        <section>
+          <Container className="grid gap-10 py-16 md:grid-cols-2 md:py-24">
+            <div>
+              <MonoLabel>Confidence comes from context</MonoLabel>
+              <h2 className="mt-5">
+                See the evidence.
+                <br />
+                Understand the limits.
+              </h2>
+              <p className="mt-5 leading-relaxed text-muted">
+                An observation in fetched HTML and a model-generated suggestion
+                answer different questions. Your report keeps that distinction
+                visible.
+              </p>
+              <Link
+                href="/audit-methodology"
+                className="mt-6 inline-block font-medium underline underline-offset-4"
+              >
+                Read our methodology →
+              </Link>
+            </div>
+            <div className="grid gap-4">
+              <article className="card p-6">
+                <span className="evidence-tag">Observed</span>
+                <h3 className="mt-4 text-xl">What the fetched page contains</h3>
+                <p className="mt-3 text-sm leading-relaxed text-muted">
+                  Technical findings reference the pages checked. These are
+                  bounded checks, with recommendations that still need human
+                  review.
+                </p>
+              </article>
+              <article className="card p-6">
+                <span className="evidence-tag evidence-tag--modeled">
+                  Modeled
+                </span>
+                <h3 className="mt-4 text-xl">What to investigate next</h3>
+                <p className="mt-3 text-sm leading-relaxed text-muted">
+                  Answer scenarios explore possible content gaps. They do not
+                  establish live visibility in ChatGPT, Claude, Gemini or Google
+                  AI Overviews.
+                </p>
+              </article>
+            </div>
+          </Container>
+        </section>
+        <section id="offers" className="border-y border-line bg-paper-2">
+          <Container className="py-16 md:py-24">
+            <div className="flex flex-wrap items-end justify-between gap-6">
+              <div>
+                <MonoLabel>Start with clarity. Then improve.</MonoLabel>
+                <h2 className="mt-5">The right level of help.</h2>
+              </div>
+              <Link
+                href="/pricing"
+                className="font-medium underline underline-offset-4"
+              >
+                Compare scope and pricing →
+              </Link>
+            </div>
+            <div className="mt-10 grid gap-5 md:grid-cols-3">
+              {site.offers.slice(0, 3).map((o, i) => (
+                <article
+                  key={o.name}
+                  className={`card flex flex-col p-7 ${i === 0 ? "border-pine!" : ""}`}
+                >
+                  <p className="text-sm font-medium text-muted">
+                    {i === 0 ? "Explore" : i === 1 ? "Diagnose" : "Implement"}
+                  </p>
+                  <h3 className="mt-5 text-2xl">{o.name}</h3>
+                  <p className="mt-5 font-display text-3xl">{o.price}</p>
+                  <p className="mt-4 flex-1 text-sm leading-relaxed text-muted">
+                    {o.desc}
+                  </p>
+                  <Cta
+                    href={o.href}
+                    variant={i === 0 ? "primary" : "ghost"}
+                    className="mt-7"
+                    showArrow={false}
+                  >
+                    {i === 0
+                      ? "Start free"
+                      : i === 1
+                        ? "See the paid audit"
+                        : "Explore an upgrade"}
+                  </Cta>
+                </article>
+              ))}
+            </div>
+            <p className="mt-6 text-sm text-muted">
+              Need a new website?{" "}
+              <Link className="underline" href="/ai-search-ready-website">
+                Explore a client-owned build
+              </Link>
+              . Ongoing work is available through the{" "}
+              <Link className="underline" href="/care-plan">
+                Care Plan
+              </Link>{" "}
+              after an eligibility review.
+            </p>
+          </Container>
+        </section>
+        <section>
+          <Container className="grid gap-10 py-16 md:grid-cols-[0.8fr_1.2fr] md:py-24">
+            <div>
+              <MonoLabel>Before you start</MonoLabel>
+              <h2 className="mt-5">Clear answers.</h2>
+              <p className="mt-5 text-muted">
+                A useful tool should be clear about what it does.
+              </p>
+            </div>
+            <Accordion items={faqs} />
+          </Container>
+        </section>
+        <section className="bg-pine text-paper">
+          <Container className="flex flex-wrap items-center justify-between gap-8 py-16">
+            <div>
+              <p className="mono-label text-paper/70!">Your next useful step</p>
+              <h2 className="mt-4 max-w-2xl">
+                Find the clarity gaps
+                <br />
+                in your website.
+              </h2>
+            </div>
+            <Cta href="/free-audit">Check my website</Cta>
+          </Container>
+        </section>
+        <section id="audit-cta">
+          <Container className="grid gap-10 py-16 md:grid-cols-2">
+            <div>
+              <MonoLabel>Work with QueryClear</MonoLabel>
+              <h2 className="mt-5">
+                Want help putting
+                <br />
+                the plan into practice?
+              </h2>
+              <p className="mt-5 text-muted leading-relaxed">
+                Tell us about your website and what you need. Kyle, our founder
+                and lead operator, reviews the scope with you.
+              </p>
+              <SnapshotCta
+                href="/#audit-cta"
+                defaultNeed="Website Upgrade"
+                className="mt-6"
+              >
+                Discuss my website
+              </SnapshotCta>
+              <br />
+              <Link
+                href="/about"
+                className="mt-5 inline-block underline underline-offset-4"
+              >
+                Meet the team behind the work →
+              </Link>
+            </div>
+            <LeadForm />
+          </Container>
+        </section>
+      </main>
+      <Footer />
+    </>
+  );
 }
