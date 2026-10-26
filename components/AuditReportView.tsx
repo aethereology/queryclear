@@ -42,7 +42,7 @@ export function AuditReportView({ report }: { report: AuditReportData }) {
         {[["overview", "Overview"], ["evidence", "Scope & evidence"], ["findings", "Technical findings"], ["scenarios", "Modeled scenarios"]].map(([id,label]) => <a key={id} href={`#${reportId}-${id}`} className="rounded-lg border border-line bg-paper px-4 py-3 hover:bg-paper-2">{label}</a>)}
       </nav>
       {/* Header */}
-      <div id={`${reportId}-overview`} className="card scroll-mt-24 grid items-center gap-6 p-6 sm:grid-cols-[1fr_auto] sm:p-8">
+      <div id={`${reportId}-overview`} className="card scroll-mt-24 grid items-center gap-6 p-6 lg:grid-cols-[1fr_auto] sm:p-8">
         <div>
           <MonoLabel index="report">Automated search-readiness preview</MonoLabel>
           <h2 className="mt-3 break-all text-2xl sm:text-3xl">{report.domain_url}</h2>

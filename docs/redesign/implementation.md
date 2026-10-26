@@ -18,12 +18,12 @@ Direction: The clarity workspace. Warm white canvas, white panels, deep forest t
 
 - [x] Current architecture, commercial offers and auth inspected
 - [x] Positioning and design direction selected
-- [ ] Shared tokens, navigation, footer and controls
-- [ ] Homepage and meaningful example visualization
-- [ ] Free audit acquisition and report presentation
-- [ ] Pricing index grounded in existing offers
-- [ ] Supporting page copy and hierarchy review
-- [ ] Owner workspace presentation
+- [x] Shared tokens, navigation, footer and controls
+- [x] Homepage and meaningful example visualization
+- [x] Free audit acquisition and report presentation
+- [x] Pricing index grounded in existing offers
+- [x] Supporting page copy and hierarchy review
+- [x] Owner workspace presentation
 - [ ] All public routes metadata, responsive and accessibility QA
 - [ ] Build, unit, Redis and browser regression checks
 - [ ] Preview screenshots and visual refinement
@@ -32,3 +32,14 @@ Direction: The clarity workspace. Warm white canvas, white panels, deep forest t
 ## Measurement and limits
 
 Retain consent-controlled events audit_preview_start, audit_preview_complete, audit_preview_capacity_gate and existing lead/checkout events. Compare consented start → completion → unlock and inquiry conversion by device and landing page; never infer a conversion uplift without post-release data. Private reports and admin paths stay excluded from analytics. No raw submitted URLs or email addresses in new events. Core Web Vitals require field data; payload budgets are not CWV evidence. Real owner production workflow still requires secure owner sign-in. Keep legal terms, fees, checkout behavior, API contracts and report retention intact.
+
+
+## Route and copy review
+
+Public inventory: /, /free-audit, /pricing, /ai-visibility-audit, /website-upgrade, /ai-search-ready-website, /care-plan, /about, /contact, /audit-methodology, /ai-visibility-stack, /geo-audit, /schema-for-ai-search, /llms-txt-for-businesses, /local-ai-search-optimization, /med-spa-ai-search-optimization, /scorecard, /audit, /privacy and /terms. Shared chrome, controls, surfaces and typography apply across these routes. Headlines and acquisition copy were rewritten where vague; useful technical guidance and existing contractual details were retained after review. There is no separate public blog, product/features page or customer dashboard to migrate. Existing educational routes provide the resource architecture.
+
+Private/noindex inventory includes /admin/audits, /admin/social, /outreach, /reports/[slug], /r/[token], checkout success pages, /thank-you, the retired /stack-kit and the unlaunched /ai-search-operator. Keep access, noindex and commercial status intact. The operator remains early access; remove the unverified five-partner scarcity claim and preserve explicit human approval. No customer dashboard or autonomous editing capability is promised.
+
+Sample reports: /audit retains the existing fictional human-reviewed report; /audit?view=automated exposes the real automated report component with a hand-authored, clearly fictional dataset. No crawl, model call, trend, benchmark or visibility score is implied. The report can be inspected without requiring a lead email. Downloaded example text retains the fictional labels in the page title, evidence and details.
+
+Legal language, refund/credit provisions, prices and entitlements are preserved. Typography and layout changes do not amend the Terms or Privacy Policy. No customer/customer-logo/social-proof content was invented.
