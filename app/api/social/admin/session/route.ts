@@ -62,8 +62,8 @@ export async function POST(request: Request) {
   return response;
 }
 
-export async function DELETE(request: Request) {
-  const response = NextResponse.redirect(new URL(destination(request), request.url), 303);
+export async function DELETE() {
+  const response = new NextResponse(null, { status: 204, headers: { "cache-control": "no-store" } });
   response.cookies.set("social_admin", "", { ...sessionCookieOptions(), maxAge: 0 });
   return response;
 }
