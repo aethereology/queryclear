@@ -245,7 +245,7 @@ export default function StackPage() {
             <div>
               <MonoLabel index="method">Our method</MonoLabel>
               <h1 className="mt-5 max-w-3xl text-4xl sm:text-5xl">
-                Seven layers from unclear source to usable website.
+                Seven questions for a clearer website.
               </h1>
               <p className="mt-5 max-w-2xl leading-relaxed text-muted">
                 Modern search does not reward a single trick. It rewards a

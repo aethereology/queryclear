@@ -259,7 +259,7 @@ export default function SchemaPage() {
             <div>
               <MonoLabel index="schema">Structured data</MonoLabel>
               <h1 className="mt-5 max-w-3xl text-4xl sm:text-5xl">
-                Schema turns your business facts into a machine-readable map.
+                Structured data starts with accurate business facts.
               </h1>
               <p className="mt-5 max-w-2xl leading-relaxed text-muted">
                 Schema, usually published as JSON-LD, is not an AI-search cheat

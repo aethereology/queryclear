@@ -95,6 +95,11 @@ export function OwnerAuditConsole({ csrf }: { csrf: string }) {
       <p>Your session has expired. Sign in again to run audits or load saved reports.</p>
       <a href="/admin/audits" className="mt-2 inline-block underline">Return to sign in</a>
     </div>}
+    <div className="print-hide grid gap-4 sm:grid-cols-3" aria-label="Workspace overview">
+      <div className="card p-5"><p className="text-xs text-muted">Available in recent history</p><p className="mt-3 font-display text-3xl">{loadingHistory ? "…" : historyError ? "Unavailable" : filterOwnerHistory(history,"",now).length}</p></div>
+      <div className="card p-5"><p className="text-xs text-muted">Current report</p><p className="mt-3 text-sm font-medium break-all">{report ? report.domain_url : "Choose a report or start a run"}</p></div>
+      <div className="card p-5"><p className="text-xs text-muted">Recommended next step</p><p className="mt-3 text-sm font-medium">{report ? "Review evidence and download your report" : "Check a public website"}</p></div>
+    </div>
     <div className="print-hide grid gap-6 lg:grid-cols-[1.3fr_1fr]">
       <section className="card p-6 sm:p-8" aria-labelledby="new-audit"><h2 id="new-audit" className="text-2xl font-semibold">Start an audit</h2>
         <p className="mt-2 text-sm text-muted">A focused scan of up to five public pages. Existing rate limits and the daily spending cap apply. No email is sent.</p>

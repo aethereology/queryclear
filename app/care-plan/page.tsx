@@ -141,7 +141,7 @@ export default function CarePlanPage() {
           <Container className="py-16 md:py-20">
             <MonoLabel index="care">{plan.name} · {plan.priceLabel}</MonoLabel>
             <h1 className="mt-5 max-w-3xl text-4xl sm:text-5xl">
-              Maintain your site&apos;s modern-search foundation each month.
+              Keep your website clear, current and working.
             </h1>
             <p className="mt-5 max-w-2xl leading-relaxed text-muted">
               A human-delivered maintenance plan for sites that already have a sound

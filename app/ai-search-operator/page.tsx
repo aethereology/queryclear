@@ -138,7 +138,7 @@ export default function OperatorPage() {
           <Container className="py-16 md:py-20">
             <MonoLabel index="operator">{site.operator.status} · {site.operator.forWho}</MonoLabel>
             <h1 className="mt-5 max-w-3xl text-4xl sm:text-5xl">
-              The AI search operator that does the work — you approve every move.
+              A human-led early-access program for ongoing website improvement.
             </h1>
             <p className="mt-5 max-w-2xl leading-relaxed text-muted">
               Most AI-search tools measure: they tell you you&apos;re invisible and
@@ -230,17 +230,17 @@ export default function OperatorPage() {
         <section id="early-access" className="scroll-mt-20 bg-pine py-20 text-paper md:py-28">
           <Container className="grid gap-12 md:grid-cols-[0.9fr_1.1fr] md:items-center">
             <div>
-              <MonoLabel index="05">Early access · five founding partners</MonoLabel>
+              <MonoLabel index="05">Early access · fit reviewed personally</MonoLabel>
               <h2 className="mt-5 text-4xl text-paper sm:text-5xl">
                 Become a founding partner.
               </h2>
               <p className="mt-5 max-w-md leading-relaxed text-paper/70">
-                We&apos;re taking just five founding partners — so each one gets
+                The early-access program includes
                 hands-on setup and a direct line to {site.founder.name}, queryclear&apos;s
                 founder and lead operator, while the
                 operator proves out. In exchange we ask for honest feedback and,
                 only if you&apos;re happy with the results, an optional case study.
-                Founding-partner pricing is locked for your first year.
+                Scope and pricing are agreed before enrollment.
               </p>
             </div>
             <LeadForm

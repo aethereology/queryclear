@@ -27,3 +27,13 @@ for(const path of ["/", "/free-audit", "/pricing", "/audit", "/contact"]) test(`
   await expect(page.locator("h1")).toBeVisible();
   await testInfo.attach("page", {body: await page.screenshot({fullPage:true}), contentType:"image/png"});
 });
+
+test("sample automated report is explicitly fictional and uses working report controls", async ({ page }) => {
+ await page.goto("/audit?view=automated");
+ await expect(page.getByText("Fictional example · No crawl or model query performed",{exact:true})).toBeVisible();
+ await page.getByRole("navigation",{name:"Report sections"}).getByRole("link",{name:"Technical findings",exact:true}).click();
+ await expect(page.getByRole("heading",{name:"Missing primary heading",exact:true})).toBeVisible();
+ await page.getByRole("checkbox",{name:"Mark action 1 reviewed"}).check();
+ await expect(page.getByText("1 of 2 reviewed",{exact:true})).toBeVisible();
+ expect((await new AxeBuilder({page}).withTags(["wcag2a","wcag2aa","wcag21aa"]).analyze()).violations).toEqual([]);
+});

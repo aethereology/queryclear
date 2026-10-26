@@ -260,7 +260,7 @@ export default function GeoAuditPage() {
             <div>
               <MonoLabel index="geo">GEO audit</MonoLabel>
               <h1 className="mt-5 max-w-3xl text-4xl sm:text-5xl">
-                A GEO audit that separates AI-search work from AI-search theater.
+                A practical guide to auditing for AI discovery.
               </h1>
               <p className="mt-5 max-w-2xl leading-relaxed text-muted">
                 Generative Engine Optimization sounds new. The serious work is
@@ -294,7 +294,7 @@ export default function GeoAuditPage() {
 
         <section className="border-b border-line py-16">
           <Container>
-            <MonoLabel index="01">What GEO really measures</MonoLabel>
+            <MonoLabel index="01">What a readiness review asks</MonoLabel>
             <h2 className="mt-3 max-w-3xl text-3xl sm:text-4xl">
               Four practical questions reveal whether a page is usable source material.
             </h2>

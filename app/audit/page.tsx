@@ -3,6 +3,10 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { AuditReport } from "@/components/AuditReport";
 import { goldleafDemo } from "@/lib/reports/goldleaf-demo";
+import Link from "next/link";
+import { Container } from "@/components/ui";
+import { AuditReportView } from "@/components/AuditReportView";
+import { readinessExample } from "@/lib/reports/readiness-example";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -36,13 +40,15 @@ const breadcrumbSchema = {
   ],
 };
 
-export default function AuditPage() {
+export default async function AuditPage({ searchParams }: { searchParams: Promise<{view?:string}> }) {
+  const automated = (await searchParams).view === "automated";
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <Header />
-      <AuditReport data={goldleafDemo} />
+      <nav aria-label="Sample report type" className="border-b border-line bg-paper"><Container className="flex flex-wrap gap-3 py-4 text-sm"><Link href="/audit" aria-current={!automated ? "page" : undefined} className="rounded-lg border border-line px-4 py-3 aria-[current=page]:bg-paper-2">Human-reviewed audit example</Link><Link href="/audit?view=automated" aria-current={automated ? "page" : undefined} className="rounded-lg border border-line px-4 py-3 aria-[current=page]:bg-paper-2">Automated preview example</Link></Container></nav>
+      {automated ? <main id="main-content"><Container className="py-12"><p className="evidence-tag">Fictional example · No crawl or model query performed</p><h1 className="mt-5 text-3xl sm:text-4xl">Inside an automated preview.</h1><p className="mt-5 mb-10 max-w-3xl text-muted leading-relaxed">This hand-authored report demonstrates the real report interface. All findings, page coverage, scenario outcomes and draft text below are illustrative. Evidence labels show how real reports categorize observations; they do not represent measurements of this example website.</p><AuditReportView report={readinessExample} /></Container></main> : <AuditReport data={goldleafDemo} />}
       <Footer />
     </>
   );

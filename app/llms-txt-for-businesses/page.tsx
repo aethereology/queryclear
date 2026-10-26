@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 
 const verdicts = [
   {
-    t: "Worth doing",
+    t: "Optional support",
     d: "A concise llms.txt file is cheap to publish and can point AI-oriented tools toward your best pages.",
   },
   {
@@ -236,7 +236,7 @@ export default function LlmsTxtPage() {
             <div>
               <MonoLabel index="llms">llms.txt</MonoLabel>
               <h1 className="mt-5 max-w-3xl text-4xl sm:text-5xl">
-                llms.txt is useful. It is not your AI-search strategy.
+                An optional directory for AI-oriented tools.
               </h1>
               <p className="mt-5 max-w-2xl leading-relaxed text-muted">
                 <code className="font-mono text-ink">llms.txt</code> is an
@@ -270,7 +270,7 @@ export default function LlmsTxtPage() {
           <Container>
             <MonoLabel index="01">The honest verdict</MonoLabel>
             <h2 className="mt-3 max-w-3xl text-3xl sm:text-4xl">
-              Publish it, but keep it in its lane.
+              Choose it when a tool or workflow will use it.
             </h2>
             <Stagger className="mt-8 grid gap-4 md:grid-cols-3">
               {verdicts.map((v) => (
